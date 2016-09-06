@@ -1,0 +1,26 @@
+﻿Построение начато 06.09.2016 15:27:26.
+     1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты build).
+     1>InitializeBuildStatus:
+         Обращение к "Debug\Integra.unsuccessfulbuild".
+       GenerateTargetFrameworkMonikerAttribute:
+       Целевой объект "GenerateTargetFrameworkMonikerAttribute" пропускается, так как все выходные файлы актуальны по отношению к входным.
+       ClCompile:
+         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt MainForm.cpp /clr:nostdlib 
+         MainForm.cpp
+         Для всех выходных данных обновления не требуется.
+       CoreResGen:
+         Отсутствуют ресурсы, устаревшие по отношению к файлам своих источников. Пропуск формирования ресурсов.
+       Link:
+         D:\soft\Visual Studio 2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe" /INCREMENTAL:NO /NOLOGO /ASSEMBLYRESOURCE:Debug\Integra.MainForm.resources /MANIFEST /ManifestFile:"Debug\Integra.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\MainForm.obj
+         "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
+         Integra.vcxproj -> D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe;#1" /manifest Debug\Integra.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Файл "Debug\Integra.unsuccessfulbuild" удаляется.
+         Обращение к "Debug\Integra.lastbuildstate".
+     1>Построение проекта "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" завершено (целевые объекты build).
+
+Построение успешно завершено.
+
+Затраченное время: 00:00:00.64

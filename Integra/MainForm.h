@@ -1,5 +1,7 @@
 #pragma once
 
+#include "stdafx.h"
+
 namespace Integra {
 
 	using namespace System;

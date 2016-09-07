@@ -1,6 +1,8 @@
 #pragma once
 
 #include "stdafx.h"
+#include "SystemSettings.h"
+#include "ODBCclass.h"
 
 namespace Integra {
 
@@ -77,8 +79,12 @@ namespace Integra {
 
 		}
 #pragma endregion
-	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-				 MessageBox::Show("test");
+	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) 
+			 {
+				 SystemSettings^ accessSettings = gcnew SystemSettings("D:\\Work\\Coding\\Github\\repos\\Integra\\Integra\\Debug\\Access.ini");
+				 OdbcClass^ odbc = gcnew OdbcClass(accessSettings->Driver);
+				 odbc->ExecuteNonQuery("INSERT INTO Table2 (Code) Values('222')");
+				 MessageBox::Show("Готово!");
 			 }
 	};
 }

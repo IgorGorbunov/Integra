@@ -32,6 +32,7 @@ namespace Integra {
 					OdbcCommand^ command = gcnew OdbcCommand(queryString);
 					try 
 					{
+						command->Connection = _connection;
 						_connection->Open();
 						command->ExecuteNonQuery();
 					}

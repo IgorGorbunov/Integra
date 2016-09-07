@@ -79,14 +79,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp" />
-    <ClCompile Include="ODBCconnection.cpp" />
-    <ClCompile Include="SystemSettings.cpp" />
+    <ClCompile Include="ODBCclass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SystemSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">

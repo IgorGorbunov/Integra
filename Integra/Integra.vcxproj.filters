@@ -18,11 +18,11 @@
     <ClCompile Include="MainForm.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="ODBCconnection.cpp">
-      <Filter>Файлы исходного кода</Filter>
+    <ClCompile Include="SystemSettings.h">
+      <Filter>Заголовочные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="SystemSettings.cpp">
-      <Filter>Файлы исходного кода</Filter>
+    <ClCompile Include="ODBCclass.h">
+      <Filter>Заголовочные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

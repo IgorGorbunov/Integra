@@ -53,30 +53,30 @@ namespace Integra {
 
 
 	private: Void ReadIniFile(Void) 
-			{
-				StreamReader^ reader = gcnew StreamReader(_filePath, Encoding::UTF8);
-				try
-				{
-					_properties = gcnew Dictionary<String ^, String ^>();
-					while (!reader->EndOfStream)
-					{
-						String^ line = reader->ReadLine();
-						if (line[0] == '#')
-							continue;
+			 {
+				 StreamReader^ reader = gcnew StreamReader(_filePath, Encoding::UTF8);
+				 try
+				 {
+					 _properties = gcnew Dictionary<String ^, String ^>();
+					 while (!reader->EndOfStream)
+					 {
+						 String^ line = reader->ReadLine();
+						 if (line[0] == '#')
+							 continue;
 
-						if (line[0] == '$')
-						{
-							String^ value = reader->ReadLine();
-							String^ word = line->Substring(1)->Trim()->ToUpper();
-							_properties->Add(word, value);
-						}
-					}
-				}
-				finally
-				{
-					reader->Close();
-				}
-			}
+						 if (line[0] == '$')
+						 {
+							 String^ value = reader->ReadLine();
+							 String^ word = line->Substring(1)->Trim()->ToUpper();
+							 _properties->Add(word, value);
+						 }
+					 }
+				 }
+				 finally
+				 {
+					 reader->Close();
+				 }
+			 }
 
 	};
 }

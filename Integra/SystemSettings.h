@@ -1,3 +1,5 @@
+#pragma once
+
 namespace Integra {
 
 	using namespace System;

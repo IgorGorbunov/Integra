@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stdafx.h"
 #include "SystemSettings.h"
 #include "ODBCclass.h"
 

@@ -18,9 +18,6 @@
     <ClCompile Include="MainForm.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="SystemSettings.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="ODBCclass.h">
       <Filter>Заголовочные файлы</Filter>
     </ClCompile>
@@ -29,7 +26,10 @@
     <ClInclude Include="MainForm.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="SystemSettings.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

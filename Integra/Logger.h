@@ -1,5 +1,7 @@
 #pragma once
 
+#include "NetCopy.h"
+
 namespace Integra {
 
 	using namespace System;
@@ -17,6 +19,8 @@ namespace Integra {
 	private:
 		StreamWriter^ _writer;
 
+		String^ _currentFileName;
+		String^ _folder;
 		String^ _name;
 		String^ _ext;
 		int _nFiles;
@@ -32,6 +36,7 @@ namespace Integra {
 		{
 			_nFiles = 5;
 			_maxFileSize = 1000000l;
+			_folder = "Logs";
 
 			_name = fileName;
 			if (extension[0] == '.')
@@ -73,15 +78,16 @@ namespace Integra {
 			String^ message = "*--*--*--*--*--*--*--*--*--*" +
 				Environment::NewLine + error;
 			WriteLine(message);
+			NetCopy::CopyToMe(_currentFileName);
 		}
 
 	private:
 		Void SetFile(Void)
 		{
-			String^ currentFile = AppDomain::CurrentDomain->BaseDirectory + _name + _ext;
+			_currentFileName = Path::Combine(AppDomain::CurrentDomain->BaseDirectory, _folder, _name + _ext);
 			try
 			{
-				FileInfo^ info = gcnew FileInfo(currentFile);
+				FileInfo^ info = gcnew FileInfo(_currentFileName);
 				bool append = true;
 				if (info->Length > _maxFileSize)
 				{
@@ -89,11 +95,16 @@ namespace Integra {
 					append = false;
 				}
 
-				_writer = gcnew StreamWriter(currentFile, append, Encoding::UTF8);
+				_writer = gcnew StreamWriter(_currentFileName, append, Encoding::UTF8);
 			}
 			catch (FileNotFoundException^)
 			{
-				_writer = gcnew StreamWriter(currentFile, false, Encoding::UTF8);
+				String^ dir = Path::Combine(AppDomain::CurrentDomain->BaseDirectory, _folder);
+				if (!Directory::Exists(dir))
+				{
+					Directory::CreateDirectory(dir);
+				}
+				_writer = gcnew StreamWriter(_currentFileName, false, Encoding::UTF8);
 			}        
 		}
 
@@ -103,9 +114,9 @@ namespace Integra {
 			{
 				try
 				{
-					FileInfo^ f = gcnew FileInfo(AppDomain::CurrentDomain->BaseDirectory + _name +
-						(i - 1) + _ext);
-					f->CopyTo(AppDomain::CurrentDomain->BaseDirectory + _name + i + _ext, true);
+					FileInfo^ f = gcnew FileInfo(Path::Combine(AppDomain::CurrentDomain->BaseDirectory, _folder, _name +
+						(i - 1) + _ext));
+					f->CopyTo(Path::Combine(AppDomain::CurrentDomain->BaseDirectory, _folder, _name + i + _ext), true);
 				}
 				catch (FileNotFoundException^ ) { }
 

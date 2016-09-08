@@ -82,7 +82,7 @@ namespace Integra {
 			 {
 				 SystemSettings^ accessSettings = gcnew SystemSettings("D:\\Work\\Coding\\Github\\repos\\Integra\\Integra\\Debug\\Access.ini");
 				 OdbcClass^ odbc = gcnew OdbcClass(accessSettings->Driver);
-				 odbc->ExecuteNonQuery("INSERT INTO Table2 (Code) Values('222')");
+				 odbc->ExecuteNonQuery("INSERтT INTO Table2 (Code) Values('222')");
 				 MessageBox::Show("Готово!");
 			 }
 	};

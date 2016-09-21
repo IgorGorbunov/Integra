@@ -1,23 +1,16 @@
-﻿Построение начато 08.09.2016 16:13:19.
-     1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты rebuild).
-     1>_PrepareForClean:
-         Файл "Debug\Integra.lastbuildstate" удаляется.
-       InitializeBuildStatus:
+﻿Построение начато 21.09.2016 12:06:57.
+     1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты build).
+     1>InitializeBuildStatus:
          Создание "Debug\Integra.unsuccessfulbuild", так как было задано "AlwaysCreate".
        GenerateTargetFrameworkMonikerAttribute:
        Целевой объект "GenerateTargetFrameworkMonikerAttribute" пропускается, так как все выходные файлы актуальны по отношению к входным.
        ClCompile:
-         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt MainForm.cpp ODBCclass.h /clr:nostdlib 
+         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt MainForm.cpp /clr:nostdlib 
          MainForm.cpp
      1>d:\work\coding\github\repos\integra\integra\NetCopy.h(75): warning C4101: e: неиспользованная локальная переменная
-         ODBCclass.h
-     1>d:\work\coding\github\repos\integra\integra\NetCopy.h(75): warning C4101: e: неиспользованная локальная переменная
-         Создание кода...
-         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt "C:\Users\igor\AppData\Local\Temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
-         .NETFramework,Version=v4.0.AssemblyAttributes.cpp
+         Для всех выходных данных обновления не требуется.
        CoreResGen:
-         "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\NETFX 4.0 Tools\resgen.exe" /useSourcePath /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /compile MainForm.resx,Debug\Integra.MainForm.resources
-         Обрабатывается файл ресурсов "MainForm.resx", результирующий объект: "Debug\Integra.MainForm.resources".
+         Отсутствуют ресурсы, устаревшие по отношению к файлам своих источников. Пропуск формирования ресурсов.
        Link:
          D:\soft\Visual Studio 2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe" /INCREMENTAL:NO /NOLOGO /ASSEMBLYRESOURCE:Debug\Integra.MainForm.resources /MANIFEST /ManifestFile:"Debug\Integra.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\MainForm.obj
          Debug\ODBCclass.obj
@@ -28,8 +21,8 @@
        FinalizeBuildStatus:
          Файл "Debug\Integra.unsuccessfulbuild" удаляется.
          Обращение к "Debug\Integra.lastbuildstate".
-     1>Построение проекта "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" завершено (целевые объекты rebuild).
+     1>Построение проекта "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" завершено (целевые объекты build).
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:01.03
+Затраченное время: 00:00:00.73

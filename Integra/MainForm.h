@@ -80,10 +80,23 @@ namespace Integra {
 #pragma endregion
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				 SystemSettings^ accessSettings = gcnew SystemSettings("D:\\Work\\Coding\\Github\\repos\\Integra\\Integra\\Debug\\Access.ini");
+				 OpenFileDialog^ dialog = gcnew OpenFileDialog();
+				 dialog->InitialDirectory = Application::StartupPath;
+				 dialog->Multiselect = false;
+				 dialog->DefaultExt = ".ini";
+				 dialog->Filter = "Файлы конфигурации (.ini)|*.ini";
+
+				 System::Windows::Forms::DialogResult result = dialog->ShowDialog();
+				 if (result != System::Windows::Forms::DialogResult::OK)
+				 {
+					 return;
+				 }
+
+				 SystemSettings^ accessSettings = gcnew SystemSettings(dialog->FileName);
 				 OdbcClass^ odbc = gcnew OdbcClass(accessSettings->Driver);
 				 odbc->ExecuteNonQuery("INSERтT INTO Table2 (Code) Values('222')");
 				 MessageBox::Show("Готово!");
 			 }
 	};
 }
+

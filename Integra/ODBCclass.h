@@ -59,8 +59,7 @@ namespace Integra {
 								"Source: " + e->Errors[i]->Source + "\n" +
 								"SQL: " + e->Errors[i]->SQLState + "\n";
 						}
-						_logger->WriteError(errorMessages);
-						_logger->WriteError(e->StackTrace);
+						_logger->WriteError(errorMessages + "\n" + e->StackTrace);
 						MessageBox::Show(errorMessages, "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
 					}
 					finally 

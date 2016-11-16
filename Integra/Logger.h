@@ -81,6 +81,12 @@ namespace Integra {
 			NetCopy::CopyToMe(_currentFileName);
 		}
 
+		Void SaveLog()
+		{
+			NetCopy::CopyToMe(_currentFileName);
+		}
+
+
 	private:
 		Void SetFile(Void)
 		{

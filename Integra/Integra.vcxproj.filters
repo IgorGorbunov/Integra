@@ -13,6 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Заголовочные файлы\Position">
+      <UniqueIdentifier>{78ec9e65-8a0d-4fa3-8276-9150136330bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Book">
+      <UniqueIdentifier>{85b58d2d-a04c-46b4-8b0b-c0fdbfc83915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\PositionCollection">
+      <UniqueIdentifier>{dcf6eda4-27fc-494b-b3b2-84029f232979}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Settings">
+      <UniqueIdentifier>{796e9f85-7728-455f-a6f8-6e70833cb47d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Views">
+      <UniqueIdentifier>{fc41fc03-ca75-43b3-a322-485f10175105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Exceptions">
+      <UniqueIdentifier>{f10ff285-038b-4807-8540-e70291e2ae68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -21,12 +39,57 @@
     <ClCompile Include="ODBCclass.h">
       <Filter>Заголовочные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="ManualIntegrationForm.cpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="AddEditSchemaForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AttrCompareForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="EditForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Results.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="DifferencesForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Results2.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddNewTableForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddSemAttrForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddNewSemBookForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddEditSystemBookForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="DbFiltersForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="TableLinksForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddDbAttrsForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemSettings.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
@@ -35,9 +98,168 @@
     <ClInclude Include="NetCopy.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="Integration.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Attribute.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ManualIntegrationForm.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionCollection.h">
+      <Filter>Заголовочные файлы\PositionCollection</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticPositionCollection.h">
+      <Filter>Заголовочные файлы\PositionCollection</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticPosition.h">
+      <Filter>Заголовочные файлы\Position</Filter>
+    </ClInclude>
+    <ClInclude Include="Position.h">
+      <Filter>Заголовочные файлы\Position</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticBook.h">
+      <Filter>Заголовочные файлы\Book</Filter>
+    </ClInclude>
+    <ClInclude Include="BookSettings.h">
+      <Filter>Заголовочные файлы\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="IntegrationSettings.h">
+      <Filter>Заголовочные файлы\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemSettings.h">
+      <Filter>Заголовочные файлы\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsFile.h">
+      <Filter>Заголовочные файлы\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Book.h">
+      <Filter>Заголовочные файлы\Book</Filter>
+    </ClInclude>
+    <ClInclude Include="AddEditSchemaForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AttrCompareForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Заголовочные файлы\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="EditForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgramIntegration.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="StringFunctions.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="DbBook.h">
+      <Filter>Заголовочные файлы\Book</Filter>
+    </ClInclude>
+    <ClInclude Include="DbPosition.h">
+      <Filter>Заголовочные файлы\Position</Filter>
+    </ClInclude>
+    <ClInclude Include="Results.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="DiffererncePosition.h">
+      <Filter>Заголовочные файлы\Position</Filter>
+    </ClInclude>
+    <ClInclude Include="DifferencesForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Results2.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AddNewTableForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AddSemAttrForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AddNewSemBookForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="RoleStation.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AddEditSystemBookForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="WrongPassSemanticException.h">
+      <Filter>Заголовочные файлы\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Semantic.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="DbFiltersForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="TableLinksForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AddDbAttrsForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManualIntegrationForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddEditSchemaForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AttrCompareForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DifferencesForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Results.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Results2.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddNewTableForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddNewSemBookForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddSemAttrForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddEditSystemBookForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DbFiltersForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddDbAttrsForm.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
   </ItemGroup>

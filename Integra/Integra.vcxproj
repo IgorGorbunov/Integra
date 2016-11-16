@@ -68,6 +68,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>
       </AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>main</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -78,21 +80,164 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddDbAttrsForm.cpp" />
+    <ClCompile Include="AddEditSchemaForm.cpp" />
+    <ClCompile Include="AddEditSystemBookForm.cpp" />
+    <ClCompile Include="AddNewSemBookForm.cpp" />
+    <ClCompile Include="AddNewTableForm.cpp" />
+    <ClCompile Include="AddSemAttrForm.cpp" />
+    <ClCompile Include="AttrCompareForm.cpp" />
+    <ClCompile Include="DbFiltersForm.cpp" />
+    <ClCompile Include="DifferencesForm.cpp" />
+    <ClCompile Include="EditForm.cpp" />
+    <ClCompile Include="LoginForm.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="ManualIntegrationForm.cpp" />
     <ClCompile Include="ODBCclass.h" />
+    <ClCompile Include="Results.cpp" />
+    <ClCompile Include="Results2.cpp" />
+    <ClCompile Include="SettingsForm.cpp" />
+    <ClCompile Include="TableLinksForm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddDbAttrsForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AddEditSchemaForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AddEditSystemBookForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AddNewSemBookForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AddNewTableForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AddSemAttrForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AttrCompareForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Attribute.h" />
+    <ClInclude Include="Book.h" />
+    <ClInclude Include="BookSettings.h" />
+    <ClInclude Include="DbBook.h" />
+    <ClInclude Include="DbFiltersForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="DbPosition.h" />
+    <ClInclude Include="DifferencesForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="DiffererncePosition.h" />
+    <ClInclude Include="EditForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Integration.h" />
+    <ClInclude Include="IntegrationSettings.h" />
+    <ClInclude Include="LoginForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="ManualIntegrationForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="NetCopy.h" />
+    <ClInclude Include="Position.h" />
+    <ClInclude Include="PositionCollection.h" />
+    <ClInclude Include="ProgramIntegration.h" />
+    <ClInclude Include="Results.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Results2.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="RoleStation.h" />
+    <ClInclude Include="Semantic.h" />
+    <ClInclude Include="SemanticBook.h" />
+    <ClInclude Include="SemanticPosition.h" />
+    <ClInclude Include="SemanticPositionCollection.h" />
+    <ClInclude Include="Settings.h" />
+    <ClInclude Include="SettingsFile.h" />
+    <ClInclude Include="SettingsForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="StringFunctions.h" />
     <ClInclude Include="SystemSettings.h" />
+    <ClInclude Include="TableLinksForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="User.h" />
+    <ClInclude Include="WrongPassSemanticException.h" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddDbAttrsForm.resx">
+      <DependentUpon>AddDbAttrsForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddEditSchemaForm.resx">
+      <DependentUpon>AddEditSchemaForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddEditSystemBookForm.resx">
+      <DependentUpon>AddEditSystemBookForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddNewSemBookForm.resx">
+      <DependentUpon>AddNewSemBookForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddNewTableForm.resx">
+      <DependentUpon>AddNewTableForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddSemAttrForm.resx">
+      <DependentUpon>AddSemAttrForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AttrCompareForm.resx">
+      <DependentUpon>AttrCompareForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DbFiltersForm.resx">
+      <DependentUpon>DbFiltersForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DifferencesForm.resx">
+      <DependentUpon>DifferencesForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditForm.resx">
+      <DependentUpon>EditForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ManualIntegrationForm.resx">
+      <DependentUpon>ManualIntegrationForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Results.resx">
+      <DependentUpon>Results.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Results2.resx">
+      <DependentUpon>Results2.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsForm.resx">
+      <DependentUpon>SettingsForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TableLinksForm.resx">
+      <DependentUpon>TableLinksForm.h</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="SemanticCore.1.0.dll">
+      <Guid>307168c0-39ae-42ad-953f-a09f8a81520f</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>false</Isolated>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

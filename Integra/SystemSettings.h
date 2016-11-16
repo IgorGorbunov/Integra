@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SettingsFile.h"
+
 namespace Integra {
 
 	using namespace System;
@@ -10,14 +12,14 @@ namespace Integra {
 	/// <summary>
 	/// Класс для работы с настройками систем
 	/// </summary>
-	public ref class SystemSettings 
+	public ref class SystemSettings : public SettingsFile
 	{
 	public:
 		property String^ Driver
 		{
 			String^ get()
 			{
-				if (String::IsNullOrEmpty(_driver))
+				if (_properties != nullptr && String::IsNullOrEmpty(_driver))
 				{
 					if (_properties->ContainsKey("DRIVER"))
 					{
@@ -31,17 +33,33 @@ namespace Integra {
 				return _driver;
 			}
 		}
+		property String^ Login
+		{
+			String^ get()
+			{
+				if (String::IsNullOrEmpty(_login))
+				{
+					if (_properties != nullptr && _properties->ContainsKey("LOGIN"))
+					{
+						_login = _properties["LOGIN"];
+					}
+					else
+					{
+						return nullptr;
+					}
+				} 
+				return _login;
+			}
+		}
 
 	private:
-		String^ _filePath;
-		Dictionary<String^, String^>^ _properties;
 		String^ _driver;
+		String^ _login;
 
 	public:
-		SystemSettings(String^ filePath) 
+		SystemSettings(String^ filePath) : SettingsFile(filePath)
 		{
-			_filePath = filePath;
-			ReadIniFile();
+
 		}
 
 	protected:
@@ -53,32 +71,6 @@ namespace Integra {
 
 		}
 
-
-	private: Void ReadIniFile(Void) 
-			 {
-				 StreamReader^ reader = gcnew StreamReader(_filePath, Encoding::UTF8);
-				 try
-				 {
-					 _properties = gcnew Dictionary<String ^, String ^>();
-					 while (!reader->EndOfStream)
-					 {
-						 String^ line = reader->ReadLine();
-						 if (line[0] == '#')
-							 continue;
-
-						 if (line[0] == '$')
-						 {
-							 String^ value = reader->ReadLine();
-							 String^ word = line->Substring(1)->Trim()->ToUpper();
-							 _properties->Add(word, value);
-						 }
-					 }
-				 }
-				 finally
-				 {
-					 reader->Close();
-				 }
-			 }
 
 	};
 }

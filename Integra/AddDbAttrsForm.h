@@ -3,6 +3,7 @@
 #include "ODBCclass.h"
 #include "Attribute.h"
 #include "DbFiltersForm.h"
+#include "TableLinksForm.h"
 
 
 namespace Integra {
@@ -29,6 +30,7 @@ namespace Integra {
 		List<String^>^ _fields;
 		OdbcClass^ _odbc;
 		String^ _filter;
+		Dictionary<String^, String^>^ _links;
 
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
@@ -37,6 +39,9 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column8;
 	private: System::Windows::Forms::Button^  bAddTableLinks;
 	private: System::Windows::Forms::Button^  bAddFilter;
+	private: System::Windows::Forms::Button^  bGroupParams;
+
+
 	private: System::Windows::Forms::TreeView^  tv;
 			 
 		
@@ -99,9 +104,9 @@ namespace Integra {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->lbTables = (gcnew System::Windows::Forms::ListBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->bAddNewTable = (gcnew System::Windows::Forms::Button());
@@ -120,6 +125,7 @@ namespace Integra {
 			this->tv = (gcnew System::Windows::Forms::TreeView());
 			this->bAddTableLinks = (gcnew System::Windows::Forms::Button());
 			this->bAddFilter = (gcnew System::Windows::Forms::Button());
+			this->bGroupParams = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -143,50 +149,52 @@ namespace Integra {
 			// 
 			// bAddNewTable
 			// 
-			this->bAddNewTable->Location = System::Drawing::Point(150, 171);
+			this->bAddNewTable->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bAddNewTable->Location = System::Drawing::Point(146, 177);
 			this->bAddNewTable->Name = L"bAddNewTable";
 			this->bAddNewTable->Size = System::Drawing::Size(170, 30);
 			this->bAddNewTable->TabIndex = 5;
 			this->bAddNewTable->Text = L"Добавить новую таблицу";
-			this->bAddNewTable->UseVisualStyleBackColor = true;
+			this->bAddNewTable->UseVisualStyleBackColor = false;
 			this->bAddNewTable->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bAddNewTable_Click);
 			// 
 			// dgvFields
 			// 
 			this->dgvFields->AllowUserToAddRows = false;
 			this->dgvFields->AllowUserToDeleteRows = false;
-			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			this->dgvFields->BackgroundColor = System::Drawing::Color::WhiteSmoke;
+			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dgvFields->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvFields->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
 			this->dgvFields->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvFields->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {this->Column1, this->Column2, 
 				this->Column3, this->Column4, this->Column8});
-			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->dgvFields->DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->dgvFields->DefaultCellStyle = dataGridViewCellStyle5;
 			this->dgvFields->Location = System::Drawing::Point(12, 225);
 			this->dgvFields->Name = L"dgvFields";
-			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle6->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle6->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle6->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dgvFields->RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle6->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle6->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle6->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle6->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvFields->RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
 			this->dgvFields->RowHeadersVisible = false;
 			this->dgvFields->Size = System::Drawing::Size(699, 210);
 			this->dgvFields->TabIndex = 6;
@@ -226,23 +234,25 @@ namespace Integra {
 			// 
 			// bClose
 			// 
+			this->bClose->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->bClose->Location = System::Drawing::Point(624, 453);
 			this->bClose->Name = L"bClose";
 			this->bClose->Size = System::Drawing::Size(87, 30);
 			this->bClose->TabIndex = 8;
 			this->bClose->Text = L"Отмена";
-			this->bClose->UseVisualStyleBackColor = true;
+			this->bClose->UseVisualStyleBackColor = false;
 			this->bClose->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bClose_Click);
 			// 
 			// bRecord
 			// 
+			this->bRecord->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->bRecord->Enabled = false;
 			this->bRecord->Location = System::Drawing::Point(517, 453);
 			this->bRecord->Name = L"bRecord";
 			this->bRecord->Size = System::Drawing::Size(87, 30);
 			this->bRecord->TabIndex = 7;
 			this->bRecord->Text = L"Записать";
-			this->bRecord->UseVisualStyleBackColor = true;
+			this->bRecord->UseVisualStyleBackColor = false;
 			this->bRecord->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bRecord_Click);
 			// 
 			// label1
@@ -292,28 +302,44 @@ namespace Integra {
 			// 
 			// bAddTableLinks
 			// 
-			this->bAddTableLinks->Location = System::Drawing::Point(461, 143);
+			this->bAddTableLinks->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bAddTableLinks->Location = System::Drawing::Point(459, 120);
 			this->bAddTableLinks->Name = L"bAddTableLinks";
 			this->bAddTableLinks->Size = System::Drawing::Size(118, 45);
 			this->bAddTableLinks->TabIndex = 14;
 			this->bAddTableLinks->Text = L"Добавить связи между таблицами";
-			this->bAddTableLinks->UseVisualStyleBackColor = true;
+			this->bAddTableLinks->UseVisualStyleBackColor = false;
+			this->bAddTableLinks->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bAddTableLinks_Click);
 			// 
 			// bAddFilter
 			// 
-			this->bAddFilter->Location = System::Drawing::Point(593, 143);
+			this->bAddFilter->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bAddFilter->Location = System::Drawing::Point(591, 120);
 			this->bAddFilter->Name = L"bAddFilter";
 			this->bAddFilter->Size = System::Drawing::Size(118, 45);
 			this->bAddFilter->TabIndex = 15;
 			this->bAddFilter->Text = L"Добавить фильтры";
-			this->bAddFilter->UseVisualStyleBackColor = true;
+			this->bAddFilter->UseVisualStyleBackColor = false;
 			this->bAddFilter->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bAddFilter_Click);
 			// 
-			// AddBdAttrsForm
+			// bGroupParams
+			// 
+			this->bGroupParams->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bGroupParams->Location = System::Drawing::Point(459, 175);
+			this->bGroupParams->Name = L"bGroupParams";
+			this->bGroupParams->Size = System::Drawing::Size(252, 35);
+			this->bGroupParams->TabIndex = 16;
+			this->bGroupParams->Text = L"Добавить параметры групп";
+			this->bGroupParams->UseVisualStyleBackColor = false;
+			this->bGroupParams->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bGroupParams_Click);
+			// 
+			// AddDbAttrsForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->ClientSize = System::Drawing::Size(739, 495);
+			this->Controls->Add(this->bGroupParams);
 			this->Controls->Add(this->bAddFilter);
 			this->Controls->Add(this->bAddTableLinks);
 			this->Controls->Add(this->tv);
@@ -328,7 +354,7 @@ namespace Integra {
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->lbTables);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
-			this->Name = L"AddBdAttrsForm";
+			this->Name = L"AddDbAttrsForm";
 			this->Text = L"AddAttrsForm";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->EndInit();
 			this->ResumeLayout(false);
@@ -598,6 +624,20 @@ private: System::Void bAddFilter_Click(System::Object^  sender, System::EventArg
 			 {
 				 _filter = form->Condition;
 			 }
+		 }
+private: System::Void bAddTableLinks_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 TableLinksForm^ form = gcnew TableLinksForm(nullptr);
+			 form->ShowDialog();
+			 if (_links != nullptr)
+			 {
+				 _links = form->Links;
+			 }
+		 }
+
+private: System::Void bGroupParams_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+
 		 }
 };
 }

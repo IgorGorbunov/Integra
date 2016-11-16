@@ -14,6 +14,9 @@ namespace Integra {
 	/// </summary>
 	public ref class TableLinksForm : public System::Windows::Forms::Form
 	{
+	public:
+		Dictionary<String^, String^>^ Links;
+
 	private:
 		List<String^>^ _codes;
 		List<String^>^ _freeCodes;
@@ -65,12 +68,12 @@ namespace Integra {
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
 			this->bOk = (gcnew System::Windows::Forms::Button());
 			this->bCancel = (gcnew System::Windows::Forms::Button());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
 			this->panel2->SuspendLayout();
@@ -101,6 +104,20 @@ namespace Integra {
 			this->dataGridView1->Size = System::Drawing::Size(325, 115);
 			this->dataGridView1->TabIndex = 0;
 			this->dataGridView1->CellClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &TableLinksForm::dataGridView1_CellClick);
+			this->dataGridView1->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &TableLinksForm::dataGridView1_CellValueChanged);
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Поле одно таблицы";
+			this->Column1->Name = L"Column1";
+			this->Column1->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+			this->Column1->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Поле другой таблицы";
+			this->Column2->Name = L"Column2";
+			this->Column2->Resizable = System::Windows::Forms::DataGridViewTriState::True;
 			// 
 			// panel2
 			// 
@@ -130,6 +147,7 @@ namespace Integra {
 			this->bOk->TabIndex = 1;
 			this->bOk->Text = L"ОК";
 			this->bOk->UseVisualStyleBackColor = false;
+			this->bOk->Click += gcnew System::EventHandler(this, &TableLinksForm::bOk_Click);
 			// 
 			// bCancel
 			// 
@@ -140,19 +158,7 @@ namespace Integra {
 			this->bCancel->TabIndex = 0;
 			this->bCancel->Text = L"Отмена";
 			this->bCancel->UseVisualStyleBackColor = false;
-			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Поле одно таблицы";
-			this->Column1->Name = L"Column1";
-			this->Column1->Resizable = System::Windows::Forms::DataGridViewTriState::True;
-			this->Column1->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Поле другой таблицы";
-			this->Column2->Name = L"Column2";
-			this->Column2->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+			this->bCancel->Click += gcnew System::EventHandler(this, &TableLinksForm::bCancel_Click);
 			// 
 			// TableLinksForm
 			// 
@@ -195,6 +201,36 @@ private: System::Void dataGridView1_CellClick(System::Object^  sender, System::W
 				 String^ firstCode = dataGridView1[0, e->RowIndex]->Value->ToString();
 				 freeCurrentCodes->Remove(firstCode);
 				 Column2->DataSource = freeCurrentCodes;
+			 }
+		 }
+private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 Links = nullptr;
+			 Close();
+		 }
+private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 Links = gcnew Dictionary<String ^, String ^>();
+			 for (int i = 0; i < dataGridView1->Rows->Count; i++)
+			 {
+				 Links->Add(dataGridView1[0, i]->Value->ToString(), dataGridView1[1, i]->Value->ToString());
+			 }
+			 Close();
+		 }
+private: System::Void dataGridView1_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
+		 {
+			 if (e->ColumnIndex == 1)
+			 {
+				 String^ addVal = dataGridView1[1, e->RowIndex]->Value->ToString();
+				 for (int i = 0; i < dataGridView1->Rows->Count; i++)
+				 {
+					 String^ val = dataGridView1[0, i]->Value->ToString();
+					 if (val == addVal)
+					 {
+						 dataGridView1->Rows->RemoveAt(i);
+						 break;
+					 }
+				 }
 			 }
 		 }
 };

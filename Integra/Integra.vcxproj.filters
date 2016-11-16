@@ -87,6 +87,9 @@
     <ClCompile Include="AddDbAttrsForm.cpp">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
+    <ClCompile Include="GroupParamsForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -212,6 +215,9 @@
     <ClInclude Include="AddDbAttrsForm.h">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClInclude>
+    <ClInclude Include="GroupParamsForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
@@ -260,6 +266,9 @@
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="AddDbAttrsForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TableLinksForm.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
   </ItemGroup>

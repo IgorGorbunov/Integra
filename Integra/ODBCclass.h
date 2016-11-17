@@ -5,6 +5,7 @@
 namespace Integra {
 
 	using namespace System;
+	using namespace System::Data;
 	using namespace System::Data::Odbc;
 	using namespace System::Windows::Forms;
  
@@ -117,6 +118,82 @@ namespace Integra {
 				return list;
 			}
 
+			List<Object^>^ GetTableCols(String^ schtab)
+			{
+				array<String^>^ arr = schtab->Split('.');
+				if (arr->Length > 1)
+				{
+					return GetTableCols(arr[0], arr[1]);
+				}
+				else
+				{
+					return GetTableCols("", arr[0]);
+				}
+				
+			}
+
+			List<Object^>^ GetTableCols(String^ schema, String^ tableName)
+			{
+				if (String::IsNullOrEmpty(schema))
+				{
+					OdbcCommand^ command = gcnew OdbcCommand("SELECT TOP 1 * FROM " + tableName);
+					OdbcDataReader^ reader;
+					List<Object^>^ list = gcnew List<Object ^>();
+					try 
+					{
+						command->Connection = _connection;
+						_connection->Open();
+						_logger->WriteLine("Соединение открыто!");
+						_logger->WriteLine("Получение столбцов из таблицы: " + tableName);
+
+						list = gcnew List<Object^>();
+						reader = command->ExecuteReader();
+						DataTable^ table = reader->GetSchemaTable();
+						for (int i = 0; i < table->Rows->Count; i++)
+						{
+							DataRow^ row = table->Rows[i];
+							list->Add(row[0]);
+						}
+					}
+					catch (OdbcException^ e)
+					{
+						String^ errorMessages = "";
+						String^ mess = e->Errors[0]->Message;
+						for (int i = 0; i < e->Errors->Count; i++)
+						{
+							errorMessages += "Index #" + i + "\n" +
+								"Message: " + e->Errors[i]->Message + "\n" +
+								"NativeError: " + e->Errors[i]->NativeError + "\n" +
+								"Source: " + e->Errors[i]->Source + "\n" +
+								"SQL: " + e->Errors[i]->SQLState + "\n";
+						}
+						_logger->WriteError(errorMessages + "\n" + e->StackTrace);
+						MessageBox::Show(mess, "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+						throw gcnew TimeoutException();
+					}
+					finally 
+					{
+						if (reader != nullptr)
+						{
+							reader->Close();
+						}
+						_connection->Close();
+						delete reader;
+						delete command;
+						_logger->WriteLine("Соединение закрыто!");
+					}
+					return list;
+				}
+
+				String^ sQuery = "select " + 
+					"COL.COLUMN_NAME " + 
+					"from ALL_TAB_COLUMNS col " + 
+					"WHERE COL.TABLE_NAME = \'" + tableName + "\' and COL.owner = \'" + schema + "\' " + 
+					"ORDER BY col.column_name";
+				List<Object^>^ list = ExecuteQuery(sQuery);
+				return list;
+			}
+
 			Void ExecuteNonQuery(String^ queryString) 
 			{
 				OdbcCommand^ command = gcnew OdbcCommand(queryString);
@@ -162,7 +239,7 @@ namespace Integra {
 					_connection->Open();
 					_logger->WriteLine("Соединение открыто!");
 					_logger->WriteLine("queryString: " + queryString);
-
+					
 					list = gcnew List<Object^>();
 					reader = command->ExecuteReader();
 					while (reader->Read())

@@ -4,6 +4,7 @@
 #include "Attribute.h"
 #include "DbFiltersForm.h"
 #include "TableLinksForm.h"
+#include "GroupParamsForm.h"
 
 
 namespace Integra {
@@ -31,6 +32,10 @@ namespace Integra {
 		OdbcClass^ _odbc;
 		String^ _filter;
 		Dictionary<String^, String^>^ _links;
+
+		String^ _IdCol;
+		String^ _NameCol;
+		Dictionary<String^,String^>^ _Attrs;
 
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
@@ -637,7 +642,14 @@ private: System::Void bAddTableLinks_Click(System::Object^  sender, System::Even
 
 private: System::Void bGroupParams_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-
+			 GroupParamsForm^ form = gcnew GroupParamsForm(_odbc);
+			 form->ShowDialog();
+			 if (form->IdCol != nullptr)
+			 {
+				 _IdCol = form->IdCol;
+				 _NameCol = form->NameCol;
+				 _Attrs = form->Attrs;
+			 }
 		 }
 };
 }

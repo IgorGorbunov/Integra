@@ -195,7 +195,7 @@ namespace Integra {
 			 }
 			 else
 			 {
-				 login = tbLogin->Text->Trim()->ToUpper();
+				 login = tbLogin->Text->Trim();
 				 String^ pass = tbPass->Text;
 				 String^ db = cbDb->Text->Trim();
 				 driver = "Driver={Microsoft ODBC for Oracle};Server=" + db + ";Uid=" + login + ";Pwd=" + pass + ";";

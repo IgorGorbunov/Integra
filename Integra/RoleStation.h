@@ -35,7 +35,7 @@ namespace Integra {
 		static void SetRole(String^ userCode)
 		{
 			SetRoles();
-			String^ sq = "select role_id from " + OdbcClass::schema + "role_users where user_bd_code = \'" + userCode + "\'";
+			String^ sq = "select role_id from " + OdbcClass::schema + "role_users where user_bd_code = \'" + userCode->Trim()->ToUpper() + "\'";
 			List<Object^>^ list = OdbcClass::ExecuteQueryStatic(sq);
 			int roleId = Int32::Parse(list[0]->ToString());
 			for(int i = 0; i < _nRoles; i++)
@@ -93,7 +93,7 @@ namespace Integra {
 			return true;
 		}
 
-		static bool AddEditSystemBookHidden()
+		static bool AddSystemBookHidden()
 		{
 			if	(_role == Role::Master ||
 				_role == Role::Administrator)

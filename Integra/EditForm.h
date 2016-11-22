@@ -133,7 +133,7 @@ namespace Integra {
 			this->Controls->Add(this->groupBox2);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"EditForm";
-			this->Text = L"Изменить ";
+			this->Text = L"Изменить справочник";
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
 			this->ResumeLayout(false);

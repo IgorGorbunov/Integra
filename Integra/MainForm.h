@@ -9,6 +9,7 @@
 #include "SettingsForm.h"
 #include "Results.h"
 #include "RoleStation.h"
+#include "AddEditUserRole.h"
 
 namespace Integra {
 
@@ -38,6 +39,18 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Source;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Target;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Direction;
+	private: System::Windows::Forms::ToolStripMenuItem^  íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  íàñòðîéêèÑïðàâî÷íèêîâToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  ñïðàâêàToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  ðóêîâîäñòâîToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
+	private: System::Windows::Forms::ToolStripMenuItem^  îÏðîãðàììåToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  èíòåãðàöèÿToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  ðó÷íîéÐåæèìToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  æóðíàëÈçìåíåíèéToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  ïðîñìîòðÆóðíàëàÈçìåíåíèéToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBox1;
 
 
 
@@ -91,13 +104,25 @@ namespace Integra {
 		void InitializeComponent(void)
 		{
 			this->dgvIntParams = (gcnew System::Windows::Forms::DataGridView());
-			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
-			this->SettingsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->Id = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Book = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Source = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Target = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Direction = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
+			this->SettingsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->íàñòðîéêèÑïðàâî÷íèêîâToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ñïðàâêàToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ðóêîâîäñòâîToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->îÏðîãðàììåToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->æóðíàëÈçìåíåíèéToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->èíòåãðàöèÿToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ðó÷íîéÐåæèìToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ïðîñìîòðÆóðíàëàÈçìåíåíèéToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripTextBox1 = (gcnew System::Windows::Forms::ToolStripTextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvIntParams))->BeginInit();
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
@@ -115,22 +140,6 @@ namespace Integra {
 			this->dgvIntParams->Size = System::Drawing::Size(1017, 378);
 			this->dgvIntParams->TabIndex = 2;
 			this->dgvIntParams->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::dgvIntParams_CellDoubleClick);
-			// 
-			// menuStrip1
-			// 
-			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->SettingsToolStripMenuItem});
-			this->menuStrip1->Location = System::Drawing::Point(0, 0);
-			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1041, 24);
-			this->menuStrip1->TabIndex = 4;
-			this->menuStrip1->Text = L"menuStrip1";
-			// 
-			// íàñòðîéêèToolStripMenuItem
-			// 
-			this->SettingsToolStripMenuItem->Name = L"íàñòðîéêèToolStripMenuItem";
-			this->SettingsToolStripMenuItem->Size = System::Drawing::Size(79, 20);
-			this->SettingsToolStripMenuItem->Text = L"Íàñòðîéêè";
-			this->SettingsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::íàñòðîéêèToolStripMenuItem_Click);
 			// 
 			// Id
 			// 
@@ -167,6 +176,102 @@ namespace Integra {
 			this->Direction->ReadOnly = true;
 			this->Direction->Width = 200;
 			// 
+			// menuStrip1
+			// 
+			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->èíòåãðàöèÿToolStripMenuItem, 
+				this->æóðíàëÈçìåíåíèéToolStripMenuItem, this->SettingsToolStripMenuItem, this->ñïðàâêàToolStripMenuItem, this->toolStripTextBox1});
+			this->menuStrip1->Location = System::Drawing::Point(0, 0);
+			this->menuStrip1->Name = L"menuStrip1";
+			this->menuStrip1->Size = System::Drawing::Size(1041, 27);
+			this->menuStrip1->TabIndex = 4;
+			this->menuStrip1->Text = L"menuStrip1";
+			// 
+			// SettingsToolStripMenuItem
+			// 
+			this->SettingsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem, 
+				this->íàñòðîéêèÑïðàâî÷íèêîâToolStripMenuItem});
+			this->SettingsToolStripMenuItem->Name = L"SettingsToolStripMenuItem";
+			this->SettingsToolStripMenuItem->Size = System::Drawing::Size(79, 23);
+			this->SettingsToolStripMenuItem->Text = L"Íàñòðîéêè";
+			this->SettingsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::íàñòðîéêèToolStripMenuItem_Click);
+			// 
+			// íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem
+			// 
+			this->íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem->Name = L"íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem";
+			this->íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem->Size = System::Drawing::Size(219, 22);
+			this->íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem->Text = L"Íàñòðîéêè ïîëüçîâàòåëåé";
+			this->íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem_Click);
+			// 
+			// íàñòðîéêèÑïðàâî÷íèêîâToolStripMenuItem
+			// 
+			this->íàñòðîéêèÑïðàâî÷íèêîâToolStripMenuItem->Name = L"íàñòðîéêèÑïðàâî÷íèêîâToolStripMenuItem";
+			this->íàñòðîéêèÑïðàâî÷íèêîâToolStripMenuItem->Size = System::Drawing::Size(219, 22);
+			this->íàñòðîéêèÑïðàâî÷íèêîâToolStripMenuItem->Text = L"Íàñòðîéêè ñïðàâî÷íèêîâ";
+			// 
+			// ñïðàâêàToolStripMenuItem
+			// 
+			this->ñïðàâêàToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->ðóêîâîäñòâîToolStripMenuItem, 
+				this->toolStripSeparator1, this->îÏðîãðàììåToolStripMenuItem});
+			this->ñïðàâêàToolStripMenuItem->Name = L"ñïðàâêàToolStripMenuItem";
+			this->ñïðàâêàToolStripMenuItem->Size = System::Drawing::Size(65, 23);
+			this->ñïðàâêàToolStripMenuItem->Text = L"Ñïðàâêà";
+			// 
+			// ðóêîâîäñòâîToolStripMenuItem
+			// 
+			this->ðóêîâîäñòâîToolStripMenuItem->Name = L"ðóêîâîäñòâîToolStripMenuItem";
+			this->ðóêîâîäñòâîToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->ðóêîâîäñòâîToolStripMenuItem->Text = L"Ðóêîâîäñòâî";
+			// 
+			// toolStripSeparator1
+			// 
+			this->toolStripSeparator1->Name = L"toolStripSeparator1";
+			this->toolStripSeparator1->Size = System::Drawing::Size(149, 6);
+			// 
+			// îÏðîãðàììåToolStripMenuItem
+			// 
+			this->îÏðîãðàììåToolStripMenuItem->Name = L"îÏðîãðàììåToolStripMenuItem";
+			this->îÏðîãðàììåToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->îÏðîãðàììåToolStripMenuItem->Text = L"Î ïðîãðàììå";
+			// 
+			// æóðíàëÈçìåíåíèéToolStripMenuItem
+			// 
+			this->æóðíàëÈçìåíåíèéToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->ïðîñìîòðÆóðíàëàÈçìåíåíèéToolStripMenuItem});
+			this->æóðíàëÈçìåíåíèéToolStripMenuItem->Name = L"æóðíàëÈçìåíåíèéToolStripMenuItem";
+			this->æóðíàëÈçìåíåíèéToolStripMenuItem->Size = System::Drawing::Size(127, 23);
+			this->æóðíàëÈçìåíåíèéToolStripMenuItem->Text = L"Æóðíàë èçìåíåíèé";
+			// 
+			// èíòåãðàöèÿToolStripMenuItem
+			// 
+			this->èíòåãðàöèÿToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->ðó÷íîéÐåæèìToolStripMenuItem, 
+				this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem});
+			this->èíòåãðàöèÿToolStripMenuItem->Name = L"èíòåãðàöèÿToolStripMenuItem";
+			this->èíòåãðàöèÿToolStripMenuItem->Size = System::Drawing::Size(84, 23);
+			this->èíòåãðàöèÿToolStripMenuItem->Text = L"Èíòåãðàöèÿ";
+			// 
+			// ðó÷íîéÐåæèìToolStripMenuItem
+			// 
+			this->ðó÷íîéÐåæèìToolStripMenuItem->Name = L"ðó÷íîéÐåæèìToolStripMenuItem";
+			this->ðó÷íîéÐåæèìToolStripMenuItem->Size = System::Drawing::Size(207, 22);
+			this->ðó÷íîéÐåæèìToolStripMenuItem->Text = L"Ðó÷íîé ðåæèì";
+			// 
+			// àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem
+			// 
+			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem->Name = L"àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem";
+			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem->Size = System::Drawing::Size(207, 22);
+			this->àâòîìàòè÷åñêèéÐåæèìToolStripMenuItem->Text = L"Àâòîìàòè÷åñêèé ðåæèì";
+			// 
+			// ïðîñìîòðÆóðíàëàÈçìåíåíèéToolStripMenuItem
+			// 
+			this->ïðîñìîòðÆóðíàëàÈçìåíåíèéToolStripMenuItem->Name = L"ïðîñìîòðÆóðíàëàÈçìåíåíèéToolStripMenuItem";
+			this->ïðîñìîòðÆóðíàëàÈçìåíåíèéToolStripMenuItem->Size = System::Drawing::Size(246, 22);
+			this->ïðîñìîòðÆóðíàëàÈçìåíåíèéToolStripMenuItem->Text = L"Ïðîñìîòð æóðíàëà èçìåíåíèé";
+			// 
+			// toolStripTextBox1
+			// 
+			this->toolStripTextBox1->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->toolStripTextBox1->Name = L"toolStripTextBox1";
+			this->toolStripTextBox1->Size = System::Drawing::Size(100, 23);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -177,7 +282,7 @@ namespace Integra {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"MainForm";
-			this->Text = L"MainForm";
+			this->Text = L"Èíòåãðàöèÿ íîðìàòèâíî-ñïðàâî÷íîé èíôîðìàöèè \"Àâèàñòàð-ÑÏ\"";
 			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &MainForm::MainForm_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvIntParams))->EndInit();
@@ -249,6 +354,11 @@ private: System::Void dgvIntParams_CellDoubleClick(System::Object^  sender, Syst
 			 List<Position^>^ tNewPoss = ProgramIntegration::TargetNew;
 			 Results^ results = gcnew Results(sNewPoss, tNewPoss, ProgramIntegration::Differences);
 			 results->ShowDialog();*/
+		 }
+private: System::Void íàñòðîéêèÏîëüçîâàòåëåéToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 AddEditUserRole^ form = gcnew AddEditUserRole();
+			 form->ShowDialog();
 		 }
 };
 }

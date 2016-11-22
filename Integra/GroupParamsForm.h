@@ -16,6 +16,7 @@ namespace Integra {
 	public ref class GroupParamsForm : public System::Windows::Forms::Form
 	{
 	public:
+		String^ Schtab;
 		String^ IdCol;
 		String^ NameCol;
 		Dictionary<String^,String^>^ Attrs;
@@ -250,7 +251,7 @@ namespace Integra {
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->label1);
 			this->Name = L"GroupParamsForm";
-			this->Text = L"GroupParamsForm";
+			this->Text = L"Добавление/редактирование реквизитов групп";
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();
@@ -296,7 +297,7 @@ namespace Integra {
 					}
 					return sList;
 				}
-				catch (TimeoutException^ e)
+				catch (TimeoutException^)
 				{
 					MessageBox::Show("Ошибка соединения с БД! Неверно задана таблица!", "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
 				}
@@ -305,6 +306,7 @@ namespace Integra {
 
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 Schtab = nullptr;
 			 IdCol = nullptr;
 			 NameCol = nullptr;
 			 Attrs = nullptr;
@@ -312,9 +314,9 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 String^ schtab = GetSchtab();
-			 IdCol = schtab + "." + cbId->SelectedItem->ToString();
-			 NameCol = schtab + "." + cbName->SelectedItem->ToString();
+			 Schtab = GetSchtab();
+			 IdCol = Schtab + "." + cbId->SelectedItem->ToString();
+			 NameCol = Schtab + "." + cbName->SelectedItem->ToString();
 			 Attrs = gcnew Dictionary<String ^, String ^>();
 			 for (int i = 0; i < dataGridView1->Rows->Count; i++)
 			 {

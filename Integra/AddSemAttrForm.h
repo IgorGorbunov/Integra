@@ -119,6 +119,11 @@ namespace Integra {
 			this->bClose = (gcnew System::Windows::Forms::Button());
 			this->bRecord = (gcnew System::Windows::Forms::Button());
 			this->dgvFields = (gcnew System::Windows::Forms::DataGridView());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->tvBooks = (gcnew System::Windows::Forms::TreeView());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->lIdBook = (gcnew System::Windows::Forms::Label());
@@ -126,11 +131,6 @@ namespace Integra {
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -234,6 +234,37 @@ namespace Integra {
 			this->dgvFields->TabIndex = 14;
 			this->dgvFields->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AddSemAttrForm::dgvFields_CellValueChanged);
 			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Используемость";
+			this->Column1->Name = L"Column1";
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Код рекзвизита";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			this->Column2->Width = 150;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Наименование реквизита";
+			this->Column3->Name = L"Column3";
+			this->Column3->ReadOnly = true;
+			this->Column3->Width = 400;
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"Тип данных";
+			this->Column4->Name = L"Column4";
+			this->Column4->ReadOnly = true;
+			// 
+			// Column8
+			// 
+			this->Column8->HeaderText = L"Максимальный объем данных";
+			this->Column8->Name = L"Column8";
+			this->Column8->ReadOnly = true;
+			// 
 			// tvBooks
 			// 
 			this->tvBooks->CheckBoxes = true;
@@ -299,37 +330,6 @@ namespace Integra {
 			this->label6->TabIndex = 29;
 			this->label6->Text = L"Элемент основного реквизита:";
 			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Используемость";
-			this->Column1->Name = L"Column1";
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Код рекзвизита";
-			this->Column2->Name = L"Column2";
-			this->Column2->ReadOnly = true;
-			this->Column2->Width = 150;
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Наименование реквизита";
-			this->Column3->Name = L"Column3";
-			this->Column3->ReadOnly = true;
-			this->Column3->Width = 400;
-			// 
-			// Column4
-			// 
-			this->Column4->HeaderText = L"Тип данных";
-			this->Column4->Name = L"Column4";
-			this->Column4->ReadOnly = true;
-			// 
-			// Column8
-			// 
-			this->Column8->HeaderText = L"Максимальный объем данных";
-			this->Column8->Name = L"Column8";
-			this->Column8->ReadOnly = true;
-			// 
 			// AddSemAttrForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -355,7 +355,7 @@ namespace Integra {
 			this->MinimizeBox = false;
 			this->Name = L"AddSemAttrForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"AddSemAttrForm";
+			this->Text = L"Добавление/редактирование реквизитов справочника Semantic";
 			this->Load += gcnew System::EventHandler(this, &AddSemAttrForm::AddSemAttrForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->EndInit();
 			this->ResumeLayout(false);

@@ -41,9 +41,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules />
+    <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -81,10 +87,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddDbAttrsForm.cpp" />
+    <ClCompile Include="AddEditGroupForm.cpp" />
     <ClCompile Include="AddEditSchemaForm.cpp" />
+    <ClCompile Include="AddEditSchemaForm2.cpp" />
     <ClCompile Include="AddEditSystemBookForm.cpp" />
-    <ClCompile Include="AddNewSemBookForm.cpp" />
+    <ClCompile Include="AddEditUserRole.cpp" />
+    <ClCompile Include="AddGroupLinksForm.cpp" />
     <ClCompile Include="AddNewTableForm.cpp" />
+    <ClCompile Include="AddNewUser.cpp" />
     <ClCompile Include="AddSemAttrForm.cpp" />
     <ClCompile Include="AttrCompareForm.cpp" />
     <ClCompile Include="DbFiltersForm.cpp" />
@@ -104,16 +114,28 @@
     <ClInclude Include="AddDbAttrsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="AddEditGroupForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AddEditSchemaForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AddEditSchemaForm2.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AddEditSystemBookForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="AddNewSemBookForm.h">
+    <ClInclude Include="AddEditUserRole.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AddGroupLinksForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AddNewTableForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AddNewUser.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AddSemAttrForm.h">
@@ -184,14 +206,20 @@
     <EmbeddedResource Include="AddDbAttrsForm.resx">
       <DependentUpon>AddDbAttrsForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AddEditGroupForm.resx">
+      <DependentUpon>AddEditGroupForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddEditSchemaForm.resx">
       <DependentUpon>AddEditSchemaForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddEditSchemaForm2.resx">
+      <DependentUpon>AddEditSchemaForm2.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddEditSystemBookForm.resx">
       <DependentUpon>AddEditSystemBookForm.h</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddNewSemBookForm.resx">
-      <DependentUpon>AddNewSemBookForm.h</DependentUpon>
+    <EmbeddedResource Include="AddGroupLinksForm.resx">
+      <DependentUpon>AddGroupLinksForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddNewTableForm.resx">
       <DependentUpon>AddNewTableForm.h</DependentUpon>

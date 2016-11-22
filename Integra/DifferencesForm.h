@@ -230,7 +230,7 @@ namespace Integra {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"DifferencesForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"DifferencesForm";
+			this->Text = L"Различия реквизитов";
 			this->Load += gcnew System::EventHandler(this, &DifferencesForm::DifferencesForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvDifferent))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvEqual))->EndInit();

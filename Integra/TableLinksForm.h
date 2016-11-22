@@ -86,7 +86,7 @@ namespace Integra {
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel1->Location = System::Drawing::Point(0, 0);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(325, 115);
+			this->panel1->Size = System::Drawing::Size(325, 130);
 			this->panel1->TabIndex = 0;
 			// 
 			// dataGridView1
@@ -101,7 +101,7 @@ namespace Integra {
 			this->dataGridView1->Location = System::Drawing::Point(0, 0);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->RowHeadersVisible = false;
-			this->dataGridView1->Size = System::Drawing::Size(325, 115);
+			this->dataGridView1->Size = System::Drawing::Size(325, 130);
 			this->dataGridView1->TabIndex = 0;
 			this->dataGridView1->CellClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &TableLinksForm::dataGridView1_CellClick);
 			this->dataGridView1->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &TableLinksForm::dataGridView1_CellValueChanged);
@@ -123,9 +123,9 @@ namespace Integra {
 			// 
 			this->panel2->Controls->Add(this->panel3);
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel2->Location = System::Drawing::Point(0, 115);
+			this->panel2->Location = System::Drawing::Point(0, 130);
 			this->panel2->Name = L"panel2";
-			this->panel2->Size = System::Drawing::Size(325, 60);
+			this->panel2->Size = System::Drawing::Size(325, 45);
 			this->panel2->TabIndex = 1;
 			// 
 			// panel3
@@ -135,13 +135,13 @@ namespace Integra {
 			this->panel3->Dock = System::Windows::Forms::DockStyle::Right;
 			this->panel3->Location = System::Drawing::Point(119, 0);
 			this->panel3->Name = L"panel3";
-			this->panel3->Size = System::Drawing::Size(206, 60);
+			this->panel3->Size = System::Drawing::Size(206, 45);
 			this->panel3->TabIndex = 0;
 			// 
 			// bOk
 			// 
 			this->bOk->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bOk->Location = System::Drawing::Point(20, 17);
+			this->bOk->Location = System::Drawing::Point(20, 9);
 			this->bOk->Name = L"bOk";
 			this->bOk->Size = System::Drawing::Size(75, 23);
 			this->bOk->TabIndex = 1;
@@ -152,7 +152,7 @@ namespace Integra {
 			// bCancel
 			// 
 			this->bCancel->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bCancel->Location = System::Drawing::Point(113, 17);
+			this->bCancel->Location = System::Drawing::Point(113, 9);
 			this->bCancel->Name = L"bCancel";
 			this->bCancel->Size = System::Drawing::Size(75, 23);
 			this->bCancel->TabIndex = 0;
@@ -172,7 +172,7 @@ namespace Integra {
 			this->MinimizeBox = false;
 			this->MinimumSize = System::Drawing::Size(341, 213);
 			this->Name = L"TableLinksForm";
-			this->Text = L"TableLinksForm";
+			this->Text = L"ƒобавление/редактирование св€зей таблиц";
 			this->Load += gcnew System::EventHandler(this, &TableLinksForm::TableLinksForm_Load);
 			this->panel1->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();
@@ -219,6 +219,10 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 		 }
 private: System::Void dataGridView1_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
 		 {
+			 if (e->RowIndex < 0)
+			 {
+				 return;
+			 }
 			 if (e->ColumnIndex == 1)
 			 {
 				 String^ addVal = dataGridView1[1, e->RowIndex]->Value->ToString();

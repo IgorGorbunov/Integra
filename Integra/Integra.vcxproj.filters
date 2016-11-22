@@ -72,9 +72,6 @@
     <ClCompile Include="AddSemAttrForm.cpp">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
-    <ClCompile Include="AddNewSemBookForm.cpp">
-      <Filter>Заголовочные файлы\Views</Filter>
-    </ClCompile>
     <ClCompile Include="AddEditSystemBookForm.cpp">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
@@ -88,6 +85,21 @@
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
     <ClCompile Include="GroupParamsForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddEditSchemaForm2.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddGroupLinksForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddEditGroupForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddEditUserRole.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddNewUser.cpp">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
   </ItemGroup>
@@ -188,9 +200,6 @@
     <ClInclude Include="AddSemAttrForm.h">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClInclude>
-    <ClInclude Include="AddNewSemBookForm.h">
-      <Filter>Заголовочные файлы\Views</Filter>
-    </ClInclude>
     <ClInclude Include="User.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
@@ -216,6 +225,21 @@
       <Filter>Заголовочные файлы\Views</Filter>
     </ClInclude>
     <ClInclude Include="GroupParamsForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AddEditSchemaForm2.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AddGroupLinksForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AddEditGroupForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AddEditUserRole.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AddNewUser.h">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClInclude>
   </ItemGroup>
@@ -253,9 +277,6 @@
     <EmbeddedResource Include="AddNewTableForm.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddNewSemBookForm.resx">
-      <Filter>Файлы ресурсов</Filter>
-    </EmbeddedResource>
     <EmbeddedResource Include="AddSemAttrForm.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
@@ -269,6 +290,18 @@
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="TableLinksForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GroupParamsForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddEditGroupForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddEditSchemaForm2.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddGroupLinksForm.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
   </ItemGroup>

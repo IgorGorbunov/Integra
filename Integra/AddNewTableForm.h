@@ -120,7 +120,7 @@ namespace Integra {
 			this->Controls->Add(this->label1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"AddNewTableForm";
-			this->Text = L"AddNewTable";
+			this->Text = L"Добавление новой таблицы";
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

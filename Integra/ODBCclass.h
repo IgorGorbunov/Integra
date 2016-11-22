@@ -16,9 +16,9 @@ namespace Integra {
 	{
 	public:
 		static OdbcClass^ Odbc;
-		static String^ schema = "";
 		static String^ LoginFromDriver;
-		//static String^ schema = "ULGU1.";
+		//static String^ schema = "";
+		static String^ schema = "ULGU1.";
 
 		private:
 			OdbcConnection^ _connection;

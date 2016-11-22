@@ -91,7 +91,7 @@ namespace Integra {
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel1->Location = System::Drawing::Point(0, 0);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(347, 105);
+			this->panel1->Size = System::Drawing::Size(347, 120);
 			this->panel1->TabIndex = 0;
 			// 
 			// dataGridView1
@@ -105,7 +105,7 @@ namespace Integra {
 			this->dataGridView1->Location = System::Drawing::Point(0, 0);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->RowHeadersVisible = false;
-			this->dataGridView1->Size = System::Drawing::Size(347, 105);
+			this->dataGridView1->Size = System::Drawing::Size(347, 120);
 			this->dataGridView1->TabIndex = 0;
 			this->dataGridView1->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &DbFiltersForm::dataGridView1_CellValueChanged);
 			// 
@@ -137,9 +137,9 @@ namespace Integra {
 			// 
 			this->panel2->Controls->Add(this->panel3);
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel2->Location = System::Drawing::Point(0, 105);
+			this->panel2->Location = System::Drawing::Point(0, 120);
 			this->panel2->Name = L"panel2";
-			this->panel2->Size = System::Drawing::Size(347, 57);
+			this->panel2->Size = System::Drawing::Size(347, 42);
 			this->panel2->TabIndex = 1;
 			// 
 			// panel3
@@ -149,12 +149,12 @@ namespace Integra {
 			this->panel3->Dock = System::Windows::Forms::DockStyle::Right;
 			this->panel3->Location = System::Drawing::Point(147, 0);
 			this->panel3->Name = L"panel3";
-			this->panel3->Size = System::Drawing::Size(200, 57);
+			this->panel3->Size = System::Drawing::Size(200, 42);
 			this->panel3->TabIndex = 2;
 			// 
 			// bCancel
 			// 
-			this->bCancel->Location = System::Drawing::Point(113, 16);
+			this->bCancel->Location = System::Drawing::Point(113, 8);
 			this->bCancel->Name = L"bCancel";
 			this->bCancel->Size = System::Drawing::Size(75, 23);
 			this->bCancel->TabIndex = 0;
@@ -164,7 +164,7 @@ namespace Integra {
 			// 
 			// bOk
 			// 
-			this->bOk->Location = System::Drawing::Point(22, 16);
+			this->bOk->Location = System::Drawing::Point(21, 8);
 			this->bOk->Name = L"bOk";
 			this->bOk->Size = System::Drawing::Size(75, 23);
 			this->bOk->TabIndex = 1;
@@ -184,7 +184,7 @@ namespace Integra {
 			this->MinimizeBox = false;
 			this->MinimumSize = System::Drawing::Size(236, 147);
 			this->Name = L"DbFiltersForm";
-			this->Text = L"DbFiltersForm";
+			this->Text = L"Добавление/изменение фильтров";
 			this->Load += gcnew System::EventHandler(this, &DbFiltersForm::DbFiltersForm_Load);
 			this->panel1->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();

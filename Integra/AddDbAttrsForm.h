@@ -360,7 +360,7 @@ namespace Integra {
 			this->Controls->Add(this->lbTables);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"AddDbAttrsForm";
-			this->Text = L"AddAttrsForm";
+			this->Text = L"Добавление/изменение реквизитов справочника СУБД";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -572,9 +572,6 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 					 arrr[4] = fieldCode;
 
 					 Attributes->Add(arrr);
-					 /*String^ squery = String::Format("insert into " + OdbcClass::schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', {6})", 
-					 id, schtab, fieldName, arr[0], arr[1], fieldCode, _idIntgrBook);
-					 OdbcClass::ExecuteNonQueryStatic(squery);*/
 				 }
 			 }
 			 dgvFields->Rows->Clear();

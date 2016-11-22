@@ -4,7 +4,7 @@
 #include "ODBCclass.h"
 #include "EditForm.h"
 #include "IntegrationSettings.h"
-#include "AddEditSchemaForm.h"
+#include "AddEditSchemaForm2.h"
 #include "RoleStation.h"
 #include "AddEditSystemBookForm.h"
 
@@ -720,10 +720,9 @@ namespace Integra {
 				{
 					bAddSchema->Visible = false;
 				}
-				if (RoleStation::AddEditSystemBookHidden())
+				if (RoleStation::AddSystemBookHidden())
 				{
 					bAddSystemBook->Visible = false;
-					bEditSystemBook->Visible = false;
 				}
 			}
 
@@ -815,7 +814,7 @@ private: System::Void bEditSystem_Click(System::Object^  sender, System::EventAr
 		 }
 private: System::Void tpIntegrationSchemas_Enter(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 List<Object^>^ integrationIds = OdbcClass::Odbc->ExecuteQuery("select ID from " + OdbcClass::schema + ".INTEGRATION_PARAMS");
+			 List<Object^>^ integrationIds = OdbcClass::Odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "INTEGRATION_PARAMS");
 			 List<IntegrationSettings^>^ inegrationSettings = gcnew List<IntegrationSettings^>();
 			 for each (Object^ id in integrationIds)
 			 {
@@ -830,7 +829,8 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bAddSchema_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 AddEditSchemaForm^ form = gcnew AddEditSchemaForm(_settings);
+			 //AddEditSchemaForm^ form = gcnew AddEditSchemaForm(_settings);
+			 AddEditSchemaForm2^ form = gcnew AddEditSchemaForm2();
 			 form->ShowDialog();
 		 }
 private: System::Void bEditSchema_Click(System::Object^  sender, System::EventArgs^  e) 

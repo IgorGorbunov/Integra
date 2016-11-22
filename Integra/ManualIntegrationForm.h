@@ -71,7 +71,7 @@ namespace Integra {
 			this->ClientSize = System::Drawing::Size(605, 281);
 			this->Controls->Add(this->dgvPositions);
 			this->Name = L"ManualIntegrationForm";
-			this->Text = L"ManualIntegrationForm";
+			this->Text = L"Ручная интеграция";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvPositions))->EndInit();
 			this->ResumeLayout(false);
 

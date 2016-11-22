@@ -269,7 +269,7 @@ namespace Integra {
 			this->MinimizeBox = false;
 			this->Name = L"AddEditSystemBookForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"AddEditSystemBook";
+			this->Text = L"Добавление/изменение справочника СУБД";
 			this->Load += gcnew System::EventHandler(this, &AddEditSystemBookForm::AddEditSystemBookForm_Load);
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();

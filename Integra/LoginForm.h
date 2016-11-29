@@ -174,6 +174,7 @@ namespace Integra {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"LoginForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Аутентификация";
 			this->Load += gcnew System::EventHandler(this, &LoginForm::LoginForm_Load);
 			this->ResumeLayout(false);
@@ -207,18 +208,18 @@ namespace Integra {
 			 bool logOn = false;
 			 try
 			 {
-				 List<Object^>^ query = odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "BOOKS");
+				 List<Object^>^ query = odbc->ExecuteQuery("select ID from " + odbc->schema + "BOOKS");
 				 pr = gcnew ProgramIntegration(odbc);
-				 OdbcClass::Odbc = odbc;
 				 logOn = true;
 			 }
 			 catch (TimeoutException^){}
 			
 		     if (logOn)
 		     {
-				 login = odbc->LoginFromDriver;
+				 login = odbc->Login;
 				 _settingsFile->SetValue("LOGIN", login);
 				 _settingsFile->UpdateFile();
+				 RoleStation::SetOdbc(odbc);
 				 RoleStation::SetRole(login);
 
 				 this->Visible = false;

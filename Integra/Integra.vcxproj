@@ -234,17 +234,26 @@
     <EmbeddedResource Include="AddEditSystemBookForm.resx">
       <DependentUpon>AddEditSystemBookForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AddEditUserRole.resx">
+      <DependentUpon>AddEditUserRole.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddGroupLinksForm.resx">
       <DependentUpon>AddGroupLinksForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddNewTableForm.resx">
       <DependentUpon>AddNewTableForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AddNewUser.resx">
+      <DependentUpon>AddNewUser.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddSemAttrForm.resx">
       <DependentUpon>AddSemAttrForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AttrCompareForm.resx">
       <DependentUpon>AttrCompareForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoConfigsForm.resx">
+      <DependentUpon>AutoConfigsForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AutoSettingsForm.resx">
       <DependentUpon>AutoSettingsForm.h</DependentUpon>
@@ -261,6 +270,9 @@
     <EmbeddedResource Include="GroupParamsForm.resx">
       <DependentUpon>GroupParamsForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="JournalChangesForm.resx">
+      <DependentUpon>JournalChangesForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.h</DependentUpon>
     </EmbeddedResource>
@@ -269,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ManualIntegrationForm.resx">
       <DependentUpon>ManualIntegrationForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NoticesForm.resx">
+      <DependentUpon>NoticesForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Results.resx">
       <DependentUpon>Results.h</DependentUpon>

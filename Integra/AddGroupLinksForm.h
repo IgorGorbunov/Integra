@@ -234,6 +234,7 @@ namespace Integra {
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->lbGroups);
 			this->Name = L"AddGroupLinksForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление/редактирование групповых связей";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgv))->EndInit();
 			this->ResumeLayout(false);

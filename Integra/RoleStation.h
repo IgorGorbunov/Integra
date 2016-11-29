@@ -21,6 +21,7 @@ namespace Integra {
 		};
 
 	private:
+		static OdbcClass^ _odbc;
 		static String^ _login;
 		static String^ _description;
 		static String^ _roleName;
@@ -32,11 +33,17 @@ namespace Integra {
 
 
 	public:
+		static void SetOdbc(OdbcClass^ odbc)
+		{
+			_odbc = odbc;
+		}
+
+
 		static void SetRole(String^ userCode)
 		{
 			SetRoles();
-			String^ sq = "select role_id from " + OdbcClass::schema + "role_users where user_bd_code = \'" + userCode->Trim()->ToUpper() + "\'";
-			List<Object^>^ list = OdbcClass::ExecuteQueryStatic(sq);
+			String^ sq = "select role_id from " + _odbc->schema + "role_users where user_bd_code = \'" + userCode->Trim()->ToUpper() + "\'";
+			List<Object^>^ list = _odbc->ExecuteQuery(sq);
 			int roleId = Int32::Parse(list[0]->ToString());
 			for(int i = 0; i < _nRoles; i++)
 			{
@@ -108,8 +115,8 @@ namespace Integra {
 		static void SetRoles()
 		{
 			_roles = gcnew array<String^, 2>(_nRoles, 3);
-			String^ sq = "select id, name, description from " + OdbcClass::schema + "roles order by id";
-			List<Object^>^ list = OdbcClass::ExecuteQueryStatic(sq);
+			String^ sq = "select id, name, description from " + _odbc->schema + "roles order by id";
+			List<Object^>^ list = _odbc->ExecuteQuery(sq);
 			int iRow = 0;
 			for(int i = 0; i < list->Count; i+=3)
 			{

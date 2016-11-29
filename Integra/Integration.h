@@ -212,11 +212,11 @@ namespace Integra {
 		{
 			if (bookSettings->IsSemantic)
 			{
-				return gcnew SemanticBook(bookSettings, _settings, _odbc, isSource);
+				return gcnew SemanticBook(bookSettings, _settings, _odbc, isSource, _odbc);
 			} 
 			else
 			{
-				return gcnew DbBook(bookSettings, _settings, isSource);
+				return gcnew DbBook(bookSettings, _settings, isSource, _odbc);
 			}
 			return nullptr;
 		}

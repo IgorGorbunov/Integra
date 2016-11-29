@@ -59,11 +59,11 @@ namespace Integra {
 	public:
 		bool AddBook(String^ name)
 		{
-			List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "BOOKS where NAME = \'" + name->Trim() + "\'");
+			List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + name->Trim() + "\'");
 			if (query->Count == 0)
 			{
-				int id = _odbc->GetMinFreeId(OdbcClass::schema + "BOOKS");
-				String^ squery = String::Format("insert into {0}BOOKS (ID, NAME, CREATE_USER, CREATE_DATE) values ({1}, '{2}', {3})", id, name, _odbc->GetCreateDataToInsert());
+				int id = _odbc->GetMinFreeId(_odbc->schema + "BOOKS");
+				String^ squery = String::Format("insert into {0}BOOKS (ID, NAME, CREATE_USER, CREATE_DATE) values ({1}, '{2}', {3})", _odbc->schema,  id, name, _odbc->GetActionDataTo());
 				_odbc->ExecuteNonQuery(squery);
 				return true;
 			}
@@ -75,11 +75,12 @@ namespace Integra {
 
 		bool AddSystem(String^ name)
 		{
-			List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "INTEGRATED_SYSTEMS where NAME = \'" + name->Trim() + "\'");
+			List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + name->Trim() + "\'");
 			if (query->Count == 0)
 			{
-				int id = _odbc->GetMinFreeId(OdbcClass::schema + "INTEGRATED_SYSTEMS");
-				_odbc->ExecuteNonQuery("insert into " + OdbcClass::schema + "INTEGRATED_SYSTEMS values (" + id + ", \'" + name + "\')");
+				int id = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATED_SYSTEMS");
+				String^ squery = String::Format("insert into {0}INTEGRATED_SYSTEMS (ID, NAME, CREATE_USER, CREATE_DATE) values ({1}, '{2}', {3})", _odbc->schema,  id, name, _odbc->GetActionDataTo());
+				_odbc->ExecuteNonQuery(squery);
 				return true;
 			}
 			else
@@ -90,23 +91,23 @@ namespace Integra {
 
 		array<String^, 2>^ GetSystemBooks(String^ systemName)
 		{
-			_systemBooks = SetList("select " + OdbcClass::schema + "BOOKS.NAME, (SELECT  NAME FROM " + OdbcClass::schema + "INTEGRATION_ATTRIBUTES WHERE ID  = ATTR_ID), (SELECT  NAME FROM " + OdbcClass::schema + "INTEGRATION_ATTRIBUTES WHERE ID  = ATTR_TITLE) " +
-				"from " + OdbcClass::schema + "BOOKS, " + OdbcClass::schema + "INTEGRATION_BOOK, " + OdbcClass::schema + "INTEGRATED_SYSTEMS " +
-				"where " + OdbcClass::schema + "INTEGRATED_SYSTEMS.NAME = '" + systemName + "' and " +
-				OdbcClass::schema + "BOOKS.ID = " + OdbcClass::schema + "INTEGRATION_BOOK.ID_BOOK and " +
-				OdbcClass::schema + "INTEGRATED_SYSTEMS.ID = " + OdbcClass::schema + "INTEGRATION_BOOK.ID_SYSTEM", 3);
+			_systemBooks = SetList("select " + _odbc->schema + "BOOKS.NAME, (SELECT  NAME FROM " + _odbc->schema + "INTEGRATION_ATTRIBUTES WHERE ID  = ATTR_ID), (SELECT  NAME FROM " + _odbc->schema + "INTEGRATION_ATTRIBUTES WHERE ID  = ATTR_TITLE) " +
+				"from " + _odbc->schema + "BOOKS, " + _odbc->schema + "INTEGRATION_BOOK, " + _odbc->schema + "INTEGRATED_SYSTEMS " +
+				"where " + _odbc->schema + "INTEGRATED_SYSTEMS.NAME = '" + systemName + "' and " +
+				_odbc->schema + "BOOKS.ID = " + _odbc->schema + "INTEGRATION_BOOK.ID_BOOK and " +
+				_odbc->schema + "INTEGRATED_SYSTEMS.ID = " + _odbc->schema + "INTEGRATION_BOOK.ID_SYSTEM", 3);
 			return _systemBooks;
 		}
 
 	private:
 		Void SetBooks()
 		{
-			_books = SetList("select ID, NAME from " + OdbcClass::schema + "BOOKS order by ID");
+			_books = SetList("select ID, NAME from " + _odbc->schema + "BOOKS order by ID");
 		}
 
 		Void SetSystems()
 		{
-			_systems = SetList3("select ID, NAME, TYPE from " + OdbcClass::schema + "INTEGRATED_SYSTEMS order by ID");
+			_systems = SetList3("select ID, NAME, TYPE from " + _odbc->schema + "INTEGRATED_SYSTEMS order by ID");
 		}
 
 		

@@ -133,6 +133,7 @@ namespace Integra {
 			this->Controls->Add(this->groupBox2);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"EditForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Изменить справочник";
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
@@ -160,11 +161,11 @@ private: System::Void bEditBook_Click(System::Object^  sender, System::EventArgs
 			 String^ table = "";
 			 if (_typeI == 0)
 			 {
-				 table = "" + OdbcClass::schema + "BOOKS";
+				 table = "" + _odbc->schema + "BOOKS";
 			 }
 			 if (_typeI == 1)
 			 {
-				 table = "" + OdbcClass::schema + "INTEGRATED_SYSTEMS";
+				 table = "" + _odbc->schema + "INTEGRATED_SYSTEMS";
 			 }
 			 _odbc->ExecuteNonQuery("update " + table + " set NAME = \'" + tbName->Text->Trim() + "\' where ID = " + _bookId);
 			 this->Visible = false;

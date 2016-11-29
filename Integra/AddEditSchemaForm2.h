@@ -299,6 +299,7 @@ namespace Integra {
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->groupBox1);
 			this->Name = L"AddEditSchemaForm2";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление/редактирование схем интеграции";
 			this->Load += gcnew System::EventHandler(this, &AddEditSchemaForm2::AddEditSchemaForm2_Load);
 			this->groupBox1->ResumeLayout(false);

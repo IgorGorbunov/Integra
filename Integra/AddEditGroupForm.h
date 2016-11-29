@@ -177,6 +177,7 @@ namespace Integra {
 			this->Controls->Add(this->tbName);
 			this->Controls->Add(this->label1);
 			this->Name = L"AddEditGroupForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление/редактирование интеграционной группы";
 			this->Load += gcnew System::EventHandler(this, &AddEditGroupForm::AddEditGroupForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->EndInit();

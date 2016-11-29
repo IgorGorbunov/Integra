@@ -8,6 +8,7 @@
 #include "Position.h"
 #include "Results2.h"
 
+
 namespace Integra {
 
 	using namespace System::Collections::Generic;
@@ -34,7 +35,7 @@ namespace Integra {
 		int _i;
 
 	public:
-		SemanticBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ commonOdbc, bool isSource) : Book(bookSettings, intSettings)
+		SemanticBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ commonOdbc, bool isSource, OdbcClass^ odbc) : Book(bookSettings, intSettings, odbc)
 		{
 			/*_bookSettings = bookSettings;
 			_intSettings = intSettings;

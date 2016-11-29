@@ -119,7 +119,7 @@ namespace Integra {
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select FULL_CODE, NAME, SCHEMA_NAME, TABLE_NAME, ATTR_NAME, ID_INTGR_BOOK from " + OdbcClass::schema + ".INTEGRATION_ATTRIBUTES where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select FULL_CODE, NAME, SCHEMA_NAME, TABLE_NAME, ATTR_NAME, ID_INTGR_BOOK from " + _odbc->schema + ".INTEGRATION_ATTRIBUTES where ID = " + id);
 			_fullCode = parametrs[0]->ToString();
 			_name = parametrs[1]->ToString();
 			_schemaName = parametrs[2]->ToString();

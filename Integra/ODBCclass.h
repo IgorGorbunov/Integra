@@ -15,32 +15,45 @@ namespace Integra {
 	public ref class OdbcClass 
 	{
 	public:
-		static OdbcClass^ Odbc;
-		static String^ LoginFromDriver;
+		property String^ DataSource
+		{
+			String^ get()
+			{
+				return _dataSource;
+			}
+		}
 
-#ifdef _DEBUG   
-		static String^ schema = "";
-#endif 
-#ifndef _DEBUG   
-		static String^ schema = "ULGU1.";
-#endif 
-		
+		String^ Login;
+  
+		String^ schema;
+
 		
 
 		private:
 			OdbcConnection^ _connection;
 			Logger^ _logger;
 			String^ _driver;
+			String^ _dataSource;
 
 		public:
+			OdbcClass()
+			{
+#ifdef _DEBUG   
+				schema = "";
+#endif 
+#ifndef _DEBUG   
+				schema = "ULGU1.";
+#endif 
+			}
+
 			OdbcClass(String^ driver) 
 			{
 				_driver = driver;
 				_logger = gcnew Logger("sql", ".sss");
 				_logger->WriteLine("----------------------------------------- NEW SESSION ----------------------------------------------");
-				_logger->WriteLine("Driver - " + driver);
+				_logger->WriteLine("Driver - " + _driver);
 				SetLoginFromDriver();
-				_connection = gcnew OdbcConnection(driver);
+				Connect();
 			}
 
 			OdbcClass(String^ login, String^ pass, String^ database) 
@@ -49,8 +62,8 @@ namespace Integra {
 				_logger->WriteLine("----------------------------------------- NEW SESSION ----------------------------------------------");
 				_driver = "Driver={Microsoft ODBC for Oracle};Server=" + database + ";Uid=" + login + ";Pwd=" + pass + ";";
 				_logger->WriteLine("Driver - " + _driver);
-				LoginFromDriver = login;
-				_connection = gcnew OdbcConnection(_driver);
+				Login = login;
+				Connect();
 			}
 
 		protected:
@@ -65,7 +78,7 @@ namespace Integra {
 
 		public: 
 
-			static int GetMinFreeIdStatic(String^ fullTableName)
+			/*static int GetMinFreeIdStatic(String^ fullTableName)
 			{
 				return Odbc->GetMinFreeId(fullTableName);
 			}
@@ -97,11 +110,39 @@ namespace Integra {
 			static List<Object^>^ ExecuteQueryStatic(String^ queryString)
 			{
 				return Odbc->ExecuteQuery(queryString);
+			}*/
+
+			List<Object^>^ GetTables(String^ schema)
+			{
+				if (String::IsNullOrEmpty(schema))
+				{
+					return GetAccessTables();
+				}
+				return nullptr;
 			}
 
-			String^ GetCreateDataToInsert()
+			String^ GetSqlString(String^ s)
 			{
-				return String::Format("'{0}', CDate('{1}')", LoginFromDriver->ToUpper(), DateTime::Today.ToString());
+				if (String::IsNullOrEmpty(s))
+				{
+					s = "NULL";
+				}
+				else
+				{
+					return "\'" + s + "\'";
+				}
+				return s;
+			}
+
+			void AddColumnComment(String^ fullCode, String^ comment)
+			{
+				String^ sQuery = "COMMENT ON COLUMN " + fullCode + " is \'" + comment + "\'";
+				ExecuteNonQuery(sQuery);
+			}
+
+			String^ GetActionDataTo()
+			{
+				return String::Format("'{0}', CDate('{1}')", Login->ToUpper(), DateTime::Now.ToString());
 			}
 
 			List<Object^>^ GetTableInfo7(String^ schtab)
@@ -112,6 +153,62 @@ namespace Integra {
 
 			List<Object^>^ GetTableInfo7(String^ schema, String^ tableName)
 			{
+				if (schema == "без схемы")
+				{
+					OdbcCommand^ command = gcnew OdbcCommand("SELECT TOP 1 * FROM " + tableName);
+					OdbcDataReader^ reader;
+					List<Object^>^ list = gcnew List<Object ^>();
+					try 
+					{
+						command->Connection = _connection;
+						_connection->Open();
+						_logger->WriteLine("Соединение открыто!");
+						_logger->WriteLine("Получение столбцов из таблицы: " + tableName);
+
+						list = gcnew List<Object^>();
+						reader = command->ExecuteReader();
+						DataTable^ table = reader->GetSchemaTable();
+						for (int i = 0; i < table->Rows->Count; i++)
+						{
+							DataRow^ row = table->Rows[i];
+							list->Add(row[0]);
+							list->Add("");//комменты
+							list->Add(row[5]->ToString());
+							list->Add(row[2]);
+							list->Add("");//data_precision
+							list->Add("");//data_scale
+							list->Add(row[1]);
+						}
+					}
+					catch (OdbcException^ e)
+					{
+						String^ errorMessages = "";
+						String^ mess = e->Errors[0]->Message;
+						for (int i = 0; i < e->Errors->Count; i++)
+						{
+							errorMessages += "Index #" + i + "\n" +
+								"Message: " + e->Errors[i]->Message + "\n" +
+								"NativeError: " + e->Errors[i]->NativeError + "\n" +
+								"Source: " + e->Errors[i]->Source + "\n" +
+								"SQL: " + e->Errors[i]->SQLState + "\n";
+						}
+						_logger->WriteError(errorMessages + "\n" + e->StackTrace);
+						MessageBox::Show(mess, "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+						throw gcnew TimeoutException();
+					}
+					finally 
+					{
+						if (reader != nullptr)
+						{
+							reader->Close();
+						}
+						_connection->Close();
+						delete reader;
+						delete command;
+						_logger->WriteLine("Соединение закрыто!");
+					}
+					return list;
+				}
 				String^ sQuery = "select " + 
 					"COL.COLUMN_NAME," + 
 					"COM.COMMENTS," + 
@@ -325,7 +422,7 @@ namespace Integra {
 				int i = 1;
 				for each (Object^ o in query)
 				{
-					int p = Decimal::ToInt32((Decimal)o);
+					int p = Int32::Parse(o->ToString());
 					if (p > i)
 					{
 						return i;
@@ -341,6 +438,14 @@ namespace Integra {
 			}
 
 		private:
+
+			void Connect()
+			{
+				_connection = gcnew OdbcConnection(_driver);
+				_connection->Open();
+				_dataSource = _connection->DataSource;
+				_connection->Close();
+			}
 			
 			void SetLoginFromDriver()
 			{
@@ -357,10 +462,15 @@ namespace Integra {
 							login += Char::ToString(c);
 							c = _driver[++j];
 						}
-						LoginFromDriver = login;
+						Login = login;
 						return;
 					}
 				}
+			}
+
+			List<Object^>^ GetAccessTables()
+			{
+				return ExecuteQuery("SELECT NAME FROM MSysObjects WHERE (((Left([Name],1)<>'~') AND (Left([Name],4) <> 'MSys')) AND Type = 1)");
 			}
 	};
 }

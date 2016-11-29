@@ -172,6 +172,7 @@ namespace Integra {
 			this->MinimizeBox = false;
 			this->MinimumSize = System::Drawing::Size(341, 213);
 			this->Name = L"TableLinksForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"ƒобавление/редактирование св€зей таблиц";
 			this->Load += gcnew System::EventHandler(this, &TableLinksForm::TableLinksForm_Load);
 			this->panel1->ResumeLayout(false);

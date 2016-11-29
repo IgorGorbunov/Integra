@@ -184,6 +184,7 @@ namespace Integra {
 			this->MinimizeBox = false;
 			this->MinimumSize = System::Drawing::Size(236, 147);
 			this->Name = L"DbFiltersForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление/изменение фильтров";
 			this->Load += gcnew System::EventHandler(this, &DbFiltersForm::DbFiltersForm_Load);
 			this->panel1->ResumeLayout(false);

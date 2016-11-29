@@ -157,6 +157,7 @@ namespace Integra {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"AddNewUser";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавить нового пользователя";
 			this->ResumeLayout(false);
 			this->PerformLayout();

@@ -814,11 +814,11 @@ private: System::Void bEditSystem_Click(System::Object^  sender, System::EventAr
 		 }
 private: System::Void tpIntegrationSchemas_Enter(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 List<Object^>^ integrationIds = OdbcClass::Odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "INTEGRATION_PARAMS");
+			 List<Object^>^ integrationIds = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATION_PARAMS");
 			 List<IntegrationSettings^>^ inegrationSettings = gcnew List<IntegrationSettings^>();
 			 for each (Object^ id in integrationIds)
 			 {
-				 IntegrationSettings^ settings = gcnew IntegrationSettings(Decimal::ToInt32((Decimal)id), OdbcClass::Odbc);
+				 IntegrationSettings^ settings = gcnew IntegrationSettings(Decimal::ToInt32((Decimal)id), _odbc);
 				 inegrationSettings->Add(settings);
 			 }
 			 SetShemas(inegrationSettings);
@@ -843,7 +843,7 @@ private: System::Void cbSystems_SelectedIndexChanged(System::Object^  sender, Sy
 		 }
 private: System::Void bAddSystemBook_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 AddEditSystemBookForm^ form = gcnew AddEditSystemBookForm(_settings);
+			 AddEditSystemBookForm^ form = gcnew AddEditSystemBookForm(_settings, _odbc);
 			 form->ShowDialog();
 			 if (cbSystems->SelectedItem != nullptr)
 			 {

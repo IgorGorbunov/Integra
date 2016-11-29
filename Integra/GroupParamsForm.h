@@ -251,6 +251,7 @@ namespace Integra {
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->label1);
 			this->Name = L"GroupParamsForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление/редактирование реквизитов групп";
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();

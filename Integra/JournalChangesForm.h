@@ -141,6 +141,7 @@ namespace Integra {
 			this->ClientSize = System::Drawing::Size(1065, 318);
 			this->Controls->Add(this->dataGridView1);
 			this->Name = L"JournalChangesForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Просмотр журнала изменений";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();
 			this->ResumeLayout(false);

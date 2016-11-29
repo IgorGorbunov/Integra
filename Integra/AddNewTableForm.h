@@ -1,4 +1,5 @@
 #pragma once
+#include "ODBCclass.h"
 
 namespace Integra {
 
@@ -19,12 +20,18 @@ namespace Integra {
 		String^ Schema;
 		String^ Table;
 
-		AddNewTableForm(void)
+	private:
+		OdbcClass^ _odbc;
+		
+
+	private: System::Windows::Forms::ComboBox^  cbSchema;
+	private: System::Windows::Forms::ComboBox^  cbTable;
+			 
+	public:
+		AddNewTableForm(OdbcClass^ odbc)
 		{
 			InitializeComponent();
-			//
-			//TODO: добавьте код конструктора
-			//
+			_odbc = odbc;
 		}
 
 	protected:
@@ -40,8 +47,8 @@ namespace Integra {
 		}
 	private: System::Windows::Forms::Label^  label1;
 	protected: 
-	private: System::Windows::Forms::TextBox^  tbSchema;
-	private: System::Windows::Forms::TextBox^  tbTable;
+
+
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Button^  bAdd;
 
@@ -59,10 +66,10 @@ namespace Integra {
 		void InitializeComponent(void)
 		{
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->tbSchema = (gcnew System::Windows::Forms::TextBox());
-			this->tbTable = (gcnew System::Windows::Forms::TextBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->bAdd = (gcnew System::Windows::Forms::Button());
+			this->cbSchema = (gcnew System::Windows::Forms::ComboBox());
+			this->cbTable = (gcnew System::Windows::Forms::ComboBox());
 			this->SuspendLayout();
 			// 
 			// label1
@@ -73,20 +80,6 @@ namespace Integra {
 			this->label1->Size = System::Drawing::Size(39, 13);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Схема";
-			// 
-			// tbSchema
-			// 
-			this->tbSchema->Location = System::Drawing::Point(25, 34);
-			this->tbSchema->Name = L"tbSchema";
-			this->tbSchema->Size = System::Drawing::Size(219, 20);
-			this->tbSchema->TabIndex = 1;
-			// 
-			// tbTable
-			// 
-			this->tbTable->Location = System::Drawing::Point(25, 80);
-			this->tbTable->Name = L"tbTable";
-			this->tbTable->Size = System::Drawing::Size(219, 20);
-			this->tbTable->TabIndex = 3;
 			// 
 			// label2
 			// 
@@ -107,20 +100,38 @@ namespace Integra {
 			this->bAdd->UseVisualStyleBackColor = true;
 			this->bAdd->Click += gcnew System::EventHandler(this, &AddNewTableForm::bAdd_Click);
 			// 
+			// cbSchema
+			// 
+			this->cbSchema->FormattingEnabled = true;
+			this->cbSchema->Location = System::Drawing::Point(25, 34);
+			this->cbSchema->Name = L"cbSchema";
+			this->cbSchema->Size = System::Drawing::Size(229, 21);
+			this->cbSchema->TabIndex = 5;
+			// 
+			// cbTable
+			// 
+			this->cbTable->FormattingEnabled = true;
+			this->cbTable->Location = System::Drawing::Point(25, 80);
+			this->cbTable->Name = L"cbTable";
+			this->cbTable->Size = System::Drawing::Size(229, 21);
+			this->cbTable->TabIndex = 6;
+			// 
 			// AddNewTableForm
 			// 
 			this->AcceptButton = this->bAdd;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(280, 162);
+			this->Controls->Add(this->cbTable);
+			this->Controls->Add(this->cbSchema);
 			this->Controls->Add(this->bAdd);
-			this->Controls->Add(this->tbTable);
 			this->Controls->Add(this->label2);
-			this->Controls->Add(this->tbSchema);
 			this->Controls->Add(this->label1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"AddNewTableForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление новой таблицы";
+			this->Load += gcnew System::EventHandler(this, &AddNewTableForm::AddNewTableForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -129,10 +140,14 @@ namespace Integra {
 
 	private: System::Void bAdd_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				 if (!String::IsNullOrEmpty(tbTable->Text->Trim()))
+				 if (!String::IsNullOrEmpty(cbTable->SelectedItem->ToString()->Trim()))
 				 {
-					 Schema =  tbSchema->Text->Trim()->ToUpper();
-					 Table = tbTable->Text->Trim()->ToUpper();
+					 Schema = "";
+					 if (cbSchema->SelectedItem != nullptr && cbSchema->SelectedItem->ToString() != "")
+					 {
+						 Schema =  cbSchema->SelectedItem->ToString()->Trim()->ToUpper();
+					 }
+					 Table = cbTable->SelectedItem->ToString()->Trim()->ToUpper();
 					 SchTab = Schema + "." + Table;
 					 Close();
 				 }
@@ -141,5 +156,23 @@ namespace Integra {
 					 MessageBox::Show("Не все поля заполнены!");
 				 }
 			 }
+private: System::Void AddNewTableForm_Load(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (_odbc->DataSource == "ACCESS")
+			 {
+				 cbSchema->Enabled = false;
+				 
+			 }
+			 String^ schema = "";
+			 if (cbSchema->SelectedItem != nullptr && cbSchema->SelectedItem->ToString() != "")
+			 {
+				 schema = cbSchema->SelectedItem->ToString()->Trim();
+			 }
+			 List<Object^>^ list = _odbc->GetTables(schema);
+			 for each (Object^ o in list)
+			 {
+				 cbTable->Items->Add(o);
+			 }
+		 }
 };
 }

@@ -37,11 +37,11 @@ namespace Integra {
 		String^ _NameCol;
 		Dictionary<String^,String^>^ _Attrs;
 
-	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column8;
+
+
+
+
+
 	private: System::Windows::Forms::Button^  bAddTableLinks;
 	private: System::Windows::Forms::Button^  bAddFilter;
 	private: System::Windows::Forms::Button^  bGroupParams;
@@ -49,6 +49,12 @@ namespace Integra {
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::Label^  label5;
+	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column8;
+	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column5;
 
 
 	private: System::Windows::Forms::TreeView^  tv;
@@ -125,6 +131,7 @@ namespace Integra {
 			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
 			this->bClose = (gcnew System::Windows::Forms::Button());
 			this->bRecord = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
@@ -186,8 +193,8 @@ namespace Integra {
 			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
 			this->dgvFields->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this->dgvFields->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgvFields->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {this->Column1, this->Column2, 
-				this->Column3, this->Column4, this->Column8});
+			this->dgvFields->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(6) {this->Column1, this->Column2, 
+				this->Column3, this->Column4, this->Column8, this->Column5});
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
 			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
@@ -244,6 +251,13 @@ namespace Integra {
 			this->Column8->Name = L"Column8";
 			this->Column8->ReadOnly = true;
 			this->Column8->Width = 80;
+			// 
+			// Column5
+			// 
+			this->Column5->HeaderText = L"Может быть пустым";
+			this->Column5->Name = L"Column5";
+			this->Column5->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+			this->Column5->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::Automatic;
 			// 
 			// bClose
 			// 
@@ -406,6 +420,7 @@ namespace Integra {
 			this->Controls->Add(this->lbTables);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"AddDbAttrsForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление/изменение реквизитов справочника СУБД";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->EndInit();
 			this->ResumeLayout(false);
@@ -441,7 +456,7 @@ namespace Integra {
 			{
 				try
 				{
-					List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "BOOKS");
+					List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS");
 					WrongPass = false;
 				}
 				catch (TimeoutException^)
@@ -464,19 +479,15 @@ namespace Integra {
 				 }*/
 				 if (isOk)
 				 {
-					 AddNewTableForm^ form = gcnew AddNewTableForm();
+					 AddNewTableForm^ form = gcnew AddNewTableForm(_odbc);
 					 form->ShowDialog();
 					 String^ schema = form->Schema;
 					 String^ table = form->Table;
-					 /*if (lbTables->Items->Contains(newSchtab))
+
+					 if (String::IsNullOrEmpty(schema))
 					 {
-					 MessageBox::Show("Uze est");
-					 bAddNewTable_Click(sender, e);
+						 schema = "без схемы";
 					 }
-					 else
-					 {
-					 lbTables->Items->Add(newSchtab);
-					 }*/
 					 if (tv->Nodes->ContainsKey(schema))
 					 {
 						 TreeNode^ schemaNode = tv->Nodes[schema];
@@ -583,7 +594,8 @@ private: System::Void dgvFields_CellValueChanged(System::Object^  sender, System
 					 String^ schtab = String::Format("{0}.{1}", tv->SelectedNode->Parent->Name, tv->SelectedNode->Name);
 					 String^ field = dgvFields[1, e->RowIndex]->Value->ToString();
 					 String^ fullCode = String::Format("{0}.{1}", schtab, field);
-					 OdbcClass::AddColumnComment(fullCode,  dgvFields[e->ColumnIndex, e->RowIndex]->Value->ToString());
+					 _odbc->AddColumnComment(fullCode,  dgvFields[e->ColumnIndex, e->RowIndex]->Value->ToString());
+					 
 				 }
 			 }
 			 
@@ -642,9 +654,9 @@ private: System::Void tv_AfterSelect(System::Object^  sender, System::Windows::F
 					 row[2] = fields[i+1];
 					 row[3] = fields[i+2];
 					 row[4] = fields[i+3];
-					 row[5] = fields[i+4];
-					 row[6] = fields[i+5];
-					 row[7] = fields[i+6];
+					 row[5] = fields[i+6];
+					 row[6] = fields[i+4];
+					 row[7] = fields[i+5];
 					 dgvFields->Rows->Add(row);
 
 					 String^ fieldCode = String::Format("{0}.{1}", schtab, fields[i]->ToString());

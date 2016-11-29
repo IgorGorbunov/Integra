@@ -166,6 +166,7 @@ namespace Integra {
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->comboBox1);
 			this->Name = L"AutoConfigsForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавить/редактировать автозапуск интеграционной схемы";
 			this->ResumeLayout(false);
 			this->PerformLayout();

@@ -19,10 +19,14 @@ namespace Integra {
 	/// </summary>
 	public ref class AddEditSystemBookForm : public System::Windows::Forms::Form
 	{
+	private:
+		OdbcClass^ _odbc;
+
 	public:
-		AddEditSystemBookForm(Settings^ settings)
+		AddEditSystemBookForm(Settings^ settings, OdbcClass^ odbc)
 		{
 			InitializeComponent();
+			_odbc = odbc;
 			_settings = settings;
 			_bookList = settings->Books;
 			_systemList = settings->Systems;
@@ -322,10 +326,10 @@ namespace Integra {
 
 			Void WriteIntegrBook()
 			{
-				String^ query = "insert into " + OdbcClass::schema + "INTEGRATION_BOOK values (";
-				_intgrId= OdbcClass::Odbc->GetMinFreeId("" + OdbcClass::schema + "INTEGRATION_BOOK");
-				List<Object^>^ idBook = OdbcClass::Odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
-				List<Object^>^ idSystem = OdbcClass::Odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystem->Text + "\'");
+				String^ query = "insert into " + _odbc->schema + "INTEGRATION_BOOK values (";
+				_intgrId = _odbc->GetMinFreeId("" + _odbc->schema + "INTEGRATION_BOOK");
+				List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
+				List<Object^>^ idSystem = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystem->Text + "\'");
 				query += _intgrId + ", " + Decimal::ToInt32((Decimal)idSystem[0]) + ", " + Decimal::ToInt32((Decimal)idBook[0]) + ", ";
 				if (_systemTypeId == 1)
 				{
@@ -343,22 +347,22 @@ namespace Integra {
 							"\', NULL, NULL, NULL, NULL, NULL, " + _systemTypeId + ", NULL, NULL)";
 					}
 				}
-				OdbcClass::Odbc->ExecuteNonQuery(query);
+				_odbc->ExecuteNonQuery(query);
 			}
 
 			int WriteIdTitleAttr(Attribute^ col, int intgrId)
 			{
-				List<Object^>^ query = OdbcClass::ExecuteQueryStatic("select ID from " + OdbcClass::schema + "integration_attributes where full_code = \'" + col->FullCode + "\' and attr_name = \'" + col->Code + "\' and ID_INTGR_BOOK = " + intgrId);
+				List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "integration_attributes where full_code = \'" + col->FullCode + "\' and attr_name = \'" + col->Code + "\' and ID_INTGR_BOOK = " + intgrId);
 				if (query != nullptr && query->Count > 0)
 				{
 					return Decimal::ToInt32((Decimal)query[0]);
 				}
 				else
 				{
-					int id = OdbcClass::GetMinFreeIdStatic("" + OdbcClass::schema + "integration_attributes");
-					String^ squery = String::Format("insert into " + OdbcClass::schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', NULL, \'{3}\', \'{4}\', {5})", 
+					int id = _odbc->GetMinFreeId("" + _odbc->schema + "integration_attributes");
+					String^ squery = String::Format("insert into " + _odbc->schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', NULL, \'{3}\', \'{4}\', {5})", 
 						id, col->FullCode, col->Name, col->Table, col->Code, intgrId);
-					OdbcClass::ExecuteNonQueryStatic(squery);
+					_odbc->ExecuteNonQuery(squery);
 					return id;
 				}
 			}
@@ -368,19 +372,19 @@ namespace Integra {
 			{
 				for (int i = 0; i < dbAttrs->Count; i++)
 				{
-					int id = OdbcClass::GetMinFreeIdStatic("" + OdbcClass::schema + "integration_attributes");
-					String^ squery = String::Format("insert into " + OdbcClass::schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', {6})", 
+					int id = _odbc->GetMinFreeId("" + _odbc->schema + "integration_attributes");
+					String^ squery = String::Format("insert into " + _odbc->schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', {6})", 
 						id, dbAttrs[i][0], dbAttrs[i][1], dbAttrs[i][2], dbAttrs[i][3], dbAttrs[i][4], intgrId);
-					OdbcClass::ExecuteNonQueryStatic(squery);
+					_odbc->ExecuteNonQuery(squery);
 				}
 
 				int id = WriteIdTitleAttr(idCol, intgrId);
 				String^ squery = "update INTEGRATION_BOOK set ATTR_ID = " + id + " where ID = " + intgrId;
-				OdbcClass::ExecuteNonQueryStatic(squery);
+				_odbc->ExecuteNonQuery(squery);
 
 				int titleAttrId = WriteIdTitleAttr(titleCol, intgrId);
 				squery = "update INTEGRATION_BOOK set ATTR_TITLE = " + titleAttrId + " where ID = " + intgrId;
-				OdbcClass::ExecuteNonQueryStatic(squery);
+				_odbc->ExecuteNonQuery(squery);
 			}
 
 			Void WriteToDb()

@@ -87,7 +87,7 @@ namespace Integra {
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC from " + OdbcClass::schema + "INTEGRATION_BOOK where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
 			SetSystem(Decimal::ToInt32((Decimal)parametrs[0]));
 			SetBook(Decimal::ToInt32((Decimal)parametrs[1]));
 			SetLogPass(parametrs[2]->ToString(), parametrs[3]->ToString());
@@ -103,13 +103,13 @@ namespace Integra {
 
 		Void SetSystem(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select NAME from " + OdbcClass::schema + "INTEGRATED_SYSTEMS where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select NAME from " + _odbc->schema + "INTEGRATED_SYSTEMS where ID = " + id);
 			_systemName = parametrs[0]->ToString();
 		}
 
 		Void SetBook(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select NAME from " + OdbcClass::schema + "BOOKS where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select NAME from " + _odbc->schema + "BOOKS where ID = " + id);
 			_bookName = parametrs[0]->ToString();
 		}
 

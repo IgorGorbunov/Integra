@@ -127,7 +127,7 @@ namespace Integra {
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SOURCE_BOOK, ID_TARGET_BOOK, TYPE, ID_SOURCE_ATTR_EQ, ID_TARGET_ATTR_EQ from " + OdbcClass::schema + "INTEGRATION_PARAMS where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SOURCE_BOOK, ID_TARGET_BOOK, TYPE, ID_SOURCE_ATTR_EQ, ID_TARGET_ATTR_EQ from " + _odbc->schema + "INTEGRATION_PARAMS where ID = " + id);
 			SetSourceBook(Decimal::ToInt32((Decimal)parametrs[0]));
 			SetTargetBook(Decimal::ToInt32((Decimal)parametrs[1]));
 			Decimal^ typ = (Decimal)parametrs[2];
@@ -149,7 +149,7 @@ namespace Integra {
 			}
 
 			AttributePairs = gcnew Dictionary<Attribute^, Attribute^>();
-			parametrs = _odbc->ExecuteQuery("select ID_SOURCE_ATTRIBUTE, ID_TARGET_ATTRIBUTE from " + OdbcClass::schema + "ATTRIBUTE_PAIRS where ID_PARAMETRS = " + id);
+			parametrs = _odbc->ExecuteQuery("select ID_SOURCE_ATTRIBUTE, ID_TARGET_ATTRIBUTE from " + _odbc->schema + "ATTRIBUTE_PAIRS where ID_PARAMETRS = " + id);
 			for (int i = 0; i < parametrs->Count / 2; i++)
 			{
 				Attribute^ sourceAttr = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[i * 2]), _odbc);

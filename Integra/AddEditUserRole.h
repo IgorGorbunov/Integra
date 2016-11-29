@@ -186,6 +186,7 @@ namespace Integra {
 			this->Controls->Add(this->lbUsers);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"AddEditUserRole";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Редактирование прав пользователей";
 			this->ResumeLayout(false);
 			this->PerformLayout();

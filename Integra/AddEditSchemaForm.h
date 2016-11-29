@@ -22,6 +22,7 @@ namespace Integra {
 	{
 	private:
 		Settings^ _settings;
+		OdbcClass^ _odbc;
 
 		array<String^, 2>^ _bookList;
 		array<String^, 2>^ _systemList;
@@ -63,9 +64,10 @@ namespace Integra {
 			 
 
 	public:
-		AddEditSchemaForm(Settings^ settings)
+		AddEditSchemaForm(Settings^ settings, OdbcClass^ odbc)
 		{
 			InitializeComponent();
+			_odbc = odbc;
 			_settings = settings;
 			_bookList = settings->Books;
 			_systemList = settings->Systems;
@@ -619,10 +621,11 @@ namespace Integra {
 
 		Void WriteIntegrBook()
 		{
-			String^ query = "insert into " + OdbcClass::schema + "INTEGRATION_BOOK values (";
-			_intgrSourceId = OdbcClass::Odbc->GetMinFreeId(OdbcClass::schema + "INTEGRATION_BOOK");
-			List<Object^>^ idBook = OdbcClass::Odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
-			List<Object^>^ idSystem = OdbcClass::Odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystemSource->Text + "\'");
+			
+			String^ query = "insert into " + _odbc->schema + "INTEGRATION_BOOK values (";
+			_intgrSourceId = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_BOOK");
+			List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
+			List<Object^>^ idSystem = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystemSource->Text + "\'");
 			query += _intgrSourceId + ", " + Decimal::ToInt32((Decimal)idSystem[0]) + ", " + Decimal::ToInt32((Decimal)idBook[0]) + ", ";
 			if (_systemSourceTypeId == 1)
 			{
@@ -640,11 +643,11 @@ namespace Integra {
 						"\', NULL, NULL, NULL, NULL, NULL, " + _systemSourceTypeId + ", NULL, NULL)";
 				}
 			}
-			OdbcClass::Odbc->ExecuteNonQuery(query);
+			_odbc->ExecuteNonQuery(query);
 			
-			query = "insert into " + OdbcClass::schema + "INTEGRATION_BOOK values (";
-			_intgrTargetId = OdbcClass::Odbc->GetMinFreeId("" + OdbcClass::schema + "INTEGRATION_BOOK");
-			idSystem = OdbcClass::Odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystemTarget->Text + "\'");
+			query = "insert into " + _odbc->schema + "INTEGRATION_BOOK values (";
+			_intgrTargetId = _odbc->GetMinFreeId("" + _odbc->schema + "INTEGRATION_BOOK");
+			idSystem = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystemTarget->Text + "\'");
 			query += _intgrTargetId + ", " + Decimal::ToInt32((Decimal)idSystem[0]) + ", " + Decimal::ToInt32((Decimal)idBook[0]) + ", ";
 			if (_systemTargetTypeId == 1)
 			{
@@ -662,7 +665,7 @@ namespace Integra {
 						"\', NULL, NULL, NULL, NULL, NULL, " + _systemTargetTypeId + ", NULL, NULL)";
 				}
 			}
-			OdbcClass::Odbc->ExecuteNonQuery(query);
+			_odbc->ExecuteNonQuery(query);
 		}
 
 
@@ -670,72 +673,72 @@ namespace Integra {
 		{
 			for (int i = 0; i < dbAttrs->Count; i++)
 			{
-				int id = OdbcClass::GetMinFreeIdStatic("" + OdbcClass::schema + "integration_attributes");
-				String^ squery = String::Format("insert into " + OdbcClass::schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', {6})", 
-					id, dbAttrs[i][0], dbAttrs[i][1], dbAttrs[i][2], dbAttrs[i][3], dbAttrs[i][4], intgrId);
-				OdbcClass::ExecuteNonQueryStatic(squery);
+				int id = _odbc->GetMinFreeId("" + _odbc->schema + "integration_attributes");
+				String^ squery = String::Format("insert into {7}integration_attributes values ({0}, \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', {6})", 
+					id, dbAttrs[i][0], dbAttrs[i][1], dbAttrs[i][2], dbAttrs[i][3], dbAttrs[i][4], intgrId, _odbc->schema);
+				_odbc->ExecuteNonQuery(squery);
 			}
 
 			int id = WriteIdTitleAttr(idCol, intgrId);
 			String^ squery = "update INTEGRATION_BOOK set ATTR_ID = " + id + " where ID = " + intgrId;
-			OdbcClass::ExecuteNonQueryStatic(squery);
+			_odbc->ExecuteNonQuery(squery);
 			
 			int titleAttrId = WriteIdTitleAttr(titleCol, intgrId);
 			squery = "update INTEGRATION_BOOK set ATTR_TITLE = " + titleAttrId + " where ID = " + intgrId;
-			OdbcClass::ExecuteNonQueryStatic(squery);
+			_odbc->ExecuteNonQuery(squery);
 		}
 
 		int WriteIdTitleAttr(String^ col, int intgrId)
 		{
 			array<String^>^ arr = col->Split('.');
-			List<Object^>^ query = OdbcClass::ExecuteQueryStatic("select ID from " + OdbcClass::schema + "integration_attributes where schema_name = \'" + arr[0] + "\' and table_name = \'" + arr[1] + "\' and attr_name = \'" + arr[2] + "\' and ID_INTGR_BOOK = " + intgrId);
+			List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "integration_attributes where schema_name = \'" + arr[0] + "\' and table_name = \'" + arr[1] + "\' and attr_name = \'" + arr[2] + "\' and ID_INTGR_BOOK = " + intgrId);
 			if (query != nullptr && query->Count > 0)
 			{
 				return Decimal::ToInt32((Decimal)query[0]);
 			}
 			else
 			{
-				int id = OdbcClass::GetMinFreeIdStatic("" + OdbcClass::schema + "integration_attributes");
-				String^ squery = String::Format("insert into " + OdbcClass::schema + "integration_attributes values ({0}, \'{1}\', NULL, \'{2}\', \'{3}\', \'{4}\', {5})", 
+				int id = _odbc->GetMinFreeId("" + _odbc->schema + "integration_attributes");
+				String^ squery = String::Format("insert into " + _odbc->schema + "integration_attributes values ({0}, \'{1}\', NULL, \'{2}\', \'{3}\', \'{4}\', {5})", 
 					id, col, arr[0], arr[1], arr[2], intgrId);
-				OdbcClass::ExecuteNonQueryStatic(squery);
+				_odbc->ExecuteNonQuery(squery);
 				return id;
 			}
 		}
 
 		Void WriteEquivAttrs()
 		{
-			String^ query = "insert into " + OdbcClass::schema + "INTEGRATION_ATTRIBUTES values (";
-			_equivSourceId = OdbcClass::Odbc->GetMinFreeId("" + OdbcClass::schema + "INTEGRATION_ATTRIBUTES");
+			String^ query = "insert into " + _odbc->schema + "INTEGRATION_ATTRIBUTES values (";
+			_equivSourceId = _odbc->GetMinFreeId("" + _odbc->schema + "INTEGRATION_ATTRIBUTES");
 			query += _equivSourceId + ", ";
 			array<String^>^ arr1 = _equivs[0];
-			String^ schema = OdbcClass::GetSqlString(arr1[0]);
-			String^ table = OdbcClass::GetSqlString(arr1[1]);
-			String^ field = OdbcClass::GetSqlString(arr1[2]);
+			String^ schema = _odbc->GetSqlString(arr1[0]);
+			String^ table = _odbc->GetSqlString(arr1[1]);
+			String^ field = _odbc->GetSqlString(arr1[2]);
 			String^ fullCode = arr1[0] + "." + arr1[1];
-			fullCode = OdbcClass::GetSqlString(fullCode);
+			fullCode = _odbc->GetSqlString(fullCode);
 
 			query += fullCode + ", NULL, " + schema + ", " + table + ", " + field + ")";
-			OdbcClass::Odbc->ExecuteNonQuery(query);
+			_odbc->ExecuteNonQuery(query);
 
-			query = "insert into " + OdbcClass::schema + "INTEGRATION_ATTRIBUTES values (";
-			_equivTargetId = OdbcClass::Odbc->GetMinFreeId("" + OdbcClass::schema + "INTEGRATION_ATTRIBUTES");
+			query = "insert into " + _odbc->schema + "INTEGRATION_ATTRIBUTES values (";
+			_equivTargetId = _odbc->GetMinFreeId("" + _odbc->schema + "INTEGRATION_ATTRIBUTES");
 			query += _equivTargetId + ", ";
 			array<String^>^ arr2 = _equivs[0];
-			schema = OdbcClass::GetSqlString(arr2[3]);
-			table = OdbcClass::GetSqlString(arr2[4]);
-			field = OdbcClass::GetSqlString(arr2[5]);
+			schema = _odbc->GetSqlString(arr2[3]);
+			table = _odbc->GetSqlString(arr2[4]);
+			field = _odbc->GetSqlString(arr2[5]);
 			fullCode = arr2[3] + "." + arr2[4];
-			fullCode = OdbcClass::GetSqlString(fullCode);
+			fullCode = _odbc->GetSqlString(fullCode);
 
 			query += fullCode + ", NULL, " + schema + ", " + table + ", " + field + ")";
-			OdbcClass::Odbc->ExecuteNonQuery(query);
+			_odbc->ExecuteNonQuery(query);
 		}
 
 		Void WriteSchema()
 		{
-			String^ query = "insert into " + OdbcClass::schema + "INTEGRATION_PARAMS values (";
-			_schemaId = OdbcClass::Odbc->GetMinFreeId("" + OdbcClass::schema + "INTEGRATION_PARAMS");
+			String^ query = "insert into " + _odbc->schema + "INTEGRATION_PARAMS values (";
+			_schemaId = _odbc->GetMinFreeId("" + _odbc->schema + "INTEGRATION_PARAMS");
 			int intgrType = cbIntgrType->SelectedIndex;
 			String^ sEquivSourceId;
 			String^ sEquivTargetId;
@@ -756,7 +759,7 @@ namespace Integra {
 				sEquivTargetId = _equivTargetId + "";
 			}
 			query += _schemaId + ", " + _intgrSourceId + ", " + _intgrTargetId + ", " + intgrType + ", " + sEquivSourceId + ", " + sEquivTargetId + ")";
-			OdbcClass::Odbc->ExecuteNonQuery(query);
+			_odbc->ExecuteNonQuery(query);
 		}
 
 		Void WriteAttrPairs()
@@ -769,34 +772,34 @@ namespace Integra {
 			String^ fullCode;
 			for each(array<String^>^ arr in _attrs)
 			{
-				query = "insert into " + OdbcClass::schema + "INTEGRATION_ATTRIBUTES values (";
-				id1 = OdbcClass::Odbc->GetMinFreeId("" + OdbcClass::schema + "INTEGRATION_ATTRIBUTES");
+				query = "insert into " + _odbc->schema + "INTEGRATION_ATTRIBUTES values (";
+				id1 = _odbc->GetMinFreeId("" + _odbc->schema + "INTEGRATION_ATTRIBUTES");
 				query += id1 + ", ";
-				schema = OdbcClass::GetSqlString(arr[0]);
-				table = OdbcClass::GetSqlString(arr[1]);
-				field = OdbcClass::GetSqlString(arr[2]);
+				schema = _odbc->GetSqlString(arr[0]);
+				table = _odbc->GetSqlString(arr[1]);
+				field = _odbc->GetSqlString(arr[2]);
 				fullCode = arr[0] + "." + arr[1];
-				fullCode = OdbcClass::GetSqlString(fullCode);
+				fullCode = _odbc->GetSqlString(fullCode);
 
 				query += fullCode + ", NULL, " + schema + ", " + table + ", " + field + ")";
-				OdbcClass::Odbc->ExecuteNonQuery(query);
+				_odbc->ExecuteNonQuery(query);
 
-				query = "insert into " + OdbcClass::schema + "INTEGRATION_ATTRIBUTES values (";
-				id2 = OdbcClass::Odbc->GetMinFreeId("" + OdbcClass::schema + "INTEGRATION_ATTRIBUTES");
+				query = "insert into " + _odbc->schema + "INTEGRATION_ATTRIBUTES values (";
+				id2 = _odbc->GetMinFreeId("" + _odbc->schema + "INTEGRATION_ATTRIBUTES");
 				query += id2 + ", ";
-				schema = OdbcClass::GetSqlString(arr[3]);
-				table = OdbcClass::GetSqlString(arr[4]);
-				field = OdbcClass::GetSqlString(arr[5]);
+				schema = _odbc->GetSqlString(arr[3]);
+				table = _odbc->GetSqlString(arr[4]);
+				field = _odbc->GetSqlString(arr[5]);
 				fullCode = arr[3] + "." + arr[4];
-				fullCode = OdbcClass::GetSqlString(fullCode);
+				fullCode = _odbc->GetSqlString(fullCode);
 
 				query += fullCode + ", NULL, " + schema + ", " + table + ", " + field + ")";
-				OdbcClass::Odbc->ExecuteNonQuery(query);
+				_odbc->ExecuteNonQuery(query);
 
-				query = "insert into " + OdbcClass::schema + "ATTRIBUTE_PAIRS values (";
-				id3 = OdbcClass::Odbc->GetMinFreeId("" + OdbcClass::schema + "ATTRIBUTE_PAIRS");
+				query = "insert into " + _odbc->schema + "ATTRIBUTE_PAIRS values (";
+				id3 = _odbc->GetMinFreeId("" + _odbc->schema + "ATTRIBUTE_PAIRS");
 				query += id3 + ", " + id1 + ", " + id2 + ", " + _schemaId + ")";
-				OdbcClass::Odbc->ExecuteNonQuery(query);
+				_odbc->ExecuteNonQuery(query);
 			}
 		}
 

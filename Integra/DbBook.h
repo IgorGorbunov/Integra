@@ -22,7 +22,7 @@ namespace Integra {
 		List<Attribute^>^ _attributes;
 
 	public:
-		DbBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, bool isSource) : Book(bookSettings, intSettings)
+		DbBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, bool isSource, OdbcClass^ odbc) : Book(bookSettings, intSettings, odbc)
 		{
 			_isSource = isSource;
 			if (_isSource)
@@ -51,13 +51,13 @@ namespace Integra {
 		virtual List<Position^>^ GetAllPositions() override
 		{
 			List<Position^>^ list = gcnew List<Position ^>();
-			List<Object^>^ query = OdbcClass::Odbc->ExecuteQuery("select " + _equivAttr->Code + " from " + _equivAttr->FullTable + " order by " + _equivAttr->Code);
+			List<Object^>^ query = _odbc->ExecuteQuery("select " + _equivAttr->Code + " from " + _equivAttr->FullTable + " order by " + _equivAttr->Code);
 			for each (Object^ o in query)
 			{
 				String^ sId = o->ToString();
 				int number;
 				bool result = Int32::TryParse(sId, number);
-				Position^ pos = gcnew DbPosition(sId, _equivAttr->Code, _attributes);
+				Position^ pos = gcnew DbPosition(sId, _equivAttr->Code, _attributes, _odbc);
 				list->Add(pos);
 			}
 
@@ -103,7 +103,7 @@ namespace Integra {
 			strQuery = strQuery->Substring(0, strQuery->Length - 2);
 			strQuery += String::Format(" order by {0}.{1}", _equivAttr->FullTable, _equivAttr->Code);
 
-			List<Object^>^ query = OdbcClass::Odbc->ExecuteQuery(strQuery);
+			List<Object^>^ query = _odbc->ExecuteQuery(strQuery);
 
 			if ( worker->CancellationPending )
 			{
@@ -171,7 +171,7 @@ namespace Integra {
 			strQuery = strQuery->Substring(0, strQuery->Length - 2);
 			strQuery += String::Format(" order by {0}.{1}", _equivAttr->FullTable, _equivAttr->Code);
 
-			List<Object^>^ query = OdbcClass::Odbc->ExecuteQuery(strQuery);
+			List<Object^>^ query = _odbc->ExecuteQuery(strQuery);
 
 				n = query->Count;
 				for (int i = 0; i < n; i += nAttr)

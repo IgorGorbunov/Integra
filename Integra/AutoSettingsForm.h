@@ -160,6 +160,7 @@ namespace Integra {
 			this->ClientSize = System::Drawing::Size(1115, 429);
 			this->Controls->Add(this->dataGridView1);
 			this->Name = L"AutoSettingsForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Настройки автоматической интеграции";
 			this->Load += gcnew System::EventHandler(this, &AutoSettingsForm::AutoSettingsForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();

@@ -72,7 +72,7 @@ namespace Integra {
 
 		static List<IntegrationSettings^>^ GetIntegrationParams() 
 		{
-			List<Object^>^ integrationIds = Odbc->ExecuteQuery("select ID from " + OdbcClass::schema + "INTEGRATION_PARAMS");
+			List<Object^>^ integrationIds = Odbc->ExecuteQuery("select ID from " + Odbc->schema + "INTEGRATION_PARAMS");
 			_inegrationSettings = gcnew List<IntegrationSettings^>();
 			for each (Object^ id in integrationIds)
 			{

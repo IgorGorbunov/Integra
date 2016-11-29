@@ -102,6 +102,18 @@
     <ClCompile Include="AddNewUser.cpp">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
+    <ClCompile Include="AutoSettingsForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoConfigsForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="NoticesForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="JournalChangesForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -242,6 +254,18 @@
     <ClInclude Include="AddNewUser.h">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClInclude>
+    <ClInclude Include="AutoSettingsForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoConfigsForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="NoticesForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="JournalChangesForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
@@ -302,6 +326,9 @@
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="AddGroupLinksForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoSettingsForm.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
   </ItemGroup>

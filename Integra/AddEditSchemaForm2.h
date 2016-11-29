@@ -212,9 +212,9 @@ namespace Integra {
 			this->label5->AutoSize = true;
 			this->label5->Location = System::Drawing::Point(631, 47);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(139, 13);
+			this->label5->Size = System::Drawing::Size(90, 13);
 			this->label5->TabIndex = 4;
-			this->label5->Text = L"Направление интеграции:";
+			this->label5->Text = L"Тип интеграции:";
 			// 
 			// dgvTarget
 			// 

@@ -63,7 +63,8 @@ namespace Integra {
 			if (query->Count == 0)
 			{
 				int id = _odbc->GetMinFreeId(OdbcClass::schema + "BOOKS");
-				_odbc->ExecuteNonQuery("insert into " + OdbcClass::schema + "BOOKS values (" + id + ", \'" + name + "\')");
+				String^ squery = String::Format("insert into {0}BOOKS (ID, NAME, CREATE_USER, CREATE_DATE) values ({1}, '{2}', {3})", id, name, _odbc->GetCreateDataToInsert());
+				_odbc->ExecuteNonQuery(squery);
 				return true;
 			}
 			else

@@ -1,104 +1,8 @@
-﻿Построение начато 18.11.2016 18:03:55.
-     1>Проект "D:\!_ig\projects\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты build).
-     1>InitializeBuildStatus:
-         Обращение к "Debug\Integra.unsuccessfulbuild".
-       GenerateTargetFrameworkMonikerAttribute:
-       Целевой объект "GenerateTargetFrameworkMonikerAttribute" пропускается, так как все выходные файлы актуальны по отношению к входным.
-       ClCompile:
-         d:\Program Files\Microsoft Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /FUInterop\Interop.SemanticCore.1.0.dll /analyze- /errorReport:prompt AddDbAttrsForm.cpp AddEditGroupForm.cpp AddEditSchemaForm.cpp AddEditSchemaForm2.cpp AddEditSystemBookForm.cpp AddEditUserRole.cpp AddGroupLinksForm.cpp AddNewTableForm.cpp AddNewUser.cpp AddSemAttrForm.cpp AttrCompareForm.cpp DbFiltersForm.cpp DifferencesForm.cpp EditForm.cpp GroupParamsForm.cpp LoginForm.cpp MainForm.cpp ManualIntegrationForm.cpp ODBCclass.h Results.cpp Results2.cpp SettingsForm.cpp TableLinksForm.cpp /clr:nostdlib 
-         AddDbAttrsForm.cpp
-         AddEditGroupForm.cpp
-         AddEditSchemaForm.cpp
-         AddEditSchemaForm2.cpp
-         AddEditSystemBookForm.cpp
-         AddEditUserRole.cpp
-         AddGroupLinksForm.cpp
-         AddNewTableForm.cpp
-         AddNewUser.cpp
-         AddSemAttrForm.cpp
-         AttrCompareForm.cpp
-         DbFiltersForm.cpp
-         DifferencesForm.cpp
-         EditForm.cpp
-         GroupParamsForm.cpp
-         LoginForm.cpp
-     1>d:\!_ig\projects\integra\integra\BookSettings.h(100): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
-     1>d:\!_ig\projects\integra\integra\Book.h(15): warning C4570: Integra::Book: не был объявлен явно как абстрактный, однако содержит абстрактные функции
-                 System::Collections::Generic::List<T> ^Integra::Book::GetAllPositions(void): абстрактный
-                 with
-                 [
-                     T=Integra::Position ^
-                 ]
-                 d:\!_ig\projects\integra\integra\Book.h(41): см. объявление "Integra::Book::GetAllPositions"
-                 System::Collections::Generic::List<T> ^Integra::Book::GetAllPositions2(System::ComponentModel::BackgroundWorker ^,System::ComponentModel::DoWorkEventArgs ^): абстрактный
-                 with
-                 [
-                     T=Integra::Position ^
-                 ]
-                 d:\!_ig\projects\integra\integra\Book.h(42): см. объявление "Integra::Book::GetAllPositions2"
-                 System::Collections::Generic::List<T> ^Integra::Book::GetAllPositions22(int %): абстрактный
-                 with
-                 [
-                     T=Integra::Position ^
-                 ]
-                 d:\!_ig\projects\integra\integra\Book.h(43): см. объявление "Integra::Book::GetAllPositions22"
-         MainForm.cpp
-     1>d:\!_ig\projects\integra\integra\BookSettings.h(100): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
-     1>d:\!_ig\projects\integra\integra\Book.h(15): warning C4570: Integra::Book: не был объявлен явно как абстрактный, однако содержит абстрактные функции
-                 System::Collections::Generic::List<T> ^Integra::Book::GetAllPositions(void): абстрактный
-                 with
-                 [
-                     T=Integra::Position ^
-                 ]
-                 d:\!_ig\projects\integra\integra\Book.h(41): см. объявление "Integra::Book::GetAllPositions"
-                 System::Collections::Generic::List<T> ^Integra::Book::GetAllPositions2(System::ComponentModel::BackgroundWorker ^,System::ComponentModel::DoWorkEventArgs ^): абстрактный
-                 with
-                 [
-                     T=Integra::Position ^
-                 ]
-                 d:\!_ig\projects\integra\integra\Book.h(42): см. объявление "Integra::Book::GetAllPositions2"
-                 System::Collections::Generic::List<T> ^Integra::Book::GetAllPositions22(int %): абстрактный
-                 with
-                 [
-                     T=Integra::Position ^
-                 ]
-                 d:\!_ig\projects\integra\integra\Book.h(43): см. объявление "Integra::Book::GetAllPositions22"
-         ManualIntegrationForm.cpp
-         ODBCclass.h
-         Results.cpp
-         Создание кода...
-         Компиляция...
-         Results2.cpp
-         SettingsForm.cpp
-     1>d:\!_ig\projects\integra\integra\BookSettings.h(100): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
-         TableLinksForm.cpp
-         Создание кода...
-         d:\Program Files\Microsoft Visual Studio 2010\VC\bin\CL.exe /c /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt "c:\temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
-         .NETFramework,Version=v4.0.AssemblyAttributes.cpp
-       CoreResGen:
-         "C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\NETFX 4.0 Tools\resgen.exe" /useSourcePath /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /r:Interop\Interop.SemanticCore.1.0.dll /compile AddDbAttrsForm.resx,Debug\Integra.AddDbAttrsForm.resources AddEditGroupForm.resx,Debug\Integra.AddEditGroupForm.resources AddEditSchemaForm.resx,Debug\Integra.AddEditSchemaForm.resources AddEditSchemaForm2.resx,Debug\Integra.AddEditSchemaForm2.resources AddEditSystemBookForm.resx,Debug\Integra.AddEditSystemBookForm.resources AddGroupLinksForm.resx,Debug\Integra.AddGroupLinksForm.resources AddNewTableForm.resx,Debug\Integra.AddNewTableForm.resources AddSemAttrForm.resx,Debug\Integra.AddSemAttrForm.resources AttrCompareForm.resx,Debug\Integra.AttrCompareForm.resources DbFiltersForm.resx,Debug\Integra.DbFiltersForm.resources DifferencesForm.resx,Debug\Integra.DifferencesForm.resources EditForm.resx,Debug\Integra.EditForm.resources GroupParamsForm.resx,Debug\Integra.GroupParamsForm.resources LoginForm.resx,Debug\Integra.LoginForm.resources MainForm.resx,Debug\Integra.MainForm.resources ManualIntegrationForm.resx,Debug\Integra.ManualIntegrationForm.resources Results.resx,Debug\Integra.Results.resources Results2.resx,Debug\Integra.Results2.resources SettingsForm.resx,Debug\Integra.SettingsForm.resources TableLinksForm.resx,Debug\Integra.TableLinksForm.resources
-         Обрабатывается файл ресурсов "AddDbAttrsForm.resx", результирующий объект: "Debug\Integra.AddDbAttrsForm.resources".
-         Обрабатывается файл ресурсов "AddEditGroupForm.resx", результирующий объект: "Debug\Integra.AddEditGroupForm.resources".
-         Обрабатывается файл ресурсов "AddEditSchemaForm.resx", результирующий объект: "Debug\Integra.AddEditSchemaForm.resources".
-         Обрабатывается файл ресурсов "AddEditSchemaForm2.resx", результирующий объект: "Debug\Integra.AddEditSchemaForm2.resources".
-         Обрабатывается файл ресурсов "AddEditSystemBookForm.resx", результирующий объект: "Debug\Integra.AddEditSystemBookForm.resources".
-         Обрабатывается файл ресурсов "AddGroupLinksForm.resx", результирующий объект: "Debug\Integra.AddGroupLinksForm.resources".
-         Обрабатывается файл ресурсов "AddNewTableForm.resx", результирующий объект: "Debug\Integra.AddNewTableForm.resources".
-         Обрабатывается файл ресурсов "AddSemAttrForm.resx", результирующий объект: "Debug\Integra.AddSemAttrForm.resources".
-         Обрабатывается файл ресурсов "AttrCompareForm.resx", результирующий объект: "Debug\Integra.AttrCompareForm.resources".
-         Обрабатывается файл ресурсов "DbFiltersForm.resx", результирующий объект: "Debug\Integra.DbFiltersForm.resources".
-         Обрабатывается файл ресурсов "DifferencesForm.resx", результирующий объект: "Debug\Integra.DifferencesForm.resources".
-         Обрабатывается файл ресурсов "EditForm.resx", результирующий объект: "Debug\Integra.EditForm.resources".
-         Обрабатывается файл ресурсов "GroupParamsForm.resx", результирующий объект: "Debug\Integra.GroupParamsForm.resources".
-         Обрабатывается файл ресурсов "LoginForm.resx", результирующий объект: "Debug\Integra.LoginForm.resources".
-         Обрабатывается файл ресурсов "MainForm.resx", результирующий объект: "Debug\Integra.MainForm.resources".
-         Обрабатывается файл ресурсов "ManualIntegrationForm.resx", результирующий объект: "Debug\Integra.ManualIntegrationForm.resources".
-         Обрабатывается файл ресурсов "Results.resx", результирующий объект: "Debug\Integra.Results.resources".
-         Обрабатывается файл ресурсов "Results2.resx", результирующий объект: "Debug\Integra.Results2.resources".
-         Обрабатывается файл ресурсов "SettingsForm.resx", результирующий объект: "Debug\Integra.SettingsForm.resources".
-         Обрабатывается файл ресурсов "TableLinksForm.resx", результирующий объект: "Debug\Integra.TableLinksForm.resources".
-       Link:
-         d:\Program Files\Microsoft Visual Studio 2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\!_ig\projects\Integra\Integra\Debug\Integra.exe" /INCREMENTAL:NO /NOLOGO /ASSEMBLYRESOURCE:Debug\Integra.AddDbAttrsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditGroupForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSchemaForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSchemaForm2.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSystemBookForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddGroupLinksForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddNewTableForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddSemAttrForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AttrCompareForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DbFiltersForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DifferencesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.EditForm.resources /ASSEMBLYRESOURCE:Debug\Integra.GroupParamsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.LoginForm.resources /ASSEMBLYRESOURCE:Debug\Integra.MainForm.resources /ASSEMBLYRESOURCE:Debug\Integra.ManualIntegrationForm.resources /ASSEMBLYRESOURCE:Debug\Integra.Results.resources /ASSEMBLYRESOURCE:Debug\Integra.Results2.resources /ASSEMBLYRESOURCE:Debug\Integra.SettingsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.TableLinksForm.resources /MANIFEST /ManifestFile:"Debug\Integra.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\!_ig\projects\Integra\Integra\Debug\Integra.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\AddDbAttrsForm.obj
+﻿Построение начато 29.11.2016 14:19:24.
+     1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
+     1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(2015,5): warning MSB3284: Не удается получить путь файла для библиотеки типа "307168c0-39ae-42ad-953f-a09f8a81520f" версии 1.0. Библиотека не зарегистрирована. (Исключение из HRESULT: 0x8002801D (TYPE_E_LIBNOTREGISTERED))
+     1>Link:
+         D:\soft\Visual Studio 2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe" /INCREMENTAL:NO /NOLOGO /ASSEMBLYRESOURCE:Debug\Integra.AddDbAttrsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditGroupForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSchemaForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSchemaForm2.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSystemBookForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddGroupLinksForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddNewTableForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddSemAttrForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AttrCompareForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AutoSettingsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DbFiltersForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DifferencesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.EditForm.resources /ASSEMBLYRESOURCE:Debug\Integra.GroupParamsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.LoginForm.resources /ASSEMBLYRESOURCE:Debug\Integra.MainForm.resources /ASSEMBLYRESOURCE:Debug\Integra.ManualIntegrationForm.resources /ASSEMBLYRESOURCE:Debug\Integra.Results.resources /ASSEMBLYRESOURCE:Debug\Integra.Results2.resources /ASSEMBLYRESOURCE:Debug\Integra.SettingsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.TableLinksForm.resources /MANIFEST /ManifestFile:"Debug\Integra.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\AddDbAttrsForm.obj
          Debug\AddEditGroupForm.obj
          Debug\AddEditSchemaForm.obj
          Debug\AddEditSchemaForm2.obj
@@ -109,29 +13,28 @@
          Debug\AddNewUser.obj
          Debug\AddSemAttrForm.obj
          Debug\AttrCompareForm.obj
+         Debug\AutoConfigsForm.obj
+         Debug\AutoSettingsForm.obj
          Debug\DbFiltersForm.obj
          Debug\DifferencesForm.obj
          Debug\EditForm.obj
          Debug\GroupParamsForm.obj
+         Debug\JournalChangesForm.obj
          Debug\LoginForm.obj
          Debug\MainForm.obj
          Debug\ManualIntegrationForm.obj
+         Debug\NoticesForm.obj
          Debug\ODBCclass.obj
          Debug\Results.obj
          Debug\Results2.obj
          Debug\SettingsForm.obj
          Debug\TableLinksForm.obj
          "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
-         Integra.vcxproj -> D:\!_ig\projects\Integra\Integra\Debug\Integra.exe
+         Integra.vcxproj -> D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\!_ig\projects\Integra\Integra\Debug\Integra.exe;#1" /manifest Debug\Integra.exe.intermediate.manifest
-       CopyFilesToOutputDirectory:
-         Копирование файла из "Interop\Interop.SemanticCore.1.0.dll" в "D:\!_ig\projects\Integra\Integra\Debug\Interop.SemanticCore.1.0.dll".
-       FinalizeBuildStatus:
-         Файл "Debug\Integra.unsuccessfulbuild" удаляется.
-         Обращение к "Debug\Integra.lastbuildstate".
-     1>Построение проекта "D:\!_ig\projects\Integra\Integra\Integra.vcxproj" завершено (целевые объекты build).
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe;#1" /manifest Debug\Integra.exe.intermediate.manifest
+     1>Построение проекта "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" завершено (целевые объекты Build).
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:34.11
+Затраченное время: 00:00:00.54

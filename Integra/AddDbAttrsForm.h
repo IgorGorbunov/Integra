@@ -45,6 +45,10 @@ namespace Integra {
 	private: System::Windows::Forms::Button^  bAddTableLinks;
 	private: System::Windows::Forms::Button^  bAddFilter;
 	private: System::Windows::Forms::Button^  bGroupParams;
+	private: System::Windows::Forms::ComboBox^  comboBox1;
+	private: System::Windows::Forms::Label^  label4;
+	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::Label^  label5;
 
 
 	private: System::Windows::Forms::TreeView^  tv;
@@ -109,9 +113,9 @@ namespace Integra {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->lbTables = (gcnew System::Windows::Forms::ListBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->bAddNewTable = (gcnew System::Windows::Forms::Button());
@@ -131,6 +135,10 @@ namespace Integra {
 			this->bAddTableLinks = (gcnew System::Windows::Forms::Button());
 			this->bAddFilter = (gcnew System::Windows::Forms::Button());
 			this->bGroupParams = (gcnew System::Windows::Forms::Button());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->label5 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -155,7 +163,7 @@ namespace Integra {
 			// bAddNewTable
 			// 
 			this->bAddNewTable->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddNewTable->Location = System::Drawing::Point(146, 177);
+			this->bAddNewTable->Location = System::Drawing::Point(146, 236);
 			this->bAddNewTable->Name = L"bAddNewTable";
 			this->bAddNewTable->Size = System::Drawing::Size(170, 30);
 			this->bAddNewTable->TabIndex = 5;
@@ -168,40 +176,40 @@ namespace Integra {
 			this->dgvFields->AllowUserToAddRows = false;
 			this->dgvFields->AllowUserToDeleteRows = false;
 			this->dgvFields->BackgroundColor = System::Drawing::Color::WhiteSmoke;
-			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dgvFields->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvFields->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this->dgvFields->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvFields->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {this->Column1, this->Column2, 
 				this->Column3, this->Column4, this->Column8});
-			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->dgvFields->DefaultCellStyle = dataGridViewCellStyle5;
-			this->dgvFields->Location = System::Drawing::Point(12, 225);
+			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->dgvFields->DefaultCellStyle = dataGridViewCellStyle2;
+			this->dgvFields->Location = System::Drawing::Point(12, 284);
 			this->dgvFields->Name = L"dgvFields";
-			dataGridViewCellStyle6->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle6->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle6->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			dataGridViewCellStyle6->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle6->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle6->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle6->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dgvFields->RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvFields->RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this->dgvFields->RowHeadersVisible = false;
-			this->dgvFields->Size = System::Drawing::Size(699, 210);
+			this->dgvFields->Size = System::Drawing::Size(756, 210);
 			this->dgvFields->TabIndex = 6;
 			this->dgvFields->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AddDbAttrsForm::dgvFields_CellValueChanged);
 			// 
@@ -240,7 +248,7 @@ namespace Integra {
 			// bClose
 			// 
 			this->bClose->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bClose->Location = System::Drawing::Point(624, 453);
+			this->bClose->Location = System::Drawing::Point(668, 510);
 			this->bClose->Name = L"bClose";
 			this->bClose->Size = System::Drawing::Size(87, 30);
 			this->bClose->TabIndex = 8;
@@ -252,7 +260,7 @@ namespace Integra {
 			// 
 			this->bRecord->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->bRecord->Enabled = false;
-			this->bRecord->Location = System::Drawing::Point(517, 453);
+			this->bRecord->Location = System::Drawing::Point(561, 510);
 			this->bRecord->Name = L"bRecord";
 			this->bRecord->Size = System::Drawing::Size(87, 30);
 			this->bRecord->TabIndex = 7;
@@ -263,7 +271,7 @@ namespace Integra {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(469, 15);
+			this->label1->Location = System::Drawing::Point(458, 15);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(139, 13);
 			this->label1->TabIndex = 9;
@@ -275,22 +283,22 @@ namespace Integra {
 			this->cbId->FormattingEnabled = true;
 			this->cbId->Location = System::Drawing::Point(459, 31);
 			this->cbId->Name = L"cbId";
-			this->cbId->Size = System::Drawing::Size(202, 21);
+			this->cbId->Size = System::Drawing::Size(309, 21);
 			this->cbId->TabIndex = 10;
 			// 
 			// cbTitle
 			// 
 			this->cbTitle->Enabled = false;
 			this->cbTitle->FormattingEnabled = true;
-			this->cbTitle->Location = System::Drawing::Point(459, 85);
+			this->cbTitle->Location = System::Drawing::Point(461, 137);
 			this->cbTitle->Name = L"cbTitle";
-			this->cbTitle->Size = System::Drawing::Size(202, 21);
+			this->cbTitle->Size = System::Drawing::Size(307, 21);
 			this->cbTitle->TabIndex = 12;
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(469, 69);
+			this->label3->Location = System::Drawing::Point(458, 121);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(110, 13);
 			this->label3->TabIndex = 11;
@@ -299,16 +307,16 @@ namespace Integra {
 			// tv
 			// 
 			this->tv->CheckBoxes = true;
-			this->tv->Location = System::Drawing::Point(114, 31);
+			this->tv->Location = System::Drawing::Point(12, 31);
 			this->tv->Name = L"tv";
-			this->tv->Size = System::Drawing::Size(327, 134);
+			this->tv->Size = System::Drawing::Size(429, 186);
 			this->tv->TabIndex = 13;
 			this->tv->AfterSelect += gcnew System::Windows::Forms::TreeViewEventHandler(this, &AddDbAttrsForm::tv_AfterSelect);
 			// 
 			// bAddTableLinks
 			// 
 			this->bAddTableLinks->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddTableLinks->Location = System::Drawing::Point(459, 120);
+			this->bAddTableLinks->Location = System::Drawing::Point(479, 172);
 			this->bAddTableLinks->Name = L"bAddTableLinks";
 			this->bAddTableLinks->Size = System::Drawing::Size(118, 45);
 			this->bAddTableLinks->TabIndex = 14;
@@ -319,7 +327,7 @@ namespace Integra {
 			// bAddFilter
 			// 
 			this->bAddFilter->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddFilter->Location = System::Drawing::Point(591, 120);
+			this->bAddFilter->Location = System::Drawing::Point(637, 172);
 			this->bAddFilter->Name = L"bAddFilter";
 			this->bAddFilter->Size = System::Drawing::Size(118, 45);
 			this->bAddFilter->TabIndex = 15;
@@ -330,20 +338,58 @@ namespace Integra {
 			// bGroupParams
 			// 
 			this->bGroupParams->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bGroupParams->Location = System::Drawing::Point(459, 175);
+			this->bGroupParams->Location = System::Drawing::Point(479, 234);
 			this->bGroupParams->Name = L"bGroupParams";
-			this->bGroupParams->Size = System::Drawing::Size(252, 35);
+			this->bGroupParams->Size = System::Drawing::Size(276, 35);
 			this->bGroupParams->TabIndex = 16;
 			this->bGroupParams->Text = L"Добавить параметры групп";
 			this->bGroupParams->UseVisualStyleBackColor = false;
 			this->bGroupParams->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bGroupParams_Click);
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->Enabled = false;
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Location = System::Drawing::Point(459, 84);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(149, 21);
+			this->comboBox1->TabIndex = 18;
+			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->Location = System::Drawing::Point(456, 68);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(172, 13);
+			this->label4->TabIndex = 17;
+			this->label4->Text = L"Реквизит грубого соответствия:";
+			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(637, 85);
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(131, 20);
+			this->textBox1->TabIndex = 19;
+			// 
+			// label5
+			// 
+			this->label5->AutoSize = true;
+			this->label5->Location = System::Drawing::Point(637, 67);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(136, 13);
+			this->label5->TabIndex = 20;
+			this->label5->Text = L"Пропускаемые символы:";
 			// 
 			// AddDbAttrsForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->ClientSize = System::Drawing::Size(739, 495);
+			this->ClientSize = System::Drawing::Size(780, 552);
+			this->Controls->Add(this->label5);
+			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->comboBox1);
+			this->Controls->Add(this->label4);
 			this->Controls->Add(this->bGroupParams);
 			this->Controls->Add(this->bAddFilter);
 			this->Controls->Add(this->bAddTableLinks);

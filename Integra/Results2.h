@@ -53,6 +53,10 @@ namespace Integra {
 
 
 	private: System::Windows::Forms::Button^  button2;
+	private: System::Windows::Forms::Label^  label8;
+	private: System::Windows::Forms::Label^  label9;
+	private: System::Windows::Forms::DataGridView^  dataGridView1;
+	private: System::Windows::Forms::DataGridView^  dataGridView2;
 
 	private:
 		int selectId;
@@ -135,10 +139,16 @@ namespace Integra {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->label9 = (gcnew System::Windows::Forms::Label());
+			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->dataGridView2 = (gcnew System::Windows::Forms::DataGridView());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSourceNew))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTargetNew))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView2))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// dgvSourceNew
@@ -150,7 +160,7 @@ namespace Integra {
 			this->dgvSourceNew->Location = System::Drawing::Point(31, 142);
 			this->dgvSourceNew->Name = L"dgvSourceNew";
 			this->dgvSourceNew->ReadOnly = true;
-			this->dgvSourceNew->Size = System::Drawing::Size(556, 150);
+			this->dgvSourceNew->Size = System::Drawing::Size(231, 150);
 			this->dgvSourceNew->TabIndex = 0;
 			// 
 			// dgvTargetNew
@@ -162,7 +172,7 @@ namespace Integra {
 			this->dgvTargetNew->Location = System::Drawing::Point(31, 322);
 			this->dgvTargetNew->Name = L"dgvTargetNew";
 			this->dgvTargetNew->ReadOnly = true;
-			this->dgvTargetNew->Size = System::Drawing::Size(556, 150);
+			this->dgvTargetNew->Size = System::Drawing::Size(231, 150);
 			this->dgvTargetNew->TabIndex = 1;
 			// 
 			// label1
@@ -195,9 +205,9 @@ namespace Integra {
 			// lbDifferences
 			// 
 			this->lbDifferences->FormattingEnabled = true;
-			this->lbDifferences->Location = System::Drawing::Point(611, 143);
+			this->lbDifferences->Location = System::Drawing::Point(596, 143);
 			this->lbDifferences->Name = L"lbDifferences";
-			this->lbDifferences->Size = System::Drawing::Size(232, 329);
+			this->lbDifferences->Size = System::Drawing::Size(247, 329);
 			this->lbDifferences->TabIndex = 6;
 			this->lbDifferences->SelectedIndexChanged += gcnew System::EventHandler(this, &Results2::lbDifferences_SelectedIndexChanged);
 			this->lbDifferences->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &Results2::lbDifferences_MouseDoubleClick);
@@ -366,12 +376,58 @@ namespace Integra {
 			this->button2->UseVisualStyleBackColor = true;
 			this->button2->Click += gcnew System::EventHandler(this, &Results2::button2_Click);
 			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->Location = System::Drawing::Point(312, 306);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(219, 13);
+			this->label8->TabIndex = 14;
+			this->label8->Text = L"Удаленные записи в системе получателе";
+			// 
+			// label9
+			// 
+			this->label9->AutoSize = true;
+			this->label9->Location = System::Drawing::Point(312, 126);
+			this->label9->Name = L"label9";
+			this->label9->Size = System::Drawing::Size(214, 13);
+			this->label9->TabIndex = 13;
+			this->label9->Text = L"Удаленные записи в системе источнике";
+			// 
+			// dataGridView1
+			// 
+			this->dataGridView1->AllowUserToAddRows = false;
+			this->dataGridView1->AllowUserToDeleteRows = false;
+			this->dataGridView1->BackgroundColor = System::Drawing::Color::WhiteSmoke;
+			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView1->Location = System::Drawing::Point(305, 322);
+			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->ReadOnly = true;
+			this->dataGridView1->Size = System::Drawing::Size(231, 150);
+			this->dataGridView1->TabIndex = 12;
+			// 
+			// dataGridView2
+			// 
+			this->dataGridView2->AllowUserToAddRows = false;
+			this->dataGridView2->AllowUserToDeleteRows = false;
+			this->dataGridView2->BackgroundColor = System::Drawing::Color::WhiteSmoke;
+			this->dataGridView2->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView2->Location = System::Drawing::Point(305, 142);
+			this->dataGridView2->Name = L"dataGridView2";
+			this->dataGridView2->ReadOnly = true;
+			this->dataGridView2->Size = System::Drawing::Size(231, 150);
+			this->dataGridView2->TabIndex = 11;
+			// 
 			// Results2
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->ClientSize = System::Drawing::Size(883, 530);
+			this->Controls->Add(this->label8);
+			this->Controls->Add(this->label9);
+			this->Controls->Add(this->dataGridView1);
+			this->Controls->Add(this->dataGridView2);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->bCancel);
 			this->Controls->Add(this->groupBox2);
@@ -385,7 +441,7 @@ namespace Integra {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"Results2";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"Результаты";
+			this->Text = L"Обработка данных";
 			this->Load += gcnew System::EventHandler(this, &Results2::Results_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSourceNew))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTargetNew))->EndInit();
@@ -393,6 +449,8 @@ namespace Integra {
 			this->groupBox1->PerformLayout();
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView2))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

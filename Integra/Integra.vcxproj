@@ -97,13 +97,17 @@
     <ClCompile Include="AddNewUser.cpp" />
     <ClCompile Include="AddSemAttrForm.cpp" />
     <ClCompile Include="AttrCompareForm.cpp" />
+    <ClCompile Include="AutoConfigsForm.cpp" />
+    <ClCompile Include="AutoSettingsForm.cpp" />
     <ClCompile Include="DbFiltersForm.cpp" />
     <ClCompile Include="DifferencesForm.cpp" />
     <ClCompile Include="EditForm.cpp" />
     <ClCompile Include="GroupParamsForm.cpp" />
+    <ClCompile Include="JournalChangesForm.cpp" />
     <ClCompile Include="LoginForm.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="ManualIntegrationForm.cpp" />
+    <ClCompile Include="NoticesForm.cpp" />
     <ClCompile Include="ODBCclass.h" />
     <ClCompile Include="Results.cpp" />
     <ClCompile Include="Results2.cpp" />
@@ -145,6 +149,12 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Attribute.h" />
+    <ClInclude Include="AutoConfigsForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AutoSettingsForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Book.h" />
     <ClInclude Include="BookSettings.h" />
     <ClInclude Include="DbBook.h" />
@@ -164,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="Integration.h" />
     <ClInclude Include="IntegrationSettings.h" />
+    <ClInclude Include="JournalChangesForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="LoginForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -175,6 +188,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="NetCopy.h" />
+    <ClInclude Include="NoticesForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Position.h" />
     <ClInclude Include="PositionCollection.h" />
     <ClInclude Include="ProgramIntegration.h" />
@@ -229,6 +245,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AttrCompareForm.resx">
       <DependentUpon>AttrCompareForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoSettingsForm.resx">
+      <DependentUpon>AutoSettingsForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DbFiltersForm.resx">
       <DependentUpon>DbFiltersForm.h</DependentUpon>

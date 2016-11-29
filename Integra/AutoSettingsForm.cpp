@@ -1,0 +1,2 @@
+#include "AutoSettingsForm.h"
+

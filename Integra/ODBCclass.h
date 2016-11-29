@@ -17,8 +17,15 @@ namespace Integra {
 	public:
 		static OdbcClass^ Odbc;
 		static String^ LoginFromDriver;
-		//static String^ schema = "";
+
+#ifdef _DEBUG   
+		static String^ schema = "";
+#endif 
+#ifndef _DEBUG   
 		static String^ schema = "ULGU1.";
+#endif 
+		
+		
 
 		private:
 			OdbcConnection^ _connection;
@@ -90,6 +97,11 @@ namespace Integra {
 			static List<Object^>^ ExecuteQueryStatic(String^ queryString)
 			{
 				return Odbc->ExecuteQuery(queryString);
+			}
+
+			String^ GetCreateDataToInsert()
+			{
+				return String::Format("'{0}', CDate('{1}')", LoginFromDriver->ToUpper(), DateTime::Today.ToString());
 			}
 
 			List<Object^>^ GetTableInfo7(String^ schtab)

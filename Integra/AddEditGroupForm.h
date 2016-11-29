@@ -71,9 +71,9 @@ namespace Integra {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->dgvTarget = (gcnew System::Windows::Forms::DataGridView());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->bOk = (gcnew System::Windows::Forms::Button());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -133,6 +133,13 @@ namespace Integra {
 			this->dgvTarget->Size = System::Drawing::Size(198, 196);
 			this->dgvTarget->TabIndex = 5;
 			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Наименование";
+			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
+			this->Column1->Width = 200;
+			// 
 			// bCancel
 			// 
 			this->bCancel->BackColor = System::Drawing::Color::WhiteSmoke;
@@ -155,13 +162,6 @@ namespace Integra {
 			this->bOk->UseVisualStyleBackColor = false;
 			this->bOk->Click += gcnew System::EventHandler(this, &AddEditGroupForm::bOk_Click);
 			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Наименование";
-			this->Column1->Name = L"Column1";
-			this->Column1->ReadOnly = true;
-			this->Column1->Width = 200;
-			// 
 			// AddEditGroupForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -177,7 +177,7 @@ namespace Integra {
 			this->Controls->Add(this->tbName);
 			this->Controls->Add(this->label1);
 			this->Name = L"AddEditGroupForm";
-			this->Text = L"Добавление/редактирование группы";
+			this->Text = L"Добавление/редактирование интеграционной группы";
 			this->Load += gcnew System::EventHandler(this, &AddEditGroupForm::AddEditGroupForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->EndInit();
 			this->ResumeLayout(false);

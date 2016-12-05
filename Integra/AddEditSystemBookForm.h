@@ -292,9 +292,11 @@ namespace Integra {
 			array<String^, 2>^ _systemList;
 			int _systemTypeId;
 
-			List<array<String^>^>^ _dbAttrs;
+			List<Attribute^>^ _dbAttrs;
 			Attribute^ _idCol;
 			Attribute^ _titleCol;
+			Attribute^ _roughCol;
+			String^ _roughSymbols;
 			int _intgrId;
 
 			Void SetComboBox(ComboBox^ comboBox, array<String^, 2>^ list)
@@ -330,7 +332,7 @@ namespace Integra {
 			{
 				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE";
 				
-				_intgrId = _odbc->GetMinFreeId("" + _odbc->schema + "INTEGRATION_BOOK");
+				_intgrId = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_BOOK");
 				List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
 				List<Object^>^ idSystem = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystem->Text + "\'");
 
@@ -369,16 +371,25 @@ namespace Integra {
 
 			int WriteIdTitleAttr(Attribute^ col, int intgrId)
 			{
-				List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "integration_attributes where full_code = \'" + col->FullCode + "\' and attr_name = \'" + col->Code + "\' and ID_INTGR_BOOK = " + intgrId);
+				List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "integration_attributes where full_code = \'" + col->FullTable + "\' and attr_name = \'" + col->Code + "\' and ID_INTGR_BOOK = " + intgrId);
 				if (query != nullptr && query->Count > 0)
 				{
 					return Decimal::ToInt32((Decimal)query[0]);
 				}
 				else
 				{
-					int id = _odbc->GetMinFreeId("" + _odbc->schema + "integration_attributes");
-					String^ squery = String::Format("insert into " + _odbc->schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', NULL, \'{3}\', \'{4}\', {5})", 
-						id, col->FullCode, col->Name, col->Table, col->Code, intgrId);
+					String^ columns = "ID,FULL_CODE,NAME,SCHEMA_NAME,TABLE_NAME,ATTR_NAME,ID_INTGR_BOOK,CREATE_USER,CREATE_DATE";
+					int id = _odbc->GetMinFreeId(_odbc->schema + "integration_attributes");
+					String^ fullTable = OdbcClass::GetSqlString(col->FullTable);
+					String^ name = OdbcClass::GetSqlString(col->Name);
+					String^ schemaName = OdbcClass::GetSqlString(col->Schema);
+					String^ tableName = OdbcClass::GetSqlString(col->Table);
+					String^ attrName = OdbcClass::GetSqlString(col->Code);
+					String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
+					String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+
+					String^ squery = String::Format("insert into {0}integration_attributes ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10})",
+						_odbc->schema, columns, id, fullTable, name, schemaName, tableName, attrName, intgrId,  sqlUser, sqlDate);
 					_odbc->ExecuteNonQuery(squery);
 					return id;
 				}
@@ -404,10 +415,60 @@ namespace Integra {
 				_odbc->ExecuteNonQuery(squery);
 			}
 
+			void WriteUseAttrs(List<Attribute^>^ dbAttrs, int intgrId)
+			{
+				String^ columns = "ID,FULL_CODE,NAME,SCHEMA_NAME,TABLE_NAME,ATTR_NAME,ID_INTGR_BOOK,CREATE_USER,CREATE_DATE";
+				for each (Attribute^ attr in dbAttrs)
+				{
+					int id = _odbc->GetMinFreeId(_odbc->schema + "integration_attributes");
+					String^ fullTable = OdbcClass::GetSqlString(attr->FullTable);
+					String^ name = OdbcClass::GetSqlString(attr->Name);
+					String^ schemaName = OdbcClass::GetSqlString(attr->Schema);
+					String^ tableName = OdbcClass::GetSqlString(attr->Table);
+					String^ attrName = OdbcClass::GetSqlString(attr->Code);
+					String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
+					String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+
+					String^ squery = String::Format("insert into {0}integration_attributes ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10})",
+						_odbc->schema, columns, id, fullTable, name, schemaName, tableName, attrName, intgrId,  sqlUser, sqlDate);
+					_odbc->ExecuteNonQuery(squery);
+				}
+
+			}
+
+			void WriteSingleAttrs(Attribute^ idCol, Attribute^ titleCol, Attribute^ roughCol, int intgrId)
+			{
+				int id = WriteIdTitleAttr(idCol, intgrId);
+				String^ squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_ID = " + id + " where ID = " + intgrId;
+				_odbc->ExecuteNonQuery(squery);
+
+				int titleAttrId = WriteIdTitleAttr(titleCol, intgrId);
+				squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_TITLE = " + titleAttrId + " where ID = " + intgrId;
+				_odbc->ExecuteNonQuery(squery);
+
+				if (roughCol != nullptr)
+				{
+					int roughAttrId = WriteIdTitleAttr(roughCol, intgrId);
+					squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_ROUGH = " + roughAttrId + " where ID = " + intgrId;
+					_odbc->ExecuteNonQuery(squery);
+				}
+			}
+
+			void WriteRoughSymbols(String^ symbols, int intgrId)
+			{
+				if (!String::IsNullOrEmpty(symbols))
+				{
+					String^ squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ROUGH_SYMBOLS = '" + symbols + "' where ID = " + intgrId;
+					_odbc->ExecuteNonQuery(squery);
+				}
+			}
+
 			Void WriteToDb()
 			{
 				WriteIntegrBook();
-				WriteDbAttrs(_idCol, _titleCol, _dbAttrs, _intgrId);
+				WriteUseAttrs(_dbAttrs, _intgrId);
+				WriteSingleAttrs(_idCol, _titleCol, _roughCol, _intgrId);
+				WriteRoughSymbols(_roughSymbols, _intgrId);
 			}
 
 	private: System::Void cbSystem_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
@@ -456,9 +517,6 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 _dbAttrs = gcnew List<array<String ^> ^>();
-			 _idCol = gcnew Attribute("", "", "", "");
-			 _titleCol =gcnew Attribute("", "", "", "");
 			 if (String::IsNullOrEmpty(cbBook->Text))
 			 {
 				 MessageBox::Show("Не задан справочник!");
@@ -470,7 +528,7 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 				 return;
 			 }
 			 
-			 else if (_dbAttrs == nullptr || _dbAttrs->Count != 0)
+			 else if (_dbAttrs == nullptr || _dbAttrs->Count == 0)
 			 {
 				 MessageBox::Show("Не заданы атрибуты системного справочника!");
 				 return;
@@ -535,7 +593,7 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 				 addAttrForm->ShowDialog();
 				 _idCol = addAttrForm->IdCol;
 				 _titleCol = addAttrForm->TitleCol;
-				 _dbAttrs = addAttrForm->Attributes;
+				 //_dbAttrs = addAttrForm->Attributes;
 			 }
 			 else
 			 {
@@ -576,6 +634,8 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 					 addAttrForm->ShowDialog();
 					 _idCol = addAttrForm->IdCol;
 					 _titleCol = addAttrForm->TitleCol;
+					 _roughCol = addAttrForm->RoughCol;
+					 _roughSymbols = addAttrForm->RoughSymbols;
 					 _dbAttrs = addAttrForm->Attributes;
 				 }
 				 

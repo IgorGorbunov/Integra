@@ -25,7 +25,9 @@ namespace Integra {
 		bool WrongPass;
 		Attribute^ IdCol;
 		Attribute^ TitleCol;
-		List<array<String^>^>^ Attributes;
+		Attribute^ RoughCol;
+		String^ RoughSymbols;
+		List<Attribute^>^ Attributes;
 
 	private:
 		List<String^>^ _fieldNames;
@@ -48,7 +50,8 @@ namespace Integra {
 
 
 	private: System::Windows::Forms::Label^  label4;
-	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::TextBox^  tbRoughSymbols;
+
 	private: System::Windows::Forms::Label^  label5;
 
 
@@ -74,7 +77,7 @@ namespace Integra {
 		{
 			_programCheck = false;
 			_allAttrs = gcnew Dictionary<String^, List<Attribute^>^>();
-			Attributes = gcnew List<array<String ^> ^>();
+			Attributes = gcnew List<Attribute^>();
 			_fieldNames = gcnew List<String ^>();
 		}
 
@@ -135,13 +138,19 @@ namespace Integra {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->lbTables = (gcnew System::Windows::Forms::ListBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->bAddNewTable = (gcnew System::Windows::Forms::Button());
 			this->dgvFields = (gcnew System::Windows::Forms::DataGridView());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
 			this->bClose = (gcnew System::Windows::Forms::Button());
 			this->bRecord = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
@@ -154,15 +163,9 @@ namespace Integra {
 			this->bGroupParams = (gcnew System::Windows::Forms::Button());
 			this->cbRoughAttr = (gcnew System::Windows::Forms::ComboBox());
 			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->tbRoughSymbols = (gcnew System::Windows::Forms::TextBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column5 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
@@ -200,42 +203,82 @@ namespace Integra {
 			this->dgvFields->AllowUserToAddRows = false;
 			this->dgvFields->AllowUserToDeleteRows = false;
 			this->dgvFields->BackgroundColor = System::Drawing::Color::WhiteSmoke;
-			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dgvFields->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvFields->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
 			this->dgvFields->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvFields->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(6) {this->Column1, this->Column2, 
 				this->Column3, this->Column4, this->Column8, this->Column5});
-			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
-			this->dgvFields->DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->dgvFields->DefaultCellStyle = dataGridViewCellStyle5;
 			this->dgvFields->Location = System::Drawing::Point(12, 363);
 			this->dgvFields->Name = L"dgvFields";
-			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+			dataGridViewCellStyle6->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle6->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle6->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
-			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dgvFields->RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle6->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle6->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle6->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle6->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvFields->RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
 			this->dgvFields->RowHeadersVisible = false;
 			this->dgvFields->Size = System::Drawing::Size(756, 210);
 			this->dgvFields->TabIndex = 6;
 			this->dgvFields->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AddDbAttrsForm::dgvFields_CellValueChanged);
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Используемость";
+			this->Column1->Name = L"Column1";
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Код реквизита";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			this->Column2->Width = 80;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Наименование реквизита";
+			this->Column3->Name = L"Column3";
+			this->Column3->Width = 300;
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"Тип данных";
+			this->Column4->Name = L"Column4";
+			this->Column4->ReadOnly = true;
+			this->Column4->Width = 80;
+			// 
+			// Column8
+			// 
+			this->Column8->HeaderText = L"Размерность";
+			this->Column8->Name = L"Column8";
+			this->Column8->ReadOnly = true;
+			this->Column8->Width = 80;
+			// 
+			// Column5
+			// 
+			this->Column5->HeaderText = L"Может быть пустым";
+			this->Column5->Name = L"Column5";
+			this->Column5->ReadOnly = true;
+			this->Column5->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+			this->Column5->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::Automatic;
 			// 
 			// bClose
 			// 
@@ -358,12 +401,12 @@ namespace Integra {
 			this->label4->TabIndex = 17;
 			this->label4->Text = L"Реквизит грубого соответствия:";
 			// 
-			// textBox1
+			// tbRoughSymbols
 			// 
-			this->textBox1->Location = System::Drawing::Point(192, 40);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(131, 20);
-			this->textBox1->TabIndex = 19;
+			this->tbRoughSymbols->Location = System::Drawing::Point(192, 40);
+			this->tbRoughSymbols->Name = L"tbRoughSymbols";
+			this->tbRoughSymbols->Size = System::Drawing::Size(131, 20);
+			this->tbRoughSymbols->TabIndex = 19;
 			// 
 			// label5
 			// 
@@ -379,53 +422,13 @@ namespace Integra {
 			this->groupBox1->Controls->Add(this->label4);
 			this->groupBox1->Controls->Add(this->label5);
 			this->groupBox1->Controls->Add(this->cbRoughAttr);
-			this->groupBox1->Controls->Add(this->textBox1);
+			this->groupBox1->Controls->Add(this->tbRoughSymbols);
 			this->groupBox1->Location = System::Drawing::Point(447, 129);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(333, 79);
 			this->groupBox1->TabIndex = 21;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Параметры грубого соответствия";
-			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Используемость";
-			this->Column1->Name = L"Column1";
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Код реквизита";
-			this->Column2->Name = L"Column2";
-			this->Column2->ReadOnly = true;
-			this->Column2->Width = 80;
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Наименование реквизита";
-			this->Column3->Name = L"Column3";
-			this->Column3->Width = 300;
-			// 
-			// Column4
-			// 
-			this->Column4->HeaderText = L"Тип данных";
-			this->Column4->Name = L"Column4";
-			this->Column4->ReadOnly = true;
-			this->Column4->Width = 80;
-			// 
-			// Column8
-			// 
-			this->Column8->HeaderText = L"Размерность";
-			this->Column8->Name = L"Column8";
-			this->Column8->ReadOnly = true;
-			this->Column8->Width = 80;
-			// 
-			// Column5
-			// 
-			this->Column5->HeaderText = L"Может быть пустым";
-			this->Column5->Name = L"Column5";
-			this->Column5->ReadOnly = true;
-			this->Column5->Resizable = System::Windows::Forms::DataGridViewTriState::True;
-			this->Column5->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::Automatic;
 			// 
 			// AddDbAttrsForm
 			// 
@@ -514,6 +517,21 @@ namespace Integra {
 					}
 				}
 				return false;
+			}
+
+			Attribute^ GetAttribute(String^ fullCode)
+			{
+				for each (KeyValuePair<String^, List<Attribute^>^>^ pair in _allAttrs)
+				{
+					for each (Attribute^ ar in pair->Value)
+					{
+						if (ar->FullCode == fullCode)
+						{
+							return ar;
+						}
+					}
+				}
+				return nullptr;
 			}
 
 			void AddFullCodesToComboBox(ComboBox^ cb)
@@ -685,14 +703,14 @@ private: System::Void dgvFields_CellValueChanged(System::Object^  sender, System
 							 String^ table =  tv->SelectedNode->Name;
 							 String^ schtab = String::Format("{0}.{1}", schema, table);
 
-							 array<String^>^ arrr = gcnew array<String ^>(5);
+							 /*array<String^>^ arrr = gcnew array<String ^>(5);
 							 arrr[0] = schtab;
 							 arrr[1] = fieldName;
 							 arrr[2] = schema;
 							 arrr[3] = table;
 							 arrr[4] = fieldCode;
 
-							 Attributes->Add(arrr);
+							 Attributes->Add(arrr);*/
 
 							 Attribute^ attr = gcnew Attribute(schema, table, fieldCode, fieldName);
 							 attr->UseChecked = ch;
@@ -736,26 +754,28 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 				 MessageBox::Show("Не задан основной реквизит!");
 				 return;
 			 }
-			 String^ schtab = lbTables->SelectedItem->ToString();
-			 array<String^>^ arr = schtab->Split('.');
-			 for (int i = 0; i < dgvFields->Rows->Count; i++)
+			 Attributes = gcnew List<Attribute ^>();
+			 for each (KeyValuePair<String^, List<Attribute^>^>^ pair in _allAttrs)
 			 {
-				 bool ch = (bool) dgvFields[0, i]->Value;
-				 if (ch)
+				 for each (Attribute^ attr in pair->Value)
 				 {
-					 String^ fieldCode = dgvFields[1, i]->Value->ToString();
-					 String^ fieldName = dgvFields[2, i]->Value->ToString();
-
-					 //Attribute^ attr = gcnew Attribute(
-					 array<String^>^ arrr = gcnew array<String ^>(5);
-					 arrr[0] = schtab;
-					 arrr[1] = fieldName;
-					 arrr[2] = arr[0];
-					 arrr[3] = arr[1];
-					 arrr[4] = fieldCode;
-
-					 Attributes->Add(arrr);
+					 if (attr->UseChecked)
+					 {
+						 Attributes->Add(attr);
+					 }
 				 }
+			 }
+			 IdCol = GetAttribute(cbId->SelectedItem->ToString());
+			 TitleCol = GetAttribute(cbTitle->SelectedItem->ToString());
+			 RoughCol = nullptr;
+			 RoughSymbols = nullptr;
+			 if (cbRoughAttr->SelectedItem != nullptr)
+			 {
+				 RoughCol = GetAttribute(cbRoughAttr->SelectedItem->ToString());
+			 }
+			 if (!String::IsNullOrEmpty(tbRoughSymbols->Text->Trim()))
+			 {
+				 RoughSymbols = tbRoughSymbols->Text->Trim();
 			 }
 			 Close();
 		 }

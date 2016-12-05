@@ -433,7 +433,7 @@ namespace Integra {
 				int i = 1;
 				for each (Object^ o in query)
 				{
-					int p = Int32::Parse(o->ToString());
+					int p = Decimal::ToInt32((Decimal)o);
 					if (p > i)
 					{
 						return i;

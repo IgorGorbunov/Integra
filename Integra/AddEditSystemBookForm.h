@@ -328,27 +328,42 @@ namespace Integra {
 
 			Void WriteIntegrBook()
 			{
-				String^ query = "insert into " + _odbc->schema + "INTEGRATION_BOOK values (";
+				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE";
+				
 				_intgrId = _odbc->GetMinFreeId("" + _odbc->schema + "INTEGRATION_BOOK");
 				List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
 				List<Object^>^ idSystem = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystem->Text + "\'");
-				query += _intgrId + ", " + Decimal::ToInt32((Decimal)idSystem[0]) + ", " + Decimal::ToInt32((Decimal)idBook[0]) + ", ";
+
+				String^ sqlIdBook = idBook[0]->ToString();
+				String^ sqlIdSystem = idSystem[0]->ToString();
+				String^ sqlLogin = "NULL";
+				String^ sqlPassword = "NULL";
+				String^ sqlDriver = "NULL";
+				String^ sqlDb = "NULL";
+				String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
+				String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+
 				if (_systemTypeId == 1)
 				{
-					query += "\'" + tbLogin->Text + "\', \'" + tbPass->Text + "\', NULL, NULL, NULL, NULL, NULL, NULL, " + _systemTypeId + ", NULL, NULL)";
+					sqlLogin = OdbcClass::GetSqlString(tbLogin->Text->Trim());
+					sqlPassword = OdbcClass::GetSqlString(tbPass->Text);
 				} 
 				else
 				{
 					if (cbConnType->SelectedIndex == 1)
 					{
-						query += "NULL, NULL, NULL, NULL, NULL, NULL, NULL, \'" + tbDriver->Text + "\', " + _systemTypeId + ", NULL, NULL)";
+						sqlDriver = OdbcClass::GetSqlString(tbDriver->Text->Trim());
 					}
 					else
 					{
-						query += "\'" + tbLogin->Text + "\', \'" + tbPass->Text + "\', \'" + tbDb->Text + 
-							"\', NULL, NULL, NULL, NULL, NULL, " + _systemTypeId + ", NULL, NULL)";
+						sqlLogin = OdbcClass::GetSqlString(tbLogin->Text->Trim());
+						sqlPassword = OdbcClass::GetSqlString(tbPass->Text);
+						sqlDb = OdbcClass::GetSqlString(tbDb->Text->Trim());
 					}
 				}
+				String^ query;
+				query = String::Format("insert into {0}INTEGRATION_BOOK ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11})", 
+					_odbc->schema, columns, _intgrId, sqlIdSystem, sqlIdBook, sqlLogin, sqlPassword, sqlDb, sqlDriver, _systemTypeId, sqlUser, sqlDate);
 				_odbc->ExecuteNonQuery(query);
 			}
 
@@ -441,6 +456,9 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 _dbAttrs = gcnew List<array<String ^> ^>();
+			 _idCol = gcnew Attribute("", "", "", "");
+			 _titleCol =gcnew Attribute("", "", "", "");
 			 if (String::IsNullOrEmpty(cbBook->Text))
 			 {
 				 MessageBox::Show("Не задан справочник!");
@@ -451,7 +469,8 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 				 MessageBox::Show("Не задана система!");
 				 return;
 			 }
-			 else if (_dbAttrs == nullptr || _dbAttrs->Count == 0)
+			 
+			 else if (_dbAttrs == nullptr || _dbAttrs->Count != 0)
 			 {
 				 MessageBox::Show("Не заданы атрибуты системного справочника!");
 				 return;

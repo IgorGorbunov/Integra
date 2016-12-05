@@ -1,4 +1,4 @@
-﻿Построение начато 05.12.2016 20:37:07.
+﻿Построение начато 06.12.2016 1:24:40.
      1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
      1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(2015,5): warning MSB3284: Не удается получить путь файла для библиотеки типа "307168c0-39ae-42ad-953f-a09f8a81520f" версии 1.0. Библиотека не зарегистрирована. (Исключение из HRESULT: 0x8002801D (TYPE_E_LIBNOTREGISTERED))
      1>ClCompile:
@@ -69,6 +69,16 @@
                  d:\work\coding\github\repos\integra\integra\Book.h(45): см. объявление "Integra::Book::GetAllPositions22"
      1>d:\work\coding\github\repos\integra\integra\AddDbAttrsForm.h(587): warning C4965: неявная упаковка целого числа 0; используйте nullptr или явное приведение типов
          Создание кода...
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
          Компиляция...
          ManualIntegrationForm.cpp
          NoticesForm.cpp
@@ -81,6 +91,10 @@
      1>d:\work\coding\github\repos\integra\integra\AddDbAttrsForm.h(587): warning C4965: неявная упаковка целого числа 0; используйте nullptr или явное приведение типов
          TableLinksForm.cpp
          Создание кода...
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
+     1>d:\work\coding\github\repos\integra\integra\odbcclass.h(146): warning C4715: Integra::OdbcClass::GetSqlDate: значение возвращается не при всех путях выполнения
          D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt "C:\Users\igor\AppData\Local\Temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
          .NETFramework,Version=v4.0.AssemblyAttributes.cpp
        Link:
@@ -120,4 +134,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:08.22
+Затраченное время: 00:00:08.94

@@ -36,7 +36,7 @@ namespace Integra {
 			String^ _dataSource;
 
 		public:
-			OdbcClass()
+			void Init()
 			{
 #ifdef _DEBUG   
 				schema = "";
@@ -48,6 +48,7 @@ namespace Integra {
 
 			OdbcClass(String^ driver) 
 			{
+				Init();
 				_driver = driver;
 				_logger = gcnew Logger("sql", ".sss");
 				_logger->WriteLine("----------------------------------------- NEW SESSION ----------------------------------------------");
@@ -58,6 +59,7 @@ namespace Integra {
 
 			OdbcClass(String^ login, String^ pass, String^ database) 
 			{
+				Init();
 				_logger = gcnew Logger("sql", ".sss");
 				_logger->WriteLine("----------------------------------------- NEW SESSION ----------------------------------------------");
 				_driver = "Driver={Microsoft ODBC for Oracle};Server=" + database + ";Uid=" + login + ";Pwd=" + pass + ";";
@@ -122,7 +124,7 @@ namespace Integra {
 			}
 
 
-			String^ GetSqlString(String^ s)
+			static String^ GetSqlString(String^ s)
 			{
 				if (String::IsNullOrEmpty(s))
 				{
@@ -130,9 +132,17 @@ namespace Integra {
 				}
 				else
 				{
-					return "\'" + s + "\'";
+					return String::Format("'{0}'", s);
 				}
 				return s;
+			}
+
+			String^ GetSqlDate(DateTime^ dateTime)
+			{
+				if (_dataSource == "ACCESS")
+				{
+					return String::Format("CDate('{0}')", dateTime->ToString("yyyy-MM-dd HH:mm:ss"));
+				}
 			}
 
 			void AddColumnComment(String^ fullCode, String^ comment)

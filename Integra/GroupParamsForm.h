@@ -24,6 +24,8 @@ namespace Integra {
 	private:
 		OdbcClass^ _odbc;
 		bool _attrsColFilled;
+		List<Object^>^ _fieldList;
+		bool _init;
 
 	public:
 		GroupParamsForm(OdbcClass^ odbc)
@@ -49,14 +51,16 @@ namespace Integra {
 
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::GroupBox^  groupBox1;
-	private: System::Windows::Forms::TextBox^  tbTable;
+
 
 	private: System::Windows::Forms::Label^  label5;
-	private: System::Windows::Forms::TextBox^  tbSchema;
+
 
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::ComboBox^  cbId;
 	private: System::Windows::Forms::ComboBox^  cbName;
+	private: System::Windows::Forms::ComboBox^  cbSchema;
+	private: System::Windows::Forms::ComboBox^  cbTable;
 
 
 	private: System::Windows::Forms::Label^  label2;
@@ -82,9 +86,9 @@ namespace Integra {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->tbTable = (gcnew System::Windows::Forms::TextBox());
+			this->cbTable = (gcnew System::Windows::Forms::ComboBox());
+			this->cbSchema = (gcnew System::Windows::Forms::ComboBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->tbSchema = (gcnew System::Windows::Forms::TextBox());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->cbId = (gcnew System::Windows::Forms::ComboBox());
 			this->cbName = (gcnew System::Windows::Forms::ComboBox());
@@ -118,9 +122,9 @@ namespace Integra {
 			// 
 			// groupBox1
 			// 
-			this->groupBox1->Controls->Add(this->tbTable);
+			this->groupBox1->Controls->Add(this->cbTable);
+			this->groupBox1->Controls->Add(this->cbSchema);
 			this->groupBox1->Controls->Add(this->label5);
-			this->groupBox1->Controls->Add(this->tbSchema);
 			this->groupBox1->Controls->Add(this->label4);
 			this->groupBox1->Location = System::Drawing::Point(12, 12);
 			this->groupBox1->Name = L"groupBox1";
@@ -129,12 +133,23 @@ namespace Integra {
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Таблица групп элементов";
 			// 
-			// tbTable
+			// cbTable
 			// 
-			this->tbTable->Location = System::Drawing::Point(171, 44);
-			this->tbTable->Name = L"tbTable";
-			this->tbTable->Size = System::Drawing::Size(138, 20);
-			this->tbTable->TabIndex = 9;
+			this->cbTable->FormattingEnabled = true;
+			this->cbTable->Location = System::Drawing::Point(170, 50);
+			this->cbTable->Name = L"cbTable";
+			this->cbTable->Size = System::Drawing::Size(121, 21);
+			this->cbTable->TabIndex = 10;
+			this->cbTable->SelectedIndexChanged += gcnew System::EventHandler(this, &GroupParamsForm::cbTable_SelectedIndexChanged);
+			// 
+			// cbSchema
+			// 
+			this->cbSchema->FormattingEnabled = true;
+			this->cbSchema->Location = System::Drawing::Point(15, 50);
+			this->cbSchema->Name = L"cbSchema";
+			this->cbSchema->Size = System::Drawing::Size(121, 21);
+			this->cbSchema->TabIndex = 9;
+			this->cbSchema->SelectedIndexChanged += gcnew System::EventHandler(this, &GroupParamsForm::cbSchema_SelectedIndexChanged);
 			// 
 			// label5
 			// 
@@ -144,13 +159,6 @@ namespace Integra {
 			this->label5->Size = System::Drawing::Size(123, 13);
 			this->label5->TabIndex = 8;
 			this->label5->Text = L"Обозначение таблицы:";
-			// 
-			// tbSchema
-			// 
-			this->tbSchema->Location = System::Drawing::Point(20, 44);
-			this->tbSchema->Name = L"tbSchema";
-			this->tbSchema->Size = System::Drawing::Size(127, 20);
-			this->tbSchema->TabIndex = 7;
 			// 
 			// label4
 			// 
@@ -168,8 +176,6 @@ namespace Integra {
 			this->cbId->Name = L"cbId";
 			this->cbId->Size = System::Drawing::Size(161, 21);
 			this->cbId->TabIndex = 7;
-			this->cbId->DropDown += gcnew System::EventHandler(this, &GroupParamsForm::cbId_DropDown);
-			this->cbId->Click += gcnew System::EventHandler(this, &GroupParamsForm::cbId_Click);
 			// 
 			// cbName
 			// 
@@ -178,7 +184,6 @@ namespace Integra {
 			this->cbName->Name = L"cbName";
 			this->cbName->Size = System::Drawing::Size(161, 21);
 			this->cbName->TabIndex = 8;
-			this->cbName->Click += gcnew System::EventHandler(this, &GroupParamsForm::cbName_Click);
 			// 
 			// label2
 			// 
@@ -199,7 +204,6 @@ namespace Integra {
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->Size = System::Drawing::Size(286, 226);
 			this->dataGridView1->TabIndex = 10;
-			this->dataGridView1->CellClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &GroupParamsForm::dataGridView1_CellClick);
 			// 
 			// Column1
 			// 
@@ -253,6 +257,7 @@ namespace Integra {
 			this->Name = L"GroupParamsForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление/редактирование реквизитов групп";
+			this->Load += gcnew System::EventHandler(this, &GroupParamsForm::GroupParamsForm_Load);
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();
@@ -266,43 +271,45 @@ namespace Integra {
 
 			String^ GetSchtab()
 			{
-				if (String::IsNullOrEmpty(tbTable->Text->Trim()))
+				if (cbTable->SelectedItem == nullptr ||
+					String::IsNullOrEmpty(cbTable->SelectedItem->ToString()))
 				{
 					return nullptr;
 				}
-				if (String::IsNullOrEmpty(tbSchema->Text->Trim()))
+				if (cbSchema->SelectedItem == nullptr ||
+					String::IsNullOrEmpty(cbSchema->SelectedItem->ToString()))
 				{
-					return tbTable->Text->Trim()->ToUpper();
+					return cbTable->SelectedItem->ToString()->Trim()->ToUpper();
 				}
 				else
 				{
-					return tbSchema->Text->Trim()->ToUpper() + "." + tbTable->Text->Trim()->ToUpper();
+					return cbSchema->SelectedItem->ToString()->Trim()->ToUpper() + "." + cbTable->SelectedItem->ToString()->Trim()->ToUpper();
 				}
 			}
 
-			List<String^>^ GetCols()
+			void SetSchemas()
 			{
-				String^ schtab = GetSchtab();
-				if (String::IsNullOrEmpty(schtab))
+				if (_odbc->DataSource == "ACCESS")
 				{
-					MessageBox::Show("Не задано обозначение таблицы!", "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
-					return nullptr;
+					cbSchema->Enabled = false;
+					SetTables("");
 				}
-				try
+			}
+
+			void SetTables(String^ schemaName)
+			{
+				cbTable->DataSource = _odbc->GetTables(schemaName);
+				cbTable->SelectedItem = nullptr;
+			}
+
+			void SetComboBox(ComboBox^ cb)
+			{
+				cb->Items->Clear();
+				for each (String^ s in _fieldList)
 				{
-					List<Object^>^ qList = _odbc->GetTableCols(schtab);
-					List<String^>^ sList = gcnew List<String ^>();
-					for each (Object^ o in qList)
-					{
-						sList->Add(o->ToString());
-					}
-					return sList;
+					cb->Items->Add(s);
 				}
-				catch (TimeoutException^)
-				{
-					MessageBox::Show("Ошибка соединения с БД! Неверно задана таблица!", "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
-				}
-				return nullptr;
+				cb->SelectedItem = nullptr;
 			}
 
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
@@ -321,41 +328,40 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 			 Attrs = gcnew Dictionary<String ^, String ^>();
 			 for (int i = 0; i < dataGridView1->Rows->Count; i++)
 			 {
-				 Attrs->Add(dataGridView1[0, i]->Value->ToString()->Trim()->ToUpper(), dataGridView1[1, i]->Value->ToString()->Trim()->ToUpper());
+				 if ((dataGridView1[0, i]->Value == nullptr || String::IsNullOrEmpty(dataGridView1[0, i]->Value->ToString())) &&
+					 (dataGridView1[1, i]->Value == nullptr || String::IsNullOrEmpty(dataGridView1[1, i]->Value->ToString())))
+				 {
+					 continue;
+				 }
+				 String^ title = String::Format("{0}.{1}", Schtab, dataGridView1[0, i]->Value->ToString()->Trim()->ToUpper());
+				 String^ name = String::Format("{0}.{1}", Schtab, dataGridView1[1, i]->Value->ToString()->Trim()->ToUpper());
+				 Attrs->Add(title, name);
 			 }
 			 Close();
 		 }
-private: System::Void cbId_Click(System::Object^  sender, System::EventArgs^  e) 
+
+private: System::Void GroupParamsForm_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 
+			 _init = true;
+			 SetSchemas();
+			 _init = false;
 		 }
-private: System::Void cbName_Click(System::Object^  sender, System::EventArgs^  e) 
+private: System::Void cbSchema_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 List<String^>^ list = GetCols();
-			 if (list == nullptr)
+			 SetTables(cbSchema->SelectedItem->ToString());
+		 }
+
+private: System::Void cbTable_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (_init)
 			 {
 				 return;
 			 }
-			 cbName->DataSource = list;
-		 }
-private: System::Void dataGridView1_CellClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
-		 {
-			 List<String^>^ list = GetCols();
-			 if (list == nullptr)
-			 {
-				 return;
-			 }
-			 Column1->DataSource = list;
-			 Column2->DataSource = list;
-		 }
-private: System::Void cbId_DropDown(System::Object^  sender, System::EventArgs^  e) 
-		 {
-			 List<String^>^ list = GetCols();
-			 if (list == nullptr)
-			 {
-				 return;
-			 }
-			 cbId->DataSource = list;
+			 _fieldList = _odbc->GetTableCols("", cbTable->SelectedItem->ToString());
+			 SetComboBox(cbId);
+			 SetComboBox(cbName);
+			 Column1->DataSource = _fieldList;
+			 Column2->DataSource = _fieldList;
 		 }
 };
 }

@@ -23,6 +23,7 @@ namespace Integra {
 	private:
 		static OdbcClass^ _odbc;
 
+
 			 static String^ _login;
 		static String^ _description;
 		static String^ _roleName;

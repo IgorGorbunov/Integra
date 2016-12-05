@@ -121,6 +121,7 @@ namespace Integra {
 				return nullptr;
 			}
 
+
 			String^ GetSqlString(String^ s)
 			{
 				if (String::IsNullOrEmpty(s))

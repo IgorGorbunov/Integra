@@ -151,6 +151,8 @@ namespace Integra {
 			this->tbDriver->Name = L"tbDriver";
 			this->tbDriver->Size = System::Drawing::Size(177, 129);
 			this->tbDriver->TabIndex = 10;
+			this->tbDriver->Text = L"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\\\\Test.accdb;Uid=Admin;Pw" 
+				L"d=;";
 			this->tbDriver->Visible = false;
 			// 
 			// cbConnType

@@ -28,7 +28,7 @@ namespace Integra {
 		List<array<String^>^>^ Attributes;
 
 	private:
-		List<String^>^ _fields;
+		List<String^>^ _fieldNames;
 		OdbcClass^ _odbc;
 		String^ _filter;
 		Dictionary<String^, String^>^ _links;
@@ -36,19 +36,27 @@ namespace Integra {
 		String^ _IdCol;
 		String^ _NameCol;
 		Dictionary<String^,String^>^ _Attrs;
-
-
-
+		Dictionary<String^, List<Attribute^>^>^ _allAttrs;
+		bool _programCheck;
 
 
 
 	private: System::Windows::Forms::Button^  bAddTableLinks;
 	private: System::Windows::Forms::Button^  bAddFilter;
 	private: System::Windows::Forms::Button^  bGroupParams;
-	private: System::Windows::Forms::ComboBox^  comboBox1;
+	private: System::Windows::Forms::ComboBox^  cbRoughAttr;
+
+
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::Label^  label5;
+
+
+
+
+
+
+	private: System::Windows::Forms::GroupBox^  groupBox1;
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
@@ -62,10 +70,18 @@ namespace Integra {
 		
 
 	public:
+		void Init()
+		{
+			_programCheck = false;
+			_allAttrs = gcnew Dictionary<String^, List<Attribute^>^>();
+			Attributes = gcnew List<array<String ^> ^>();
+			_fieldNames = gcnew List<String ^>();
+		}
+
 		AddDbAttrsForm(String^ login, String^ pass, String^ database)
 		{
 			InitializeComponent();
-			Attributes = gcnew List<array<String ^> ^>();
+			Init();
 			_odbc = gcnew OdbcClass(login, pass, database);
 			TryConnect();
 		}
@@ -73,7 +89,7 @@ namespace Integra {
 		AddDbAttrsForm(String^ driver)
 		{
 			InitializeComponent();
-			Attributes = gcnew List<array<String ^> ^>();
+			Init();
 			_odbc = gcnew OdbcClass(driver);
 			TryConnect();
 		}
@@ -126,12 +142,6 @@ namespace Integra {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->bAddNewTable = (gcnew System::Windows::Forms::Button());
 			this->dgvFields = (gcnew System::Windows::Forms::DataGridView());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column5 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
 			this->bClose = (gcnew System::Windows::Forms::Button());
 			this->bRecord = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
@@ -142,11 +152,19 @@ namespace Integra {
 			this->bAddTableLinks = (gcnew System::Windows::Forms::Button());
 			this->bAddFilter = (gcnew System::Windows::Forms::Button());
 			this->bGroupParams = (gcnew System::Windows::Forms::Button());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->cbRoughAttr = (gcnew System::Windows::Forms::ComboBox());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->BeginInit();
+			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// lbTables
@@ -156,7 +174,6 @@ namespace Integra {
 			this->lbTables->Name = L"lbTables";
 			this->lbTables->Size = System::Drawing::Size(429, 134);
 			this->lbTables->TabIndex = 0;
-			this->lbTables->SelectedIndexChanged += gcnew System::EventHandler(this, &AddDbAttrsForm::lbTables_SelectedIndexChanged);
 			// 
 			// label2
 			// 
@@ -170,7 +187,7 @@ namespace Integra {
 			// bAddNewTable
 			// 
 			this->bAddNewTable->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddNewTable->Location = System::Drawing::Point(146, 236);
+			this->bAddNewTable->Location = System::Drawing::Point(146, 303);
 			this->bAddNewTable->Name = L"bAddNewTable";
 			this->bAddNewTable->Size = System::Drawing::Size(170, 30);
 			this->bAddNewTable->TabIndex = 5;
@@ -204,7 +221,7 @@ namespace Integra {
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
 			this->dgvFields->DefaultCellStyle = dataGridViewCellStyle2;
-			this->dgvFields->Location = System::Drawing::Point(12, 284);
+			this->dgvFields->Location = System::Drawing::Point(12, 363);
 			this->dgvFields->Name = L"dgvFields";
 			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
@@ -219,6 +236,156 @@ namespace Integra {
 			this->dgvFields->Size = System::Drawing::Size(756, 210);
 			this->dgvFields->TabIndex = 6;
 			this->dgvFields->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AddDbAttrsForm::dgvFields_CellValueChanged);
+			// 
+			// bClose
+			// 
+			this->bClose->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bClose->Location = System::Drawing::Point(668, 589);
+			this->bClose->Name = L"bClose";
+			this->bClose->Size = System::Drawing::Size(87, 30);
+			this->bClose->TabIndex = 8;
+			this->bClose->Text = L"Отмена";
+			this->bClose->UseVisualStyleBackColor = false;
+			this->bClose->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bClose_Click);
+			// 
+			// bRecord
+			// 
+			this->bRecord->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bRecord->Location = System::Drawing::Point(561, 589);
+			this->bRecord->Name = L"bRecord";
+			this->bRecord->Size = System::Drawing::Size(87, 30);
+			this->bRecord->TabIndex = 7;
+			this->bRecord->Text = L"Сохранить";
+			this->bRecord->UseVisualStyleBackColor = false;
+			this->bRecord->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bRecord_Click);
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(458, 15);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(139, 13);
+			this->label1->TabIndex = 9;
+			this->label1->Text = L"Реквизит-идентификатор:";
+			// 
+			// cbId
+			// 
+			this->cbId->Enabled = false;
+			this->cbId->FormattingEnabled = true;
+			this->cbId->Location = System::Drawing::Point(459, 31);
+			this->cbId->Name = L"cbId";
+			this->cbId->Size = System::Drawing::Size(309, 21);
+			this->cbId->TabIndex = 10;
+			this->cbId->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::cbId_Click);
+			// 
+			// cbTitle
+			// 
+			this->cbTitle->Enabled = false;
+			this->cbTitle->FormattingEnabled = true;
+			this->cbTitle->Location = System::Drawing::Point(459, 81);
+			this->cbTitle->Name = L"cbTitle";
+			this->cbTitle->Size = System::Drawing::Size(307, 21);
+			this->cbTitle->TabIndex = 12;
+			this->cbTitle->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::cbTitle_Click);
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Location = System::Drawing::Point(456, 65);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(110, 13);
+			this->label3->TabIndex = 11;
+			this->label3->Text = L"Основной реквизит:";
+			// 
+			// tv
+			// 
+			this->tv->CheckBoxes = true;
+			this->tv->Location = System::Drawing::Point(12, 31);
+			this->tv->Name = L"tv";
+			this->tv->Size = System::Drawing::Size(429, 266);
+			this->tv->TabIndex = 13;
+			this->tv->AfterCheck += gcnew System::Windows::Forms::TreeViewEventHandler(this, &AddDbAttrsForm::tv_AfterCheck);
+			this->tv->AfterSelect += gcnew System::Windows::Forms::TreeViewEventHandler(this, &AddDbAttrsForm::tv_AfterSelect);
+			// 
+			// bAddTableLinks
+			// 
+			this->bAddTableLinks->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bAddTableLinks->Location = System::Drawing::Point(479, 236);
+			this->bAddTableLinks->Name = L"bAddTableLinks";
+			this->bAddTableLinks->Size = System::Drawing::Size(118, 45);
+			this->bAddTableLinks->TabIndex = 14;
+			this->bAddTableLinks->Text = L"Добавить связи между таблицами";
+			this->bAddTableLinks->UseVisualStyleBackColor = false;
+			this->bAddTableLinks->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bAddTableLinks_Click);
+			// 
+			// bAddFilter
+			// 
+			this->bAddFilter->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bAddFilter->Location = System::Drawing::Point(637, 236);
+			this->bAddFilter->Name = L"bAddFilter";
+			this->bAddFilter->Size = System::Drawing::Size(118, 45);
+			this->bAddFilter->TabIndex = 15;
+			this->bAddFilter->Text = L"Добавить фильтры";
+			this->bAddFilter->UseVisualStyleBackColor = false;
+			this->bAddFilter->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bAddFilter_Click);
+			// 
+			// bGroupParams
+			// 
+			this->bGroupParams->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bGroupParams->Location = System::Drawing::Point(479, 298);
+			this->bGroupParams->Name = L"bGroupParams";
+			this->bGroupParams->Size = System::Drawing::Size(276, 35);
+			this->bGroupParams->TabIndex = 16;
+			this->bGroupParams->Text = L"Добавить параметры групп";
+			this->bGroupParams->UseVisualStyleBackColor = false;
+			this->bGroupParams->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bGroupParams_Click);
+			// 
+			// cbRoughAttr
+			// 
+			this->cbRoughAttr->FormattingEnabled = true;
+			this->cbRoughAttr->Location = System::Drawing::Point(14, 39);
+			this->cbRoughAttr->Name = L"cbRoughAttr";
+			this->cbRoughAttr->Size = System::Drawing::Size(149, 21);
+			this->cbRoughAttr->TabIndex = 18;
+			this->cbRoughAttr->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::cbRoughAttr_Click);
+			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->Location = System::Drawing::Point(11, 23);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(172, 13);
+			this->label4->TabIndex = 17;
+			this->label4->Text = L"Реквизит грубого соответствия:";
+			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(192, 40);
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(131, 20);
+			this->textBox1->TabIndex = 19;
+			// 
+			// label5
+			// 
+			this->label5->AutoSize = true;
+			this->label5->Location = System::Drawing::Point(192, 22);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(136, 13);
+			this->label5->TabIndex = 20;
+			this->label5->Text = L"Пропускаемые символы:";
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Controls->Add(this->label4);
+			this->groupBox1->Controls->Add(this->label5);
+			this->groupBox1->Controls->Add(this->cbRoughAttr);
+			this->groupBox1->Controls->Add(this->textBox1);
+			this->groupBox1->Location = System::Drawing::Point(447, 129);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(333, 79);
+			this->groupBox1->TabIndex = 21;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Параметры грубого соответствия";
 			// 
 			// Column1
 			// 
@@ -256,154 +423,17 @@ namespace Integra {
 			// 
 			this->Column5->HeaderText = L"Может быть пустым";
 			this->Column5->Name = L"Column5";
+			this->Column5->ReadOnly = true;
 			this->Column5->Resizable = System::Windows::Forms::DataGridViewTriState::True;
 			this->Column5->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::Automatic;
-			// 
-			// bClose
-			// 
-			this->bClose->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bClose->Location = System::Drawing::Point(668, 510);
-			this->bClose->Name = L"bClose";
-			this->bClose->Size = System::Drawing::Size(87, 30);
-			this->bClose->TabIndex = 8;
-			this->bClose->Text = L"Отмена";
-			this->bClose->UseVisualStyleBackColor = false;
-			this->bClose->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bClose_Click);
-			// 
-			// bRecord
-			// 
-			this->bRecord->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bRecord->Enabled = false;
-			this->bRecord->Location = System::Drawing::Point(561, 510);
-			this->bRecord->Name = L"bRecord";
-			this->bRecord->Size = System::Drawing::Size(87, 30);
-			this->bRecord->TabIndex = 7;
-			this->bRecord->Text = L"Записать";
-			this->bRecord->UseVisualStyleBackColor = false;
-			this->bRecord->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bRecord_Click);
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(458, 15);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(139, 13);
-			this->label1->TabIndex = 9;
-			this->label1->Text = L"Реквизит-идентификатор:";
-			// 
-			// cbId
-			// 
-			this->cbId->Enabled = false;
-			this->cbId->FormattingEnabled = true;
-			this->cbId->Location = System::Drawing::Point(459, 31);
-			this->cbId->Name = L"cbId";
-			this->cbId->Size = System::Drawing::Size(309, 21);
-			this->cbId->TabIndex = 10;
-			// 
-			// cbTitle
-			// 
-			this->cbTitle->Enabled = false;
-			this->cbTitle->FormattingEnabled = true;
-			this->cbTitle->Location = System::Drawing::Point(461, 137);
-			this->cbTitle->Name = L"cbTitle";
-			this->cbTitle->Size = System::Drawing::Size(307, 21);
-			this->cbTitle->TabIndex = 12;
-			// 
-			// label3
-			// 
-			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(458, 121);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(110, 13);
-			this->label3->TabIndex = 11;
-			this->label3->Text = L"Основной реквизит:";
-			// 
-			// tv
-			// 
-			this->tv->CheckBoxes = true;
-			this->tv->Location = System::Drawing::Point(12, 31);
-			this->tv->Name = L"tv";
-			this->tv->Size = System::Drawing::Size(429, 186);
-			this->tv->TabIndex = 13;
-			this->tv->AfterSelect += gcnew System::Windows::Forms::TreeViewEventHandler(this, &AddDbAttrsForm::tv_AfterSelect);
-			// 
-			// bAddTableLinks
-			// 
-			this->bAddTableLinks->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddTableLinks->Location = System::Drawing::Point(479, 172);
-			this->bAddTableLinks->Name = L"bAddTableLinks";
-			this->bAddTableLinks->Size = System::Drawing::Size(118, 45);
-			this->bAddTableLinks->TabIndex = 14;
-			this->bAddTableLinks->Text = L"Добавить связи между таблицами";
-			this->bAddTableLinks->UseVisualStyleBackColor = false;
-			this->bAddTableLinks->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bAddTableLinks_Click);
-			// 
-			// bAddFilter
-			// 
-			this->bAddFilter->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddFilter->Location = System::Drawing::Point(637, 172);
-			this->bAddFilter->Name = L"bAddFilter";
-			this->bAddFilter->Size = System::Drawing::Size(118, 45);
-			this->bAddFilter->TabIndex = 15;
-			this->bAddFilter->Text = L"Добавить фильтры";
-			this->bAddFilter->UseVisualStyleBackColor = false;
-			this->bAddFilter->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bAddFilter_Click);
-			// 
-			// bGroupParams
-			// 
-			this->bGroupParams->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bGroupParams->Location = System::Drawing::Point(479, 234);
-			this->bGroupParams->Name = L"bGroupParams";
-			this->bGroupParams->Size = System::Drawing::Size(276, 35);
-			this->bGroupParams->TabIndex = 16;
-			this->bGroupParams->Text = L"Добавить параметры групп";
-			this->bGroupParams->UseVisualStyleBackColor = false;
-			this->bGroupParams->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bGroupParams_Click);
-			// 
-			// comboBox1
-			// 
-			this->comboBox1->Enabled = false;
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(459, 84);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(149, 21);
-			this->comboBox1->TabIndex = 18;
-			// 
-			// label4
-			// 
-			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(456, 68);
-			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(172, 13);
-			this->label4->TabIndex = 17;
-			this->label4->Text = L"Реквизит грубого соответствия:";
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(637, 85);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(131, 20);
-			this->textBox1->TabIndex = 19;
-			// 
-			// label5
-			// 
-			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(637, 67);
-			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(136, 13);
-			this->label5->TabIndex = 20;
-			this->label5->Text = L"Пропускаемые символы:";
 			// 
 			// AddDbAttrsForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->ClientSize = System::Drawing::Size(780, 552);
-			this->Controls->Add(this->label5);
-			this->Controls->Add(this->textBox1);
-			this->Controls->Add(this->comboBox1);
-			this->Controls->Add(this->label4);
+			this->ClientSize = System::Drawing::Size(791, 633);
+			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->bGroupParams);
 			this->Controls->Add(this->bAddFilter);
 			this->Controls->Add(this->bAddTableLinks);
@@ -423,6 +453,8 @@ namespace Integra {
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление/изменение реквизитов справочника СУБД";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->EndInit();
+			this->groupBox1->ResumeLayout(false);
+			this->groupBox1->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -430,7 +462,7 @@ namespace Integra {
 #pragma endregion
 
 		private:
-			void SetButtonRec()
+			void SetTvChecked()
 			{
 				bool checked = false;
 				for (int i = 0; i < dgvFields->Rows->Count; i++)
@@ -444,11 +476,15 @@ namespace Integra {
 				}
 				if (checked)
 				{
+					_programCheck = true;
 					tv->SelectedNode->Checked = true;
+					_programCheck = false;
 				}
 				else
 				{
+					_programCheck = true;
 					tv->SelectedNode->Checked = false;
+					_programCheck = false;
 				}
 			}
 
@@ -465,96 +501,169 @@ namespace Integra {
 				}
 			}
 
+			bool AllAttrsContains(Attribute^ attr)
+			{
+				for each (KeyValuePair<String^, List<Attribute^>^>^ pair in _allAttrs)
+				{
+					for each (Attribute^ ar in pair->Value)
+					{
+						if (ar->FullCode == attr->FullCode)
+						{
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+
+			void AddFullCodesToComboBox(ComboBox^ cb)
+			{
+				cb->Items->Clear();
+				for each (String^ s in _fieldNames)
+				{
+					cb->Items->Add(s);
+				}
+			}
+
+			void SetDgvFromDict(String^ schtab)
+			{
+				for each (Attribute^ attr in _allAttrs[schtab])
+				{
+					array<Object^>^ row = gcnew array<Object ^>(8);
+					row[0] = attr->UseChecked;
+					row[1] = attr->Code;
+					row[2] = attr->Name;
+					row[3] = attr->DataType;
+					row[4] = attr->MaxLength;
+					row[5] = attr->CanBeNull;
+					row[6] = "";
+					row[7] = "";
+					dgvFields->Rows->Add(row);
+				}
+			}
+
+			void AddAttrInAllAttrs(String^ schtab, String^ code, Attribute^ attr)
+			{
+				List<Attribute^>^ list = _allAttrs[schtab];
+				for (int i = 0; i < _allAttrs[schtab]->Count; i++)
+				{
+					if (list[i]->Code == code)
+					{
+						list[i] = attr;
+					}
+				}
+				_allAttrs[schtab] = list;
+			}
+
+			void SetDgvFromSql(System::Windows::Forms::TreeViewEventArgs^  e, String^ schtab)
+			{
+				List<Object^>^ fields = _odbc->GetTableInfo7(schtab);
+
+				String^ sSchema = e->Node->Parent->Name;
+				String^ table = e->Node->Name;
+				String^ schema = sSchema;
+				if (sSchema == "без схемы")
+				{
+					schema = "";
+				}
+				List<Attribute^>^ list = gcnew List<Attribute ^>();
+				for (int i = 0; i < fields->Count; i += 7)
+				{
+					array<Object^>^ row = gcnew array<Object ^>(8);
+					row[0] = false;
+					row[1] = fields[i];
+					row[2] = fields[i+1];
+					row[3] = fields[i+2];
+					row[4] = fields[i+3];
+					row[5] = fields[i+6];
+					row[6] = fields[i+4];
+					row[7] = fields[i+5];
+					dgvFields->Rows->Add(row);
+
+					Attribute^ attr = gcnew Attribute(schema, table, fields[i]->ToString(), fields[i+1]->ToString());
+					attr->UseChecked = false;
+					attr->DataType = fields[i+2]->ToString();
+					attr->MaxLength = fields[i+3]->ToString();
+					if (row[5] == 0)
+					{
+						attr->CanBeNull = false;
+					}
+					else
+					{
+						attr->CanBeNull = true;
+					}
+					list->Add(attr);
+
+					String^ fieldCode = String::Format("{0}.{1}", schtab, fields[i]->ToString());
+					if (!_fieldNames->Contains(fieldCode))
+					{
+						_fieldNames->Add(fieldCode);
+					}
+				}
+				_allAttrs[schtab] = list;
+			}
+
 
 	private: System::Void bAddNewTable_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				 bool isOk = true;
-				 /*if (dgvFields->Rows->Count > 0)
-				 {
-					 System::Windows::Forms::DialogResult result = MessageBox::Show("tst", "sts", MessageBoxButtons::YesNoCancel, MessageBoxIcon::Warning);
-					 if (result != Windows::Forms::DialogResult::Yes)
-					 {
-						 isOk = false;
-					 }
-				 }*/
-				 if (isOk)
-				 {
-					 AddNewTableForm^ form = gcnew AddNewTableForm(_odbc);
-					 form->ShowDialog();
-					 String^ schema = form->Schema;
-					 String^ table = form->Table;
+				AddNewTableForm^ form = gcnew AddNewTableForm(_odbc);
+				form->ShowDialog();
+				String^ schema = form->Schema;
+				String^ table = form->Table;
 
-					 if (String::IsNullOrEmpty(schema))
-					 {
-						 schema = "без схемы";
-					 }
-					 if (tv->Nodes->ContainsKey(schema))
-					 {
-						 TreeNode^ schemaNode = tv->Nodes[schema];
-						 if (schemaNode->Nodes->ContainsKey(table))
-						 {
-							 MessageBox::Show("Данная таблица уже есть в дереве!");
-						 }
-						 else
-						 {
-							 schemaNode->Nodes->Add(table, table);
-						 }
-					 }
-					 else
-					 {
-						 if (String::IsNullOrEmpty(schema))
-						 {
-							 tv->Nodes->Add("без схемы", "без схемы");
-							 tv->Nodes["без схемы"]->Nodes->Add(table, table);
-						 }
-						 else
-						 {
-							 tv->Nodes->Add(schema, schema);
-							 tv->Nodes[schema]->Nodes->Add(table, table);
-						 }
+				if (String::IsNullOrEmpty(schema))
+				{
+					schema = "без схемы";
+				}
+				if (tv->Nodes->ContainsKey(schema))
+				{
+					TreeNode^ schemaNode = tv->Nodes[schema];
+					if (schemaNode->Nodes->ContainsKey(table))
+					{
+						MessageBox::Show("Данная таблица уже есть в дереве!");
+					}
+					else
+					{
+						schemaNode->Nodes->Add(table, table);
+					}
+				}
+				else
+				{
+					if (String::IsNullOrEmpty(schema))
+					{
+						tv->Nodes->Add("без схемы", "без схемы");
+						tv->Nodes["без схемы"]->Nodes->Add(table, table);
+					}
+					else
+					{
+						tv->Nodes->Add(schema, schema);
+						tv->Nodes[schema]->Nodes->Add(table, table);
+					}
 						 
-					 }
-				 }
-				 
-			 }
-private: System::Void lbTables_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
-		 {
-			 /*if (lbTables->SelectedItem != nullptr)
-			 {
-				 dgvFields->Rows->Clear();
-				 _fields = gcnew List<String ^>();
-				 List<Object^>^ fields = _odbc->GetTableInfo7(lbTables->SelectedItem->ToString());
-				 for (int i = 0; i < fields->Count; i += 7)
-				 {
-					 array<Object^>^ row = gcnew array<Object ^>(8);
-					 row[0] = false;
-					 row[1] = fields[i];
-					 row[2] = fields[i+1];
-					 row[3] = fields[i+2];
-					 row[4] = fields[i+3];
-					 row[5] = fields[i+4];
-					 row[6] = fields[i+5];
-					 row[7] = fields[i+6];
-					 dgvFields->Rows->Add(row);
+				}
+				if (tv->Nodes->Count > 1)
+				{
+					bAddTableLinks->Enabled = true;
+				}
+				else
+				{
+					if (tv->Nodes[0]->Nodes->Count > 1)
+					{
+						bAddTableLinks->Enabled = true;
+					}
+					else
+					{
+						bAddTableLinks->Enabled = false;
+					}
+				}
 
-					 String^ fieldCode = lbTables->SelectedItem->ToString() + "." + fields[i]->ToString();
-					 if (!_fields->Contains(fieldCode))
-					 {
-						 _fields->Add(fieldCode);
-						 cbId->Items->Add(fieldCode);
-						 cbTitle->Items->Add(fieldCode);
-					 }
-					 
-				 }
-				 cbId->Enabled = true;
-				 cbTitle->Enabled = true;
-			 }*/
-			 
-		 }
+			 }
+
 private: System::Void bClose_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 IdCol = nullptr;
 			 TitleCol = nullptr;
+			 Attributes = nullptr;
 			 Close();
 		 }
 private: System::Void dgvFields_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
@@ -563,12 +672,13 @@ private: System::Void dgvFields_CellValueChanged(System::Object^  sender, System
 			 {
 				 if (e->ColumnIndex == 0)
 				 {
-					 SetButtonRec();
-					 for (int i = 0; i < dgvFields->Rows->Count; i++)
-					 {
+					 SetTvChecked();
+					 /*for (int i = 0; i < dgvFields->Rows->Count; i++)
+					 {*/
+					 int i = e->RowIndex;
 						 bool ch = (bool) dgvFields[0, i]->Value;
-						 if (ch)
-						 {
+						 /*if (ch)
+						 {*/
 							 String^ fieldCode = dgvFields[1, i]->Value->ToString();
 							 String^ fieldName = dgvFields[2, i]->Value->ToString();
 							 String^ schema = tv->SelectedNode->Parent->Name;
@@ -583,11 +693,25 @@ private: System::Void dgvFields_CellValueChanged(System::Object^  sender, System
 							 arrr[4] = fieldCode;
 
 							 Attributes->Add(arrr);
-							 /*String^ squery = String::Format("insert into " + OdbcClass::schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', {6})", 
-							 id, schtab, fieldName, arr[0], arr[1], fieldCode, _idIntgrBook);
-							 OdbcClass::ExecuteNonQueryStatic(squery);*/
-						 }
-					 }
+
+							 Attribute^ attr = gcnew Attribute(schema, table, fieldCode, fieldName);
+							 attr->UseChecked = ch;
+							 attr->DataType = dgvFields[3, i]->Value->ToString();
+							 attr->MaxLength = dgvFields[4, i]->Value->ToString();
+							 Object^ bcanBeNull = dgvFields[5, i]->Value;
+							 if ((bool)bcanBeNull)
+							 {
+								 attr->CanBeNull = true;
+							 }
+							 else
+							 {
+								 attr->CanBeNull = false;
+
+							 }
+
+							 AddAttrInAllAttrs(schtab, fieldCode, attr);
+						 //}
+					 //}
 				 }
 				 else if (e->ColumnIndex == 2)
 				 {
@@ -622,6 +746,7 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 					 String^ fieldCode = dgvFields[1, i]->Value->ToString();
 					 String^ fieldName = dgvFields[2, i]->Value->ToString();
 
+					 //Attribute^ attr = gcnew Attribute(
 					 array<String^>^ arrr = gcnew array<String ^>(5);
 					 arrr[0] = schtab;
 					 arrr[1] = fieldName;
@@ -632,42 +757,25 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 					 Attributes->Add(arrr);
 				 }
 			 }
-			 dgvFields->Rows->Clear();
-			 bRecord->Enabled = false;
+			 Close();
 		 }
 private: System::Void tv_AfterSelect(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) 
 		 {
 			 if (e->Node->Level > 0)
 			 {
 				 dgvFields->Rows->Clear();
-				 cbId->Items->Clear();
-				 cbTitle->Items->Clear();
 
-				 _fields = gcnew List<String ^>();
 				 String^ schtab = String::Format("{0}.{1}", e->Node->Parent->Name, e->Node->Name);
-				 List<Object^>^ fields = _odbc->GetTableInfo7(schtab);
-				 for (int i = 0; i < fields->Count; i += 7)
+
+				 if (_allAttrs->ContainsKey(schtab))
 				 {
-					 array<Object^>^ row = gcnew array<Object ^>(8);
-					 row[0] = false;
-					 row[1] = fields[i];
-					 row[2] = fields[i+1];
-					 row[3] = fields[i+2];
-					 row[4] = fields[i+3];
-					 row[5] = fields[i+6];
-					 row[6] = fields[i+4];
-					 row[7] = fields[i+5];
-					 dgvFields->Rows->Add(row);
-
-					 String^ fieldCode = String::Format("{0}.{1}", schtab, fields[i]->ToString());
-					 if (!_fields->Contains(fieldCode))
-					 {
-						 _fields->Add(fieldCode);
-					 }
-					 cbId->Items->Add(fieldCode);
-					 cbTitle->Items->Add(fieldCode);
-
+					 SetDgvFromDict(schtab);
 				 }
+				 else
+				 {
+					 SetDgvFromSql(e, schtab);
+				 }
+				 
 				 cbId->Enabled = true;
 				 cbTitle->Enabled = true;
 			 }
@@ -678,7 +786,15 @@ private: System::Void tv_AfterSelect(System::Object^  sender, System::Windows::F
 		 }
 private: System::Void bAddFilter_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 DbFiltersForm^ form = gcnew DbFiltersForm(nullptr);
+			 List<String^>^ list = gcnew List<String ^>();
+			 for each (KeyValuePair<String^, List<Attribute^>^>^ pair in _allAttrs)
+			 {
+				 for each (Attribute^ attr in pair->Value)
+				 {
+					 list->Add(String::Format("{0}.{1}", pair->Key, attr->Code));
+				 }
+			 }
+			 DbFiltersForm^ form = gcnew DbFiltersForm(list);
 			 form->ShowDialog();
 			 if (!String::IsNullOrEmpty(form->Condition))
 			 {
@@ -687,7 +803,17 @@ private: System::Void bAddFilter_Click(System::Object^  sender, System::EventArg
 		 }
 private: System::Void bAddTableLinks_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 TableLinksForm^ form = gcnew TableLinksForm(nullptr);
+			 Dictionary<String^, List<String^>^>^ dict = gcnew Dictionary<String ^, List<String ^> ^>();
+			 for each (KeyValuePair<String^, List<Attribute^>^>^ pair in _allAttrs)
+			 {
+				 List<String^>^ list = gcnew List<String ^>();
+				 for each (Attribute^ attr in pair->Value)
+				 {
+					 list->Add(attr->Code);
+				 }
+				 dict->Add(pair->Key, list);
+			 }
+			 TableLinksForm^ form = gcnew TableLinksForm(dict);
 			 form->ShowDialog();
 			 if (_links != nullptr)
 			 {
@@ -705,6 +831,25 @@ private: System::Void bGroupParams_Click(System::Object^  sender, System::EventA
 				 _NameCol = form->NameCol;
 				 _Attrs = form->Attrs;
 			 }
+		 }
+private: System::Void tv_AfterCheck(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) 
+		 {
+			 if (!_programCheck && e->Node->Checked)
+			 {
+				 e->Node->Checked = false;
+			 }
+		 }
+private: System::Void cbId_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 AddFullCodesToComboBox(cbId);
+		 }
+private: System::Void cbTitle_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			  AddFullCodesToComboBox(cbTitle);
+		 }
+private: System::Void cbRoughAttr_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 AddFullCodesToComboBox(cbRoughAttr);
 		 }
 };
 }

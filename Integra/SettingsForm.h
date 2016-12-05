@@ -111,6 +111,14 @@ namespace Integra {
 
 	private: System::Windows::Forms::Button^  bEditSchema;
 
+
+			 private: System::Windows::Forms::Label^ label4;
+					  private: System::Windows::Forms::DataGridView^ dataGridView1;
+					  private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn1;
+					  private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn2;
+					  private: System::Windows::Forms::Button^ button1;
+					  private: System::Windows::Forms::Button^ button2;
+
 	private:
 		/// <summary>
 		/// Требуется переменная конструктора.
@@ -128,6 +136,12 @@ namespace Integra {
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->tpBooks = (gcnew System::Windows::Forms::TabPage());
+			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->dataGridViewTextBoxColumn2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->bEditBook = (gcnew System::Windows::Forms::Button());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->bAddBook = (gcnew System::Windows::Forms::Button());
@@ -169,6 +183,7 @@ namespace Integra {
 			this->panel1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
 			this->tpBooks->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvBooks))->BeginInit();
 			this->tpSystems->SuspendLayout();
@@ -218,16 +233,75 @@ namespace Integra {
 			// tpBooks
 			// 
 			this->tpBooks->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->tpBooks->Controls->Add(this->bEditBook);
-			this->tpBooks->Controls->Add(this->groupBox1);
+			this->tpBooks->Controls->Add(this->button1);
 			this->tpBooks->Controls->Add(this->label1);
 			this->tpBooks->Controls->Add(this->dgvBooks);
+			this->tpBooks->Controls->Add(this->button2);
+			this->tpBooks->Controls->Add(this->label4);
+			this->tpBooks->Controls->Add(this->dataGridView1);
+			this->tpBooks->Controls->Add(this->bEditBook);
+			this->tpBooks->Controls->Add(this->groupBox1);
 			this->tpBooks->Location = System::Drawing::Point(4, 26);
 			this->tpBooks->Name = L"tpBooks";
 			this->tpBooks->Padding = System::Windows::Forms::Padding(3);
 			this->tpBooks->Size = System::Drawing::Size(729, 264);
 			this->tpBooks->TabIndex = 0;
-			this->tpBooks->Text = L"Справочники";
+			this->tpBooks->Text = L"Списки справочников и систем";
+			// 
+			// button2
+			// 
+			this->button2->Location = System::Drawing::Point(223, 17);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(120, 26);
+			this->button2->TabIndex = 9;
+			this->button2->Text = L"Добавить/изменитьДобавить/изменить";
+			this->button2->UseVisualStyleBackColor = true;
+			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(567, 17);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(120, 26);
+			this->button1->TabIndex = 8;
+			this->button1->Text = L"Добавить/изменитьДобавить/изменить";
+			this->button1->UseVisualStyleBackColor = true;
+			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->Location = System::Drawing::Point(19, 24);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(115, 13);
+			this->label4->TabIndex = 7;
+			this->label4->Text = L"Созданные системы:";
+			// 
+			// dataGridView1
+			// 
+			this->dataGridView1->AllowUserToAddRows = false;
+			this->dataGridView1->AllowUserToDeleteRows = false;
+			this->dataGridView1->BackgroundColor = System::Drawing::Color::WhiteSmoke;
+			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->dataGridViewTextBoxColumn1, 
+				this->dataGridViewTextBoxColumn2});
+			this->dataGridView1->Location = System::Drawing::Point(19, 56);
+			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->ReadOnly = true;
+			this->dataGridView1->Size = System::Drawing::Size(324, 193);
+			this->dataGridView1->TabIndex = 6;
+			// 
+			// dataGridViewTextBoxColumn1
+			// 
+			this->dataGridViewTextBoxColumn1->HeaderText = L"ID";
+			this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
+			this->dataGridViewTextBoxColumn1->ReadOnly = true;
+			this->dataGridViewTextBoxColumn1->Visible = false;
+			// 
+			// dataGridViewTextBoxColumn2
+			// 
+			this->dataGridViewTextBoxColumn2->HeaderText = L"Наименование";
+			this->dataGridViewTextBoxColumn2->Name = L"dataGridViewTextBoxColumn2";
+			this->dataGridViewTextBoxColumn2->ReadOnly = true;
+			this->dataGridViewTextBoxColumn2->Width = 280;
 			// 
 			// bEditBook
 			// 
@@ -245,9 +319,9 @@ namespace Integra {
 			this->groupBox1->Controls->Add(this->bAddBook);
 			this->groupBox1->Controls->Add(this->label2);
 			this->groupBox1->Controls->Add(this->tbBookName);
-			this->groupBox1->Location = System::Drawing::Point(363, 21);
+			this->groupBox1->Location = System::Drawing::Point(457, 82);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(349, 114);
+			this->groupBox1->Size = System::Drawing::Size(194, 53);
 			this->groupBox1->TabIndex = 2;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Добавить справочник";
@@ -285,7 +359,7 @@ namespace Integra {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(19, 21);
+			this->label1->Location = System::Drawing::Point(363, 24);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(135, 13);
 			this->label1->TabIndex = 1;
@@ -298,10 +372,10 @@ namespace Integra {
 			this->dgvBooks->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dgvBooks->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvBooks->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->BookIdCol, this->BookNameCol});
-			this->dgvBooks->Location = System::Drawing::Point(19, 40);
+			this->dgvBooks->Location = System::Drawing::Point(363, 56);
 			this->dgvBooks->Name = L"dgvBooks";
 			this->dgvBooks->ReadOnly = true;
-			this->dgvBooks->Size = System::Drawing::Size(324, 206);
+			this->dgvBooks->Size = System::Drawing::Size(324, 193);
 			this->dgvBooks->TabIndex = 0;
 			// 
 			// BookIdCol
@@ -625,6 +699,7 @@ namespace Integra {
 			this->tabControl1->ResumeLayout(false);
 			this->tpBooks->ResumeLayout(false);
 			this->tpBooks->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvBooks))->EndInit();
@@ -652,7 +727,7 @@ namespace Integra {
 
 			Void SetSystems(array<String^, 2>^ list)
 			{
-				SetList(list, dgvSystems);
+				SetList(list, dataGridView1);
 			}
 
 			Void SetSystemsToSystemBooks(array<String^, 2>^ list)
@@ -700,6 +775,7 @@ namespace Integra {
 
 			void SetRoles()
 			{
+				tabControl1->TabPages->Remove(tpSystems);
 				if (RoleStation::AddEditBookHidden())
 				{
 					tabControl1->TabPages->Remove(tpBooks);

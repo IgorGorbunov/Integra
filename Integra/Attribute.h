@@ -40,7 +40,7 @@ namespace Integra {
 		{
 			String^ get()
 			{
-				return _schemaName + "." + _tableName;
+				return Schema + "." + Table;
 			}
 		}
 		property String^ FullCode
@@ -72,6 +72,10 @@ namespace Integra {
 			}
 		}
 
+		bool UseChecked;
+		String^ DataType;
+		String^ MaxLength;
+		bool CanBeNull;
 
 
 	private:
@@ -92,19 +96,13 @@ namespace Integra {
 			_odbc = odbc;
 			Set(_id);
 		}
-		Attribute(String^ fullCodeAttr, String^ name)
+		Attribute(String^ schema, String^ table, String^ code, String^ name)
 		{
-			array<String^>^ arr = fullCodeAttr->Split('.');
-			_attrName = arr[arr->Length-1];
-			_fullCode = "";
-			for (int i = 0;i < arr->Length - 1; i++)
-			{
-				if (String::IsNullOrEmpty(arr[i]))
-					continue;
-				_fullCode += String::Format("{0}.", arr[i]);
-			}
+			_schemaName = schema;
+			_tableName = table;
+			_attrName = code;
 			_name = name;
-			_tableName = _fullCode;
+			_fullCode = String::Format("{0}.{1}.{2}", _schemaName, _tableName, _attrName);
 		}
 
 	protected:
@@ -128,6 +126,10 @@ namespace Integra {
 			_idIntgrBook = Decimal::ToInt32((Decimal)parametrs[5]);
 		}
 
+		Void ParseFullCode()
+		{
 
+
+		}
 	};
 }

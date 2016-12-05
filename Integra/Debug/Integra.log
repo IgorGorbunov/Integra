@@ -1,13 +1,16 @@
-﻿Построение начато 29.11.2016 18:56:02.
+﻿Построение начато 05.12.2016 19:44:17.
      1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
      1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(2015,5): warning MSB3284: Не удается получить путь файла для библиотеки типа "307168c0-39ae-42ad-953f-a09f8a81520f" версии 1.0. Библиотека не зарегистрирована. (Исключение из HRESULT: 0x8002801D (TYPE_E_LIBNOTREGISTERED))
      1>ClCompile:
-         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt AddDbAttrsForm.cpp AddEditGroupForm.cpp AddEditSchemaForm.cpp AddEditSchemaForm2.cpp AddEditSystemBookForm.cpp AddEditUserRole.cpp AddGroupLinksForm.cpp AddNewTableForm.cpp AddNewUser.cpp AddSemAttrForm.cpp AttrCompareForm.cpp AutoConfigsForm.cpp AutoSettingsForm.cpp DbFiltersForm.cpp DifferencesForm.cpp EditForm.cpp GroupParamsForm.cpp JournalChangesForm.cpp LoginForm.cpp MainForm.cpp ManualIntegrationForm.cpp NoticesForm.cpp ODBCclass.h Results.cpp Results2.cpp SettingsForm.cpp TableLinksForm.cpp /clr:nostdlib 
+         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt AddDbAttrsForm.cpp AddEditGroupForm.cpp AddEditSchemaForm.cpp AddEditSchemaForm2.cpp AddEditSystemBookForm.cpp AddEditUserRole.cpp AddGroupLinksForm.cpp AddNewTableForm.cpp AddNewUser.cpp AddSemAttrForm.cpp AttrCompareForm.cpp AutoConfigsForm.cpp AutoSettingsForm.cpp DbFiltersForm.cpp DifferencesForm.cpp EditForm.cpp GroupParamsForm.cpp JournalChangesForm.cpp LoginForm.cpp MainForm.cpp ManualIntegrationForm.cpp NoticesForm.cpp ODBCclass.h Results.cpp Results2.cpp RoughInterg.cpp SettingsForm.cpp TableLinksForm.cpp /clr:nostdlib 
          AddDbAttrsForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\AddDbAttrsForm.h(587): warning C4965: неявная упаковка целого числа 0; используйте nullptr или явное приведение типов
          AddEditGroupForm.cpp
          AddEditSchemaForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\AddDbAttrsForm.h(587): warning C4965: неявная упаковка целого числа 0; используйте nullptr или явное приведение типов
          AddEditSchemaForm2.cpp
          AddEditSystemBookForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\AddDbAttrsForm.h(587): warning C4965: неявная упаковка целого числа 0; используйте nullptr или явное приведение типов
          AddEditUserRole.cpp
          AddGroupLinksForm.cpp
          AddNewTableForm.cpp
@@ -42,6 +45,7 @@
                      T=Integra::Position ^
                  ]
                  d:\work\coding\github\repos\integra\integra\Book.h(45): см. объявление "Integra::Book::GetAllPositions22"
+     1>d:\work\coding\github\repos\integra\integra\AddDbAttrsForm.h(587): warning C4965: неявная упаковка целого числа 0; используйте nullptr или явное приведение типов
          MainForm.cpp
      1>d:\work\coding\github\repos\integra\integra\BookSettings.h(100): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
      1>d:\work\coding\github\repos\integra\integra\Book.h(15): warning C4570: Integra::Book: не был объявлен явно как абстрактный, однако содержит абстрактные функции
@@ -63,6 +67,7 @@
                      T=Integra::Position ^
                  ]
                  d:\work\coding\github\repos\integra\integra\Book.h(45): см. объявление "Integra::Book::GetAllPositions22"
+     1>d:\work\coding\github\repos\integra\integra\AddDbAttrsForm.h(587): warning C4965: неявная упаковка целого числа 0; используйте nullptr или явное приведение типов
          Создание кода...
          Компиляция...
          ManualIntegrationForm.cpp
@@ -70,14 +75,16 @@
          ODBCclass.h
          Results.cpp
          Results2.cpp
+         RoughInterg.cpp
          SettingsForm.cpp
      1>d:\work\coding\github\repos\integra\integra\BookSettings.h(100): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddDbAttrsForm.h(587): warning C4965: неявная упаковка целого числа 0; используйте nullptr или явное приведение типов
          TableLinksForm.cpp
          Создание кода...
          D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt "C:\Users\igor\AppData\Local\Temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
          .NETFramework,Version=v4.0.AssemblyAttributes.cpp
        Link:
-         D:\soft\Visual Studio 2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe" /INCREMENTAL:NO /NOLOGO /ASSEMBLYRESOURCE:Debug\Integra.AddDbAttrsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditGroupForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSchemaForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSchemaForm2.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSystemBookForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditUserRole.resources /ASSEMBLYRESOURCE:Debug\Integra.AddGroupLinksForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddNewTableForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddNewUser.resources /ASSEMBLYRESOURCE:Debug\Integra.AddSemAttrForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AttrCompareForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AutoConfigsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AutoSettingsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DbFiltersForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DifferencesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.EditForm.resources /ASSEMBLYRESOURCE:Debug\Integra.GroupParamsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.JournalChangesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.LoginForm.resources /ASSEMBLYRESOURCE:Debug\Integra.MainForm.resources /ASSEMBLYRESOURCE:Debug\Integra.ManualIntegrationForm.resources /ASSEMBLYRESOURCE:Debug\Integra.NoticesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.Results.resources /ASSEMBLYRESOURCE:Debug\Integra.Results2.resources /ASSEMBLYRESOURCE:Debug\Integra.SettingsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.TableLinksForm.resources /MANIFEST /ManifestFile:"Debug\Integra.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\AddDbAttrsForm.obj
+         D:\soft\Visual Studio 2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe" /INCREMENTAL:NO /NOLOGO /ASSEMBLYRESOURCE:Debug\Integra.AddDbAttrsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditGroupForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSchemaForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSchemaForm2.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSystemBookForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditUserRole.resources /ASSEMBLYRESOURCE:Debug\Integra.AddGroupLinksForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddNewTableForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddNewUser.resources /ASSEMBLYRESOURCE:Debug\Integra.AddSemAttrForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AttrCompareForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AutoConfigsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AutoSettingsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DbFiltersForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DifferencesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.EditForm.resources /ASSEMBLYRESOURCE:Debug\Integra.GroupParamsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.JournalChangesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.LoginForm.resources /ASSEMBLYRESOURCE:Debug\Integra.MainForm.resources /ASSEMBLYRESOURCE:Debug\Integra.ManualIntegrationForm.resources /ASSEMBLYRESOURCE:Debug\Integra.NoticesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.Results.resources /ASSEMBLYRESOURCE:Debug\Integra.Results2.resources /ASSEMBLYRESOURCE:Debug\Integra.RoughInterg.resources /ASSEMBLYRESOURCE:Debug\Integra.SettingsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.TableLinksForm.resources /MANIFEST /ManifestFile:"Debug\Integra.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\AddDbAttrsForm.obj
          Debug\AddEditGroupForm.obj
          Debug\AddEditSchemaForm.obj
          Debug\AddEditSchemaForm2.obj
@@ -102,6 +109,7 @@
          Debug\ODBCclass.obj
          Debug\Results.obj
          Debug\Results2.obj
+         Debug\RoughInterg.obj
          Debug\SettingsForm.obj
          Debug\TableLinksForm.obj
          "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
@@ -112,4 +120,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:08.31
+Затраченное время: 00:00:08.47

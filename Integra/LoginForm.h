@@ -54,7 +54,7 @@ namespace Integra {
 	private: System::Windows::Forms::Button^  bCancel;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Label^  label2;
-	private: System::Windows::Forms::Label^  label3;
+
 
 	private:
 		/// <summary>
@@ -76,7 +76,6 @@ namespace Integra {
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// tbLogin
@@ -90,7 +89,7 @@ namespace Integra {
 			// 
 			this->tbPass->Location = System::Drawing::Point(21, 81);
 			this->tbPass->Name = L"tbPass";
-			this->tbPass->Size = System::Drawing::Size(150, 20);
+			this->tbPass->Size = System::Drawing::Size(156, 20);
 			this->tbPass->TabIndex = 1;
 			this->tbPass->UseSystemPasswordChar = true;
 			// 
@@ -103,13 +102,14 @@ namespace Integra {
 			this->cbDb->Size = System::Drawing::Size(156, 21);
 			this->cbDb->TabIndex = 2;
 			this->cbDb->Text = L"OTL.KTPP.AVIASTAR.LINK-UL.RU";
+			this->cbDb->Visible = false;
 			// 
 			// bOk
 			// 
 			this->bOk->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bOk->Location = System::Drawing::Point(21, 166);
+			this->bOk->Location = System::Drawing::Point(15, 125);
 			this->bOk->Name = L"bOk";
-			this->bOk->Size = System::Drawing::Size(75, 23);
+			this->bOk->Size = System::Drawing::Size(75, 32);
 			this->bOk->TabIndex = 3;
 			this->bOk->Text = L"Войти";
 			this->bOk->UseVisualStyleBackColor = false;
@@ -119,9 +119,9 @@ namespace Integra {
 			// 
 			this->bCancel->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->bCancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-			this->bCancel->Location = System::Drawing::Point(102, 166);
+			this->bCancel->Location = System::Drawing::Point(96, 125);
 			this->bCancel->Name = L"bCancel";
-			this->bCancel->Size = System::Drawing::Size(75, 23);
+			this->bCancel->Size = System::Drawing::Size(75, 32);
 			this->bCancel->TabIndex = 4;
 			this->bCancel->Text = L"Отмена";
 			this->bCancel->UseVisualStyleBackColor = false;
@@ -145,15 +145,6 @@ namespace Integra {
 			this->label2->TabIndex = 6;
 			this->label2->Text = L"Пароль";
 			// 
-			// label3
-			// 
-			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(24, 111);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(72, 13);
-			this->label3->TabIndex = 7;
-			this->label3->Text = L"База данных";
-			// 
 			// LoginForm
 			// 
 			this->AcceptButton = this->bOk;
@@ -161,8 +152,7 @@ namespace Integra {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->CancelButton = this->bCancel;
-			this->ClientSize = System::Drawing::Size(199, 206);
-			this->Controls->Add(this->label3);
+			this->ClientSize = System::Drawing::Size(199, 167);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->bCancel);
@@ -174,7 +164,7 @@ namespace Integra {
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"LoginForm";
-			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Аутентификация";
 			this->Load += gcnew System::EventHandler(this, &LoginForm::LoginForm_Load);
 			this->ResumeLayout(false);

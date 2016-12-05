@@ -592,10 +592,9 @@ private: System::Void tvBooks_DoubleClick(System::Object^  sender, System::Event
 		 }
 private: System::Void cbId_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 //lIdBook->Text = GetFullNodeCodeS(tvBooks->SelectedNode.FullPath);
 			 String^ code = cbId->SelectedItem->ToString();
 			 lIdBook->Text = tvBooks->SelectedNode->FullPath;
-			 IdCol = gcnew Attribute(GetFullNodeCodeS(tvBooks->SelectedNode) + "." + code, _attrCodeNames[code]);
+			 //IdCol = gcnew Attribute(GetFullNodeCodeS(tvBooks->SelectedNode) + "." + code, _attrCodeNames[code]);
 		 }
 
 
@@ -603,7 +602,7 @@ private: System::Void cbTitle_SelectedIndexChanged(System::Object^  sender, Syst
 		 {
 			 String^ code = cbTitle->SelectedItem->ToString();
 			 lNameBook->Text = tvBooks->SelectedNode->FullPath;
-			 TitleCol = gcnew Attribute(GetFullNodeCodeS(tvBooks->SelectedNode) + "." + code, _attrCodeNames[code]);
+			 //TitleCol = gcnew Attribute(GetFullNodeCodeS(tvBooks->SelectedNode) + "." + code, _attrCodeNames[code]);
 		 }
 
 private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^  e) 

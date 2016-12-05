@@ -154,6 +154,7 @@ namespace Integra {
 			this->dgvIntParams->ReadOnly = true;
 			this->dgvIntParams->Size = System::Drawing::Size(1017, 378);
 			this->dgvIntParams->TabIndex = 2;
+			this->dgvIntParams->Visible = false;
 			this->dgvIntParams->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MainForm::dgvIntParams_CellDoubleClick);
 			// 
 			// Id
@@ -329,6 +330,7 @@ namespace Integra {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"MainForm";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Интеграция нормативно-справочной информации \"Авиастар-СП\"";
 			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &MainForm::MainForm_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);

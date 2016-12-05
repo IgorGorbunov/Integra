@@ -96,7 +96,7 @@ namespace Integra {
 			// 
 			// dataGridView1
 			// 
-			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::AllCells;
+			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dataGridView1->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->Column1, 
@@ -113,25 +113,21 @@ namespace Integra {
 			// 
 			this->Column1->HeaderText = L"Поле";
 			this->Column1->Name = L"Column1";
-			this->Column1->Width = 39;
 			// 
 			// Column2
 			// 
 			this->Column2->HeaderText = L"Условие";
 			this->Column2->Name = L"Column2";
-			this->Column2->Width = 57;
 			// 
 			// Column3
 			// 
 			this->Column3->HeaderText = L"Значение";
 			this->Column3->Name = L"Column3";
-			this->Column3->Width = 80;
 			// 
 			// Column4
 			// 
 			this->Column4->HeaderText = L"Сочетание";
 			this->Column4->Name = L"Column4";
-			this->Column4->Width = 66;
 			// 
 			// panel2
 			// 
@@ -221,6 +217,7 @@ namespace Integra {
 			void SetDgvComboBoxes()
 			{
 				Column2->DataSource = _conditions;
+				Column4->DataSource = _comparators;
 				Column1->DataSource = _codes;
 			}
 
@@ -240,6 +237,10 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 			 Condition = "";
 			 for (int i = 0; i < dataGridView1->Rows->Count; i++)
 			 {
+				 if (dataGridView1[3, i]->Value == nullptr)
+				 {
+					 dataGridView1[3, i]->Value = "";
+				 }
 				 Condition += String::Format("{0} {1} {2}", dataGridView1[0, i]->Value, dataGridView1[1, i]->Value, dataGridView1[2, i]->Value);
 				 if (i < dataGridView1->Rows->Count - 1)
 				 {
@@ -250,6 +251,10 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 		 }
 private: System::Void dataGridView1_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
 		 {
+			 if (e->RowIndex < 0)
+			 {
+				 return;
+			 }
 			 if (e->ColumnIndex == 1)
 			 {
 				 String^ cellValue = dataGridView1[1, e->RowIndex]->Value->ToString();

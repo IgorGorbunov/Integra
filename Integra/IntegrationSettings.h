@@ -100,6 +100,7 @@ namespace Integra {
 		BookSettings^ _sourceBook;
 		BookSettings^ _targetBook;
 		IntegrationType _type;
+		int _intType;
 		Attribute^ _sourceAttributeEquil;
 		Attribute^ _targetAttributeEquil;
 		
@@ -113,6 +114,17 @@ namespace Integra {
 			_id = parametrsId;
 			_odbc = odbc;
 			Set(_id);
+		}
+
+		IntegrationSettings(OdbcClass^ odbc, BookSettings^ sourceBook, BookSettings^ targetBook, int type, Dictionary<Attribute^, Attribute^>^ attrPairs)
+		{
+			_odbc = odbc;
+			_sourceBook = sourceBook;
+			_targetBook = targetBook;
+			AttributePairs = attrPairs;
+			_intType = type;
+			CreateIntgrSchema();
+			CreateAttrPairs();
 		}
 
 	protected:
@@ -167,5 +179,38 @@ namespace Integra {
 		{
 			_targetBook = gcnew BookSettings(id, _odbc);
 		}
+
+		void CreateIntgrSchema()
+		{
+			String^ columns = "ID,ID_SOURCE_BOOK,ID_TARGET_BOOK,TYPE,CREATE_USER,CREATE_DATE";
+			_id = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_PARAMS");
+			int idS = _sourceBook->Id;
+			int idT = _targetBook->Id;
+			String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
+			String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+
+			String^ squery = String::Format("insert into {0}INTEGRATION_PARAMS ({1}) values ({2},{3},{4},{5},{6},{7})",
+				_odbc->schema, columns, _id, idS, idT, _intType, sqlUser, sqlDate);
+			_odbc->ExecuteNonQuery(squery);
+		}
+
+		void CreateAttrPairs()
+		{
+			String^ columns = "ID,ID_SOURCE_ATTRIBUTE,ID_TARGET_ATTRIBUTE,ID_PARAMETRS,CREATE_USER,CREATE_DATE";
+			for each (KeyValuePair<Attribute^, Attribute^>^ pair in AttributePairs)
+			{
+				int idPair = _odbc->GetMinFreeId(_odbc->schema + "ATTRIBUTE_PAIRS");
+				int idS = pair->Key->Id;
+				int idT = pair->Value->Id;
+				String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
+				String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+
+				String^ squery = String::Format("insert into {0}ATTRIBUTE_PAIRS ({1}) values ({2},{3},{4},{5},{6},{7})",
+					_odbc->schema, columns, idPair, idS, idT, _id, sqlUser, sqlDate);
+				_odbc->ExecuteNonQuery(squery);
+			}
+			
+		}
+
 	};
 }

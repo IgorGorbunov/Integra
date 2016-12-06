@@ -906,7 +906,7 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 private: System::Void bAddSchema_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 //AddEditSchemaForm^ form = gcnew AddEditSchemaForm(_settings);
-			 AddEditSchemaForm2^ form = gcnew AddEditSchemaForm2();
+			 AddEditSchemaForm2^ form = gcnew AddEditSchemaForm2(_settings, _odbc);
 			 form->ShowDialog();
 		 }
 private: System::Void bEditSchema_Click(System::Object^  sender, System::EventArgs^  e) 

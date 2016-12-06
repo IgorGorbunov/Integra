@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ODBCclass.h"
+#include "Attribute.h"
 
 namespace Integra {
 
@@ -50,9 +51,28 @@ namespace Integra {
 				return _password;
 			}
 		}
+		property bool HasGroup
+		{
+			bool get()
+			{
+				if (_groupId == 0)
+				{
+					return false;
+				}
+				return true;
+			}
+		}
+		property int Id
+		{
+			int get()
+			{
+				return _id;
+			}
+		}
 
 	private:
 		OdbcClass^ _odbc;
+		int _id;
 
 		String^ _systemName;
 		String^ _bookName;
@@ -67,11 +87,14 @@ namespace Integra {
 		String^ _sid;
 		String^ _driver;
 		bool _isSemantic;
+		int _groupId;
+		
 
 	public:
 		BookSettings(int parametrsId, OdbcClass^ odbc)
 		{
 			_odbc = odbc;
+			_id = parametrsId;
 			Set(parametrsId);
 		}
 
@@ -84,10 +107,31 @@ namespace Integra {
 
 		}
 
+	public:
+		List<Attribute^>^ GetUseAttrs()
+		{
+			String^ squery = String::Format("select ID, FULL_CODE, NAME, SCHEMA_NAME, TABLE_NAME, ATTR_NAME from {0}INTEGRATION_ATTRIBUTES" + 
+				" where ID_INTGR_BOOK = {1}", _odbc->schema, _id);
+			List<Object^>^ oList = _odbc->ExecuteQuery(squery);
+			List<Attribute^>^ list = gcnew List<Attribute ^>();
+			for (int i = 0; i < oList->Count; i+=6)
+			{
+				int id = OdbcClass::GetInt(oList[i]);
+				String^ fullTable = OdbcClass::GetResString(oList[i+1]);
+				String^ name = OdbcClass::GetResString(oList[i+2]);
+				String^ schemaName = OdbcClass::GetResString(oList[i+3]);
+				String^ tableName = OdbcClass::GetResString(oList[i+4]);
+				String^ attrName = OdbcClass::GetResString(oList[i+5]);
+				Attribute^ attr = gcnew Attribute(schemaName, tableName, attrName, name, id);
+				list->Add(attr);
+			}
+			return list;
+		}
+
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
 			SetSystem(Decimal::ToInt32((Decimal)parametrs[0]));
 			SetBook(Decimal::ToInt32((Decimal)parametrs[1]));
 			SetLogPass(parametrs[2]->ToString(), parametrs[3]->ToString());
@@ -98,6 +142,7 @@ namespace Integra {
 			_sid = parametrs[8]->ToString();
 			_driver = parametrs[9]->ToString();
 			_isSemantic = (bool) Decimal::ToInt32((Decimal)parametrs[10]);
+			_groupId = OdbcClass::GetInt(parametrs[11]);
 
 		}
 
@@ -112,6 +157,8 @@ namespace Integra {
 			List<Object^>^ parametrs = _odbc->ExecuteQuery("select NAME from " + _odbc->schema + "BOOKS where ID = " + id);
 			_bookName = parametrs[0]->ToString();
 		}
+
+		
 
 		Void SetLogPass(String^ login, String^ password)
 		{

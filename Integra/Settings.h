@@ -91,13 +91,30 @@ namespace Integra {
 
 		array<String^, 2>^ GetSystemBooks(String^ systemName)
 		{
-			_systemBooks = SetList("select " + _odbc->schema + "BOOKS.NAME, (SELECT  NAME FROM " + _odbc->schema + "INTEGRATION_ATTRIBUTES WHERE ID  = ATTR_ID), (SELECT  NAME FROM " + _odbc->schema + "INTEGRATION_ATTRIBUTES WHERE ID  = ATTR_TITLE) " +
+			array<String^, 2>^ systemBooks = SetList("select " + _odbc->schema + "BOOKS.NAME, (SELECT  NAME FROM " + _odbc->schema + "INTEGRATION_ATTRIBUTES WHERE ID  = ATTR_ID), (SELECT  NAME FROM " + _odbc->schema + "INTEGRATION_ATTRIBUTES WHERE ID  = ATTR_TITLE) " +
 				"from " + _odbc->schema + "BOOKS, " + _odbc->schema + "INTEGRATION_BOOK, " + _odbc->schema + "INTEGRATED_SYSTEMS " +
 				"where " + _odbc->schema + "INTEGRATED_SYSTEMS.NAME = '" + systemName + "' and " +
 				_odbc->schema + "BOOKS.ID = " + _odbc->schema + "INTEGRATION_BOOK.ID_BOOK and " +
 				_odbc->schema + "INTEGRATED_SYSTEMS.ID = " + _odbc->schema + "INTEGRATION_BOOK.ID_SYSTEM", 3);
+			return systemBooks;
+		}
+
+		array<String^, 2>^ GetSystemBooks(int bookTypeId)
+		{
+			String^ squery = String::Format("select INTEGRATION_BOOK.ID, BOOKS.NAME, INTEGRATED_SYSTEMS.NAME " +
+				"from BOOKS, {0}INTEGRATION_BOOK, {0}INTEGRATED_SYSTEMS where BOOKS.ID = {1} and BOOKS.ID = INTEGRATION_BOOK.ID_BOOK and INTEGRATED_SYSTEMS.ID = INTEGRATION_BOOK.ID_SYSTEM", _odbc->schema, bookTypeId);
+			array<String^, 2>^ systemBooks = SetList(squery, 3);
+			return systemBooks;
+		}
+
+		array<String^, 2>^ GetSystemBooks()
+		{
+			String^ squery = String::Format("select INTEGRATION_BOOK.ID, BOOKS.NAME, INTEGRATED_SYSTEMS.NAME " +
+				"from BOOKS, {0}INTEGRATION_BOOK, {0}INTEGRATED_SYSTEMS where BOOKS.ID = INTEGRATION_BOOK.ID_BOOK and INTEGRATED_SYSTEMS.ID = INTEGRATION_BOOK.ID_SYSTEM", _odbc->schema);
+			_systemBooks = SetList(squery, 3);
 			return _systemBooks;
 		}
+
 
 	private:
 		Void SetBooks()

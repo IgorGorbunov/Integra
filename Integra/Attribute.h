@@ -71,6 +71,14 @@ namespace Integra {
 				return _name;
 			}
 		}
+		property int Id
+		{
+			int get()
+			{
+				return _id;
+			}
+
+		}
 
 		bool UseChecked;
 		String^ DataType;
@@ -90,13 +98,7 @@ namespace Integra {
 		int _idIntgrBook;
 
 	public:
-		Attribute(int id, OdbcClass^ odbc)
-		{
-			_id = id;
-			_odbc = odbc;
-			Set(_id);
-		}
-		Attribute(String^ schema, String^ table, String^ code, String^ name)
+		void Init(String^ schema, String^ table, String^ code, String^ name)
 		{
 			_schemaName = schema;
 			_tableName = table;
@@ -104,6 +106,25 @@ namespace Integra {
 			_name = name;
 			_fullCode = String::Format("{0}.{1}.{2}", _schemaName, _tableName, _attrName);
 		}
+
+		Attribute(int id, OdbcClass^ odbc)
+		{
+			_id = id;
+			_odbc = odbc;
+			Set(_id);
+		}
+
+		Attribute(String^ schema, String^ table, String^ code, String^ name)
+		{
+			Init(schema, table, code, name);
+		}
+
+		Attribute(String^ schema, String^ table, String^ code, String^ name, int id)
+		{
+			Init(schema, table, code, name);
+			_id = id;
+		}
+
 
 	protected:
 		/// <summary>

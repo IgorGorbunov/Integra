@@ -1,5 +1,7 @@
 #pragma once
 #include "AddGroupLinksForm.h"
+#include "Settings.h"
+#include "IntegrationSettings.h"
 
 namespace Integra {
 
@@ -15,13 +17,22 @@ namespace Integra {
 	/// </summary>
 	public ref class AddEditSchemaForm2 : public System::Windows::Forms::Form
 	{
+	private:
+		Settings^ _settings;
+		array<String^, 2>^ _books;
+		OdbcClass^ _odbc;
+		Dictionary<Attribute^, Attribute^>^ _attrPairs;
+
+		BookSettings^ _sourceBook;
+		BookSettings^ _targetBook;
+
 	public:
-		AddEditSchemaForm2(void)
+		AddEditSchemaForm2(Settings^ settings, OdbcClass^ odbc)
 		{
 			InitializeComponent();
-			//
-			//TODO: добавьте код конструктора
-			//
+			_settings = settings;
+			_books = _settings->Books;
+			_odbc = odbc;
 		}
 
 	protected:
@@ -35,30 +46,41 @@ namespace Integra {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Label^  label1;
+
 	protected: 
-	private: System::Windows::Forms::ComboBox^  comboBox1;
-	private: System::Windows::Forms::GroupBox^  groupBox1;
-	private: System::Windows::Forms::ComboBox^  comboBox2;
-	private: System::Windows::Forms::Label^  label2;
+
+
+
+
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::DataGridView^  dgvSource;
 
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
+
+
+
 
 	private: System::Windows::Forms::Label^  label4;
-	private: System::Windows::Forms::ComboBox^  comboBox3;
+	private: System::Windows::Forms::ComboBox^  cbIntgr;
+
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::DataGridView^  dgvTarget;
 
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
+
+
+
 	private: System::Windows::Forms::Button^  bCancel;
 	private: System::Windows::Forms::Button^  bSave;
 	private: System::Windows::Forms::Button^  bLinks;
+	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::ComboBox^  cbBook;
+
+	private: System::Windows::Forms::GroupBox^  groupBox1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
 
 	private:
 		/// <summary>
@@ -73,18 +95,13 @@ namespace Integra {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
-			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
-			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->dgvSource = (gcnew System::Windows::Forms::DataGridView());
 			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->comboBox3 = (gcnew System::Windows::Forms::ComboBox());
+			this->cbIntgr = (gcnew System::Windows::Forms::ComboBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->dgvTarget = (gcnew System::Windows::Forms::DataGridView());
 			this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -93,59 +110,13 @@ namespace Integra {
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->bSave = (gcnew System::Windows::Forms::Button());
 			this->bLinks = (gcnew System::Windows::Forms::Button());
-			this->groupBox1->SuspendLayout();
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->cbBook = (gcnew System::Windows::Forms::ComboBox());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSource))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->BeginInit();
+			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(17, 23);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(70, 13);
-			this->label1->TabIndex = 0;
-			this->label1->Text = L"Справочник:";
-			// 
-			// comboBox1
-			// 
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Технологических операций", L"Оборудования"});
-			this->comboBox1->Location = System::Drawing::Point(20, 39);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(231, 21);
-			this->comboBox1->TabIndex = 1;
-			// 
-			// groupBox1
-			// 
-			this->groupBox1->Controls->Add(this->comboBox2);
-			this->groupBox1->Controls->Add(this->label2);
-			this->groupBox1->Controls->Add(this->comboBox1);
-			this->groupBox1->Controls->Add(this->label1);
-			this->groupBox1->Location = System::Drawing::Point(22, 24);
-			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(588, 77);
-			this->groupBox1->TabIndex = 2;
-			this->groupBox1->TabStop = false;
-			this->groupBox1->Text = L"Фильтр справочников и систем";
-			// 
-			// comboBox2
-			// 
-			this->comboBox2->FormattingEnabled = true;
-			this->comboBox2->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"САПР ТП ТЕМП2", L"Semantic"});
-			this->comboBox2->Location = System::Drawing::Point(330, 39);
-			this->comboBox2->Name = L"comboBox2";
-			this->comboBox2->Size = System::Drawing::Size(231, 21);
-			this->comboBox2->TabIndex = 3;
-			// 
-			// label2
-			// 
-			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(327, 23);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(54, 13);
-			this->label2->TabIndex = 2;
-			this->label2->Text = L"Система:";
 			// 
 			// label3
 			// 
@@ -160,6 +131,7 @@ namespace Integra {
 			// 
 			this->dgvSource->AllowUserToAddRows = false;
 			this->dgvSource->AllowUserToDeleteRows = false;
+			this->dgvSource->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dgvSource->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dgvSource->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvSource->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->Column1, this->Column2, 
@@ -176,6 +148,7 @@ namespace Integra {
 			this->Column1->HeaderText = L"Наименование";
 			this->Column1->Name = L"Column1";
 			this->Column1->ReadOnly = true;
+			this->Column1->Visible = false;
 			// 
 			// Column2
 			// 
@@ -198,19 +171,19 @@ namespace Integra {
 			this->label4->TabIndex = 5;
 			this->label4->Text = L"Система-получатель:";
 			// 
-			// comboBox3
+			// cbIntgr
 			// 
-			this->comboBox3->FormattingEnabled = true;
-			this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Одностороннее", L"Двустороннее"});
-			this->comboBox3->Location = System::Drawing::Point(634, 63);
-			this->comboBox3->Name = L"comboBox3";
-			this->comboBox3->Size = System::Drawing::Size(231, 21);
-			this->comboBox3->TabIndex = 5;
+			this->cbIntgr->FormattingEnabled = true;
+			this->cbIntgr->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Односторонняя", L"Двусторонняя"});
+			this->cbIntgr->Location = System::Drawing::Point(42, 342);
+			this->cbIntgr->Name = L"cbIntgr";
+			this->cbIntgr->Size = System::Drawing::Size(231, 21);
+			this->cbIntgr->TabIndex = 5;
 			// 
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(631, 47);
+			this->label5->Location = System::Drawing::Point(39, 326);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(90, 13);
 			this->label5->TabIndex = 4;
@@ -220,6 +193,7 @@ namespace Integra {
 			// 
 			this->dgvTarget->AllowUserToAddRows = false;
 			this->dgvTarget->AllowUserToDeleteRows = false;
+			this->dgvTarget->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dgvTarget->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dgvTarget->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvTarget->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->dataGridViewTextBoxColumn1, 
@@ -236,6 +210,7 @@ namespace Integra {
 			this->dataGridViewTextBoxColumn1->HeaderText = L"Наименование";
 			this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
 			this->dataGridViewTextBoxColumn1->ReadOnly = true;
+			this->dataGridViewTextBoxColumn1->Visible = false;
 			// 
 			// dataGridViewTextBoxColumn2
 			// 
@@ -274,13 +249,42 @@ namespace Integra {
 			// bLinks
 			// 
 			this->bLinks->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bLinks->Location = System::Drawing::Point(419, 317);
+			this->bLinks->Location = System::Drawing::Point(414, 326);
 			this->bLinks->Name = L"bLinks";
 			this->bLinks->Size = System::Drawing::Size(109, 39);
 			this->bLinks->TabIndex = 9;
 			this->bLinks->Text = L"Связи";
 			this->bLinks->UseVisualStyleBackColor = false;
 			this->bLinks->Click += gcnew System::EventHandler(this, &AddEditSchemaForm2::bLinks_Click);
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(17, 23);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(70, 13);
+			this->label1->TabIndex = 0;
+			this->label1->Text = L"Справочник:";
+			// 
+			// cbBook
+			// 
+			this->cbBook->FormattingEnabled = true;
+			this->cbBook->Location = System::Drawing::Point(20, 39);
+			this->cbBook->Name = L"cbBook";
+			this->cbBook->Size = System::Drawing::Size(231, 21);
+			this->cbBook->TabIndex = 1;
+			this->cbBook->SelectedIndexChanged += gcnew System::EventHandler(this, &AddEditSchemaForm2::cbBook_SelectedIndexChanged);
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Controls->Add(this->cbBook);
+			this->groupBox1->Controls->Add(this->label1);
+			this->groupBox1->Location = System::Drawing::Point(22, 24);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(277, 77);
+			this->groupBox1->TabIndex = 2;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Фильтр справочников:";
 			// 
 			// AddEditSchemaForm2
 			// 
@@ -292,7 +296,7 @@ namespace Integra {
 			this->Controls->Add(this->bSave);
 			this->Controls->Add(this->bCancel);
 			this->Controls->Add(this->dgvTarget);
-			this->Controls->Add(this->comboBox3);
+			this->Controls->Add(this->cbIntgr);
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->dgvSource);
@@ -302,15 +306,40 @@ namespace Integra {
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Добавление/редактирование схем интеграции";
 			this->Load += gcnew System::EventHandler(this, &AddEditSchemaForm2::AddEditSchemaForm2_Load);
-			this->groupBox1->ResumeLayout(false);
-			this->groupBox1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSource))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->EndInit();
+			this->groupBox1->ResumeLayout(false);
+			this->groupBox1->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
+
+		private:
+			void SetDgv(DataGridView^ dgv, array<String^, 2>^ books)
+			{
+				dgv->Rows->Clear();
+				
+				for (int i = 0; i < books->GetLength(0); i++)
+				{
+					array<String^>^ row = gcnew array<String ^>(books->GetLength(1));
+					for (int j = 0; j < books->GetLength(1); j++)
+					{
+						row[j] = books[i,j];
+					}
+					dgv->Rows->Add(row);
+				}
+			}
+
+			void SetComboBox()
+			{
+				cbBook->Items->Clear();
+				for (int i = 0; i < _books->GetLength(0); i++)
+				{
+					cbBook->Items->Add(_books[i,1]);
+				}
+			}
 
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -318,26 +347,64 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bSave_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 if (cbIntgr->SelectedItem == nullptr)
+			 {
+				 MessageBox::Show("Не задан тип интеграции!");
+				 return;
+			 }
+			 if (_attrPairs == nullptr)
+			 {
+				 MessageBox::Show("Не заданы связи между реквизитами!");
+				 return;
+			 }
+			 int intgrType = cbIntgr->SelectedIndex;
+			 IntegrationSettings^ intSettings = gcnew IntegrationSettings(_odbc, _sourceBook, _targetBook, intgrType, _attrPairs); 
+
 			 Close();
 		 }
 private: System::Void bLinks_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 AddGroupLinksForm^ form = gcnew AddGroupLinksForm();
+			 String^ oS = dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
+			 String^ oT = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
+			 _sourceBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oS)), _odbc);
+			 _targetBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oT)), _odbc);
+			 AddGroupLinksForm^ form = gcnew AddGroupLinksForm(_sourceBook, _targetBook);
 			 form->ShowDialog();
-
+			 if (form->attrPairs != nullptr)
+			 {
+				 _attrPairs = form->attrPairs;
+			 }
 		 }
 private: System::Void AddEditSchemaForm2_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 array<String^>^ row = gcnew array<String ^>(3);
-			 row[0] = "Тестовый справочник оборудования ТЕМП"; 
-			 row[1] = "Справочник оборудования"; 
-			 row[2] = "САПР ТП \"ТеМП2\""; 
-			 dgvSource->Rows->Add(row);
+			 array<String^, 2>^ systemBooks = _settings->GetSystemBooks();
+			 SetDgv(dgvSource, systemBooks);
+			 SetDgv(dgvTarget, systemBooks);
+			 SetComboBox();
+		 }
 
-			 row[0] = "Тестовый справочник оборудования Semantic"; 
-			 row[1] = "Справочник оборудования"; 
-			 row[2] = "АСУ НСИ \"Semantic\"";
-			 dgvTarget->Rows->Add(row);
+private: System::Void cbBook_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (cbBook->SelectedItem == nullptr || cbBook->SelectedItem->ToString() == "")
+			 {
+				 array<String^, 2>^ systemBooks = _settings->GetSystemBooks();
+				 SetDgv(dgvSource, systemBooks);
+				 SetDgv(dgvTarget, systemBooks);
+				 return;
+			 }
+			 String^ name = cbBook->SelectedItem->ToString();
+			 int id = 0;
+			 for (int i = 0; i < _books->GetLength(0); i++)
+			 {
+				 if (name == _books[i,1])
+				 {
+					 id = Int32::Parse(_books[i,0]);
+					 break;
+				 }
+			 }
+			 array<String^, 2>^ systemBooks = _settings->GetSystemBooks(id);
+			 SetDgv(dgvSource, systemBooks);
+			 SetDgv(dgvTarget, systemBooks);
 		 }
 };
 }

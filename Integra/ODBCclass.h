@@ -123,6 +123,18 @@ namespace Integra {
 				return nullptr;
 			}
 
+			static String^ GetResString(Object^ o)
+			{
+				if (o == nullptr)
+				{
+					return "";
+				}
+				else
+				{
+					return o->ToString();
+				}
+			}
+
 
 			static String^ GetSqlString(String^ s)
 			{
@@ -135,6 +147,15 @@ namespace Integra {
 					return String::Format("'{0}'", s);
 				}
 				return s;
+			}
+
+			static int GetInt(Object^ o)
+			{
+				if (o == nullptr || String::IsNullOrEmpty(o->ToString()))
+				{
+					return 0;
+				}
+				return Decimal::ToInt32((Decimal)o);
 			}
 
 			String^ GetSqlDate(DateTime^ dateTime)

@@ -18,7 +18,7 @@ namespace Integra {
 	public ref class Position
 	{
 	public:
-		property Dictionary<Attribute^, String^>^ Attributes
+		property Dictionary<Attribute^, String^>^ AttributesAndValues
 		{
 			Dictionary<Attribute^, String^>^ get()
 			{
@@ -34,9 +34,14 @@ namespace Integra {
 			}
 		}
 
+		String^ AttrIdCode;
+
+		String^ Caption;
+
 	protected:
 		Dictionary<Attribute^, String^>^ _attributes;
 		String^ _unicId;
+		
 
 	public:
 		Position() 

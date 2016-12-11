@@ -197,6 +197,7 @@ namespace Integra {
 			this->tbPass->Name = L"tbPass";
 			this->tbPass->Size = System::Drawing::Size(177, 20);
 			this->tbPass->TabIndex = 4;
+			this->tbPass->Text = L"1990";
 			this->tbPass->UseSystemPasswordChar = true;
 			// 
 			// label3
@@ -214,6 +215,7 @@ namespace Integra {
 			this->tbLogin->Name = L"tbLogin";
 			this->tbLogin->Size = System::Drawing::Size(177, 20);
 			this->tbLogin->TabIndex = 0;
+			this->tbLogin->Text = L"Administrator";
 			// 
 			// cbSystem
 			// 

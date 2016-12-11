@@ -117,6 +117,12 @@
     <ClCompile Include="RoughInterg.cpp">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
+    <ClCompile Include="ManualIntegrationForm1.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="Results3.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -272,6 +278,12 @@
     <ClInclude Include="RoughInterg.h">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClInclude>
+    <ClInclude Include="ManualIntegrationForm1.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Results3.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
@@ -350,6 +362,12 @@
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="NoticesForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoughInterg.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManualIntegrationForm1.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
   </ItemGroup>

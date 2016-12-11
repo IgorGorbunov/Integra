@@ -10,6 +10,7 @@
 #include "Results.h"
 #include "RoleStation.h"
 #include "AddEditUserRole.h"
+#include "ManualIntegrationForm1.h"
 
 namespace Integra {
 
@@ -235,12 +236,14 @@ namespace Integra {
 			this->ðó÷íîéÐåæèìToolStripMenuItem->Name = L"ðó÷íîéÐåæèìToolStripMenuItem";
 			this->ðó÷íîéÐåæèìToolStripMenuItem->Size = System::Drawing::Size(207, 22);
 			this->ðó÷íîéÐåæèìToolStripMenuItem->Text = L"Ðó÷íîé ðåæèì";
+			this->ðó÷íîéÐåæèìToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::ðó÷íîéÐåæèìToolStripMenuItem_Click);
 			// 
 			// ãðóáîåÑîîòâåòñâèåToolStripMenuItem
 			// 
 			this->ãðóáîåÑîîòâåòñâèåToolStripMenuItem->Name = L"ãðóáîåÑîîòâåòñâèåToolStripMenuItem";
 			this->ãðóáîåÑîîòâåòñâèåToolStripMenuItem->Size = System::Drawing::Size(190, 22);
 			this->ãðóáîåÑîîòâåòñâèåToolStripMenuItem->Text = L"Ãðóáîå ñîîòâåòñòâèå";
+			this->ãðóáîåÑîîòâåòñâèåToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::ãðóáîåÑîîòâåòñâèåToolStripMenuItem_Click);
 			// 
 			// òî÷íîåÑîîòâåòñòâèåToolStripMenuItem
 			// 
@@ -410,6 +413,15 @@ private: System::Void íàñòðîéêèÑïðàâî÷íèêîâToolStripMenuItem_Click(System::Objec
 			 settingsForm->ShowDialog();
 		 }
 
+private: System::Void ãðóáîåÑîîòâåòñâèåToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+
+		 }
+private: System::Void ðó÷íîéÐåæèìToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 ManualIntegrationForm1^ form = gcnew ManualIntegrationForm1(ProgramIntegration::Odbc);
+			 form->ShowDialog();
+		 }
 };
 }
 

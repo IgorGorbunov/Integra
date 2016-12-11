@@ -38,12 +38,8 @@ namespace Integra {
 		public:
 			void Init()
 			{
-#ifdef _DEBUG   
-				schema = "";
-#endif 
-#ifndef _DEBUG   
-				schema = "ULGU1.";
-#endif 
+				schema = ""; 
+				//schema = "ULGU1.";
 			}
 
 			OdbcClass(String^ driver) 

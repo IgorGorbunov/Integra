@@ -103,7 +103,7 @@ namespace Integra {
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(368, 68);
+			this->button1->Location = System::Drawing::Point(386, 68);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(117, 23);
 			this->button1->TabIndex = 4;
@@ -112,7 +112,7 @@ namespace Integra {
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(354, 213);
+			this->button2->Location = System::Drawing::Point(338, 213);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(75, 23);
 			this->button2->TabIndex = 5;
@@ -121,11 +121,11 @@ namespace Integra {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(446, 213);
+			this->button3->Location = System::Drawing::Point(428, 213);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 6;
-			this->button3->Text = L"Пропустить";
+			this->button3->Text = L"Не найдено";
 			this->button3->UseVisualStyleBackColor = true;
 			// 
 			// RoughInterg

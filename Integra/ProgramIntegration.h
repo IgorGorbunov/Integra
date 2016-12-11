@@ -1,4 +1,5 @@
 #pragma once
+
 #include "SystemSettings.h"
 #include "BookSettings.h"
 #include "IntegrationSettings.h"
@@ -25,10 +26,14 @@ namespace Integra {
 		static List<Position^>^ TargetNew;
 		static List<DifferencePosition^>^ Differences;
 
+		static List<List<Object^>^>^ SourceTabNew;
+		static List<List<Object^>^>^ TargetTabNew;
+
 
 	private:
 		static SystemSettings^ _accessSettings;
 		static List<IntegrationSettings^>^ _inegrationSettings;
+		static Integration^ _integration;
 
 	public:
 		ProgramIntegration(OdbcClass^ odbc) 
@@ -46,9 +51,29 @@ namespace Integra {
 		}
 
 	public:
-		Void Start() 
+		static Void StartIntegrationTable(IntegrationSettings^ intSet, System::Windows::Forms::Form^% form, System::Windows::Forms::Label^% lblCount) 
 		{
-			
+			_integration = gcnew Integration(intSet, Odbc);
+			_integration->StartIntegrationTable(form, lblCount);
+			SourceNew = _integration->SourceNew;
+			TargetNew = _integration->TargetNew;
+			Differences = _integration->Differences;
+		}
+
+
+		static void AddPosToSource(Position^ pos)
+		{
+			_integration->AddPosToSource(pos);
+		}
+
+		static void AddPosToTarget(Position^ pos)
+		{
+			_integration->AddPosToTarget(pos);
+		}
+
+		static void UpdatePosTarget(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)
+		{
+			_integration->UpdatePosToTarget(currentPos, newAttrVals);
 		}
 
 		static Void StartIntegration(IntegrationSettings^ intSet) 
@@ -81,6 +106,16 @@ namespace Integra {
 				_inegrationSettings->Add(settings);
 			}
 			return _inegrationSettings;
+		}
+
+		static List<Object^>^ GetTableIntegrationParams() 
+		{
+			String^ columns = "INTEGRATION_PARAMS.ID, INTEGRATION_BOOK.ID.ID, INTEGRATION_BOOK.ID, INTEGRATION_BOOK.ID, INTEGRATION_BOOK.ID, INTEGRATION_BOOK.ID, INTEGRATION_BOOK.ID, INTEGRATION_PARAMS.ID, INTEGRATION_PARAMS.ID, INTEGRATION_PARAMS.ID, INTEGRATION_PARAMS.ID, ";
+			
+			String^ squery = String::Format("select INTEGRATION_PARAMS.ID, BOOK.ID, BOOK.NAME " + 
+				"from {0}INTEGRATION_PARAMS, {0}BOOKS where INTEGRATION_PARAMS.BOOK_TYPE_ID = BOOK.ID", Odbc->schema);
+			List<Object^>^ list = Odbc->ExecuteQuery(squery);
+			return list;
 		}
 
 		static Void SaveLogs()

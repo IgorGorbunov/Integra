@@ -22,9 +22,8 @@ namespace Integra {
 
 	private:
 		Semantic^ _semantic;
-		BookSettings^ _bookSettings;
+		BookSettings^ BookSetting;
 		IntegrationSettings^ _intSettings;
-		OdbcClass^ _commonOdbc;
 
 		Object^ _root;
 		List<String^>^ _tables;
@@ -35,7 +34,7 @@ namespace Integra {
 		int _i;
 
 	public:
-		SemanticBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ commonOdbc, bool isSource, OdbcClass^ odbc) : Book(bookSettings, intSettings, odbc)
+		SemanticBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ odbc, bool isSource) : Book(bookSettings, intSettings, odbc)
 		{
 			/*_bookSettings = bookSettings;
 			_intSettings = intSettings;
@@ -83,6 +82,21 @@ namespace Integra {
 		{
 			n = 0;
 			return nullptr;
+		}
+
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs) override
+		{
+			return nullptr;
+		}
+
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		{
+
+		}
+
+		virtual void UpdatePosition(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		{
+
 		}
 
 	private:
@@ -168,5 +182,7 @@ namespace Integra {
 			return GetChildPositions2(rootPos->GetChildPositions(), worker, e);
 
 		}
+
+
 	};
 }

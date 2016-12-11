@@ -107,10 +107,12 @@
     <ClCompile Include="LoginForm.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="ManualIntegrationForm.cpp" />
+    <ClCompile Include="ManualIntegrationForm1.cpp" />
     <ClCompile Include="NoticesForm.cpp" />
     <ClCompile Include="ODBCclass.h" />
     <ClCompile Include="Results.cpp" />
     <ClCompile Include="Results2.cpp" />
+    <ClCompile Include="Results3.cpp" />
     <ClCompile Include="RoughInterg.cpp" />
     <ClCompile Include="SettingsForm.cpp" />
     <ClCompile Include="TableLinksForm.cpp" />
@@ -188,6 +190,9 @@
     <ClInclude Include="ManualIntegrationForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="ManualIntegrationForm1.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="NetCopy.h" />
     <ClInclude Include="NoticesForm.h">
       <FileType>CppForm</FileType>
@@ -199,6 +204,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Results2.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="Results3.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="RoleStation.h" />
@@ -288,6 +296,9 @@
     <EmbeddedResource Include="ManualIntegrationForm.resx">
       <DependentUpon>ManualIntegrationForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ManualIntegrationForm1.resx">
+      <DependentUpon>ManualIntegrationForm1.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NoticesForm.resx">
       <DependentUpon>NoticesForm.h</DependentUpon>
     </EmbeddedResource>
@@ -296,6 +307,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Results2.resx">
       <DependentUpon>Results2.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Results3.resx">
+      <DependentUpon>Results3.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RoughInterg.resx">
       <DependentUpon>RoughInterg.h</DependentUpon>

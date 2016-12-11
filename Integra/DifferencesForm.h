@@ -2,6 +2,7 @@
 
 #include "DiffererncePosition.h"
 
+
 namespace Integra {
 
 	using namespace System;
@@ -18,6 +19,7 @@ namespace Integra {
 	{
 	public:
 		DifferencePosition^ _pos;
+		Dictionary<Attribute^, String^>^ NewAttrNames;
 
 	public:
 		DifferencesForm(DifferencePosition^ pos)
@@ -44,19 +46,31 @@ namespace Integra {
 
 
 	private: System::Windows::Forms::DataGridView^  dgvEqual;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
+
+
+
 	private: System::Windows::Forms::Button^  bClose;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::Button^  bIntegInSource;
+
+
+
+
+
+
+
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  codeSourceCol;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  codeTargetCol;
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  valueCol;
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  valueTargetCol;
-	private: System::Windows::Forms::Button^  bRec;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
+	private: System::Windows::Forms::Button^  bIntegInTarget;
+
 
 	private:
 		/// <summary>
@@ -85,7 +99,8 @@ namespace Integra {
 			this->bClose = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->bRec = (gcnew System::Windows::Forms::Button());
+			this->bIntegInSource = (gcnew System::Windows::Forms::Button());
+			this->bIntegInTarget = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvDifferent))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvEqual))->BeginInit();
 			this->SuspendLayout();
@@ -107,13 +122,13 @@ namespace Integra {
 			// 
 			// codeSourceCol
 			// 
-			this->codeSourceCol->HeaderText = L"Код из системы источника";
+			this->codeSourceCol->HeaderText = L"Наименование из системы источника";
 			this->codeSourceCol->Name = L"codeSourceCol";
 			this->codeSourceCol->Width = 76;
 			// 
 			// codeTargetCol
 			// 
-			this->codeTargetCol->HeaderText = L"Код из системы получателя";
+			this->codeTargetCol->HeaderText = L"Наименование из системы получателя";
 			this->codeTargetCol->Name = L"codeTargetCol";
 			this->codeTargetCol->Width = 76;
 			// 
@@ -158,13 +173,13 @@ namespace Integra {
 			// 
 			// dataGridViewTextBoxColumn1
 			// 
-			this->dataGridViewTextBoxColumn1->HeaderText = L"Код из системы источника";
+			this->dataGridViewTextBoxColumn1->HeaderText = L"Наименование из системы источника";
 			this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
 			this->dataGridViewTextBoxColumn1->ReadOnly = true;
 			// 
 			// dataGridViewTextBoxColumn2
 			// 
-			this->dataGridViewTextBoxColumn2->HeaderText = L"Код из системы получателя";
+			this->dataGridViewTextBoxColumn2->HeaderText = L"Наименование из системы получателя";
 			this->dataGridViewTextBoxColumn2->Name = L"dataGridViewTextBoxColumn2";
 			this->dataGridViewTextBoxColumn2->ReadOnly = true;
 			// 
@@ -180,9 +195,9 @@ namespace Integra {
 			this->bClose->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->bClose->Location = System::Drawing::Point(556, 473);
 			this->bClose->Name = L"bClose";
-			this->bClose->Size = System::Drawing::Size(75, 23);
+			this->bClose->Size = System::Drawing::Size(75, 47);
 			this->bClose->TabIndex = 2;
-			this->bClose->Text = L"Закрыть";
+			this->bClose->Text = L"Отмена";
 			this->bClose->UseVisualStyleBackColor = false;
 			this->bClose->Click += gcnew System::EventHandler(this, &DifferencesForm::bClose_Click);
 			// 
@@ -204,24 +219,38 @@ namespace Integra {
 			this->label2->TabIndex = 4;
 			this->label2->Text = L"Различные атрибуты";
 			// 
-			// bRec
+			// bIntegInSource
 			// 
-			this->bRec->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bRec->Enabled = false;
-			this->bRec->Location = System::Drawing::Point(475, 473);
-			this->bRec->Name = L"bRec";
-			this->bRec->Size = System::Drawing::Size(75, 23);
-			this->bRec->TabIndex = 5;
-			this->bRec->Text = L"Изменить";
-			this->bRec->UseVisualStyleBackColor = false;
+			this->bIntegInSource->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bIntegInSource->Enabled = false;
+			this->bIntegInSource->Location = System::Drawing::Point(281, 473);
+			this->bIntegInSource->Name = L"bIntegInSource";
+			this->bIntegInSource->Size = System::Drawing::Size(117, 47);
+			this->bIntegInSource->TabIndex = 5;
+			this->bIntegInSource->Text = L"Интегрировать в систему источник";
+			this->bIntegInSource->UseVisualStyleBackColor = false;
+			this->bIntegInSource->Visible = false;
+			// 
+			// bIntegInTarget
+			// 
+			this->bIntegInTarget->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bIntegInTarget->Enabled = false;
+			this->bIntegInTarget->Location = System::Drawing::Point(420, 473);
+			this->bIntegInTarget->Name = L"bIntegInTarget";
+			this->bIntegInTarget->Size = System::Drawing::Size(117, 47);
+			this->bIntegInTarget->TabIndex = 6;
+			this->bIntegInTarget->Text = L"Интегрировать в систему приемник";
+			this->bIntegInTarget->UseVisualStyleBackColor = false;
+			this->bIntegInTarget->Click += gcnew System::EventHandler(this, &DifferencesForm::bIntegInTarget_Click);
 			// 
 			// DifferencesForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->ClientSize = System::Drawing::Size(654, 508);
-			this->Controls->Add(this->bRec);
+			this->ClientSize = System::Drawing::Size(654, 532);
+			this->Controls->Add(this->bIntegInTarget);
+			this->Controls->Add(this->bIntegInSource);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->bClose);
@@ -249,8 +278,8 @@ namespace Integra {
 				 for each(array<Object^>^ arr in _pos->Equals)
 				 {
 					 array<String^>^ arrS = gcnew array<String ^>(3);
-					 arrS[0] = ((Attribute^)arr[0])->Code;
-					 arrS[1] = ((Attribute^)arr[1])->Code;
+					 arrS[0] = ((Attribute^)arr[0])->Name;
+					 arrS[1] = ((Attribute^)arr[1])->Name;
 					 arrS[2] = arr[2]->ToString();
 					 dgvEqual->Rows->Add(arrS);
 				 }
@@ -258,8 +287,8 @@ namespace Integra {
 				 for each(array<Object^, 2>^ arr in _pos->Differences)
 				 {
 					 array<String^>^ arrS = gcnew array<String ^>(6);
-					 arrS[0] = ((Attribute^)arr[0, 0])->Code;
-					 arrS[1] = ((Attribute^)arr[1, 0])->Code;
+					 arrS[0] = ((Attribute^)arr[0, 0])->Name;
+					 arrS[1] = ((Attribute^)arr[1, 0])->Name;
 					 arrS[3] = arr[0, 1]->ToString();
 					 arrS[5] = arr[1, 1]->ToString();
 					 dgvDifferent->Rows->Add(arrS);
@@ -267,6 +296,7 @@ namespace Integra {
 			 }
 private: System::Void bClose_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 NewAttrNames = nullptr;
 			 Close();
 		 }
 private: System::Void dgvDifferent_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
@@ -296,13 +326,30 @@ private: System::Void dgvDifferent_CellValueChanged(System::Object^  sender, Sys
 				 }
 				 if (isTwoFalse)
 				 {
-					 bRec->Enabled = false;
+					 bIntegInTarget->Enabled = false;
 				 }
 				 else
 				 {
-					 bRec->Enabled = true;
+					 bIntegInTarget->Enabled = true;
 				 }
 			 }
+		 }
+private: System::Void bIntegInTarget_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 Dictionary<Attribute^, String^>^ newAttrVals = gcnew Dictionary<Attribute ^, String ^>();
+			 for (int i = 0; i < dgvDifferent->Rows->Count; i++)
+			 {
+				 bool fromSource =  (bool)dgvDifferent[2, i]->Value;
+				 if (fromSource)
+				 {
+					 array<Object^, 2>^ arr = _pos->Differences[i];
+					 Attribute^ tAttr = (Attribute^) arr[1,0];
+					 String^ value = dgvDifferent[3, i]->Value->ToString();
+					 newAttrVals->Add(tAttr, value);
+				 }
+			 }
+			 NewAttrNames = newAttrVals;
+			 Close();
 		 }
 };
 }

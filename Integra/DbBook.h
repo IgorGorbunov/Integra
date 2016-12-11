@@ -2,8 +2,10 @@
 
 #include "Book.h"
 #include "DbPosition.h"
+#include "Position.h"
 #include "IntegrationSettings.h"
 #include "Results2.h"
+#include "ODBCclass.h"
 
 namespace Integra {
 
@@ -62,6 +64,46 @@ namespace Integra {
 			}
 
 			return list;
+		}
+
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs) override
+		{
+			String^ globalSquery = GetGlobalSquery(attrs);
+
+// 			List<Object^>^ tableCodeAttrs = GetTableCodeAttrs();
+// 			List<String^>^ tables = GetTables(tableCodeAttrs);
+// 			attrNames = GetAttrsName(tableCodeAttrs);
+// 			
+			int iId, iTitle;
+			bool idSet, titleSet;
+			for (int i = 0; i < attrs->Count; i++)
+			{
+				if (!idSet && attrs[i]->FullCode == BookSetting->AttrIdFullcode)
+				{
+					iId = i;
+					idSet = true;
+				}
+				if (!titleSet && attrs[i]->FullCode == BookSetting->AttrTitleFullcode)
+				{
+					iTitle = i;
+					titleSet = true;
+				}
+				if (idSet && titleSet)
+				{
+					break;
+				}
+			}
+			
+ 			List<Object^>^ table = BookSetting->Odbc->ExecuteQuery(globalSquery);
+			List<Position^>^ poses = gcnew List<Position ^>();
+			for (int i = 0; i < table->Count; i+=attrs->Count)
+			{
+				List<Object^>^ attrValues = table->GetRange(i, attrs->Count);
+				Position^ pos = gcnew DbPosition(attrValues, attrs, iId, iTitle);
+				poses->Add(pos);
+			}
+
+ 			return poses;
 		}
 
 
@@ -190,5 +232,123 @@ namespace Integra {
 			return list;
 		}
 
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		{
+			String^ table;
+			List<String^>^ valueList = gcnew List<String ^>();
+			List<String^>^ titleList = gcnew List<String ^>();
+
+			for each (KeyValuePair<Attribute^, String^>^ pair in attrsAndNewVals)
+			{
+				titleList->Add(pair->Key->Code);
+				if (String::IsNullOrEmpty(table))
+				{
+					table = pair->Key->FullTable;
+				}
+				if (pair->Key->DataType == "STRING")
+				{
+					valueList->Add(OdbcClass::GetSqlString(pair->Value));
+				}
+				else
+				{
+					valueList->Add(pair->Value);
+				}
+			}
+
+			String^ squery = String::Format("insert into {0} (", table);
+			for each (String^ title in titleList)
+			{
+				squery += String::Format("{0},", title);
+			}
+			squery = squery->Substring(0, squery->Length - 1);
+			squery += ") values (";
+			for each (String^ val in valueList)
+			{
+				squery += String::Format("{0},", val);
+			}
+			squery = squery->Substring(0, squery->Length - 1);
+			squery += ")";
+
+			BookSetting->Odbc->ExecuteNonQuery(squery);
+		}
+
+		virtual void UpdatePosition(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		{
+			String^ table;
+			String^ squery = "update ";
+			for each (KeyValuePair<Attribute^, String^>^ pair in attrsAndNewVals)
+			{
+				if (String::IsNullOrEmpty(table))
+				{
+					table = pair->Key->FullTable;
+					squery += String::Format("{0} set", table);
+				}
+				String^ value;
+				if (pair->Key->DataType == "STRING")
+				{
+					value = OdbcClass::GetSqlString(pair->Value);
+				}
+				else
+				{
+					value = pair->Value;
+				}
+				squery += String::Format(" {0} = {1},", pair->Key->FullCode, value);
+			}
+			squery = squery->Substring(0, squery->Length - 1);
+			squery += String::Format(" where {0} = {1}", currentPos->AttrIdCode, OdbcClass::GetSqlString(currentPos->UnicId));
+			BookSetting->Odbc->ExecuteNonQuery(squery);
+		}
+
+		private:
+			List<Object^>^ GetTableCodeAttrs()
+			{
+				String^ squery = String::Format("select IA.FULL_CODE, IA.ATTR_NAME, IA.NAME from {0}INTEGRATION_ATTRIBUTES IA, {0}INTEGRATION_BOOK IB where " +
+					"IB.ID = {1} and IA.ID_INTGR_BOOK = IB.ID", _odbc->schema, BookSetting->Id);
+				return _odbc->ExecuteQuery(squery);
+			}
+
+			List<String^>^ GetTables(List<Object^>^ tableCodeAttrs)
+			{
+				List<String^>^ list = gcnew List<String ^>();
+				for (int i = 0; i < tableCodeAttrs->Count; i += 3)
+				{
+					if (!list->Contains(tableCodeAttrs[i]->ToString()))
+					{
+						list->Add(tableCodeAttrs[i]->ToString());
+					}
+				}
+				return list;
+			}
+
+			List<Attribute^>^ GetAttrsName(List<Object^>^ tableCodeAttrs)
+			{
+				List<Attribute^>^ list = gcnew List<Attribute ^>();
+				for (int i = 0; i < tableCodeAttrs->Count; i += 3)
+				{
+					String^ fullTable = tableCodeAttrs[i]->ToString();
+					String^ code = tableCodeAttrs[i+1]->ToString();
+					String^ name = tableCodeAttrs[i+2]->ToString();
+					Attribute^ attr = gcnew Attribute(fullTable, code, name);
+					if (!list->Contains(attr))
+					{
+						list->Add(attr);
+					}
+				}
+				return list;
+			}
+
+			String^ GetGlobalSquery(List<Attribute^>^ attrNames)
+			{
+				String^ s = "select ";
+				for each (Attribute^ attr in attrNames)
+				{
+					s += attr->FullCode + ",";
+				}
+				s = s->Substring(0, s->Length - 1);
+				s += " from ";
+				s += attrNames[0]->FullTable;
+
+				return s;
+			}
 	};
 }

@@ -19,14 +19,13 @@ namespace Integra {
 	private:
 		OdbcClass^ _odbc;
 		List<Attribute^>^ _attributeList;
-		String^ _fieldIdCode;
 
 	public:
 		DbPosition(String^ id, String^ fieldIdCode, List<Attribute^>^ attributeList, OdbcClass^ odbc) 
 		{
 			_odbc = odbc;
 			_unicId = id;
-			_fieldIdCode = fieldIdCode;
+			AttrIdCode = fieldIdCode;
 			_attributeList = attributeList;
 			SetAttrs(_attributeList);
 		}
@@ -34,9 +33,23 @@ namespace Integra {
 		DbPosition(String^ id, String^ fieldIdCode, List<Attribute^>^ attributeList, Dictionary<Attribute^, String^>^ attributes) 
 		{
 			_unicId = id;
-			_fieldIdCode = fieldIdCode;
+			AttrIdCode = fieldIdCode;
 			_attributeList = attributeList;
 			_attributes = attributes;
+		}
+
+		DbPosition(List<Object^>^ attrs, List<Attribute^>^ attrNames, int iId, int iTitle) 
+		{
+			_unicId = attrs[iId]->ToString();
+			AttrIdCode = attrNames[iId]->FullCode;
+			Caption = attrs[iTitle]->ToString();
+			_attributeList = attrNames;
+
+			_attributes = gcnew Dictionary<Attribute^, String^>();
+			for (int i = 0; i < attrs->Count; i++)
+			{
+				_attributes->Add(attrNames[i], attrs[i]->ToString());
+			}
 		}
 
 
@@ -55,7 +68,8 @@ namespace Integra {
 			_attributes = gcnew Dictionary<Attribute^, String^>();
 			for each(Attribute^ attr in parametrCodes)
 			{
-				List<Object^>^ value = _odbc->ExecuteQuery("select " + attr->Code + " from " + attr->FullTable + " where " + _fieldIdCode + " = \'" + UnicId + "\'");
+				String^ sQuery = String::Format("select {0} from {1} where {2} = \'{3}\'", attr->FullCode, attr->FullTable, AttrIdCode, UnicId);
+				List<Object^>^ value = _odbc->ExecuteQuery(sQuery);
 				if (value[0] == nullptr && String::IsNullOrEmpty(value[0]->ToString()))
 				{
 					_attributes->Add(attr, "");

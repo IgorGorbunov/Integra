@@ -8,10 +8,11 @@
 #include "Position.h"
 #include "Results2.h"
 
+
 namespace Integra {
 
 	using namespace System::Collections::Generic;
-	using namespace SemanticCore;
+	//using namespace SemanticCore;
 
 	/// <summary>
 	/// Класс spravochnika Semantic
@@ -21,11 +22,11 @@ namespace Integra {
 
 	private:
 		Semantic^ _semantic;
-		BookSettings^ _bookSettings;
+		BookSettings^ BookSetting;
 		IntegrationSettings^ _intSettings;
 		OdbcClass^ _commonOdbc;
 
-		ISCObject^ _root;
+		Object^ _root;
 		List<String^>^ _tables;
 		String^ _title;
 		List<Attribute^>^ _attributes;
@@ -34,9 +35,9 @@ namespace Integra {
 		int _i;
 
 	public:
-		SemanticBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ commonOdbc, bool isSource) : Book(bookSettings, intSettings, commonOdbc)
+		SemanticBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ commonOdbc, bool isSource, OdbcClass^ odbc) : Book(bookSettings, intSettings, odbc)
 		{
-			_bookSettings = bookSettings;
+			/*_bookSettings = bookSettings;
 			_intSettings = intSettings;
 			_commonOdbc = commonOdbc;
 			_semantic = gcnew Semantic(_bookSettings->Login, _bookSettings->Password);
@@ -56,7 +57,7 @@ namespace Integra {
 			_title = _title->Substring(1);
 			_semantic->WriteToLog("title - " + _title);
 			SetBookObject();
-			_i = 0;
+			_i = 0;*/
 		}
 
 
@@ -92,7 +93,7 @@ namespace Integra {
 	private:
 		Void SetBookObject()
 		{
-			_root = _semantic->Core->ObjectList()->GetRootObject(_title);
+			//_root = _semantic->Core->ObjectList()->GetRootObject(_title);
 		}
 
 		
@@ -172,5 +173,7 @@ namespace Integra {
 			return GetChildPositions2(rootPos->GetChildPositions(), worker, e);
 
 		}
+
+
 	};
 }

@@ -189,7 +189,7 @@ namespace Integra {
 			this->bRecord->Name = L"bRecord";
 			this->bRecord->Size = System::Drawing::Size(87, 30);
 			this->bRecord->TabIndex = 15;
-			this->bRecord->Text = L"Записать";
+			this->bRecord->Text = L"Сохранить";
 			this->bRecord->UseVisualStyleBackColor = true;
 			this->bRecord->Click += gcnew System::EventHandler(this, &AddSemAttrForm::bRecord_Click);
 			// 
@@ -355,7 +355,7 @@ namespace Integra {
 			this->MinimizeBox = false;
 			this->Name = L"AddSemAttrForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"Добавление/редактирование реквизитов справочника Semantic";
+			this->Text = L"Добавление реквизитов справочника Semantic";
 			this->Load += gcnew System::EventHandler(this, &AddSemAttrForm::AddSemAttrForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->EndInit();
 			this->ResumeLayout(false);

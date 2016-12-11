@@ -2,6 +2,8 @@
 
 #include "Logger.h"
 #include "BookSettings.h"
+#include "Position.h"
+#include "IntegrationSettings.h"
 
 
 namespace Integra {
@@ -15,7 +17,7 @@ namespace Integra {
 	{
 
 	protected:
-		BookSettings^ _bookSettings;
+		BookSettings^ BookSetting;
 		IntegrationSettings^ _intSettings;
 		OdbcClass^ _odbc;
 
@@ -23,7 +25,7 @@ namespace Integra {
 		Book(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ odbc) 
 		{
 			_odbc = odbc;
-			_bookSettings = bookSettings;
+			BookSetting = bookSettings;
 			_intSettings = intSettings;
 		}
 
@@ -41,8 +43,12 @@ namespace Integra {
 
 	public:
 		virtual List<Position^>^ GetAllPositions() abstract;
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs) abstract;
 		virtual List<Position^>^ GetAllPositions2(System::ComponentModel::BackgroundWorker^ worker, System::ComponentModel::DoWorkEventArgs ^ e) abstract;
 		virtual List<Position^>^ GetAllPositions22(int% n) abstract;
+
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals) abstract;
+		virtual void UpdatePosition(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals) abstract;
 
 	protected:
 

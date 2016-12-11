@@ -6,8 +6,10 @@
 #include "DbBook.h"
 #include "SemanticBook.h"
 #include "Position.h"
+#include "DbPosition.h"
 #include "DiffererncePosition.h"
 #include "Results2.h"
+
 
 namespace Integra {
 
@@ -16,6 +18,7 @@ namespace Integra {
 	using namespace System::ComponentModel;
 	using namespace System::IO;
 	using namespace System::Text;
+	using namespace System::Windows::Forms;
 
 	/// <summary>
 	/// Класс для р
@@ -27,11 +30,17 @@ namespace Integra {
 		List<Position^>^ TargetNew;
 		List<DifferencePosition^>^ Differences;
 
+		List<List<Object^>^>^ SourceTabNew;
+		List<List<Object^>^>^ TargetTabNew;
+
 	private:
 		Results2^ _resultForm;
 
 		IntegrationSettings^ _settings;
 		OdbcClass^ _odbc;
+		Dictionary<Attribute^, Attribute^>^ _attrPairs;
+		List<Attribute^>^ _sourceAttrs;
+		List<Attribute^>^ _targetAttrs;
 		
 
 		Book^ _sourceBook;
@@ -65,7 +74,158 @@ namespace Integra {
 
 		}
 
+		Dictionary<int, int>^ iPairs;
+
+
 	public:
+		Void StartIntegrationTable(Form^% form, Label^% lblCount)
+		{
+			_attrPairs = _settings->AttributePairs;
+			SetAttrLists();
+
+			_sourceBook = GetBook(_settings->SourceBook, true);
+			_targetBook = GetBook(_settings->TargetBook, false);
+			List<Position^>^ sourcePoses = _sourceBook->GetAllPositionsTable(_sourceAttrs);
+			List<Position^>^ targetPoses = _targetBook->GetAllPositionsTable(_targetAttrs);
+
+			lblCount->Text = "0";
+			Application::DoEvents();
+
+			Differences = gcnew List<DifferencePosition^>();
+			SourceNew = gcnew List<Position ^>();
+			TargetNew = gcnew List<Position ^>();
+
+			for (int i = 0; i < sourcePoses->Count; i++)
+			{
+				bool contains = false;
+				Position^ sPos = sourcePoses[i];
+				int jDel;
+				for (int j = 0; j < targetPoses->Count; j++)
+				{
+					Position^ tPos = targetPoses[j];
+					if (sPos->UnicId == tPos->UnicId)
+					{
+						contains = true;
+						jDel = j;
+						DifferencePosition^ diffPos;
+						if (AttrsIsFullyEqual(sPos, tPos, diffPos))
+						{
+							break;
+						}
+						else
+						{
+							Differences->Add(diffPos);
+							break;
+						}
+					}
+				}
+				if (contains)
+				{
+					targetPoses->RemoveAt(jDel);
+				}
+				else
+				{
+					SourceNew->Add(sPos);
+				}
+				lblCount->Text = i + "";
+				form->Update();
+				form->Refresh();
+			}
+			TargetNew = targetPoses;
+
+
+//List<Attribute^>^ attrSourceTitles;
+// 			String^ sourceAttrIdName = _settings->SourceBook->AttrIdFullcode;
+// 			String^ sourceAttrTitleName = _settings->SourceBook->AttrTitleFullcode;
+// 			int iSAttrId = GetAttrId(attrSourceTitles, sourceAttrIdName);
+// 			int iSAttrTitle = GetAttrId(attrSourceTitles, sourceAttrTitleName);
+// 
+// 			
+// 			List<Attribute^>^ attrTargetTitles;
+// 			
+// 			String^ targetAttrIdName = _settings->TargetBook->AttrIdFullcode;
+// 			String^ targetAttrTitleName = _settings->TargetBook->AttrTitleFullcode;
+// 			int iTAttrId = GetAttrId(attrTargetTitles, targetAttrIdName);
+// 			int iTAttrTitle = GetAttrId(attrTargetTitles, targetAttrTitleName);
+// 
+// 			iPairs = SetDictiPairs(_settings->AttributePairFullCodes, attrSourceTitles, attrTargetTitles);
+// 			pairs = SetDictiPairs(_settings->AttributePairFullCodes, attrSourceTitles, attrTargetTitles);
+// 
+// 			SourceNew = gcnew List<Position^>();
+// 			TargetNew = gcnew List<Position^>();
+// 			Differences = gcnew List<DifferencePosition ^>();
+// 			for (int i = 0; i < sourcePoses->Count; i += attrSourceTitles->Count)
+// 			{
+// 				bool find = false;
+// 				String^ sVal = sourcePoses[i + iSAttrId]->ToString();
+// 				for (int j = 0; j < _targetPoses->Count; j += attrTargetTitles->Count)
+// 				{
+// 					String^ tVal = _targetPoses[j + iTAttrId]->ToString();
+// 					if (sVal == tVal)
+// 					{
+// 						List<Object^>^ sListingPos = GetPos(sourcePoses, attrSourceTitles->Count, i);
+// 						List<Object^>^ tListingPos = GetPos(_targetPoses, attrTargetTitles->Count, j);
+// 
+// 						DifferencePosition^ diffPos = SetDiffPos(sListingPos, tListingPos,
+// 											 attrSourceTitles, attrTargetTitles, iPairs, sVal);
+// 						if (diffPos != nullptr)
+// 						{
+// 							Differences->Add(diffPos);
+// 						}
+// 						find = true;
+// 						Remove(_targetPoses, attrTargetTitles->Count, j);
+// 						break;
+// 					}
+// 				}
+// 				if (!find)
+// 				{
+// 					List<Object^>^ sListingPos = GetPos(sourcePoses, attrSourceTitles->Count, i);
+// 					Position^ p = gcnew DbPosition(sListingPos, attrSourceTitles, iSAttrId, iSAttrTitle);
+// 					SourceNew->Add(p);
+// 				}
+// 				lblCount->Text = ++ii + "";
+// 				Application::DoEvents();
+// 			}
+// 
+// 			for (int i = 0; i < _targetPoses->Count; i += attrTargetTitles->Count)
+// 			{
+// 				List<Object^>^ sListingPos = GetPos(_targetPoses, attrTargetTitles->Count, i);
+// 				Position^ p = gcnew DbPosition(sListingPos, attrSourceTitles, iSAttrId, iSAttrTitle);
+// 				TargetNew->Add(p);
+// 			}
+		}
+
+		void AddPosToSource(Position^ p)
+		{
+			Dictionary<Attribute^, String^>^ newAttrsAndVals = gcnew Dictionary<Attribute ^, String ^>();
+			for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrPairs)
+			{
+				if (p->AttributesAndValues->ContainsKey(pair->Value))
+				{
+					newAttrsAndVals->Add(pair->Key, p->AttributesAndValues[pair->Value]);
+				}
+			}
+			_sourceBook->AddPosition(newAttrsAndVals);
+		}
+
+		void AddPosToTarget(Position^ p)
+		{
+			Dictionary<Attribute^, String^>^ newAttrsAndVals = gcnew Dictionary<Attribute ^, String ^>();
+			for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrPairs)
+			{
+				if (p->AttributesAndValues->ContainsKey(pair->Key))
+				{
+					newAttrsAndVals->Add(pair->Value, p->AttributesAndValues[pair->Key]);
+				}
+			}
+			_targetBook->AddPosition(newAttrsAndVals);
+		}
+
+		void UpdatePosToTarget(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)
+		{
+			_targetBook->UpdatePosition(currentPos, newAttrVals);
+		}
+
 		Void SetPositionsAndCompare()
 		{
 
@@ -143,13 +303,13 @@ namespace Integra {
 			{
 				delPos = targetPos;
 				String^ c1 = "";
-				for each(KeyValuePair<Attribute^, String^>^ pair in sourcePos->Attributes)
+				for each(KeyValuePair<Attribute^, String^>^ pair in sourcePos->AttributesAndValues)
 				{
 					c1 += pair->Key->Code + " - " + pair->Value + ", ";
 				}
 
 				String^ c2 = "";
-				for each(KeyValuePair<Attribute^, String^>^ pair in targetPos->Attributes)
+				for each(KeyValuePair<Attribute^, String^>^ pair in targetPos->AttributesAndValues)
 				{
 					c2 += pair->Key->Code + " - " + pair->Value + ", ";
 				}
@@ -183,16 +343,95 @@ namespace Integra {
 		}
 
 	private:
+
+		void SetAttrLists()
+		{
+			_sourceAttrs = gcnew List<Attribute ^>();
+			_targetAttrs = gcnew List<Attribute ^>();
+			for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrPairs)
+			{
+				_sourceAttrs->Add(pair->Key);
+				_targetAttrs->Add(pair->Value);
+			}
+		}
+
+		int GetAttrId(List<Attribute^>^ list, String^ name)
+		{
+			for (int i = 0; i < list->Count; i++)
+			{
+				if (name == list[i]->FullCode)
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		void Remove(List<Object^>^% list, int nDels, int j)
+		{
+			for (int i = 0; i < nDels; i++)
+			{
+				list->RemoveAt(j);
+			}
+		}
+
+		List<Object^>^ GetPos(List<Object^>^ list, int nAdds, int j)
+		{
+			List<Object^>^ list1 = gcnew List<Object ^>();
+			for (int i = j; i < nAdds + j; i++)
+			{
+				list1->Add(list[i]->ToString());
+			}
+			return list1;
+		}
+
+		/*DifferencePosition^ SetDiffPos(List<Object^>^ sPos, List<Object^>^ tPos, List<Attribute^>^ sTitles, List<Attribute^>^ tTitles, Dictionary<int, int>^ iPairs, String^ id)
+		{
+			DifferencePosition^ pos = gcnew DifferencePosition(id);
+			bool different;
+			for each (KeyValuePair<int, int>^ pair in iPairs)
+			{
+				String^ sVal = sPos[pair->Key]->ToString()->Trim();
+				String^ tVal = tPos[pair->Value]->ToString()->Trim();
+				if (sVal != tVal)
+				{
+					pos->AddDifferenceAttr(sTitles[pair->Key], sVal, tTitles[pair->Value], tVal);
+					different = true;
+				}
+				else
+				{
+					pos->AddEqualAttr(sTitles[pair->Key], tTitles[pair->Value], sVal);
+				}
+			}
+			if (different)
+			{
+				return pos;
+			}
+			return nullptr;
+		}*/
+
+		Dictionary<int, int>^ SetDictiPairs(List<String^>^ names, List<Attribute^>^ sourceAttrs, List<Attribute^>^ targetAttrs)
+		{
+			Dictionary<int, int>^ dict = gcnew Dictionary<int, int>();
+			for (int i = 0; i < names->Count; i+=2)
+			{
+				int iS = GetAttrId(sourceAttrs, names[i]);
+				int iT = GetAttrId(targetAttrs, names[i+1]);
+				dict->Add(iS, iT);
+			}
+			return dict;
+		}
+
 		bool AttrsIsFullyEqual(Position^ sourcePos, Position^ targetPos, DifferencePosition^% diffPos)
 		{
 			bool equal = true;
-			diffPos = gcnew DifferencePosition(sourcePos->UnicId);
-			for each (KeyValuePair<Attribute^, String^>^ pair in sourcePos->Attributes)
+			diffPos = gcnew DifferencePosition(sourcePos->UnicId, sourcePos,  targetPos);
+			for each (KeyValuePair<Attribute^, String^>^ pair in sourcePos->AttributesAndValues)
 			{
 				Attribute^ sAttr = pair->Key;
 				String^ sValue = pair->Value;
 				Attribute^ pAttr = _settings->AttributePairs[sAttr];
-				String^ tValue = targetPos->Attributes[pAttr];
+				String^ tValue = targetPos->AttributesAndValues[pAttr];
 
 				if (sValue->Trim() != tValue->Trim())
 				{
@@ -212,7 +451,7 @@ namespace Integra {
 		{
 			if (bookSettings->IsSemantic)
 			{
-				return gcnew SemanticBook(bookSettings, _settings, _odbc, isSource, _odbc);
+				return gcnew SemanticBook(bookSettings, _settings, _odbc, isSource);
 			} 
 			else
 			{

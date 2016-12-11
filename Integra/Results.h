@@ -164,7 +164,7 @@ namespace Integra {
 		{
 			if (positions->Count > 0)
 			{
-				Dictionary<Attribute^, String^>^ attrs =  positions[0]->Attributes;
+				Dictionary<Attribute^, String^>^ attrs =  positions[0]->AttributesAndValues;
 				for each (KeyValuePair<Attribute^, String^>^ pair in attrs)
 				{
 					DataGridViewTextBoxColumn^ col = gcnew DataGridViewTextBoxColumn();
@@ -174,7 +174,7 @@ namespace Integra {
 				}
 				for each (Position^ pos in positions)
 				{
-					Dictionary<Attribute^, String^>^ attrs = pos->Attributes;
+					Dictionary<Attribute^, String^>^ attrs = pos->AttributesAndValues;
 					array<String^>^ row = gcnew array<String ^>(attrs->Count);
 					int i = 0;
 					for each (KeyValuePair<Attribute^, String^>^ pair in attrs)

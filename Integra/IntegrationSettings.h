@@ -90,8 +90,31 @@ namespace Integra {
 				return _targetAttributeEquil;
 			}
 		}
-
-		Dictionary<Attribute^, Attribute^>^ AttributePairs;
+		property Dictionary<Attribute^, Attribute^>^ AttributePairs
+		{
+			Dictionary<Attribute^, Attribute^>^ get()
+			{
+				if (_attributePairs == nullptr || _attributePairs->Count == 0)
+				{
+					SetAttrPairs();
+				}
+				
+				return _attributePairs;
+			}
+		}
+		property List<String^>^ AttributePairFullCodes
+		{
+			List<String^>^ get()
+			{
+				List<String^>^ list = gcnew List<String ^>();
+				for each (KeyValuePair<Attribute^, Attribute^>^ pair in AttributePairs)
+				{
+					list->Add(pair->Key->FullCode);
+					list->Add(pair->Value->FullCode);
+				}
+				return list;
+			}
+		}
 
 	private:
 		OdbcClass^ _odbc;
@@ -104,7 +127,7 @@ namespace Integra {
 		Attribute^ _sourceAttributeEquil;
 		Attribute^ _targetAttributeEquil;
 		
-
+		Dictionary<Attribute^, Attribute^>^ _attributePairs;
 
 		Dictionary<String^, String^>^ _fields;
 
@@ -121,11 +144,13 @@ namespace Integra {
 			_odbc = odbc;
 			_sourceBook = sourceBook;
 			_targetBook = targetBook;
-			AttributePairs = attrPairs;
+			_attributePairs = attrPairs;
 			_intType = type;
 			CreateIntgrSchema();
 			CreateAttrPairs();
 		}
+
+		
 
 	protected:
 		/// <summary>
@@ -139,7 +164,7 @@ namespace Integra {
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SOURCE_BOOK, ID_TARGET_BOOK, TYPE, ID_SOURCE_ATTR_EQ, ID_TARGET_ATTR_EQ from " + _odbc->schema + "INTEGRATION_PARAMS where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SOURCE_BOOK, ID_TARGET_BOOK, TYPE, CREATE_USER, CREATE_DATE from " + _odbc->schema + "INTEGRATION_PARAMS where ID = " + id);
 			SetSourceBook(Decimal::ToInt32((Decimal)parametrs[0]));
 			SetTargetBook(Decimal::ToInt32((Decimal)parametrs[1]));
 			Decimal^ typ = (Decimal)parametrs[2];
@@ -151,23 +176,20 @@ namespace Integra {
 			{
 				_type = IntegrationType::OneWay;
 			}
-			if (!String::IsNullOrEmpty(parametrs[3]->ToString()))
-			{
-				_sourceAttributeEquil = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[3]), _odbc);
-			}
-			if (!String::IsNullOrEmpty(parametrs[4]->ToString()))
-			{
-				_targetAttributeEquil = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[4]), _odbc);
-			}
 
-			AttributePairs = gcnew Dictionary<Attribute^, Attribute^>();
-			parametrs = _odbc->ExecuteQuery("select ID_SOURCE_ATTRIBUTE, ID_TARGET_ATTRIBUTE from " + _odbc->schema + "ATTRIBUTE_PAIRS where ID_PARAMETRS = " + id);
-			for (int i = 0; i < parametrs->Count / 2; i++)
-			{
-				Attribute^ sourceAttr = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[i * 2]), _odbc);
-				Attribute^ targetAttr = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[i * 2 + 1]), _odbc);
-				AttributePairs->Add(sourceAttr, targetAttr);
-			}
+
+
+
+			//if (!String::IsNullOrEmpty(parametrs[3]->ToString()))
+			//{
+			//	//_sourceAttributeEquil = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[3]), _odbc);
+			//}
+			//if (!String::IsNullOrEmpty(parametrs[4]->ToString()))
+			//{
+			//	//_targetAttributeEquil = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[4]), _odbc);
+			//}
+
+			///**/
 		}
 
 		Void SetSourceBook(int id)
@@ -212,5 +234,16 @@ namespace Integra {
 			
 		}
 
+		void SetAttrPairs()
+		{
+			_attributePairs = gcnew Dictionary<Attribute^, Attribute^>();
+			List<Object^>^ parametrs  = _odbc->ExecuteQuery("select AP.ID_SOURCE_ATTRIBUTE, AP.ID_TARGET_ATTRIBUTE from " + _odbc->schema + "ATTRIBUTE_PAIRS AP where AP.ID_PARAMETRS = " + _id);
+			for (int i = 0; i < parametrs->Count / 2; i++)
+			{
+				Attribute^ sourceAttr = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[i * 2]), _odbc);
+				Attribute^ targetAttr = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[i * 2 + 1]), _odbc);
+				_attributePairs->Add(sourceAttr, targetAttr);
+			}
+		}
 	};
 }

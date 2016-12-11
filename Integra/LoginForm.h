@@ -211,8 +211,10 @@ namespace Integra {
 				 _settingsFile->UpdateFile();
 				 RoleStation::SetOdbc(odbc);
 				 RoleStation::SetRole(login);
-
 				 this->Visible = false;
+
+				 
+
 				 MainForm^ form = gcnew MainForm();
 				 form->ShowDialog();
 				 this->Close();
@@ -221,6 +223,8 @@ namespace Integra {
 private: System::Void LoginForm_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 String^ configPath = Path::Combine(Application::StartupPath, Settings::UserConfigs);
+			 //configPath = Settings::UserConfigs;
+			 //configPath = Application::StartupPath;
 			 _settingsFile = gcnew SystemSettings(configPath);
 			 if (_settingsFile->Driver != nullptr)
 			 {

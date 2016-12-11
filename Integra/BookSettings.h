@@ -69,9 +69,53 @@ namespace Integra {
 				return _id;
 			}
 		}
+		property OdbcClass^ Odbc
+		{
+			OdbcClass^ get()
+			{
+				if (_workOdbc == nullptr)
+				{
+					if (_driver == nullptr)
+					{
+						_workOdbc = gcnew OdbcClass(_login, _password, _tnsDatabase);
+					}
+					else
+					{
+						_workOdbc = gcnew OdbcClass(_driver);
+					}
+				}
+				return _workOdbc;
+			}
+		}
+		property String^ AttrIdFullcode
+		{
+			String^ get()
+			{
+				if (_attrIdFullcode == nullptr)
+				{
+					SetAttrIdName();
+				}
+				return _attrIdFullcode;
+			}
+
+		}
+
+		property String^ AttrTitleFullcode
+		{
+			String^ get()
+			{
+				if (_attrTitleFullcode == nullptr)
+				{
+					SetAttrTitleName();
+				}
+				return _attrTitleFullcode;
+			}
+
+		}
 
 	private:
 		OdbcClass^ _odbc;
+		OdbcClass^ _workOdbc;
 		int _id;
 
 		String^ _systemName;
@@ -88,6 +132,11 @@ namespace Integra {
 		String^ _driver;
 		bool _isSemantic;
 		int _groupId;
+
+		int _attrIdId;
+		String^ _attrIdFullcode;
+		int _attrTitleId;
+		String^ _attrTitleFullcode;
 		
 
 	public:
@@ -131,7 +180,7 @@ namespace Integra {
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
 			SetSystem(Decimal::ToInt32((Decimal)parametrs[0]));
 			SetBook(Decimal::ToInt32((Decimal)parametrs[1]));
 			SetLogPass(parametrs[2]->ToString(), parametrs[3]->ToString());
@@ -143,7 +192,8 @@ namespace Integra {
 			_driver = parametrs[9]->ToString();
 			_isSemantic = (bool) Decimal::ToInt32((Decimal)parametrs[10]);
 			_groupId = OdbcClass::GetInt(parametrs[11]);
-
+			_attrIdId = OdbcClass::GetInt(parametrs[12]);
+			_attrTitleId = OdbcClass::GetInt(parametrs[13]);
 		}
 
 		Void SetSystem(int id)
@@ -158,7 +208,21 @@ namespace Integra {
 			_bookName = parametrs[0]->ToString();
 		}
 
-		
+		void SetAttrIdName()
+		{
+			String^ squery = String::Format("select IA.FULL_CODE, IA.ATTR_NAME from {0}INTEGRATION_ATTRIBUTES IA, {0}INTEGRATION_BOOK IB " +
+				"where IB.ATTR_ID = IA.ID and IB.ID = {1}", _odbc->schema, _id);
+			List<Object^>^ list = _odbc->ExecuteQuery(squery);
+			_attrIdFullcode = String::Format("{0}.{1}", list[0], list[1]);
+		}
+
+		void SetAttrTitleName()
+		{
+			String^ squery = String::Format("select IA.FULL_CODE, IA.ATTR_NAME from {0}INTEGRATION_ATTRIBUTES IA, {0}INTEGRATION_BOOK IB " +
+				"where IB.ATTR_TITLE = IA.ID and IB.ID = {1}", _odbc->schema, _id);
+			List<Object^>^ list = _odbc->ExecuteQuery(squery);
+			_attrTitleFullcode = String::Format("{0}.{1}", list[0], list[1]);
+		}
 
 		Void SetLogPass(String^ login, String^ password)
 		{

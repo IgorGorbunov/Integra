@@ -40,7 +40,11 @@ namespace Integra {
 		{
 			String^ get()
 			{
-				return Schema + "." + Table;
+				if (String::IsNullOrEmpty(Schema))
+				{
+					return Table;
+				}
+				return String::Format("{0}.{1}", Schema, Table);
 			}
 		}
 		property String^ FullCode
@@ -71,6 +75,17 @@ namespace Integra {
 				return _name;
 			}
 		}
+		property String^ DataType
+		{
+			String^ get()
+			{
+				return _dataType;
+			}
+			void set(String^ value)
+			{
+				_dataType = value;
+			}
+		}
 		property int Id
 		{
 			int get()
@@ -81,7 +96,6 @@ namespace Integra {
 		}
 
 		bool UseChecked;
-		String^ DataType;
 		String^ MaxLength;
 		bool CanBeNull;
 
@@ -95,6 +109,7 @@ namespace Integra {
 		String^ _schemaName;
 		String^ _tableName;
 		String^ _attrName;
+		String^ _dataType;
 		int _idIntgrBook;
 
 	public:
@@ -104,7 +119,14 @@ namespace Integra {
 			_tableName = table;
 			_attrName = code;
 			_name = name;
-			_fullCode = String::Format("{0}.{1}.{2}", _schemaName, _tableName, _attrName);
+			if (String::IsNullOrEmpty(_schemaName))
+			{
+				_fullCode = String::Format("{0}.{1}", _tableName, _attrName);
+			}
+			else
+			{
+				_fullCode = String::Format("{0}.{1}.{2}", _schemaName, _tableName, _attrName);
+			}
 		}
 
 		Attribute(int id, OdbcClass^ odbc)
@@ -116,6 +138,34 @@ namespace Integra {
 
 		Attribute(String^ schema, String^ table, String^ code, String^ name)
 		{
+			Init(schema, table, code, name);
+		}
+
+		Attribute(String^ fullTable, String^ code, String^ name)
+		{
+			String^ schema = "";
+			String^ table;
+			array<String^>^ arr = fullTable->Trim()->Split('.');
+			List<String^>^ list = gcnew List<String ^>(arr);
+			for (int i = 0; i < list->Count; i++)
+			{
+				if (list[i] == nullptr || list[i] == "")
+				{
+					list->RemoveAt(i);
+					i--;
+				}
+			}
+			bool schemaIsNull;
+			if (list->Count > 1)
+			{
+				schema = list[0];
+				table = list[1];
+			}
+			else
+			{
+				schema = "";
+				table = arr[0];
+			}
 			Init(schema, table, code, name);
 		}
 
@@ -138,19 +188,22 @@ namespace Integra {
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select FULL_CODE, NAME, SCHEMA_NAME, TABLE_NAME, ATTR_NAME, ID_INTGR_BOOK from " + _odbc->schema + ".INTEGRATION_ATTRIBUTES where ID = " + id);
-			_fullCode = parametrs[0]->ToString();
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select FULL_CODE, NAME, SCHEMA_NAME, TABLE_NAME, ATTR_NAME, ID_INTGR_BOOK, DATA_TYPE from " + _odbc->schema + ".INTEGRATION_ATTRIBUTES where ID = " + id);
 			_name = parametrs[1]->ToString();
 			_schemaName = parametrs[2]->ToString();
 			_tableName = parametrs[3]->ToString();
 			_attrName = parametrs[4]->ToString();
 			_idIntgrBook = Decimal::ToInt32((Decimal)parametrs[5]);
+			_dataType = parametrs[6]->ToString();
+			if (String::IsNullOrEmpty(_schemaName))
+			{
+				_fullCode = String::Format("{0}.{1}", _tableName, _attrName);
+			}
+			else
+			{
+				_fullCode = String::Format("{0}.{1}.{2}", _schemaName, _tableName, _attrName);
+			}
 		}
 
-		Void ParseFullCode()
-		{
-
-
-		}
 	};
 }

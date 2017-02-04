@@ -102,15 +102,15 @@ namespace Integra {
 		array<String^, 2>^ GetSystemBooks(int bookTypeId)
 		{
 			String^ squery = String::Format("select INTEGRATION_BOOK.ID, BOOKS.NAME, INTEGRATED_SYSTEMS.NAME " +
-				"from BOOKS, {0}INTEGRATION_BOOK, {0}INTEGRATED_SYSTEMS where BOOKS.ID = {1} and BOOKS.ID = INTEGRATION_BOOK.ID_BOOK and INTEGRATED_SYSTEMS.ID = INTEGRATION_BOOK.ID_SYSTEM", _odbc->schema, bookTypeId);
+				"from {0}BOOKS, {0}INTEGRATION_BOOK, {0}INTEGRATED_SYSTEMS where BOOKS.ID = {1} and BOOKS.ID = INTEGRATION_BOOK.ID_BOOK and INTEGRATED_SYSTEMS.ID = INTEGRATION_BOOK.ID_SYSTEM", _odbc->schema, bookTypeId);
 			array<String^, 2>^ systemBooks = SetList(squery, 3);
 			return systemBooks;
 		}
 
 		array<String^, 2>^ GetSystemBooks()
 		{
-			String^ squery = String::Format("select INTEGRATION_BOOK.ID, BOOKS.NAME, INTEGRATED_SYSTEMS.NAME " +
-				"from BOOKS, {0}INTEGRATION_BOOK, {0}INTEGRATED_SYSTEMS where BOOKS.ID = INTEGRATION_BOOK.ID_BOOK and INTEGRATED_SYSTEMS.ID = INTEGRATION_BOOK.ID_SYSTEM", _odbc->schema);
+			String^ squery = String::Format("select IB.ID, BB.NAME, ISS.NAME " +
+				"from {0}BOOKS BB, {0}INTEGRATION_BOOK IB, {0}INTEGRATED_SYSTEMS ISS where BB.ID = IB.ID_BOOK and ISS.ID = IB.ID_SYSTEM", _odbc->schema);
 			_systemBooks = SetList(squery, 3);
 			return _systemBooks;
 		}

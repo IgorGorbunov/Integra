@@ -2,6 +2,7 @@
 
 #include "Semantic.h"
 #include "Attribute.h"
+#include "AddComplexAttrForm.h"
 
 
 namespace Integra {
@@ -21,13 +22,13 @@ namespace Integra {
 	public:
 		Attribute^ IdCol;
 		Attribute^ TitleCol;
-		List<array<String^>^>^ Attributes;
+		List<Attribute^>^ Attributes;
 
 	private:
 		Semantic^ _sem;
 		String^ _semLogin;
 		String^ _semPass;
-		Dictionary<String^, List<array<Object^>^>^>^ _attrDict;
+		Dictionary<String^, List<Attribute^>^>^ _attrDict;
 		int _nEdits;
 		int _nChecked;
 		String^ _prevNodeFullCode;
@@ -45,6 +46,7 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
+	private: System::Windows::Forms::Button^  bAddTreeAttrs;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column8;
 			 
 
@@ -56,8 +58,8 @@ namespace Integra {
 			_semPass = password;
 			_nEdits = 0;
 			_nChecked = 0;
-			_attrDict = gcnew Dictionary<String ^, List<array<Object ^> ^> ^>();
-			Attributes = gcnew List<array<String ^> ^>();
+			_attrDict = gcnew Dictionary<String ^, List<Attribute ^> ^>();
+			Attributes = gcnew List<Attribute^>();
 		}
 
 	protected:
@@ -131,6 +133,7 @@ namespace Integra {
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->bAddTreeAttrs = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -175,7 +178,7 @@ namespace Integra {
 			// bClose
 			// 
 			this->bClose->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-			this->bClose->Location = System::Drawing::Point(816, 472);
+			this->bClose->Location = System::Drawing::Point(816, 517);
 			this->bClose->Name = L"bClose";
 			this->bClose->Size = System::Drawing::Size(87, 30);
 			this->bClose->TabIndex = 16;
@@ -185,7 +188,7 @@ namespace Integra {
 			// 
 			// bRecord
 			// 
-			this->bRecord->Location = System::Drawing::Point(709, 472);
+			this->bRecord->Location = System::Drawing::Point(709, 517);
 			this->bRecord->Name = L"bRecord";
 			this->bRecord->Size = System::Drawing::Size(87, 30);
 			this->bRecord->TabIndex = 15;
@@ -218,7 +221,7 @@ namespace Integra {
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
 			this->dgvFields->DefaultCellStyle = dataGridViewCellStyle2;
-			this->dgvFields->Location = System::Drawing::Point(34, 252);
+			this->dgvFields->Location = System::Drawing::Point(34, 297);
 			this->dgvFields->Name = L"dgvFields";
 			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
@@ -271,7 +274,7 @@ namespace Integra {
 			this->tvBooks->FullRowSelect = true;
 			this->tvBooks->Location = System::Drawing::Point(34, 42);
 			this->tvBooks->Name = L"tvBooks";
-			this->tvBooks->Size = System::Drawing::Size(420, 178);
+			this->tvBooks->Size = System::Drawing::Size(420, 227);
 			this->tvBooks->TabIndex = 21;
 			this->tvBooks->AfterCheck += gcnew System::Windows::Forms::TreeViewEventHandler(this, &AddSemAttrForm::tvBooks_AfterCheck);
 			this->tvBooks->BeforeExpand += gcnew System::Windows::Forms::TreeViewCancelEventHandler(this, &AddSemAttrForm::tvBooks_BeforeExpand);
@@ -315,7 +318,7 @@ namespace Integra {
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(46, 236);
+			this->label5->Location = System::Drawing::Point(46, 272);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(66, 13);
 			this->label5->TabIndex = 28;
@@ -330,12 +333,24 @@ namespace Integra {
 			this->label6->TabIndex = 29;
 			this->label6->Text = L"Элемент основного реквизита:";
 			// 
+			// bAddTreeAttrs
+			// 
+			this->bAddTreeAttrs->Location = System::Drawing::Point(484, 235);
+			this->bAddTreeAttrs->Name = L"bAddTreeAttrs";
+			this->bAddTreeAttrs->Size = System::Drawing::Size(133, 34);
+			this->bAddTreeAttrs->TabIndex = 30;
+			this->bAddTreeAttrs->Text = L"Добавить атрибуты классификации";
+			this->bAddTreeAttrs->UseVisualStyleBackColor = true;
+			this->bAddTreeAttrs->Visible = false;
+			this->bAddTreeAttrs->Click += gcnew System::EventHandler(this, &AddSemAttrForm::bAddTreeAttrs_Click);
+			// 
 			// AddSemAttrForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->CancelButton = this->bClose;
-			this->ClientSize = System::Drawing::Size(915, 514);
+			this->ClientSize = System::Drawing::Size(915, 563);
+			this->Controls->Add(this->bAddTreeAttrs);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->label4);
@@ -394,18 +409,25 @@ namespace Integra {
 				}
 			}
 
-			void SetDgvAttrs(List<array<Object^>^>^ attrs)
+			void SetDgvAttrs(List<Attribute^>^ attrs)
 			{
 				dgvFields->Rows->Clear();
 				_attrCodeNames = gcnew Dictionary<String ^, String ^>();
-				for each(array<Object^>^ arr in attrs)
+				for each(Attribute^ arr in attrs)
 				{
-					if (((bool)arr[0]) == true)
+					if (arr->UseChecked)
 					{
 						_nChecked++;
 					}
-					_attrCodeNames->Add(arr[1]->ToString(), arr[2]->ToString());
-					dgvFields->Rows->Add(arr);
+					_attrCodeNames->Add(arr->FullCode->ToString(), arr->Name->ToString());
+
+					array<Object^>^ attrRow = gcnew array<Object^>(5);
+					attrRow[0] = arr->UseChecked;
+					attrRow[1] = arr->FullCode;
+					attrRow[2] = arr->Name;
+					attrRow[3] = arr->DataType;
+					attrRow[4] = arr->MaxLength;
+					dgvFields->Rows->Add(attrRow);
 				}
 			}
 
@@ -423,7 +445,7 @@ namespace Integra {
 					_attrDict->Remove(fullCode);
 				}
 
-				List<array<Object^>^>^ list = gcnew List<array<Object ^> ^>();
+				List<Attribute^>^ list = gcnew List<Attribute ^>();
 
 				int nRows = dgvFields->Rows->Count;
 				for (int i =0; i < nRows; i++)
@@ -441,7 +463,16 @@ namespace Integra {
 					arr[2] = dgvFields[2, i]->Value;
 					arr[3] = dgvFields[3, i]->Value;
 					arr[4] = dgvFields[4, i]->Value;
-					list->Add(arr);
+
+					//List<String^>^ fullTable = GetFullNodeCode(tvBooks->SelectedNode);
+					array<String^>^ fullCodeFromAttr = dgvFields[1, i]->Value->ToString()->Split('.');
+
+					Attribute^ attr = gcnew Attribute(fullCodeFromAttr[0] + "." + fullCodeFromAttr[1], fullCodeFromAttr[2], dgvFields[2, i]->Value->ToString());
+					attr->UseChecked = (bool)dgvFields[0, i]->Value;
+					attr->DataType = dgvFields[3, i]->Value->ToString();
+					attr->MaxLength = dgvFields[4, i]->Value->ToString();
+
+					list->Add(attr);
 				}
 				_attrDict->Add(fullCode, list);
 			}
@@ -612,19 +643,23 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 				 MessageBox::Show("Не задан реквизит-идентификатор!");
 				 return;
 			 }
+			 String^ fullIdCode = cbId->SelectedItem->ToString();
+
 			 if (cbTitle->SelectedItem == nullptr)
 			 {
 				 MessageBox::Show("Не задан основной реквизит!");
 				 return;
 			 }
+			 String^ fullTitleCode = cbTitle->SelectedItem->ToString();
+			 
 			 WritePrevClassAttrs();
 
-			 for each(KeyValuePair<String^, List<array<Object^>^>^>^ pair in _attrDict)
+			 for each(KeyValuePair<String^, List<Attribute^>^>^ pair in _attrDict)
 			 {
 				 String^ schtab = pair->Key;
-				 for each(array<Object^>^ ar in pair->Value)
+				 for each(Attribute^ atr in pair->Value)
 				 {
-					 bool isUseAttr = (bool)ar[0];
+					 /*bool isUseAttr = (bool)ar[0];
 					 if (isUseAttr)
 					 {
 						 array<String^>^ arrr = gcnew array<String ^>(5);
@@ -634,7 +669,19 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 						 arrr[3] = schtab;
 						 arrr[4] = ar[1]->ToString();
 
-						 Attributes->Add(arrr);
+						 
+					 }*/
+					 if	(atr->UseChecked)
+					 {
+						Attributes->Add(atr);
+					 }
+					 if	(atr->FullCode == fullIdCode)
+					 {
+						 IdCol = atr;
+					 }
+					 if	(atr->FullCode == fullTitleCode)
+					 {
+						 TitleCol = atr;
 					 }
 				 }
 			 }
@@ -644,8 +691,23 @@ private: System::Void bClose_Click(System::Object^  sender, System::EventArgs^  
 		 {
 			 IdCol = nullptr;
 			 TitleCol = nullptr;
+			 Attributes = nullptr;
 			 Close();
 		 }
 
+private: System::Void bAddTreeAttrs_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 //String^ posClassLocation = tvBooks->SelectedNode->Name;
+			 /*Dictionary<String^, String^>^ dict = gcnew Dictionary<String^, String^>();
+			 TreeNode^ parentNode = tvBooks->SelectedNode->Parent;
+			 while(parentNode->Level > 1)
+			 {
+				 dict->Add(parentNode->Name, parentNode->Text);
+				 parentNode = parentNode->Parent;
+			 }
+
+			 AddComplexAttrForm^ form = gcnew AddComplexAttrForm(_attrDict, dict);
+			 form->ShowDialog();*/
+		 }
 };
 }

@@ -204,15 +204,15 @@ namespace Integra {
 
 		void CreateIntgrSchema()
 		{
-			String^ columns = "ID,ID_SOURCE_BOOK,ID_TARGET_BOOK,TYPE,CREATE_USER,CREATE_DATE";
+			String^ columns = "ID,ID_SOURCE_BOOK,ID_TARGET_BOOK,TYPE,CREATE_USER,CREATE_DATE,BOOK_TYPE_ID";
 			_id = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_PARAMS");
 			int idS = _sourceBook->Id;
 			int idT = _targetBook->Id;
 			String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
 			String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
 
-			String^ squery = String::Format("insert into {0}INTEGRATION_PARAMS ({1}) values ({2},{3},{4},{5},{6},{7})",
-				_odbc->schema, columns, _id, idS, idT, _intType, sqlUser, sqlDate);
+			String^ squery = String::Format("insert into {0}INTEGRATION_PARAMS ({1}) values ({2},{3},{4},{5},{6},{7},{8})",
+				_odbc->schema, columns, _id, idS, idT, _intType, sqlUser, sqlDate, _sourceBook->BookId);
 			_odbc->ExecuteNonQuery(squery);
 		}
 

@@ -151,8 +151,6 @@ namespace Integra {
 			this->tbDriver->Name = L"tbDriver";
 			this->tbDriver->Size = System::Drawing::Size(177, 129);
 			this->tbDriver->TabIndex = 10;
-			this->tbDriver->Text = L"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\\\\Test.accdb;Uid=Admin;Pw" 
-				L"d=;";
 			this->tbDriver->Visible = false;
 			// 
 			// cbConnType
@@ -197,7 +195,6 @@ namespace Integra {
 			this->tbPass->Name = L"tbPass";
 			this->tbPass->Size = System::Drawing::Size(177, 20);
 			this->tbPass->TabIndex = 4;
-			this->tbPass->Text = L"1990";
 			this->tbPass->UseSystemPasswordChar = true;
 			// 
 			// label3
@@ -215,7 +212,6 @@ namespace Integra {
 			this->tbLogin->Name = L"tbLogin";
 			this->tbLogin->Size = System::Drawing::Size(177, 20);
 			this->tbLogin->TabIndex = 0;
-			this->tbLogin->Text = L"Administrator";
 			// 
 			// cbSystem
 			// 
@@ -301,6 +297,11 @@ namespace Integra {
 			String^ _roughSymbols;
 			int _intgrId;
 
+			String^ _groupSchtab;
+			Attribute^ _groupIdCol;
+			Attribute^ _groupNameCol;
+			Dictionary<Attribute^,Attribute^>^ _groupAttrs;
+
 			Void SetComboBox(ComboBox^ comboBox, array<String^, 2>^ list)
 			{
 				for (int i = 0; i < list->GetLength(0); i++)
@@ -371,7 +372,7 @@ namespace Integra {
 				_odbc->ExecuteNonQuery(query);
 			}
 
-			int WriteIdTitleAttr(Attribute^ col, int intgrId)
+			int WriteSingleAttr(Attribute^ col, int intgrId)
 			{
 				List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "integration_attributes where full_code = \'" + col->FullTable + "\' and attr_name = \'" + col->Code + "\' and ID_INTGR_BOOK = " + intgrId);
 				if (query != nullptr && query->Count > 0)
@@ -380,7 +381,7 @@ namespace Integra {
 				}
 				else
 				{
-					String^ columns = "ID,FULL_CODE,NAME,SCHEMA_NAME,TABLE_NAME,ATTR_NAME,ID_INTGR_BOOK,CREATE_USER,CREATE_DATE";
+					String^ columns = "ID,FULL_CODE,NAME,SCHEMA_NAME,TABLE_NAME,ATTR_NAME,ID_INTGR_BOOK,CREATE_USER,CREATE_DATE,DATA_TYPE,MAX_LENGTH";
 					int id = _odbc->GetMinFreeId(_odbc->schema + "integration_attributes");
 					String^ fullTable = OdbcClass::GetSqlString(col->FullTable);
 					String^ name = OdbcClass::GetSqlString(col->Name);
@@ -389,9 +390,11 @@ namespace Integra {
 					String^ attrName = OdbcClass::GetSqlString(col->Code);
 					String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
 					String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+					String^ dataType = OdbcClass::GetSqlString(col->DataType);
+					String^ maxLen = OdbcClass::GetSqlString(col->MaxLength);
 
-					String^ squery = String::Format("insert into {0}integration_attributes ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10})",
-						_odbc->schema, columns, id, fullTable, name, schemaName, tableName, attrName, intgrId,  sqlUser, sqlDate);
+					String^ squery = String::Format("insert into {0}integration_attributes ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12})",
+						_odbc->schema, columns, id, fullTable, name, schemaName, tableName, attrName, intgrId,  sqlUser, sqlDate, dataType, maxLen);
 					_odbc->ExecuteNonQuery(squery);
 					return id;
 				}
@@ -408,18 +411,18 @@ namespace Integra {
 					_odbc->ExecuteNonQuery(squery);
 				}
 
-				int id = WriteIdTitleAttr(idCol, intgrId);
+				int id = WriteSingleAttr(idCol, intgrId);
 				String^ squery = "update INTEGRATION_BOOK set ATTR_ID = " + id + " where ID = " + intgrId;
 				_odbc->ExecuteNonQuery(squery);
 
-				int titleAttrId = WriteIdTitleAttr(titleCol, intgrId);
+				int titleAttrId = WriteSingleAttr(titleCol, intgrId);
 				squery = "update INTEGRATION_BOOK set ATTR_TITLE = " + titleAttrId + " where ID = " + intgrId;
 				_odbc->ExecuteNonQuery(squery);
 			}
 
 			void WriteUseAttrs(List<Attribute^>^ dbAttrs, int intgrId)
 			{
-				String^ columns = "ID,FULL_CODE,NAME,SCHEMA_NAME,TABLE_NAME,ATTR_NAME,ID_INTGR_BOOK,CREATE_USER,CREATE_DATE";
+				String^ columns = "ID,FULL_CODE,NAME,SCHEMA_NAME,TABLE_NAME,ATTR_NAME,ID_INTGR_BOOK,CREATE_USER,CREATE_DATE,DATA_TYPE,MAX_LENGTH";
 				for each (Attribute^ attr in dbAttrs)
 				{
 					int id = _odbc->GetMinFreeId(_odbc->schema + "integration_attributes");
@@ -430,9 +433,11 @@ namespace Integra {
 					String^ attrName = OdbcClass::GetSqlString(attr->Code);
 					String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
 					String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+					String^ dataType = OdbcClass::GetSqlString(attr->DataType);
+					String^ maxLen = OdbcClass::GetSqlString(attr->MaxLength);
 
-					String^ squery = String::Format("insert into {0}integration_attributes ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10})",
-						_odbc->schema, columns, id, fullTable, name, schemaName, tableName, attrName, intgrId,  sqlUser, sqlDate);
+					String^ squery = String::Format("insert into {0}integration_attributes ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12})",
+						_odbc->schema, columns, id, fullTable, name, schemaName, tableName, attrName, intgrId,  sqlUser, sqlDate,  dataType, maxLen);
 					_odbc->ExecuteNonQuery(squery);
 				}
 
@@ -440,17 +445,17 @@ namespace Integra {
 
 			void WriteSingleAttrs(Attribute^ idCol, Attribute^ titleCol, Attribute^ roughCol, int intgrId)
 			{
-				int id = WriteIdTitleAttr(idCol, intgrId);
+				int id = WriteSingleAttr(idCol, intgrId);
 				String^ squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_ID = " + id + " where ID = " + intgrId;
 				_odbc->ExecuteNonQuery(squery);
 
-				int titleAttrId = WriteIdTitleAttr(titleCol, intgrId);
+				int titleAttrId = WriteSingleAttr(titleCol, intgrId);
 				squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_TITLE = " + titleAttrId + " where ID = " + intgrId;
 				_odbc->ExecuteNonQuery(squery);
 
 				if (roughCol != nullptr)
 				{
-					int roughAttrId = WriteIdTitleAttr(roughCol, intgrId);
+					int roughAttrId = WriteSingleAttr(roughCol, intgrId);
 					squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_ROUGH = " + roughAttrId + " where ID = " + intgrId;
 					_odbc->ExecuteNonQuery(squery);
 				}
@@ -465,12 +470,44 @@ namespace Integra {
 				}
 			}
 
+			void WriteGroup(int intgrId)
+			{
+				int idId = WriteSingleAttr(_groupIdCol, intgrId);
+				int idName = WriteSingleAttr(_groupNameCol, intgrId);
+				int idGroupParams = _odbc->GetMinFreeId(_odbc->schema + "GROUP_PARAMS");
+				String^ sFullTable = OdbcClass::GetSqlString(_groupSchtab);
+				String^ columns = "ID,ID_ATTR,NAME_ATTR,FULL_TABLE";
+				//todo add user and data to table
+				String^ squery = String::Format("insert into {0}GROUP_PARAMS ({1}) values ({2}, {3}, {4}, {5})",
+					_odbc->schema, columns, idGroupParams, idId, idName, sFullTable);
+				_odbc->ExecuteNonQuery(squery);
+
+				for each (KeyValuePair<Attribute^, Attribute^>^ pair in _groupAttrs)
+				{
+					int idAttrPair = _odbc->GetMinFreeId(_odbc->schema + "GROUP_ATTRIBUTE_PAIRS");
+					int idTitleAttr = WriteSingleAttr(pair->Key, intgrId);
+					int idNameAttr = WriteSingleAttr(pair->Value, intgrId);
+					columns = "ID,ID_TITLE,ID_NAME,ID_GROUP_PARAMS";
+					//todo add user and data to table
+					squery = String::Format("insert into {0}GROUP_ATTRIBUTE_PAIRS ({1}) values ({2}, {3}, {4}, {5})",
+						_odbc->schema, columns, idAttrPair, idTitleAttr, idNameAttr, idGroupParams);
+					_odbc->ExecuteNonQuery(squery);
+				}
+
+				squery = String::Format("update {0}INTEGRATION_BOOK set GROUP_ID = {1} where ID = {2}", _odbc->schema, idGroupParams, intgrId);
+				_odbc->ExecuteNonQuery(squery);
+			}
+
 			Void WriteToDb()
 			{
 				WriteIntegrBook();
 				WriteUseAttrs(_dbAttrs, _intgrId);
 				WriteSingleAttrs(_idCol, _titleCol, _roughCol, _intgrId);
 				WriteRoughSymbols(_roughSymbols, _intgrId);
+				if (!String::IsNullOrEmpty(_groupSchtab))
+				{
+					WriteGroup(_intgrId);
+				}
 			}
 
 	private: System::Void cbSystem_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
@@ -595,7 +632,7 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 				 addAttrForm->ShowDialog();
 				 _idCol = addAttrForm->IdCol;
 				 _titleCol = addAttrForm->TitleCol;
-				 //_dbAttrs = addAttrForm->Attributes;
+				 _dbAttrs = addAttrForm->Attributes;
 			 }
 			 else
 			 {
@@ -639,6 +676,16 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 					 _roughCol = addAttrForm->RoughCol;
 					 _roughSymbols = addAttrForm->RoughSymbols;
 					 _dbAttrs = addAttrForm->Attributes;
+
+					 _groupSchtab = addAttrForm->GroupSchtab;
+					 if (!String::IsNullOrEmpty(_groupSchtab))
+					 {
+						 _groupIdCol = addAttrForm->GroupIdCol;
+						 _groupNameCol = addAttrForm->GroupNameCol;
+						 _groupAttrs = addAttrForm->GroupAttrs;
+					 }
+					 
+					 
 				 }
 				 
 			 }

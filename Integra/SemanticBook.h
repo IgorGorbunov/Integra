@@ -99,6 +99,11 @@ namespace Integra {
 
 		}
 
+		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) override
+		{
+
+		}
+
 	private:
 		Void SetBookObject()
 		{

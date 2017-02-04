@@ -39,7 +39,7 @@ namespace Integra {
 			void Init()
 			{
 				schema = ""; 
-				//schema = "ULGU1.";
+				//schema = "INTEGRA.";
 			}
 
 			OdbcClass(String^ driver) 
@@ -116,7 +116,19 @@ namespace Integra {
 				{
 					return GetAccessTables();
 				}
-				return nullptr;
+				return GetOracleTables(schema);
+			}
+
+			List<Object^>^ GetOracleTables(String^ schema)
+			{
+				String^ squery = String::Format("select table_name from all_tables where owner = '{0}'", schema);
+				return ExecuteQuery(squery);
+			}
+
+			List<Object^>^ GetSchemas()
+			{
+				String^ squery = "select distinct OWNER from SYS.DBA_OBJECTS order by OWNER";
+				return ExecuteQuery(squery);
 			}
 
 			static String^ GetResString(Object^ o)
@@ -128,6 +140,21 @@ namespace Integra {
 				else
 				{
 					return o->ToString();
+				}
+			}
+
+			static DateTime^ GetResDate(Object^ o)
+			{
+				DateTime^ date;
+				if (o == nullptr || String::IsNullOrEmpty(o->ToString()))
+				{
+					return nullptr;
+					//return DateTime::ParseExact("1111-01-01 00:00:00", "yyyy-MM-dd HH:mm:ss", System::Globalization::CultureInfo::InvariantCulture);
+				}
+				else
+				{
+					date = (DateTime^)o;
+					return date;
 				}
 			}
 
@@ -159,6 +186,10 @@ namespace Integra {
 				if (_dataSource == "ACCESS")
 				{
 					return String::Format("CDate('{0}')", dateTime->ToString("yyyy-MM-dd HH:mm:ss"));
+				}
+				else
+				{
+					return String::Format("TO_DATE('{0}', 'YYYY-MM-DD HH24:MI:SS')", dateTime->ToString("yyyy-MM-dd HH:mm:ss"));
 				}
 			}
 
@@ -470,9 +501,31 @@ namespace Integra {
 			void Connect()
 			{
 				_connection = gcnew OdbcConnection(_driver);
-				_connection->Open();
-				_dataSource = _connection->DataSource;
-				_connection->Close();
+				try 
+				{
+					_connection->Open();
+					_dataSource = _connection->DataSource;
+				}
+				catch (OdbcException^ e)
+				{
+					String^ errorMessages = "";
+					for (int i = 0; i < e->Errors->Count; i++)
+					{
+						errorMessages += "Index #" + i + "\n" +
+							"Message: " + e->Errors[i]->Message + "\n" +
+							"NativeError: " + e->Errors[i]->NativeError + "\n" +
+							"Source: " + e->Errors[i]->Source + "\n" +
+							"SQL: " + e->Errors[i]->SQLState + "\n";
+					}
+					_logger->WriteError(errorMessages + "\n" + e->StackTrace);
+					MessageBox::Show(errorMessages, "Ошибка!", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				}
+				finally 
+				{
+					_connection->Close();
+					_logger->WriteLine("Соединение закрыто!");
+				}
+				
 			}
 			
 			void SetLoginFromDriver()

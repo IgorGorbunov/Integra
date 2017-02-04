@@ -49,6 +49,18 @@ namespace Integra {
 
 		}
 
+		String^ GetValue(Attribute^ attribute)
+		{
+			if (_attributes->ContainsKey(attribute))
+			{
+				return _attributes[attribute];
+			}
+			else
+			{
+				return nullptr;
+			}
+		}
+
 
 	protected:
 		/// <summary>

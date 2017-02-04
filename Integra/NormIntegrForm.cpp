@@ -1,0 +1,2 @@
+#include "NormIntegrForm.h"
+

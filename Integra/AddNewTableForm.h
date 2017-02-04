@@ -107,6 +107,7 @@ namespace Integra {
 			this->cbSchema->Name = L"cbSchema";
 			this->cbSchema->Size = System::Drawing::Size(229, 21);
 			this->cbSchema->TabIndex = 5;
+			this->cbSchema->SelectedIndexChanged += gcnew System::EventHandler(this, &AddNewTableForm::cbSchema_SelectedIndexChanged);
 			// 
 			// cbTable
 			// 
@@ -142,10 +143,9 @@ namespace Integra {
 			 {
 				 if (!String::IsNullOrEmpty(cbTable->SelectedItem->ToString()->Trim()))
 				 {
-					 Schema = "";
 					 if (cbSchema->SelectedItem != nullptr && cbSchema->SelectedItem->ToString() != "")
 					 {
-						 Schema =  cbSchema->SelectedItem->ToString()->Trim()->ToUpper();
+						 Schema = cbSchema->SelectedItem->ToString()->Trim()->ToUpper();
 					 }
 					 Table = cbTable->SelectedItem->ToString()->Trim()->ToUpper();
 					 SchTab = Schema + "." + Table;
@@ -160,18 +160,36 @@ private: System::Void AddNewTableForm_Load(System::Object^  sender, System::Even
 		 {
 			 if (_odbc->DataSource == "ACCESS")
 			 {
+				 Schema = "";
 				 cbSchema->Enabled = false;
-				 
+				 List<Object^>^ list = _odbc->GetTables(Schema);
+				 for each (Object^ o in list)
+				 {
+					 cbTable->Items->Add(o);
+				 }
 			 }
-			 String^ schema = "";
+			 else
+			 {
+				 cbTable->Enabled = false;
+				 List<Object^>^ list = _odbc->GetSchemas();
+				 for each (Object^ o in list)
+				 {
+					 cbSchema->Items->Add(o);
+				 }
+			 }
+		 }
+private: System::Void cbSchema_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
 			 if (cbSchema->SelectedItem != nullptr && cbSchema->SelectedItem->ToString() != "")
 			 {
-				 schema = cbSchema->SelectedItem->ToString()->Trim();
-			 }
-			 List<Object^>^ list = _odbc->GetTables(schema);
-			 for each (Object^ o in list)
-			 {
-				 cbTable->Items->Add(o);
+				 cbTable->Enabled = true;
+				 Schema = cbSchema->SelectedItem->ToString();
+				 List<Object^>^ list = _odbc->GetTables(Schema);
+				 cbTable->Items->Clear();
+				 for each (Object^ o in list)
+				 {
+					 cbTable->Items->Add(o);
+				 }
 			 }
 		 }
 };

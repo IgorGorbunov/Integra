@@ -79,6 +79,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Reference Include="Interop.Microsoft.Office.Interop.Excel, Version=1.6.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Interop.Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -86,9 +89,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddComplexAttrForm.cpp" />
     <ClCompile Include="AddDbAttrsForm.cpp" />
     <ClCompile Include="AddEditGroupForm.cpp" />
-    <ClCompile Include="AddEditSchemaForm.cpp" />
     <ClCompile Include="AddEditSchemaForm2.cpp" />
     <ClCompile Include="AddEditSystemBookForm.cpp" />
     <ClCompile Include="AddEditUserRole.cpp" />
@@ -96,18 +99,20 @@
     <ClCompile Include="AddNewTableForm.cpp" />
     <ClCompile Include="AddNewUser.cpp" />
     <ClCompile Include="AddSemAttrForm.cpp" />
-    <ClCompile Include="AttrCompareForm.cpp" />
     <ClCompile Include="AutoConfigsForm.cpp" />
     <ClCompile Include="AutoSettingsForm.cpp" />
     <ClCompile Include="DbFiltersForm.cpp" />
+    <ClCompile Include="DetailResults.cpp" />
     <ClCompile Include="DifferencesForm.cpp" />
     <ClCompile Include="EditForm.cpp" />
     <ClCompile Include="GroupParamsForm.cpp" />
+    <ClCompile Include="IntgrResultsForm.cpp" />
     <ClCompile Include="JournalChangesForm.cpp" />
     <ClCompile Include="LoginForm.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="ManualIntegrationForm.cpp" />
     <ClCompile Include="ManualIntegrationForm1.cpp" />
+    <ClCompile Include="NormIntegrForm.cpp" />
     <ClCompile Include="NoticesForm.cpp" />
     <ClCompile Include="ODBCclass.h" />
     <ClCompile Include="Results.cpp" />
@@ -118,13 +123,13 @@
     <ClCompile Include="TableLinksForm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddComplexAttrForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AddDbAttrsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AddEditGroupForm.h">
-      <FileType>CppForm</FileType>
-    </ClInclude>
-    <ClInclude Include="AddEditSchemaForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AddEditSchemaForm2.h">
@@ -148,9 +153,6 @@
     <ClInclude Include="AddSemAttrForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="AttrCompareForm.h">
-      <FileType>CppForm</FileType>
-    </ClInclude>
     <ClInclude Include="Attribute.h" />
     <ClInclude Include="AutoConfigsForm.h">
       <FileType>CppForm</FileType>
@@ -160,11 +162,17 @@
     </ClInclude>
     <ClInclude Include="Book.h" />
     <ClInclude Include="BookSettings.h" />
+    <ClInclude Include="ComplexAttribute.h" />
+    <ClInclude Include="ComposeAttr.h" />
     <ClInclude Include="DbBook.h" />
     <ClInclude Include="DbFiltersForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="DbLink.h" />
     <ClInclude Include="DbPosition.h" />
+    <ClInclude Include="DetailResults.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="DifferencesForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -172,11 +180,17 @@
     <ClInclude Include="EditForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Editting.h" />
+    <ClInclude Include="ExcelClass.h" />
     <ClInclude Include="GroupParamsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Integration.h" />
+    <ClInclude Include="IntegrationResult.h" />
     <ClInclude Include="IntegrationSettings.h" />
+    <ClInclude Include="IntgrResultsForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="JournalChangesForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -194,6 +208,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="NetCopy.h" />
+    <ClInclude Include="NormIntegrForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="NoticesForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -231,15 +248,15 @@
     <ClInclude Include="WrongPassSemanticException.h" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddComplexAttrForm.resx">
+      <DependentUpon>AddComplexAttrForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddDbAttrsForm.resx">
       <DependentUpon>AddDbAttrsForm.h</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="AddEditGroupForm.resx">
       <DependentUpon>AddEditGroupForm.h</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AddEditSchemaForm.resx">
-      <DependentUpon>AddEditSchemaForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddEditSchemaForm2.resx">
       <DependentUpon>AddEditSchemaForm2.h</DependentUpon>
@@ -262,9 +279,6 @@
     <EmbeddedResource Include="AddSemAttrForm.resx">
       <DependentUpon>AddSemAttrForm.h</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AttrCompareForm.resx">
-      <DependentUpon>AttrCompareForm.h</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="AutoConfigsForm.resx">
       <DependentUpon>AutoConfigsForm.h</DependentUpon>
     </EmbeddedResource>
@@ -273,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DbFiltersForm.resx">
       <DependentUpon>DbFiltersForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailResults.resx">
+      <DependentUpon>DetailResults.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DifferencesForm.resx">
       <DependentUpon>DifferencesForm.h</DependentUpon>
@@ -283,6 +300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GroupParamsForm.resx">
       <DependentUpon>GroupParamsForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IntgrResultsForm.resx">
+      <DependentUpon>IntgrResultsForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="JournalChangesForm.resx">
       <DependentUpon>JournalChangesForm.h</DependentUpon>
@@ -298,6 +318,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ManualIntegrationForm1.resx">
       <DependentUpon>ManualIntegrationForm1.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NormIntegrForm.resx">
+      <DependentUpon>NormIntegrForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NoticesForm.resx">
       <DependentUpon>NoticesForm.h</DependentUpon>

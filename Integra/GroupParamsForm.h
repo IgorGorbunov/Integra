@@ -1,5 +1,6 @@
 #pragma once
 #include "ODBCclass.h"
+#include "Attribute.h"
 
 namespace Integra {
 
@@ -17,15 +18,22 @@ namespace Integra {
 	{
 	public:
 		String^ Schtab;
-		String^ IdCol;
-		String^ NameCol;
-		Dictionary<String^,String^>^ Attrs;
+		Attribute^ IdAttr;
+		Attribute^ NameAttr;
+		Dictionary<Attribute^,Attribute^>^ Attrs;
 
 	private:
 		OdbcClass^ _odbc;
 		bool _attrsColFilled;
 		List<Object^>^ _fieldList;
 		bool _init;
+
+		String^ _schema;
+		String^ _table;
+
+		String^ _idCol;
+		String^ _nameCol;
+		Dictionary<String^,String^>^ _attrs;
 
 	public:
 		GroupParamsForm(OdbcClass^ odbc)
@@ -274,16 +282,22 @@ namespace Integra {
 				if (cbTable->SelectedItem == nullptr ||
 					String::IsNullOrEmpty(cbTable->SelectedItem->ToString()))
 				{
+					_schema = "";
+					_table = "";
 					return nullptr;
 				}
 				if (cbSchema->SelectedItem == nullptr ||
 					String::IsNullOrEmpty(cbSchema->SelectedItem->ToString()))
 				{
-					return cbTable->SelectedItem->ToString()->Trim()->ToUpper();
+					_schema = "";
+					_table = cbTable->SelectedItem->ToString()->Trim()->ToUpper();
+					return _table;
 				}
 				else
 				{
-					return cbSchema->SelectedItem->ToString()->Trim()->ToUpper() + "." + cbTable->SelectedItem->ToString()->Trim()->ToUpper();
+					_schema = cbSchema->SelectedItem->ToString()->Trim()->ToUpper();
+					_table = cbTable->SelectedItem->ToString()->Trim()->ToUpper();
+					return _schema + "." + _table;
 				}
 			}
 
@@ -315,17 +329,26 @@ namespace Integra {
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 Schtab = nullptr;
-			 IdCol = nullptr;
-			 NameCol = nullptr;
-			 Attrs = nullptr;
+			 _idCol = nullptr;
+			 _nameCol = nullptr;
+			 _attrs = nullptr;
 			 Close();
 		 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 Schtab = GetSchtab();
-			 IdCol = Schtab + "." + cbId->SelectedItem->ToString();
-			 NameCol = Schtab + "." + cbName->SelectedItem->ToString();
-			 Attrs = gcnew Dictionary<String ^, String ^>();
+			 String^ idCode = cbId->SelectedItem->ToString()->ToUpper();
+			 _idCol = Schtab + "." + idCode;
+			 IdAttr = gcnew Attribute(_schema, _table, idCode, "");
+			 //todo add length datatype
+
+			 String^ nameCode = cbName->SelectedItem->ToString()->ToUpper();
+			 _nameCol = Schtab + "." + nameCode;
+			 NameAttr = gcnew Attribute(_schema, _table, nameCode, "");
+			 //todo add length datatype
+
+			 _attrs = gcnew Dictionary<String ^, String ^>();
+			 Attrs = gcnew Dictionary<Attribute ^, Attribute ^>();
 			 for (int i = 0; i < dataGridView1->Rows->Count; i++)
 			 {
 				 if ((dataGridView1[0, i]->Value == nullptr || String::IsNullOrEmpty(dataGridView1[0, i]->Value->ToString())) &&
@@ -333,9 +356,18 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 				 {
 					 continue;
 				 }
-				 String^ title = String::Format("{0}.{1}", Schtab, dataGridView1[0, i]->Value->ToString()->Trim()->ToUpper());
-				 String^ name = String::Format("{0}.{1}", Schtab, dataGridView1[1, i]->Value->ToString()->Trim()->ToUpper());
-				 Attrs->Add(title, name);
+				 String^ title = dataGridView1[0, i]->Value->ToString()->Trim()->ToUpper();
+				 String^ schTitle = String::Format("{0}.{1}", Schtab, title);
+				 Attribute^ titleAttr = gcnew Attribute(_schema, _table, title, "");
+				 //todo add length datatype
+
+				 String^ name = dataGridView1[1, i]->Value->ToString()->Trim()->ToUpper();
+				 String^ schName = String::Format("{0}.{1}", Schtab, name);
+				 Attribute^ nameAttr = gcnew Attribute(_schema, _table, name, "");
+				 //todo add length datatype
+
+				 _attrs->Add(schTitle, schName);
+				 Attrs->Add(titleAttr, nameAttr);
 			 }
 			 Close();
 		 }

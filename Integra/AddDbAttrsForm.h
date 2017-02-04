@@ -5,6 +5,7 @@
 #include "DbFiltersForm.h"
 #include "TableLinksForm.h"
 #include "GroupParamsForm.h"
+#include "DbLink.h"
 
 
 namespace Integra {
@@ -29,15 +30,19 @@ namespace Integra {
 		String^ RoughSymbols;
 		List<Attribute^>^ Attributes;
 
+		String^ GroupSchtab;
+		Attribute^ GroupIdCol;
+		Attribute^ GroupNameCol;
+		Dictionary<Attribute^,Attribute^>^ GroupAttrs;
+
 	private:
 		List<String^>^ _fieldNames;
 		OdbcClass^ _odbc;
 		String^ _filter;
-		Dictionary<String^, String^>^ _links;
+		List<DbLink^>^ _links;
 
-		String^ _IdCol;
-		String^ _NameCol;
-		Dictionary<String^,String^>^ _Attrs;
+		
+
 		Dictionary<String^, List<Attribute^>^>^ _allAttrs;
 		bool _programCheck;
 
@@ -77,6 +82,7 @@ namespace Integra {
 		void Init()
 		{
 			_programCheck = false;
+			//todo неверно пишутся атрибуты без схемы
 			_allAttrs = gcnew Dictionary<String^, List<Attribute^>^>();
 			Attributes = gcnew List<Attribute^>();
 			_fieldNames = gcnew List<String ^>();
@@ -350,6 +356,7 @@ namespace Integra {
 			this->tv->Size = System::Drawing::Size(429, 266);
 			this->tv->TabIndex = 13;
 			this->tv->AfterCheck += gcnew System::Windows::Forms::TreeViewEventHandler(this, &AddDbAttrsForm::tv_AfterCheck);
+			this->tv->BeforeSelect += gcnew System::Windows::Forms::TreeViewCancelEventHandler(this, &AddDbAttrsForm::tv_BeforeSelect);
 			this->tv->AfterSelect += gcnew System::Windows::Forms::TreeViewEventHandler(this, &AddDbAttrsForm::tv_AfterSelect);
 			// 
 			// bAddTableLinks
@@ -574,15 +581,31 @@ namespace Integra {
 
 			void AddAttrInAllAttrs(String^ schtab, String^ code, Attribute^ attr)
 			{
-				List<Attribute^>^ list = _allAttrs[schtab];
-				for (int i = 0; i < _allAttrs[schtab]->Count; i++)
+				if(_allAttrs->ContainsKey(schtab))
 				{
-					if (list[i]->Code == code)
+					List<Attribute^>^ list = _allAttrs[schtab];
+					bool find = false;
+					for (int i = 0; i < _allAttrs[schtab]->Count; i++)
 					{
-						list[i] = attr;
+						if (list[i]->Code == code)
+						{
+							list[i] = attr;
+							find = true;
+							break;
+						}
 					}
+					if(!find)
+					{
+						list->Add(attr);
+					}
+					_allAttrs[schtab] = list;
 				}
-				_allAttrs[schtab] = list;
+				else
+				{
+					List<Attribute^>^ list = gcnew List<Attribute^>();
+					list->Add(attr);
+					_allAttrs->Add(schtab, list);
+				}
 			}
 
 			void SetDgvFromSql(System::Windows::Forms::TreeViewEventArgs^  e, String^ schtab)
@@ -605,32 +628,88 @@ namespace Integra {
 					row[2] = fields[i+1];
 					row[3] = fields[i+2];
 					row[4] = fields[i+3];
-					row[5] = fields[i+6];
+					String^ canBeNullLetter = fields[i+6]->ToString();
+					if (canBeNullLetter == "N")
+					{
+						row[5] = false;
+					}
+					else
+					{
+						row[5] = true;
+					}
 					row[6] = fields[i+4];
 					row[7] = fields[i+5];
 					dgvFields->Rows->Add(row);
 
-					Attribute^ attr = gcnew Attribute(schema, table, fields[i]->ToString(), fields[i+1]->ToString());
+					/*Attribute^ attr = gcnew Attribute(schema, table, fields[i]->ToString(), fields[i+1]->ToString());
 					attr->UseChecked = false;
 					attr->DataType = fields[i+2]->ToString();
 					attr->MaxLength = fields[i+3]->ToString();
-					if (row[5] == 0)
-					{
-						attr->CanBeNull = false;
-					}
-					else
-					{
-						attr->CanBeNull = true;
-					}
+
+						attr->CanBeNull = (bool) row[5];
+
 					list->Add(attr);
 
 					String^ fieldCode = String::Format("{0}.{1}", schtab, fields[i]->ToString());
 					if (!_fieldNames->Contains(fieldCode))
 					{
 						_fieldNames->Add(fieldCode);
-					}
+					}*/
 				}
-				_allAttrs[schtab] = list;
+				//_allAttrs[schtab] = list;
+			}
+
+			void ReadAttrsFromDataGridView()
+			{
+				if(tv->SelectedNode == nullptr)
+				{
+					return;
+				}
+				if(tv->SelectedNode->Parent == nullptr)
+				{
+					return;
+				}
+				_fieldNames->Clear();
+
+				String^ schema = tv->SelectedNode->Parent->Name;
+				String^ table =  tv->SelectedNode->Name;
+				String^ schtab = String::Format("{0}.{1}", schema, table);
+				for (int i = 0; i < dgvFields->Rows->Count; i++)
+				{
+					bool ch = (bool) dgvFields[0, i]->Value;
+					String^ fieldCode = dgvFields[1, i]->Value->ToString();
+					String^ fieldName = dgvFields[2, i]->Value->ToString();
+
+					Attribute^ attr;
+					if (schema == "без схемы")
+					{
+						attr = gcnew Attribute("", table, fieldCode, fieldName);
+					}
+					else
+					{
+						attr = gcnew Attribute(schema, table, fieldCode, fieldName);
+					}
+
+					attr->UseChecked = ch;
+					Object^ obj = dgvFields[3, i]->Value;
+					if(obj != nullptr)
+					{
+						attr->DataType = obj->ToString();
+					}
+					attr->MaxLength = dgvFields[4, i]->Value->ToString();
+					Object^ bcanBeNull = dgvFields[5, i]->Value;
+					if ((bool)bcanBeNull)
+					{
+						attr->CanBeNull = true;
+					}
+					else
+					{
+						attr->CanBeNull = false;
+
+					}
+					_fieldNames->Add(attr->FullCode);
+					AddAttrInAllAttrs(schtab, fieldCode, attr);
+				}
 			}
 
 
@@ -673,17 +752,17 @@ namespace Integra {
 				}
 				if (tv->Nodes->Count > 1)
 				{
-					bAddTableLinks->Enabled = true;
+					//bAddTableLinks->Enabled = true;
 				}
 				else
 				{
 					if (tv->Nodes[0]->Nodes->Count > 1)
 					{
-						bAddTableLinks->Enabled = true;
+						//bAddTableLinks->Enabled = true;
 					}
 					else
 					{
-						bAddTableLinks->Enabled = false;
+						//bAddTableLinks->Enabled = false;
 					}
 				}
 
@@ -703,26 +782,15 @@ private: System::Void dgvFields_CellValueChanged(System::Object^  sender, System
 				 if (e->ColumnIndex == 0)
 				 {
 					 SetTvChecked();
-					 /*for (int i = 0; i < dgvFields->Rows->Count; i++)
-					 {*/
-					 int i = e->RowIndex;
+					 /*int i = e->RowIndex;
 						 bool ch = (bool) dgvFields[0, i]->Value;
-						 /*if (ch)
-						 {*/
+
 							 String^ fieldCode = dgvFields[1, i]->Value->ToString();
 							 String^ fieldName = dgvFields[2, i]->Value->ToString();
 							 String^ schema = tv->SelectedNode->Parent->Name;
 							 String^ table =  tv->SelectedNode->Name;
 							 String^ schtab = String::Format("{0}.{1}", schema, table);
 
-							 /*array<String^>^ arrr = gcnew array<String ^>(5);
-							 arrr[0] = schtab;
-							 arrr[1] = fieldName;
-							 arrr[2] = schema;
-							 arrr[3] = table;
-							 arrr[4] = fieldCode;
-
-							 Attributes->Add(arrr);*/
 
 							 Attribute^ attr = gcnew Attribute(schema, table, fieldCode, fieldName);
 							 attr->UseChecked = ch;
@@ -739,9 +807,8 @@ private: System::Void dgvFields_CellValueChanged(System::Object^  sender, System
 
 							 }
 
-							 AddAttrInAllAttrs(schtab, fieldCode, attr);
-						 //}
-					 //}
+							 AddAttrInAllAttrs(schtab, fieldCode, attr);*/
+
 				 }
 				 else if (e->ColumnIndex == 2)
 				 {
@@ -845,7 +912,7 @@ private: System::Void bAddTableLinks_Click(System::Object^  sender, System::Even
 				 }
 				 dict->Add(pair->Key, list);
 			 }
-			 TableLinksForm^ form = gcnew TableLinksForm(dict);
+			 TableLinksForm^ form = gcnew TableLinksForm(_allAttrs);
 			 form->ShowDialog();
 			 if (_links != nullptr)
 			 {
@@ -857,11 +924,12 @@ private: System::Void bGroupParams_Click(System::Object^  sender, System::EventA
 		 {
 			 GroupParamsForm^ form = gcnew GroupParamsForm(_odbc);
 			 form->ShowDialog();
-			 if (form->IdCol != nullptr)
+			 if (form->IdAttr != nullptr)
 			 {
-				 _IdCol = form->IdCol;
-				 _NameCol = form->NameCol;
-				 _Attrs = form->Attrs;
+				 GroupSchtab = form->Schtab;
+				 GroupIdCol = form->IdAttr;
+				 GroupNameCol = form->NameAttr;
+				 GroupAttrs = form->Attrs;
 			 }
 		 }
 private: System::Void tv_AfterCheck(System::Object^  sender, System::Windows::Forms::TreeViewEventArgs^  e) 
@@ -873,15 +941,21 @@ private: System::Void tv_AfterCheck(System::Object^  sender, System::Windows::Fo
 		 }
 private: System::Void cbId_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 ReadAttrsFromDataGridView();
 			 AddFullCodesToComboBox(cbId);
 		 }
 private: System::Void cbTitle_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 ReadAttrsFromDataGridView();
 			  AddFullCodesToComboBox(cbTitle);
 		 }
 private: System::Void cbRoughAttr_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 AddFullCodesToComboBox(cbRoughAttr);
+		 }
+private: System::Void tv_BeforeSelect(System::Object^  sender, System::Windows::Forms::TreeViewCancelEventArgs^  e) 
+		 {
+			 ReadAttrsFromDataGridView();
 		 }
 };
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IntegrationSettings.h"
+#include "IntegrationResult.h"
 #include "ODBCclass.h"
 #include "Book.h"
 #include "DbBook.h"
@@ -9,6 +10,7 @@
 #include "DbPosition.h"
 #include "DiffererncePosition.h"
 #include "Results2.h"
+#include "Editting.h"
 
 
 namespace Integra {
@@ -47,16 +49,22 @@ namespace Integra {
 		Book^ _targetBook;
 		List<Position^>^ _sourcePositions;
 		List<Position^>^ _targetPositions;
+		static List<Position^>^ _sourceStaicPositions;
+		static List<Position^>^ _targetStaicPositions;
 		List<Position^>^ _targetNewPositions;
 		List<Position^>^ _sourceNewPositions;
 
 		BackgroundWorker^ _backgroundWorker1;
 		BackgroundWorker^ _backgroundWorker2;
+		BackgroundWorker^ _bWorker;
 		
 
 		bool _firstWorkIsSemantic, _secondWorkIsSemantic;
+		bool _isBusy;
 		int maxColSource;
 		int maxColTarget;
+
+		IntegrationResult^ _intgrResults;
 
 	public:
 		Integration(IntegrationSettings^ settings, OdbcClass^ odbc) 
@@ -80,58 +88,148 @@ namespace Integra {
 	public:
 		Void StartIntegrationTable(Form^% form, Label^% lblCount)
 		{
+			_intgrResults = gcnew IntegrationResult(_odbc, _settings, 1);
+			_intgrResults->WriteDbStart();
+
 			_attrPairs = _settings->AttributePairs;
 			SetAttrLists();
 
-			_sourceBook = GetBook(_settings->SourceBook, true);
-			_targetBook = GetBook(_settings->TargetBook, false);
-			List<Position^>^ sourcePoses = _sourceBook->GetAllPositionsTable(_sourceAttrs);
-			List<Position^>^ targetPoses = _targetBook->GetAllPositionsTable(_targetAttrs);
+			_bWorker = nullptr;
+			InitializeBackgoundWorkers();
+			List<Position^>^ _sourcePositions;
+			List<Position^>^ _targetPositions;
+
+			bool secondIsSemantic = false;
+			if (_settings->SourceBook->IsSemantic && !_settings->TargetBook->IsSemantic)
+			{
+				_bWorker = _backgroundWorker1;
+				_targetBook = GetBook(_settings->TargetBook, false);
+				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs);
+			}
+			if (!_settings->SourceBook->IsSemantic && _settings->TargetBook->IsSemantic)
+			{
+				secondIsSemantic = true;
+				_sourceBook = GetBook(_settings->SourceBook, true);
+				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs);
+				_bWorker = _backgroundWorker2;
+			}
+			
+			if	(_bWorker == nullptr)
+			{
+				_sourceBook = GetBook(_settings->SourceBook, true);
+				_targetBook = GetBook(_settings->TargetBook, false);
+				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs);
+				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs);
+			}
+			else
+			{
+				_isBusy = true;
+				_bWorker->RunWorkerAsync();
+			}
+			
 
 			lblCount->Text = "0";
 			Application::DoEvents();
+
+			while (_bWorker != nullptr && _isBusy)
+			{
+				System::Threading::Thread::Sleep(1000);
+			}
 
 			Differences = gcnew List<DifferencePosition^>();
 			SourceNew = gcnew List<Position ^>();
 			TargetNew = gcnew List<Position ^>();
 
-			for (int i = 0; i < sourcePoses->Count; i++)
+			if(_sourcePositions == nullptr)
 			{
-				bool contains = false;
-				Position^ sPos = sourcePoses[i];
-				int jDel;
-				for (int j = 0; j < targetPoses->Count; j++)
+				_sourcePositions = _sourceStaicPositions;
+			}
+			if(_targetPositions == nullptr)
+			{
+				_targetPositions = _targetStaicPositions;
+			}
+
+			if	(!secondIsSemantic)
+			{
+				for (int i = 0; i < _sourcePositions->Count; i++)
 				{
-					Position^ tPos = targetPoses[j];
-					if (sPos->UnicId == tPos->UnicId)
+					bool contains = false;
+					Position^ sPos = _sourcePositions[i];
+					int jDel;
+					for (int j = 0; j < _targetPositions->Count; j++)
 					{
-						contains = true;
-						jDel = j;
-						DifferencePosition^ diffPos;
-						if (AttrsIsFullyEqual(sPos, tPos, diffPos))
+						Position^ tPos = _targetPositions[j];
+						if (sPos->UnicId == tPos->UnicId)
 						{
-							break;
-						}
-						else
-						{
-							Differences->Add(diffPos);
-							break;
+							contains = true;
+							jDel = j;
+							DifferencePosition^ diffPos;
+							if (AttrsIsFullyEqual(sPos, tPos, diffPos))
+							{
+								break;
+							}
+							else
+							{
+								Differences->Add(diffPos);
+								break;
+							}
 						}
 					}
+					if (contains)
+					{
+						_targetPositions->RemoveAt(jDel);
+					}
+					else
+					{
+						SourceNew->Add(sPos);
+					}
+					lblCount->Text = i + "";
+					form->Update();
+					form->Refresh();
 				}
-				if (contains)
-				{
-					targetPoses->RemoveAt(jDel);
-				}
-				else
-				{
-					SourceNew->Add(sPos);
-				}
-				lblCount->Text = i + "";
-				form->Update();
-				form->Refresh();
+				TargetNew = _targetPositions;
 			}
-			TargetNew = targetPoses;
+			else
+			{
+				for (int i = 0; i < _targetPositions->Count; i++)
+				{
+					bool contains = false;
+					Position^ tPos = _targetPositions[i];
+					int jDel;
+					for (int j = 0; j < _sourcePositions->Count; j++)
+					{
+						Position^ sPos = _sourcePositions[j];
+						if (sPos->UnicId == tPos->UnicId)
+						{
+							contains = true;
+							jDel = j;
+							DifferencePosition^ diffPos;
+							if (AttrsIsFullyEqual(sPos, tPos, diffPos))
+							{
+								break;
+							}
+							else
+							{
+								Differences->Add(diffPos);
+								break;
+							}
+						}
+					}
+					if (contains)
+					{
+						_sourcePositions->RemoveAt(jDel);
+					}
+					else
+					{
+						TargetNew->Add(tPos);
+					}
+					lblCount->Text = i + "";
+					form->Update();
+					form->Refresh();
+				}
+				SourceNew = _sourcePositions;
+			}
+			
 
 
 //List<Attribute^>^ attrSourceTitles;
@@ -206,6 +304,8 @@ namespace Integra {
 				}
 			}
 			_sourceBook->AddPosition(newAttrsAndVals);
+			Editting^ newEdit = gcnew Editting(_odbc, _intgrResults, 0, 0, p->UnicId);
+			newEdit->WriteNewPos();
 		}
 
 		void AddPosToTarget(Position^ p)
@@ -219,11 +319,13 @@ namespace Integra {
 				}
 			}
 			_targetBook->AddPosition(newAttrsAndVals);
+			Editting^ newEdit = gcnew Editting(_odbc, _intgrResults, 0, 1, p->UnicId);
+			newEdit->WriteNewPos();
 		}
 
 		void UpdatePosToTarget(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)
 		{
-			_targetBook->UpdatePosition(currentPos, newAttrVals);
+			_targetBook->UpdatePositionForEachAttr(currentPos, newAttrVals, _intgrResults, 1);
 		}
 
 		Void SetPositionsAndCompare()
@@ -433,7 +535,20 @@ namespace Integra {
 				Attribute^ pAttr = _settings->AttributePairs[sAttr];
 				String^ tValue = targetPos->AttributesAndValues[pAttr];
 
-				if (sValue->Trim() != tValue->Trim())
+				Object^ sVal;
+				Object^ tVal;
+				if	(IsBothDouble(sValue, tValue))
+				{
+					sVal = Double::Parse(sValue);
+					tVal = Double::Parse(tValue);
+				}
+				else
+				{
+					sVal = sValue->Trim();
+					tVal = tValue->Trim();
+				}
+
+				if (sVal->ToString() != tVal->ToString())
 				{
 					equal = false;
 					diffPos->AddDifferenceAttr(sAttr, sValue, pAttr, tValue);
@@ -446,6 +561,23 @@ namespace Integra {
 			return equal;
 		}
 
+		bool IsBothDouble(String^ sVal1, String^ sVal2)
+		{
+            sVal1 = sVal1->Replace('.', ',');
+            sVal2 = sVal2->Replace('.', ',');
+            Double d1;
+			Double d2;
+            bool b1 = Double::TryParse(sVal1, d1);
+            bool b2 = Double::TryParse(sVal2, d2);
+            if (b1 && b2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+		}
 
 		Book^ GetBook(BookSettings^ bookSettings, bool isSource)
 		{
@@ -469,24 +601,24 @@ namespace Integra {
 
 		void backgroundWorker1_DoWork( Object^ sender, DoWorkEventArgs^ e )
 		{
-			if (_resultForm == nullptr && Application::OpenForms["Results2"] == nullptr && _resultForm->IsBusy)
+			/*if (_resultForm == nullptr && Application::OpenForms["Results2"] == nullptr && _resultForm->IsBusy)
 			{
 				System::Threading::Thread::Sleep(1000);
-			}
-			TargetNew = _resultForm->TargetPositions;
-			Differences = gcnew List<DifferencePosition ^>();
+			}*/
 
-			_resultForm->LblSourceStatus->Text = "В процессе";
-			_resultForm->LblSourceStatus->ForeColor = Color::Yellow;
-			BackgroundWorker^ worker = dynamic_cast<BackgroundWorker^>(sender);
+			/*_resultForm->LblSourceStatus->Text = "В процессе";
+			_resultForm->LblSourceStatus->ForeColor = Color::Yellow;*/
 
+			//_sourceBook = GetBook(_settings->SourceBook, true);
 			_sourceBook = GetBook(_settings->SourceBook, true);
-			_sourcePositions = _sourceBook->GetAllPositions2(worker, e);
+			BackgroundWorker^ worker = dynamic_cast<BackgroundWorker^>(sender);
+			_sourceStaicPositions = _sourceBook->GetAllPositions2(_bWorker, e);
+			_isBusy = false;
 		}
 
 		void backgroundWorker1_RunWorkerCompleted( Object^ /*sender*/, RunWorkerCompletedEventArgs^ e )
 		{
-			if ( e->Error != nullptr )
+			/*if ( e->Error != nullptr )
 			{
 				MessageBox::Show( e->Error->Message );
 			}
@@ -506,12 +638,14 @@ namespace Integra {
 				{
 					_resultForm->SetNewTarget(pos);
 				}
-			}
+			}*/
+			_isBusy = false;
+
 		}
 
 		void backgroundWorker1_ProgressChanged( Object^ /*sender*/, ProgressChangedEventArgs^ e )
 		{
-			if (e->UserState == nullptr)
+			/*if (e->UserState == nullptr)
 			{
 				_resultForm->LblSourceCount->Text = e->ProgressPercentage + "";
 			}
@@ -524,28 +658,29 @@ namespace Integra {
 					System::Threading::Thread::Sleep(1000);
 				}
 				CompareSource(pos);
-			}
+			}*/
 		}
 
 		void backgroundWorker2_DoWork( Object^ sender, DoWorkEventArgs^ e )
 		{
-			while (_resultForm == nullptr && Application::OpenForms["Results2"] == nullptr)
+			/*while (_resultForm == nullptr && Application::OpenForms["Results2"] == nullptr)
 			{
 				System::Threading::Thread::Sleep(1000);
 			}
 			_resultForm->LblTargetStatus->Text = "В процессе";
 			_resultForm->LblTargetStatus->ForeColor = Color::Yellow;
-			BackgroundWorker^ worker = dynamic_cast<BackgroundWorker^>(sender);
+			
 
+			_targetBook = GetBook(_settings->TargetBook, false);*/
 			_targetBook = GetBook(_settings->TargetBook, false);
-			_targetPositions = _targetBook->GetAllPositions2(worker, e);
-			
-			
+			BackgroundWorker^ worker = dynamic_cast<BackgroundWorker^>(sender);
+			_targetStaicPositions = _targetBook->GetAllPositions2(worker, e);
+			_isBusy = false;
 		}
 
 		void backgroundWorker2_RunWorkerCompleted( Object^ /*sender*/, RunWorkerCompletedEventArgs^ e )
 		{
-			if ( e->Error != nullptr )
+			/*if ( e->Error != nullptr )
 			{
 				MessageBox::Show( e->Error->Message );
 			}
@@ -558,7 +693,8 @@ namespace Integra {
 			{
 				_resultForm->LblTargetStatus->Text = "Завершено";
 				_resultForm->LblTargetStatus->ForeColor = Color::Green;
-			}
+			}*/
+			_isBusy = false;
 		}
 
 		void backgroundWorker2_ProgressChanged( Object^ /*sender*/, ProgressChangedEventArgs^ e )

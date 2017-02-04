@@ -5,6 +5,7 @@
 #include"IntegrationSettings.h"
 #include"Integration.h"
 #include "Results3.h"
+#include "IntegrationResult.h"
 
 namespace Integra {
 
@@ -305,11 +306,11 @@ namespace Integra {
 			 }
 private: System::Void ManualIntegrationForm1_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			String^ squery = String::Format("select INTEGRATION_PARAMS.ID, BOOKS.ID, BOOKS.NAME, " + 
-				"INTEGRATION_PARAMS.ID_SOURCE_BOOK, (select INTEGRATED_SYSTEMS.NAME from INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from INTEGRATION_BOOK where INTEGRATION_BOOK.ID = INTEGRATION_PARAMS.ID_SOURCE_BOOK) ), " + 
-				"INTEGRATION_PARAMS.ID_TARGET_BOOK, (select INTEGRATED_SYSTEMS.NAME from INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from INTEGRATION_BOOK where INTEGRATION_BOOK.ID = INTEGRATION_PARAMS.ID_TARGET_BOOK) ), " + 
-				"INTEGRATION_PARAMS.TYPE, INTEGRATION_PARAMS.CREATE_DATE, INTEGRATION_PARAMS.CREATE_USER " +
-				"from {0}INTEGRATION_PARAMS, {0}BOOKS where INTEGRATION_PARAMS.BOOK_TYPE_ID = BOOKS.ID", _odbc->schema);
+			String^ squery = String::Format("select IP.ID, BB.ID, BB.NAME, " + 
+				"IP.ID_SOURCE_BOOK, (select INTEGRATED_SYSTEMS.NAME from {0}INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from {0}INTEGRATION_BOOK where INTEGRATION_BOOK.ID = IP.ID_SOURCE_BOOK) ), " + 
+				"IP.ID_TARGET_BOOK, (select INTEGRATED_SYSTEMS.NAME from {0}INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from {0}INTEGRATION_BOOK where INTEGRATION_BOOK.ID = IP.ID_TARGET_BOOK) ), " + 
+				"IP.TYPE, IP.CREATE_DATE, IP.CREATE_USER " +
+				"from {0}INTEGRATION_PARAMS IP, {0}BOOKS BB where IP.BOOK_TYPE_ID = BB.ID", _odbc->schema);
 			List<Object^>^ list = _odbc->ExecuteQuery(squery);
 
 			for (int i = 0; i < list->Count; i+=10)
@@ -338,7 +339,7 @@ private: System::Void ManualIntegrationForm1_Load(System::Object^  sender, Syste
 		 }
 private: System::Void bStartRough_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 
+			 int i = Int32::Parse("s");
 		 }
 private: System::Void bStartAccurate_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -350,6 +351,9 @@ private: System::Void bStartAccurate_Click(System::Object^  sender, System::Even
 			 int paramId = Decimal::ToInt32((Decimal)dataGridView1[0, dataGridView1->SelectedCells[0]->RowIndex]->Value);
 
 			 IntegrationSettings^ settings = gcnew IntegrationSettings(paramId, _odbc);
+
+			 
+
 			 Results3^ resForm	= gcnew Results3(settings);
 			 resForm->ShowDialog();
 		 }

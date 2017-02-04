@@ -83,7 +83,24 @@ namespace Integra {
 			}
 			void set(String^ value)
 			{
-				_dataType = value;
+				value = value->ToUpper();
+				if(value == "ÑÒÐÎÊÀ" || value == "VARCHAR2" || value == "ÒÅÊÑÒ" || value == "STRING" || value == "VARCHAR"  || value == "CHAR" || value == "SYSTEM.STRING")
+				{
+					_dataType = "ÑÒÐÎÊÀ";
+				}
+				//release
+				if(value == "ÖÅËÎÅ ×ÈÑËÎ" || value == "INTEGER" || value == "NUMBER" || value == "SYSTEM.DECIMAL")
+				{
+					_dataType = "ÖÅËÎÅ ×ÈÑËÎ";
+				}
+				if(value == "ÄÀÒÀ" || value == "DATE" || value == "DATETIME" || value == "SYSTEM.DATETIME")
+				{
+					_dataType = "ÄÀÒÀ";
+				}
+				if(value == "×ÈÑËÎ Ñ ÏËÀÂÀÞÙÅÉ ÒÎ×ÊÎÉ"  || value == "DECIMAL"  || value == "SYSTEM.DECIMAL")
+				{
+					_dataType = "×ÈÑËÎ Ñ ÏËÀÂÀÞÙÅÉ ÒÎ×ÊÎÉ";
+				}
 			}
 		}
 		property int Id
@@ -155,11 +172,20 @@ namespace Integra {
 					i--;
 				}
 			}
-			bool schemaIsNull;
+
 			if (list->Count > 1)
 			{
-				schema = list[0];
-				table = list[1];
+				if	(list->Count > 2)
+				{
+					schema = "";
+					table = fullTable;
+				}
+				else
+				{
+					schema = list[0];
+					table = list[1];
+				}
+				
 			}
 			else
 			{
@@ -188,13 +214,14 @@ namespace Integra {
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select FULL_CODE, NAME, SCHEMA_NAME, TABLE_NAME, ATTR_NAME, ID_INTGR_BOOK, DATA_TYPE from " + _odbc->schema + ".INTEGRATION_ATTRIBUTES where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select FULL_CODE, NAME, SCHEMA_NAME, TABLE_NAME, ATTR_NAME, ID_INTGR_BOOK, DATA_TYPE, MAX_LENGTH from " + _odbc->schema + "INTEGRATION_ATTRIBUTES where ID = " + id);
 			_name = parametrs[1]->ToString();
 			_schemaName = parametrs[2]->ToString();
 			_tableName = parametrs[3]->ToString();
 			_attrName = parametrs[4]->ToString();
 			_idIntgrBook = Decimal::ToInt32((Decimal)parametrs[5]);
 			_dataType = parametrs[6]->ToString();
+			MaxLength = parametrs[7]->ToString();
 			if (String::IsNullOrEmpty(_schemaName))
 			{
 				_fullCode = String::Format("{0}.{1}", _tableName, _attrName);

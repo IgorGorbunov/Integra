@@ -32,6 +32,21 @@ namespace Integra {
 			tbName->Text = name;
 		}
 
+		EditForm(int type, OdbcClass^ odbc)
+		{
+			_odbc = odbc;
+			_typeI = type;
+			if	(type == 0)
+			{
+				Text += " новую систему";
+			}
+			else
+			{
+				Text += " новый справочник";
+			}
+			InitializeComponent();
+		}
+
 	protected:
 		/// <summary>
 		/// Освободить все используемые ресурсы.
@@ -43,10 +58,10 @@ namespace Integra {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::GroupBox^  groupBox2;
+
 	protected: 
 	private: System::Windows::Forms::Button^  bEditBook;
-	private: System::Windows::Forms::Label^  label3;
+
 	private: System::Windows::Forms::TextBox^  tbName;
 	private: System::Windows::Forms::Button^  bCancel;
 
@@ -64,50 +79,26 @@ namespace Integra {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->bEditBook = (gcnew System::Windows::Forms::Button());
-			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->tbName = (gcnew System::Windows::Forms::TextBox());
 			this->bCancel = (gcnew System::Windows::Forms::Button());
-			this->groupBox2->SuspendLayout();
 			this->SuspendLayout();
-			// 
-			// groupBox2
-			// 
-			this->groupBox2->Controls->Add(this->bEditBook);
-			this->groupBox2->Controls->Add(this->label3);
-			this->groupBox2->Controls->Add(this->tbName);
-			this->groupBox2->Location = System::Drawing::Point(12, 12);
-			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(349, 105);
-			this->groupBox2->TabIndex = 4;
-			this->groupBox2->TabStop = false;
-			this->groupBox2->Text = L"Изменить справочник";
 			// 
 			// bEditBook
 			// 
 			this->bEditBook->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->bEditBook->Enabled = false;
-			this->bEditBook->Location = System::Drawing::Point(127, 58);
+			this->bEditBook->Location = System::Drawing::Point(128, 61);
 			this->bEditBook->Name = L"bEditBook";
 			this->bEditBook->Size = System::Drawing::Size(103, 37);
 			this->bEditBook->TabIndex = 2;
-			this->bEditBook->Text = L"Изменить";
+			this->bEditBook->Text = L"Добавить";
 			this->bEditBook->UseVisualStyleBackColor = false;
 			this->bEditBook->Click += gcnew System::EventHandler(this, &EditForm::bEditBook_Click);
 			// 
-			// label3
-			// 
-			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(24, 16);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(83, 13);
-			this->label3->TabIndex = 1;
-			this->label3->Text = L"Наименование";
-			// 
 			// tbName
 			// 
-			this->tbName->Location = System::Drawing::Point(27, 32);
+			this->tbName->Location = System::Drawing::Point(28, 35);
 			this->tbName->Name = L"tbName";
 			this->tbName->Size = System::Drawing::Size(300, 20);
 			this->tbName->TabIndex = 0;
@@ -116,7 +107,7 @@ namespace Integra {
 			// bCancel
 			// 
 			this->bCancel->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bCancel->Location = System::Drawing::Point(274, 130);
+			this->bCancel->Location = System::Drawing::Point(253, 130);
 			this->bCancel->Name = L"bCancel";
 			this->bCancel->Size = System::Drawing::Size(75, 23);
 			this->bCancel->TabIndex = 5;
@@ -128,16 +119,16 @@ namespace Integra {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(377, 165);
+			this->ClientSize = System::Drawing::Size(354, 164);
+			this->Controls->Add(this->bEditBook);
 			this->Controls->Add(this->bCancel);
-			this->Controls->Add(this->groupBox2);
+			this->Controls->Add(this->tbName);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"EditForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"Изменить справочник";
-			this->groupBox2->ResumeLayout(false);
-			this->groupBox2->PerformLayout();
+			this->Text = L"Добавить";
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -158,7 +149,7 @@ private: System::Void tbName_TextChanged(System::Object^  sender, System::EventA
 		 }
 private: System::Void bEditBook_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 String^ table = "";
+			 /*String^ table = "";
 			 if (_typeI == 0)
 			 {
 				 table = "" + _odbc->schema + "BOOKS";
@@ -168,7 +159,23 @@ private: System::Void bEditBook_Click(System::Object^  sender, System::EventArgs
 				 table = "" + _odbc->schema + "INTEGRATED_SYSTEMS";
 			 }
 			 _odbc->ExecuteNonQuery("update " + table + " set NAME = \'" + tbName->Text->Trim() + "\' where ID = " + _bookId);
-			 this->Visible = false;
+			 this->Visible = false;*/
+			 String^ name = OdbcClass::GetSqlString(tbName->Text->Trim());
+			 String^ table;
+			 if	(_typeI == 0)
+			 {
+				 table = "INTEGRATED_SYSTEMS";
+			 }
+			 else
+			 {
+				 table = "BOOKS";
+			 }
+			 int id = _odbc->GetMinFreeId(_odbc->schema + table);
+			 String^ columns = "ID,NAME,CREATE_USER,CREATE_DATE";
+			 String^ squery = String::Format("insert into {0}{1} ({2}) values ({3},{4},{5},{6})", _odbc->schema, table, 
+				 columns, id, name, OdbcClass::GetSqlString(_odbc->Login), _odbc->GetSqlDate(DateTime::Now));
+			 _odbc->ExecuteNonQuery(squery);
+
 			 Close();
 		 }
 };

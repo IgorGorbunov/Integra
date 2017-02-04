@@ -62,15 +62,10 @@ namespace Integra {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::TreeNode^  treeNode10 = (gcnew System::Windows::Forms::TreeNode(L"Справочник материалов"));
-			System::Windows::Forms::TreeNode^  treeNode11 = (gcnew System::Windows::Forms::TreeNode(L"Справочник оборудования"));
-			System::Windows::Forms::TreeNode^  treeNode12 = (gcnew System::Windows::Forms::TreeNode(L"Справочник покупного инструмента"));
-			System::Windows::Forms::TreeNode^  treeNode13 = (gcnew System::Windows::Forms::TreeNode(L"Справочник технологической оснастки"));
-			System::Windows::Forms::TreeNode^  treeNode14 = (gcnew System::Windows::Forms::TreeNode(L"Справочник технологических операций и переходов"));
-			System::Windows::Forms::TreeNode^  treeNode15 = (gcnew System::Windows::Forms::TreeNode(L"Справочник нормативных документов"));
-			System::Windows::Forms::TreeNode^  treeNode16 = (gcnew System::Windows::Forms::TreeNode(L"АСУ НСИ \"Semantic\""));
-			System::Windows::Forms::TreeNode^  treeNode17 = (gcnew System::Windows::Forms::TreeNode(L"САПР ТП ТеМП2"));
-			System::Windows::Forms::TreeNode^  treeNode18 = (gcnew System::Windows::Forms::TreeNode(L"АС КТПП БД ЭОИ"));
+			System::Windows::Forms::TreeNode^  treeNode1 = (gcnew System::Windows::Forms::TreeNode(L"АСУ НСИ \"Semantic\""));
+			System::Windows::Forms::TreeNode^  treeNode2 = (gcnew System::Windows::Forms::TreeNode(L"САПР ТП ТеМП2"));
+			System::Windows::Forms::TreeNode^  treeNode3 = (gcnew System::Windows::Forms::TreeNode(L"Справочник материалов"));
+			System::Windows::Forms::TreeNode^  treeNode4 = (gcnew System::Windows::Forms::TreeNode(L"Справочник оборудования"));
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->tbName = (gcnew System::Windows::Forms::TextBox());
 			this->cbRole = (gcnew System::Windows::Forms::ComboBox());
@@ -80,10 +75,10 @@ namespace Integra {
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->bSave = (gcnew System::Windows::Forms::Button());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->treeView1 = (gcnew System::Windows::Forms::TreeView());
-			this->treeView2 = (gcnew System::Windows::Forms::TreeView());
-			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->treeView2 = (gcnew System::Windows::Forms::TreeView());
+			this->treeView1 = (gcnew System::Windows::Forms::TreeView());
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -158,6 +153,7 @@ namespace Integra {
 			this->bSave->TabIndex = 7;
 			this->bSave->Text = L"Сохранить";
 			this->bSave->UseVisualStyleBackColor = false;
+			this->bSave->Click += gcnew System::EventHandler(this, &AddNewUser::bSave_Click);
 			// 
 			// groupBox1
 			// 
@@ -172,42 +168,14 @@ namespace Integra {
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Доступ к данным:";
 			// 
-			// treeView1
+			// label5
 			// 
-			this->treeView1->CheckBoxes = true;
-			this->treeView1->Location = System::Drawing::Point(11, 43);
-			this->treeView1->Name = L"treeView1";
-			treeNode10->Name = L"Узел0";
-			treeNode10->Text = L"Справочник материалов";
-			treeNode11->Name = L"Узел1";
-			treeNode11->Text = L"Справочник оборудования";
-			treeNode12->Name = L"Узел2";
-			treeNode12->Text = L"Справочник покупного инструмента";
-			treeNode13->Name = L"Узел3";
-			treeNode13->Text = L"Справочник технологической оснастки";
-			treeNode14->Name = L"Узел4";
-			treeNode14->Text = L"Справочник технологических операций и переходов";
-			treeNode15->Name = L"Узел5";
-			treeNode15->Text = L"Справочник нормативных документов";
-			this->treeView1->Nodes->AddRange(gcnew cli::array< System::Windows::Forms::TreeNode^  >(6) {treeNode10, treeNode11, treeNode12, 
-				treeNode13, treeNode14, treeNode15});
-			this->treeView1->Size = System::Drawing::Size(217, 167);
-			this->treeView1->TabIndex = 1;
-			// 
-			// treeView2
-			// 
-			this->treeView2->CheckBoxes = true;
-			this->treeView2->Location = System::Drawing::Point(244, 43);
-			this->treeView2->Name = L"treeView2";
-			treeNode16->Name = L"Узел0";
-			treeNode16->Text = L"АСУ НСИ \"Semantic\"";
-			treeNode17->Name = L"Узел1";
-			treeNode17->Text = L"САПР ТП ТеМП2";
-			treeNode18->Name = L"Узел2";
-			treeNode18->Text = L"АС КТПП БД ЭОИ";
-			this->treeView2->Nodes->AddRange(gcnew cli::array< System::Windows::Forms::TreeNode^  >(3) {treeNode16, treeNode17, treeNode18});
-			this->treeView2->Size = System::Drawing::Size(217, 167);
-			this->treeView2->TabIndex = 2;
+			this->label5->AutoSize = true;
+			this->label5->Location = System::Drawing::Point(256, 27);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(70, 13);
+			this->label5->TabIndex = 4;
+			this->label5->Text = L"к системам:";
 			// 
 			// label4
 			// 
@@ -218,14 +186,31 @@ namespace Integra {
 			this->label4->TabIndex = 3;
 			this->label4->Text = L"к справочникам:";
 			// 
-			// label5
+			// treeView2
 			// 
-			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(256, 27);
-			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(70, 13);
-			this->label5->TabIndex = 4;
-			this->label5->Text = L"к системам:";
+			this->treeView2->CheckBoxes = true;
+			this->treeView2->Location = System::Drawing::Point(244, 43);
+			this->treeView2->Name = L"treeView2";
+			treeNode1->Name = L"Узел0";
+			treeNode1->Text = L"АСУ НСИ \"Semantic\"";
+			treeNode2->Name = L"Узел1";
+			treeNode2->Text = L"САПР ТП ТеМП2";
+			this->treeView2->Nodes->AddRange(gcnew cli::array< System::Windows::Forms::TreeNode^  >(2) {treeNode1, treeNode2});
+			this->treeView2->Size = System::Drawing::Size(217, 167);
+			this->treeView2->TabIndex = 2;
+			// 
+			// treeView1
+			// 
+			this->treeView1->CheckBoxes = true;
+			this->treeView1->Location = System::Drawing::Point(11, 43);
+			this->treeView1->Name = L"treeView1";
+			treeNode3->Name = L"Узел0";
+			treeNode3->Text = L"Справочник материалов";
+			treeNode4->Name = L"Узел1";
+			treeNode4->Text = L"Справочник оборудования";
+			this->treeView1->Nodes->AddRange(gcnew cli::array< System::Windows::Forms::TreeNode^  >(2) {treeNode3, treeNode4});
+			this->treeView1->Size = System::Drawing::Size(217, 167);
+			this->treeView1->TabIndex = 1;
 			// 
 			// AddNewUser
 			// 
@@ -259,5 +244,10 @@ namespace Integra {
 			 {
 				 Close();
 			 }
+
+private: System::Void bSave_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 int i = Int32::Parse("s");
+		 }
 };
 }

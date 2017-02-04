@@ -1,8 +1,11 @@
 #pragma once
 
+#include "DbLink.h"
+#include "Attribute.h"
+
+
 namespace Integra {
 
-	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections::Generic;
 	using namespace System::Windows::Forms;
@@ -15,12 +18,14 @@ namespace Integra {
 	public ref class TableLinksForm : public System::Windows::Forms::Form
 	{
 	public:
-		Dictionary<String^, String^>^ Links;
+		List<DbLink^>^ Links;
 		
 
 	private:
-		Dictionary<String^, List<String^>^>^ _attrs;
+		Dictionary<String^, List<Attribute^>^>^ _attrs;
 		List<String^>^ _firstTables;
+		List<String^>^ _freeCodes;
+
 	private: System::Windows::Forms::DataGridViewComboBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewComboBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewComboBoxColumn^  Column3;
@@ -31,11 +36,11 @@ namespace Integra {
 
 
 
-			 List<String^>^ _freeCodes;
+			 
 
 
 	public:
-		TableLinksForm(Dictionary<String^, List<String^>^>^ attrs)
+		TableLinksForm(Dictionary<String^, List<Attribute^>^>^ attrs)
 		{
 			InitializeComponent();
 			_attrs = attrs;
@@ -228,10 +233,12 @@ namespace Integra {
 	private: System::Void TableLinksForm_Load(System::Object^  sender, System::EventArgs^  e) 
 			 {
 				 _firstTables = gcnew List<String ^>();
-				 for each(KeyValuePair<String^, List<String^>^>^ pair in _attrs)
+
+				 for each(KeyValuePair<String^, List<Attribute^>^>^ pair in _attrs)
 				 {
 					 array<String^>^ arr = gcnew array<String ^>(4);
-					 arr[0] = pair->Key;
+					 Integra::Attribute^ attr = pair->Value[0];
+					 arr[0] = attr->FullTable;
 					 arr[1] = nullptr;
 					 arr[2] = nullptr;
 					 arr[3] = nullptr;
@@ -248,20 +255,7 @@ private: System::Void dataGridView1_CellClick(System::Object^  sender, System::W
 				 return;
 			 }
 			 int iCol = e->ColumnIndex;
-			 if (iCol == 1)
-			 {
-				 String^ tableName = dataGridView1[0, e->RowIndex]->Value->ToString();
-				 List<String^>^ list =  _attrs[tableName];
-				 DataGridViewComboBoxCell^ comboBoxCell = (DataGridViewComboBoxCell^)dataGridView1[1, e->RowIndex];
-				 comboBoxCell->DataSource = list;
-			 }
-			 if (iCol == 3)
-			 {
-				 String^ tableName = dataGridView1[2, e->RowIndex]->Value->ToString();
-				 List<String^>^ list =  _attrs[tableName];
-				 DataGridViewComboBoxCell^ comboBoxCell = (DataGridViewComboBoxCell^)dataGridView1[3, e->RowIndex];
-				 comboBoxCell->DataSource = list;
-			 }
+
 		 }
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -270,7 +264,8 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 bool hasVoid = CheckVoidCells();
+			 int i = Int32::Parse("sdf");
+			 /*bool hasVoid = CheckVoidCells();
 			 if (hasVoid)
 			 {
 				 MessageBox::Show("Не все поля заполнены!");
@@ -282,7 +277,7 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 				 String^ firstFullCode = String::Format("{0}.{1}", dataGridView1[0, i]->Value, dataGridView1[1, i]->Value);
 				 String^ secondFullCode = String::Format("{0}.{1}", dataGridView1[2, i]->Value, dataGridView1[3, i]->Value);
 				 Links->Add(firstFullCode, secondFullCode);
-			 }
+			 }*/
 			 Close();
 		 }
 private: System::Void dataGridView1_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 

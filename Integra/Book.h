@@ -4,6 +4,7 @@
 #include "BookSettings.h"
 #include "Position.h"
 #include "IntegrationSettings.h"
+#include "IntegrationResult.h"
 
 
 namespace Integra {
@@ -13,7 +14,7 @@ namespace Integra {
 	/// <summary>
 	/// Класс spravochnika Semantic
 	/// </summary>
-	public ref class Book
+	public ref class Book abstract
 	{
 
 	protected:
@@ -49,6 +50,7 @@ namespace Integra {
 
 		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals) abstract;
 		virtual void UpdatePosition(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals) abstract;
+		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) abstract;
 
 	protected:
 

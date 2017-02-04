@@ -42,12 +42,6 @@
     <ClCompile Include="ManualIntegrationForm.cpp">
       <Filter>Заголовочные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="AddEditSchemaForm.cpp">
-      <Filter>Заголовочные файлы\Views</Filter>
-    </ClCompile>
-    <ClCompile Include="AttrCompareForm.cpp">
-      <Filter>Заголовочные файлы\Views</Filter>
-    </ClCompile>
     <ClCompile Include="SettingsForm.cpp">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
@@ -123,6 +117,18 @@
     <ClCompile Include="Results3.cpp">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
+    <ClCompile Include="NormIntegrForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="AddComplexAttrForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="IntgrResultsForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="DetailResults.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -172,12 +178,6 @@
     </ClInclude>
     <ClInclude Include="Book.h">
       <Filter>Заголовочные файлы\Book</Filter>
-    </ClInclude>
-    <ClInclude Include="AddEditSchemaForm.h">
-      <Filter>Заголовочные файлы\Views</Filter>
-    </ClInclude>
-    <ClInclude Include="AttrCompareForm.h">
-      <Filter>Заголовочные файлы\Views</Filter>
     </ClInclude>
     <ClInclude Include="SettingsForm.h">
       <Filter>Заголовочные файлы\Views</Filter>
@@ -284,6 +284,36 @@
     <ClInclude Include="Results3.h">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClInclude>
+    <ClInclude Include="NormIntegrForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="ExcelClass.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ComplexAttribute.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ComposeAttr.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AddComplexAttrForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="DbLink.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="IntegrationResult.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="IntgrResultsForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="DetailResults.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="Editting.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
@@ -299,12 +329,6 @@
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="EditForm.resx">
-      <Filter>Файлы ресурсов</Filter>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AddEditSchemaForm.resx">
-      <Filter>Файлы ресурсов</Filter>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AttrCompareForm.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="DifferencesForm.resx">
@@ -368,6 +392,18 @@
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="ManualIntegrationForm1.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Results3.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NormIntegrForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddComplexAttrForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IntgrResultsForm.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
   </ItemGroup>

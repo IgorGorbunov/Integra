@@ -6,6 +6,7 @@
 #include "IntegrationSettings.h"
 #include "Results2.h"
 #include "ODBCclass.h"
+#include "Editting.h"
 
 namespace Integra {
 
@@ -75,7 +76,8 @@ namespace Integra {
 // 			attrNames = GetAttrsName(tableCodeAttrs);
 // 			
 			int iId, iTitle;
-			bool idSet, titleSet;
+			bool idSet = false;
+			bool titleSet = false;
 			for (int i = 0; i < attrs->Count; i++)
 			{
 				if (!idSet && attrs[i]->FullCode == BookSetting->AttrIdFullcode)
@@ -106,6 +108,7 @@ namespace Integra {
  			return poses;
 		}
 
+		
 
 
 		virtual List<Position^>^ GetAllPositions2(System::ComponentModel::BackgroundWorker^ worker, System::ComponentModel::DoWorkEventArgs^ e) override
@@ -245,7 +248,7 @@ namespace Integra {
 				{
 					table = pair->Key->FullTable;
 				}
-				if (pair->Key->DataType == "STRING")
+				if (pair->Key->DataType == "岩形世")
 				{
 					valueList->Add(OdbcClass::GetSqlString(pair->Value));
 				}
@@ -284,7 +287,7 @@ namespace Integra {
 					squery += String::Format("{0} set", table);
 				}
 				String^ value;
-				if (pair->Key->DataType == "STRING")
+				if (pair->Key->DataType == "岩形世")
 				{
 					value = OdbcClass::GetSqlString(pair->Value);
 				}
@@ -297,6 +300,47 @@ namespace Integra {
 			squery = squery->Substring(0, squery->Length - 1);
 			squery += String::Format(" where {0} = {1}", currentPos->AttrIdCode, OdbcClass::GetSqlString(currentPos->UnicId));
 			BookSetting->Odbc->ExecuteNonQuery(squery);
+		}
+
+		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) override
+		{
+			for each (KeyValuePair<Attribute^, String^>^ pair in attrsAndNewVals)
+			{
+				Attribute^ attr = pair->Key;
+				String^ attrVal = pair->Value;
+
+				String^ table;
+				String^ squery = "update ";
+				if (String::IsNullOrEmpty(table))
+				{
+					table = attr->FullTable;
+					squery += String::Format("{0} set", table);
+				}
+				String^ value;
+				if (attr->DataType == "岩形世")
+				{
+					value = OdbcClass::GetSqlString(attrVal);
+				}
+				else
+				{
+					value = attrVal;
+				}
+				squery += String::Format(" {0} = {1},", attr->FullCode, value);
+				squery = squery->Substring(0, squery->Length - 1);
+				squery += String::Format(" where {0} = {1}", currentPos->AttrIdCode, OdbcClass::GetSqlString(currentPos->UnicId));
+				try
+				{
+					BookSetting->Odbc->ExecuteNonQuery(squery);
+				}
+				catch (Exception^ e)
+				{
+					throw e;
+				}
+				Editting^ newEdit = gcnew Editting(_odbc, result, 1, isTarget, currentPos->UnicId, attr, currentPos->GetValue(attr), attrVal);
+				newEdit->WriteEditingPos();
+				
+			}
+			
 		}
 
 		private:

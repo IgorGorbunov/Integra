@@ -40,13 +40,19 @@ namespace Integra {
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::Button^  bEditSystemBook;
 	private: System::Windows::Forms::Button^  bAddSystemBook;
+
+
+
+
+
+
+			 OdbcClass^ _odbc;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
 
 
 
-			 OdbcClass^ _odbc;
 			 array<String^, 2>^ _currentSystemBooks;
 			 //List<IntegrationSettings^>^ _integrSettings;
 
@@ -116,8 +122,10 @@ namespace Integra {
 					  private: System::Windows::Forms::DataGridView^ dataGridView1;
 					  private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn1;
 					  private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn2;
-					  private: System::Windows::Forms::Button^ button1;
-					  private: System::Windows::Forms::Button^ button2;
+	private: System::Windows::Forms::Button^  bAddNewBook;
+
+	private: System::Windows::Forms::Button^  bAddNewSystem;
+
 
 	private:
 		/// <summary>
@@ -136,12 +144,12 @@ namespace Integra {
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->tpBooks = (gcnew System::Windows::Forms::TabPage());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->bAddNewBook = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->dgvBooks = (gcnew System::Windows::Forms::DataGridView());
 			this->BookIdCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->BookNameCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->bAddNewSystem = (gcnew System::Windows::Forms::Button());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -165,9 +173,6 @@ namespace Integra {
 			this->bEditSystemBook = (gcnew System::Windows::Forms::Button());
 			this->bAddSystemBook = (gcnew System::Windows::Forms::Button());
 			this->dgvSystemBooks = (gcnew System::Windows::Forms::DataGridView());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->cbSystems = (gcnew System::Windows::Forms::ComboBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->tpIntegrationSchemas = (gcnew System::Windows::Forms::TabPage());
@@ -180,6 +185,9 @@ namespace Integra {
 			this->SchemaSourceCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaTargetCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaDirectionCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->panel1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
 			this->tpBooks->SuspendLayout();
@@ -234,10 +242,10 @@ namespace Integra {
 			// tpBooks
 			// 
 			this->tpBooks->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->tpBooks->Controls->Add(this->button1);
+			this->tpBooks->Controls->Add(this->bAddNewBook);
 			this->tpBooks->Controls->Add(this->label1);
 			this->tpBooks->Controls->Add(this->dgvBooks);
-			this->tpBooks->Controls->Add(this->button2);
+			this->tpBooks->Controls->Add(this->bAddNewSystem);
 			this->tpBooks->Controls->Add(this->label4);
 			this->tpBooks->Controls->Add(this->dataGridView1);
 			this->tpBooks->Controls->Add(this->bEditBook);
@@ -249,14 +257,15 @@ namespace Integra {
 			this->tpBooks->TabIndex = 0;
 			this->tpBooks->Text = L"Списки справочников и систем";
 			// 
-			// button1
+			// bAddNewBook
 			// 
-			this->button1->Location = System::Drawing::Point(567, 17);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(120, 26);
-			this->button1->TabIndex = 8;
-			this->button1->Text = L"Добавить";
-			this->button1->UseVisualStyleBackColor = true;
+			this->bAddNewBook->Location = System::Drawing::Point(567, 17);
+			this->bAddNewBook->Name = L"bAddNewBook";
+			this->bAddNewBook->Size = System::Drawing::Size(120, 26);
+			this->bAddNewBook->TabIndex = 8;
+			this->bAddNewBook->Text = L"Добавить";
+			this->bAddNewBook->UseVisualStyleBackColor = true;
+			this->bAddNewBook->Click += gcnew System::EventHandler(this, &SettingsForm::bAddNewBook_Click);
 			// 
 			// label1
 			// 
@@ -294,14 +303,15 @@ namespace Integra {
 			this->BookNameCol->ReadOnly = true;
 			this->BookNameCol->Width = 280;
 			// 
-			// button2
+			// bAddNewSystem
 			// 
-			this->button2->Location = System::Drawing::Point(223, 17);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(120, 26);
-			this->button2->TabIndex = 9;
-			this->button2->Text = L"Добавить";
-			this->button2->UseVisualStyleBackColor = true;
+			this->bAddNewSystem->Location = System::Drawing::Point(223, 17);
+			this->bAddNewSystem->Name = L"bAddNewSystem";
+			this->bAddNewSystem->Size = System::Drawing::Size(120, 26);
+			this->bAddNewSystem->TabIndex = 9;
+			this->bAddNewSystem->Text = L"Добавить";
+			this->bAddNewSystem->UseVisualStyleBackColor = true;
+			this->bAddNewSystem->Click += gcnew System::EventHandler(this, &SettingsForm::bAddNewSystem_Click);
 			// 
 			// label4
 			// 
@@ -510,6 +520,7 @@ namespace Integra {
 			this->tpIntegrBook->Size = System::Drawing::Size(729, 264);
 			this->tpIntegrBook->TabIndex = 3;
 			this->tpIntegrBook->Text = L"Декларированные справочники";
+			this->tpIntegrBook->Enter += gcnew System::EventHandler(this, &SettingsForm::tpIntegrBook_Enter);
 			// 
 			// bEditSystemBook
 			// 
@@ -520,6 +531,7 @@ namespace Integra {
 			this->bEditSystemBook->TabIndex = 5;
 			this->bEditSystemBook->Text = L"Изменить";
 			this->bEditSystemBook->UseVisualStyleBackColor = false;
+			this->bEditSystemBook->Visible = false;
 			// 
 			// bAddSystemBook
 			// 
@@ -547,27 +559,6 @@ namespace Integra {
 			this->dgvSystemBooks->Size = System::Drawing::Size(675, 150);
 			this->dgvSystemBooks->TabIndex = 2;
 			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Наименование справочника";
-			this->Column1->Name = L"Column1";
-			this->Column1->ReadOnly = true;
-			this->Column1->Width = 250;
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Наименование атрибута идентификатора";
-			this->Column2->Name = L"Column2";
-			this->Column2->ReadOnly = true;
-			this->Column2->Width = 200;
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Наименование основоного атрибута";
-			this->Column3->Name = L"Column3";
-			this->Column3->ReadOnly = true;
-			this->Column3->Width = 200;
-			// 
 			// cbSystems
 			// 
 			this->cbSystems->FormattingEnabled = true;
@@ -575,6 +566,7 @@ namespace Integra {
 			this->cbSystems->Name = L"cbSystems";
 			this->cbSystems->Size = System::Drawing::Size(166, 21);
 			this->cbSystems->TabIndex = 1;
+			this->cbSystems->Visible = false;
 			this->cbSystems->SelectedIndexChanged += gcnew System::EventHandler(this, &SettingsForm::cbSystems_SelectedIndexChanged);
 			// 
 			// label3
@@ -585,6 +577,7 @@ namespace Integra {
 			this->label3->Size = System::Drawing::Size(54, 13);
 			this->label3->TabIndex = 0;
 			this->label3->Text = L"Система:";
+			this->label3->Visible = false;
 			// 
 			// tpIntegrationSchemas
 			// 
@@ -610,6 +603,7 @@ namespace Integra {
 			this->bEditSchema->TabIndex = 3;
 			this->bEditSchema->Text = L"Изменить";
 			this->bEditSchema->UseVisualStyleBackColor = false;
+			this->bEditSchema->Visible = false;
 			this->bEditSchema->Click += gcnew System::EventHandler(this, &SettingsForm::bEditSchema_Click);
 			// 
 			// bAddSchema
@@ -680,6 +674,27 @@ namespace Integra {
 			this->SchemaDirectionCol->HeaderText = L"Направление интеграции";
 			this->SchemaDirectionCol->Name = L"SchemaDirectionCol";
 			this->SchemaDirectionCol->ReadOnly = true;
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Номер справочника";
+			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
+			this->Column1->Width = 250;
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Наименование справочника";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			this->Column2->Width = 200;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Наименование системы";
+			this->Column3->Name = L"Column3";
+			this->Column3->ReadOnly = true;
+			this->Column3->Width = 200;
 			// 
 			// SettingsForm
 			// 
@@ -801,6 +816,7 @@ namespace Integra {
 				{
 					bAddSystemBook->Visible = false;
 				}
+
 			}
 
 			void SetSystemBooks(String^ systemName)
@@ -917,6 +933,15 @@ private: System::Void bAddSchema_Click(System::Object^  sender, System::EventArg
 			 //AddEditSchemaForm^ form = gcnew AddEditSchemaForm(_settings);
 			 AddEditSchemaForm2^ form = gcnew AddEditSchemaForm2(_settings, _odbc);
 			 form->ShowDialog();
+			 List<Object^>^ integrationIds = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATION_PARAMS");
+			 List<IntegrationSettings^>^ inegrationSettings = gcnew List<IntegrationSettings^>();
+			 for each (Object^ id in integrationIds)
+			 {
+				 IntegrationSettings^ settings = gcnew IntegrationSettings(Decimal::ToInt32((Decimal)id), _odbc);
+				 inegrationSettings->Add(settings);
+			 }
+			 SetShemas(inegrationSettings);
+
 		 }
 private: System::Void bEditSchema_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -942,8 +967,29 @@ private: System::Void bAddSystemBook_Click(System::Object^  sender, System::Even
 			 {
 				 SetSystemBooks(cbSystems->SelectedItem->ToString());
 			 }
+			 else
+			 {
+				 SetSystemBooks("");
+			 }
 		 }
 private: System::Void tabControl1_Enter(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 SetSystemBooks("");
+		 }
+
+private: System::Void bAddNewBook_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 EditForm^ form = gcnew EditForm(1, _odbc);
+			 form->ShowDialog();
+			 SetBooks(_settings->Books);
+		 }
+private: System::Void bAddNewSystem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 EditForm^ form = gcnew EditForm(0, _odbc);
+			 form->ShowDialog();
+			 SetSystems(_settings->Systems);
+		 }
+private: System::Void tpIntegrBook_Enter(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 SetSystemBooks("");
 		 }

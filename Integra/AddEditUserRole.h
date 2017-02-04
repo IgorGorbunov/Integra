@@ -75,7 +75,6 @@ namespace Integra {
 			// lbUsers
 			// 
 			this->lbUsers->FormattingEnabled = true;
-			this->lbUsers->Items->AddRange(gcnew cli::array< System::Object^  >(4) {L"ULGU1", L"ULGU2", L"ULGU3", L"ULGU4"});
 			this->lbUsers->Location = System::Drawing::Point(29, 42);
 			this->lbUsers->Name = L"lbUsers";
 			this->lbUsers->Size = System::Drawing::Size(153, 186);
@@ -156,6 +155,7 @@ namespace Integra {
 			this->bDelUser->TabIndex = 8;
 			this->bDelUser->Text = L"Удалить пользователя";
 			this->bDelUser->UseVisualStyleBackColor = false;
+			this->bDelUser->Visible = false;
 			// 
 			// bClose
 			// 

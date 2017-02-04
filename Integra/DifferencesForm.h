@@ -21,6 +21,15 @@ namespace Integra {
 		DifferencePosition^ _pos;
 		Dictionary<Attribute^, String^>^ NewAttrNames;
 
+
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  codeSourceCol;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  codeTargetCol;
+	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  valueCol;
+	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  valueTargetCol;
+			 
+
 	public:
 		DifferencesForm(DifferencePosition^ pos)
 		{
@@ -60,12 +69,12 @@ namespace Integra {
 
 
 
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  codeSourceCol;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  codeTargetCol;
-	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  valueCol;
-	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  valueTargetCol;
+
+
+
+
+
+
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
@@ -86,12 +95,6 @@ namespace Integra {
 		void InitializeComponent(void)
 		{
 			this->dgvDifferent = (gcnew System::Windows::Forms::DataGridView());
-			this->codeSourceCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->codeTargetCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
-			this->valueCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
-			this->valueTargetCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->dgvEqual = (gcnew System::Windows::Forms::DataGridView());
 			this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->dataGridViewTextBoxColumn2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -101,6 +104,12 @@ namespace Integra {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->bIntegInSource = (gcnew System::Windows::Forms::Button());
 			this->bIntegInTarget = (gcnew System::Windows::Forms::Button());
+			this->codeSourceCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->codeTargetCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
+			this->valueCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
+			this->valueTargetCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvDifferent))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvEqual))->BeginInit();
 			this->SuspendLayout();
@@ -119,42 +128,6 @@ namespace Integra {
 			this->dgvDifferent->Size = System::Drawing::Size(606, 202);
 			this->dgvDifferent->TabIndex = 0;
 			this->dgvDifferent->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &DifferencesForm::dgvDifferent_CellValueChanged);
-			// 
-			// codeSourceCol
-			// 
-			this->codeSourceCol->HeaderText = L"Наименование из системы источника";
-			this->codeSourceCol->Name = L"codeSourceCol";
-			this->codeSourceCol->Width = 76;
-			// 
-			// codeTargetCol
-			// 
-			this->codeTargetCol->HeaderText = L"Наименование из системы получателя";
-			this->codeTargetCol->Name = L"codeTargetCol";
-			this->codeTargetCol->Width = 76;
-			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"";
-			this->Column1->Name = L"Column1";
-			this->Column1->Width = 25;
-			// 
-			// valueCol
-			// 
-			this->valueCol->HeaderText = L"Значение из системы-источника";
-			this->valueCol->Name = L"valueCol";
-			this->valueCol->Width = 200;
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"";
-			this->Column2->Name = L"Column2";
-			this->Column2->Width = 25;
-			// 
-			// valueTargetCol
-			// 
-			this->valueTargetCol->HeaderText = L"Значение из системы-получателя";
-			this->valueTargetCol->Name = L"valueTargetCol";
-			this->valueTargetCol->Width = 200;
 			// 
 			// dgvEqual
 			// 
@@ -242,6 +215,43 @@ namespace Integra {
 			this->bIntegInTarget->Text = L"Интегрировать в систему приемник";
 			this->bIntegInTarget->UseVisualStyleBackColor = false;
 			this->bIntegInTarget->Click += gcnew System::EventHandler(this, &DifferencesForm::bIntegInTarget_Click);
+			// 
+			// codeSourceCol
+			// 
+			this->codeSourceCol->HeaderText = L"Наименование из системы источника";
+			this->codeSourceCol->Name = L"codeSourceCol";
+			this->codeSourceCol->Width = 76;
+			// 
+			// codeTargetCol
+			// 
+			this->codeTargetCol->HeaderText = L"Наименование из системы получателя";
+			this->codeTargetCol->Name = L"codeTargetCol";
+			this->codeTargetCol->Width = 76;
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"";
+			this->Column1->Name = L"Column1";
+			this->Column1->Width = 25;
+			// 
+			// valueCol
+			// 
+			this->valueCol->HeaderText = L"Значение из системы-источника";
+			this->valueCol->Name = L"valueCol";
+			this->valueCol->Width = 200;
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			this->Column2->Width = 25;
+			// 
+			// valueTargetCol
+			// 
+			this->valueTargetCol->HeaderText = L"Значение из системы-получателя";
+			this->valueTargetCol->Name = L"valueTargetCol";
+			this->valueTargetCol->Width = 200;
 			// 
 			// DifferencesForm
 			// 
@@ -349,6 +359,7 @@ private: System::Void bIntegInTarget_Click(System::Object^  sender, System::Even
 				 }
 			 }
 			 NewAttrNames = newAttrVals;
+			 MessageBox::Show("Позиция интегрирована");
 			 Close();
 		 }
 };

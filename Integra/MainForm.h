@@ -11,6 +11,10 @@
 #include "RoleStation.h"
 #include "AddEditUserRole.h"
 #include "ManualIntegrationForm1.h"
+#include "NormIntegrForm.h"
+#include "JournalChangesForm.h"
+#include "NoticesForm.h"
+#include "IntgrResultsForm.h"
 
 namespace Integra {
 
@@ -45,15 +49,15 @@ namespace Integra {
 	private: System::Windows::Forms::ToolStripMenuItem^  справкаToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  руководствоToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
-	private: System::Windows::Forms::ToolStripMenuItem^  оПрограммеToolStripMenuItem;
+
 	private: System::Windows::Forms::ToolStripMenuItem^  интеграцияToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  ручнойРежимToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  автоматическийРежимToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  журналИзмененийToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  просмотрЖурналаИзмененийToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripTextBox^  toolStripTextBox1;
-	private: System::Windows::Forms::ToolStripMenuItem^  грубоеСоответсвиеToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  точноеСоответствиеToolStripMenuItem;
+
+
+
+
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Id;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
@@ -62,10 +66,9 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Source;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Target;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Direction;
-
-
-
-
+	private: System::Windows::Forms::ToolStripMenuItem^  журналРезультатовToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  извещенияToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  normsToolStripMenuItem;
 
 			 List <IntegrationSettings^>^ _itegrationSettings;
 
@@ -76,6 +79,22 @@ namespace Integra {
 			if (RoleStation::BookSettingsHidden())
 			{
 				SettingsToolStripMenuItem->Visible = false;
+			}
+			if (RoleStation::IntegrationHidden())
+			{
+				интеграцияToolStripMenuItem->Visible = false;
+			}
+			if (RoleStation::IzveHidden())
+			{
+				извещенияToolStripMenuItem->Visible = false;
+			}
+			if (RoleStation::IzmeHidden())
+			{
+				журналИзмененийToolStripMenuItem->Visible = false;
+			}
+			if (RoleStation::UsersHidden())
+			{
+				настройкиПользователейToolStripMenuItem->Visible = false;
 			}
 		}
 
@@ -114,6 +133,9 @@ namespace Integra {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->dgvIntParams = (gcnew System::Windows::Forms::DataGridView());
 			this->Id = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -126,19 +148,17 @@ namespace Integra {
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->интеграцияToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ручнойРежимToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->грубоеСоответсвиеToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->точноеСоответствиеToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->автоматическийРежимToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->normsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->журналРезультатовToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->извещенияToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->журналИзмененийToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->просмотрЖурналаИзмененийToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->SettingsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->настройкиПользователейToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->настройкиСправочниковToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->справкаToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->руководствоToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
-			this->оПрограммеToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->toolStripTextBox1 = (gcnew System::Windows::Forms::ToolStripTextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvIntParams))->BeginInit();
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
@@ -147,12 +167,39 @@ namespace Integra {
 			// 
 			this->dgvIntParams->AllowUserToAddRows = false;
 			this->dgvIntParams->AllowUserToDeleteRows = false;
+			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvIntParams->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this->dgvIntParams->ColumnHeadersHeight = 45;
 			this->dgvIntParams->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {this->Id, this->Column1, 
 				this->Column2, this->Column3, this->Book, this->Source, this->Target, this->Direction});
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
+			this->dgvIntParams->DefaultCellStyle = dataGridViewCellStyle2;
 			this->dgvIntParams->Location = System::Drawing::Point(12, 27);
 			this->dgvIntParams->Name = L"dgvIntParams";
 			this->dgvIntParams->ReadOnly = true;
+			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(204)));
+			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dgvIntParams->RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this->dgvIntParams->Size = System::Drawing::Size(1017, 378);
 			this->dgvIntParams->TabIndex = 2;
 			this->dgvIntParams->Visible = false;
@@ -213,69 +260,72 @@ namespace Integra {
 			// 
 			// menuStrip1
 			// 
-			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->интеграцияToolStripMenuItem, 
-				this->журналИзмененийToolStripMenuItem, this->SettingsToolStripMenuItem, this->справкаToolStripMenuItem, this->toolStripTextBox1});
+			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {this->интеграцияToolStripMenuItem, 
+				this->журналРезультатовToolStripMenuItem, this->извещенияToolStripMenuItem, this->журналИзмененийToolStripMenuItem, this->SettingsToolStripMenuItem, 
+				this->справкаToolStripMenuItem});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1041, 27);
+			this->menuStrip1->Size = System::Drawing::Size(1041, 24);
 			this->menuStrip1->TabIndex = 4;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
 			// интеграцияToolStripMenuItem
 			// 
-			this->интеграцияToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->ручнойРежимToolStripMenuItem, 
-				this->автоматическийРежимToolStripMenuItem});
+			this->интеграцияToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->ручнойРежимToolStripMenuItem, 
+				this->автоматическийРежимToolStripMenuItem, this->normsToolStripMenuItem});
 			this->интеграцияToolStripMenuItem->Name = L"интеграцияToolStripMenuItem";
-			this->интеграцияToolStripMenuItem->Size = System::Drawing::Size(84, 23);
+			this->интеграцияToolStripMenuItem->Size = System::Drawing::Size(84, 20);
 			this->интеграцияToolStripMenuItem->Text = L"Интеграция";
+			this->интеграцияToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::интеграцияToolStripMenuItem_Click);
 			// 
 			// ручнойРежимToolStripMenuItem
 			// 
-			this->ручнойРежимToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->грубоеСоответсвиеToolStripMenuItem, 
-				this->точноеСоответствиеToolStripMenuItem});
 			this->ручнойРежимToolStripMenuItem->Name = L"ручнойРежимToolStripMenuItem";
-			this->ручнойРежимToolStripMenuItem->Size = System::Drawing::Size(207, 22);
+			this->ручнойРежимToolStripMenuItem->Size = System::Drawing::Size(241, 22);
 			this->ручнойРежимToolStripMenuItem->Text = L"Ручной режим";
 			this->ручнойРежимToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::ручнойРежимToolStripMenuItem_Click);
-			// 
-			// грубоеСоответсвиеToolStripMenuItem
-			// 
-			this->грубоеСоответсвиеToolStripMenuItem->Name = L"грубоеСоответсвиеToolStripMenuItem";
-			this->грубоеСоответсвиеToolStripMenuItem->Size = System::Drawing::Size(190, 22);
-			this->грубоеСоответсвиеToolStripMenuItem->Text = L"Грубое соответствие";
-			this->грубоеСоответсвиеToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::грубоеСоответсвиеToolStripMenuItem_Click);
-			// 
-			// точноеСоответствиеToolStripMenuItem
-			// 
-			this->точноеСоответствиеToolStripMenuItem->Name = L"точноеСоответствиеToolStripMenuItem";
-			this->точноеСоответствиеToolStripMenuItem->Size = System::Drawing::Size(190, 22);
-			this->точноеСоответствиеToolStripMenuItem->Text = L"Точное соответствие";
 			// 
 			// автоматическийРежимToolStripMenuItem
 			// 
 			this->автоматическийРежимToolStripMenuItem->Name = L"автоматическийРежимToolStripMenuItem";
-			this->автоматическийРежимToolStripMenuItem->Size = System::Drawing::Size(207, 22);
+			this->автоматическийРежимToolStripMenuItem->Size = System::Drawing::Size(241, 22);
 			this->автоматическийРежимToolStripMenuItem->Text = L"Автоматический режим";
+			this->автоматическийРежимToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::автоматическийРежимToolStripMenuItem_Click);
+			// 
+			// normsToolStripMenuItem
+			// 
+			this->normsToolStripMenuItem->Name = L"normsToolStripMenuItem";
+			this->normsToolStripMenuItem->Size = System::Drawing::Size(241, 22);
+			this->normsToolStripMenuItem->Text = L"Сборников нормативов работ";
+			this->normsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::normsToolStripMenuItem_Click);
+			// 
+			// журналРезультатовToolStripMenuItem
+			// 
+			this->журналРезультатовToolStripMenuItem->Name = L"журналРезультатовToolStripMenuItem";
+			this->журналРезультатовToolStripMenuItem->Size = System::Drawing::Size(132, 20);
+			this->журналРезультатовToolStripMenuItem->Text = L"Журнал результатов";
+			this->журналРезультатовToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::журналРезультатовToolStripMenuItem_Click);
+			// 
+			// извещенияToolStripMenuItem
+			// 
+			this->извещенияToolStripMenuItem->Name = L"извещенияToolStripMenuItem";
+			this->извещенияToolStripMenuItem->Size = System::Drawing::Size(128, 20);
+			this->извещенияToolStripMenuItem->Text = L"Журнал извещений";
+			this->извещенияToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::извещенияToolStripMenuItem_Click);
 			// 
 			// журналИзмененийToolStripMenuItem
 			// 
-			this->журналИзмененийToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->просмотрЖурналаИзмененийToolStripMenuItem});
 			this->журналИзмененийToolStripMenuItem->Name = L"журналИзмененийToolStripMenuItem";
-			this->журналИзмененийToolStripMenuItem->Size = System::Drawing::Size(127, 23);
-			this->журналИзмененийToolStripMenuItem->Text = L"Журнал изменений";
-			// 
-			// просмотрЖурналаИзмененийToolStripMenuItem
-			// 
-			this->просмотрЖурналаИзмененийToolStripMenuItem->Name = L"просмотрЖурналаИзмененийToolStripMenuItem";
-			this->просмотрЖурналаИзмененийToolStripMenuItem->Size = System::Drawing::Size(246, 22);
-			this->просмотрЖурналаИзмененийToolStripMenuItem->Text = L"Просмотр журнала изменений";
+			this->журналИзмененийToolStripMenuItem->Size = System::Drawing::Size(150, 20);
+			this->журналИзмененийToolStripMenuItem->Text = L"Журнал корректировок";
+			this->журналИзмененийToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::журналИзмененийToolStripMenuItem_Click);
 			// 
 			// SettingsToolStripMenuItem
 			// 
 			this->SettingsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->настройкиПользователейToolStripMenuItem, 
 				this->настройкиСправочниковToolStripMenuItem});
 			this->SettingsToolStripMenuItem->Name = L"SettingsToolStripMenuItem";
-			this->SettingsToolStripMenuItem->Size = System::Drawing::Size(79, 23);
+			this->SettingsToolStripMenuItem->Size = System::Drawing::Size(79, 20);
 			this->SettingsToolStripMenuItem->Text = L"Настройки";
 			// 
 			// настройкиПользователейToolStripMenuItem
@@ -294,34 +344,23 @@ namespace Integra {
 			// 
 			// справкаToolStripMenuItem
 			// 
-			this->справкаToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->руководствоToolStripMenuItem, 
-				this->toolStripSeparator1, this->оПрограммеToolStripMenuItem});
+			this->справкаToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->руководствоToolStripMenuItem, 
+				this->toolStripSeparator1});
 			this->справкаToolStripMenuItem->Name = L"справкаToolStripMenuItem";
-			this->справкаToolStripMenuItem->Size = System::Drawing::Size(65, 23);
+			this->справкаToolStripMenuItem->Size = System::Drawing::Size(65, 20);
 			this->справкаToolStripMenuItem->Text = L"Справка";
 			// 
 			// руководствоToolStripMenuItem
 			// 
 			this->руководствоToolStripMenuItem->Name = L"руководствоToolStripMenuItem";
-			this->руководствоToolStripMenuItem->Size = System::Drawing::Size(149, 22);
+			this->руководствоToolStripMenuItem->Size = System::Drawing::Size(143, 22);
 			this->руководствоToolStripMenuItem->Text = L"Руководство";
+			this->руководствоToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::руководствоToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this->toolStripSeparator1->Name = L"toolStripSeparator1";
-			this->toolStripSeparator1->Size = System::Drawing::Size(146, 6);
-			// 
-			// оПрограммеToolStripMenuItem
-			// 
-			this->оПрограммеToolStripMenuItem->Name = L"оПрограммеToolStripMenuItem";
-			this->оПрограммеToolStripMenuItem->Size = System::Drawing::Size(149, 22);
-			this->оПрограммеToolStripMenuItem->Text = L"О программе";
-			// 
-			// toolStripTextBox1
-			// 
-			this->toolStripTextBox1->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->toolStripTextBox1->Name = L"toolStripTextBox1";
-			this->toolStripTextBox1->Size = System::Drawing::Size(100, 23);
+			this->toolStripSeparator1->Size = System::Drawing::Size(140, 6);
 			// 
 			// MainForm
 			// 
@@ -422,6 +461,42 @@ private: System::Void ручнойРежимToolStripMenuItem_Click(System::Object^  sender
 			 ManualIntegrationForm1^ form = gcnew ManualIntegrationForm1(ProgramIntegration::Odbc);
 			 form->ShowDialog();
 		 }
+private: System::Void интеграцияToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void извещенияToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 NoticesForm^ form = gcnew NoticesForm();
+			 form->ShowDialog();
+		 }
+private: System::Void журналИзмененийToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 JournalChangesForm^ form = gcnew JournalChangesForm();
+			 form->ShowDialog();
+		 }
+private: System::Void журналРезультатовToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 IntgrResultsForm^ form = gcnew IntgrResultsForm(ProgramIntegration::Odbc);
+			 form->ShowDialog();
+		 }
+private: System::Void руководствоToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 String^ docFile = RoleStation::GetRoleDoc();
+			 String^ fullPath = Path::Combine(Application::StartupPath, docFile);
+			 //todo а если путь уже абсолютный
+			 Process::Start(fullPath);
+		 }
+private: System::Void автоматическийРежимToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 int i = Int32::Parse("s");
+		 }
+private: System::Void normsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 //NormIntegrForm^ form = gcnew NormIntegrForm();
+			 //form->ShowDialog();
+			 String^ path = Path::Combine(Application::StartupPath, "NormTime.exe");
+			 System::Diagnostics::Process::Start(path);
+		 }
+
 };
 }
 

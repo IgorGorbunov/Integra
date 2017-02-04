@@ -75,7 +75,7 @@ namespace Integra {
 			{
 				if (_workOdbc == nullptr)
 				{
-					if (_driver == nullptr)
+					if (String::IsNullOrEmpty(_driver))
 					{
 						_workOdbc = gcnew OdbcClass(_login, _password, _tnsDatabase);
 					}
@@ -112,6 +112,19 @@ namespace Integra {
 			}
 
 		}
+		property Attribute^ AttrId
+		{
+			Attribute^ get()
+			{
+				if (_attrId == nullptr)
+				{
+					SetAttrId();
+				}
+				return _attrId;
+			}
+		}
+
+		int BookId;
 
 	private:
 		OdbcClass^ _odbc;
@@ -137,6 +150,8 @@ namespace Integra {
 		String^ _attrIdFullcode;
 		int _attrTitleId;
 		String^ _attrTitleFullcode;
+
+		Attribute^ _attrId;
 		
 
 	public:
@@ -159,19 +174,13 @@ namespace Integra {
 	public:
 		List<Attribute^>^ GetUseAttrs()
 		{
-			String^ squery = String::Format("select ID, FULL_CODE, NAME, SCHEMA_NAME, TABLE_NAME, ATTR_NAME from {0}INTEGRATION_ATTRIBUTES" + 
-				" where ID_INTGR_BOOK = {1}", _odbc->schema, _id);
+			String^ squery = String::Format("select ID from {0}INTEGRATION_ATTRIBUTES where ID_INTGR_BOOK = {1}", _odbc->schema, _id);
 			List<Object^>^ oList = _odbc->ExecuteQuery(squery);
 			List<Attribute^>^ list = gcnew List<Attribute ^>();
-			for (int i = 0; i < oList->Count; i+=6)
+			for (int i = 0; i < oList->Count; i++)
 			{
 				int id = OdbcClass::GetInt(oList[i]);
-				String^ fullTable = OdbcClass::GetResString(oList[i+1]);
-				String^ name = OdbcClass::GetResString(oList[i+2]);
-				String^ schemaName = OdbcClass::GetResString(oList[i+3]);
-				String^ tableName = OdbcClass::GetResString(oList[i+4]);
-				String^ attrName = OdbcClass::GetResString(oList[i+5]);
-				Attribute^ attr = gcnew Attribute(schemaName, tableName, attrName, name, id);
+				Attribute^ attr = gcnew Attribute(id, _odbc);
 				list->Add(attr);
 			}
 			return list;
@@ -204,8 +213,10 @@ namespace Integra {
 
 		Void SetBook(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select NAME from " + _odbc->schema + "BOOKS where ID = " + id);
-			_bookName = parametrs[0]->ToString();
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID, NAME from " + _odbc->schema + "BOOKS where ID = " + id);
+			BookId = OdbcClass::GetInt(parametrs[0]);
+			_bookName = parametrs[1]->ToString();
+
 		}
 
 		void SetAttrIdName()
@@ -214,6 +225,11 @@ namespace Integra {
 				"where IB.ATTR_ID = IA.ID and IB.ID = {1}", _odbc->schema, _id);
 			List<Object^>^ list = _odbc->ExecuteQuery(squery);
 			_attrIdFullcode = String::Format("{0}.{1}", list[0], list[1]);
+		}
+
+		void SetAttrId()
+		{
+			_attrId = gcnew Attribute(_attrIdId, _odbc);
 		}
 
 		void SetAttrTitleName()
@@ -229,5 +245,7 @@ namespace Integra {
 			_login = login;
 			_password = password;
 		}
+
+
 	};
 }

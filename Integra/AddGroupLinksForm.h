@@ -1,6 +1,8 @@
-#pragma once
 #include "AddEditGroupForm.h"
 #include "BookSettings.h"
+#include "AddComplexAttrForm.h"
+#include "ComplexAttribute.h"
+#include "ODBCclass.h"
 
 namespace Integra {
 
@@ -20,11 +22,22 @@ namespace Integra {
 		Dictionary<Attribute^,Attribute^>^ attrPairs;
 
 	private:
+		OdbcClass^ _odbc;
+
 		BookSettings^ _sourceBook;
 		BookSettings^ _targetBook;
 		List<Attribute^>^ _sourceAttrs;
 		List<Attribute^>^ _targetAttrs;
 		List<Attribute^>^ _sourceAttrsFree;
+		List<Attribute^>^ _targetAttrsFree;
+
+		List<ComplexAttribute^>^ _complexAttrs;
+
+
+	private: System::Windows::Forms::Panel^  panel4;
+	private: System::Windows::Forms::Panel^  pListBox;
+	private: System::Windows::Forms::Panel^  panel3;
+	private: System::Windows::Forms::Panel^  panel5;
 	private: System::Windows::Forms::DataGridViewComboBoxColumn^  ColumnSourceCode;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
@@ -33,17 +46,16 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column6;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column8;
-	private: System::Windows::Forms::Panel^  panel4;
-	private: System::Windows::Forms::Panel^  pListBox;
-	private: System::Windows::Forms::Panel^  panel3;
-	private: System::Windows::Forms::Panel^  panel5;
-			 List<Attribute^>^ _targetAttrsFree;
+	private: System::Windows::Forms::Button^  bDelComplexAttr;
+	private: System::Windows::Forms::Button^  bAddComplexAttr;
 
 
 	public:
-		AddGroupLinksForm(BookSettings^ sourceBook, BookSettings^ targetBook)
+		AddGroupLinksForm(BookSettings^ sourceBook, BookSettings^ targetBook, OdbcClass^ odbc)
 		{
 			InitializeComponent();
+			_odbc = odbc;
+			_complexAttrs = gcnew List<ComplexAttribute ^>();
 			_sourceBook = sourceBook;
 			_targetBook = targetBook;
 			if (!_sourceBook->HasGroup || !_targetBook->HasGroup)
@@ -123,6 +135,8 @@ namespace Integra {
 			this->pListBox = (gcnew System::Windows::Forms::Panel());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
+			this->bDelComplexAttr = (gcnew System::Windows::Forms::Button());
+			this->bAddComplexAttr = (gcnew System::Windows::Forms::Button());
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->pDgv = (gcnew System::Windows::Forms::Panel());
@@ -178,6 +192,7 @@ namespace Integra {
 			this->button2->TabIndex = 3;
 			this->button2->Text = L"Изменить";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Visible = false;
 			// 
 			// button3
 			// 
@@ -188,11 +203,11 @@ namespace Integra {
 			this->button3->TabIndex = 4;
 			this->button3->Text = L"Удалить";
 			this->button3->UseVisualStyleBackColor = false;
+			this->button3->Visible = false;
 			// 
 			// dgv
 			// 
 			this->dgv->AllowUserToDeleteRows = false;
-			this->dgv->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::DisplayedCells;
 			this->dgv->BackgroundColor = System::Drawing::SystemColors::Window;
 			this->dgv->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {this->ColumnSourceCode, 
@@ -203,20 +218,21 @@ namespace Integra {
 			this->dgv->RowHeadersVisible = false;
 			this->dgv->Size = System::Drawing::Size(867, 223);
 			this->dgv->TabIndex = 5;
+			this->dgv->CellBeginEdit += gcnew System::Windows::Forms::DataGridViewCellCancelEventHandler(this, &AddGroupLinksForm::dgv_CellBeginEdit);
 			this->dgv->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AddGroupLinksForm::dgv_CellValueChanged);
+			this->dgv->CurrentCellDirtyStateChanged += gcnew System::EventHandler(this, &AddGroupLinksForm::dgv_CurrentCellDirtyStateChanged);
 			// 
 			// ColumnSourceCode
 			// 
-			this->ColumnSourceCode->HeaderText = L"Обозначение реквизита системы-источника";
+			this->ColumnSourceCode->HeaderText = L"Наименование реквизита системы-источника";
 			this->ColumnSourceCode->Name = L"ColumnSourceCode";
-			this->ColumnSourceCode->Width = 215;
+			this->ColumnSourceCode->Width = 223;
 			// 
 			// Column1
 			// 
-			this->Column1->HeaderText = L"Наименование реквизита системы-источника";
+			this->Column1->HeaderText = L"Обозначение реквизита системы-источника";
 			this->Column1->Name = L"Column1";
 			this->Column1->ReadOnly = true;
-			this->Column1->Width = 242;
 			// 
 			// Column5
 			// 
@@ -234,16 +250,15 @@ namespace Integra {
 			// 
 			// ColumnTargetCode
 			// 
-			this->ColumnTargetCode->HeaderText = L"Обозначение реквизита системы-получателя";
+			this->ColumnTargetCode->HeaderText = L"Наименование реквизита системы-получателя";
 			this->ColumnTargetCode->Name = L"ColumnTargetCode";
-			this->ColumnTargetCode->Width = 220;
+			this->ColumnTargetCode->Width = 228;
 			// 
 			// Column4
 			// 
-			this->Column4->HeaderText = L"Наименование реквизита системы-получателя";
+			this->Column4->HeaderText = L"Обозначение реквизита системы-получателя";
 			this->Column4->Name = L"Column4";
 			this->Column4->ReadOnly = true;
-			this->Column4->Width = 247;
 			// 
 			// Column6
 			// 
@@ -322,12 +337,34 @@ namespace Integra {
 			// 
 			// panel2
 			// 
+			this->panel2->Controls->Add(this->bDelComplexAttr);
+			this->panel2->Controls->Add(this->bAddComplexAttr);
 			this->panel2->Controls->Add(this->panel5);
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Bottom;
 			this->panel2->Location = System::Drawing::Point(0, 458);
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(893, 51);
 			this->panel2->TabIndex = 9;
+			// 
+			// bDelComplexAttr
+			// 
+			this->bDelComplexAttr->Location = System::Drawing::Point(256, 16);
+			this->bDelComplexAttr->Name = L"bDelComplexAttr";
+			this->bDelComplexAttr->Size = System::Drawing::Size(217, 23);
+			this->bDelComplexAttr->TabIndex = 10;
+			this->bDelComplexAttr->Text = L"Удалить комплексный реквизит";
+			this->bDelComplexAttr->UseVisualStyleBackColor = true;
+			this->bDelComplexAttr->Click += gcnew System::EventHandler(this, &AddGroupLinksForm::bDelComplexAttr_Click);
+			// 
+			// bAddComplexAttr
+			// 
+			this->bAddComplexAttr->Location = System::Drawing::Point(22, 16);
+			this->bAddComplexAttr->Name = L"bAddComplexAttr";
+			this->bAddComplexAttr->Size = System::Drawing::Size(217, 23);
+			this->bAddComplexAttr->TabIndex = 9;
+			this->bAddComplexAttr->Text = L"Добавить комплексный реквизит";
+			this->bAddComplexAttr->UseVisualStyleBackColor = true;
+			this->bAddComplexAttr->Click += gcnew System::EventHandler(this, &AddGroupLinksForm::bAddComplexAttr_Click);
 			// 
 			// panel5
 			// 
@@ -370,7 +407,7 @@ namespace Integra {
 			this->MinimumSize = System::Drawing::Size(16, 535);
 			this->Name = L"AddGroupLinksForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"Добавление/редактирование групповых связей";
+			this->Text = L"Добавление связей";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgv))->EndInit();
 			this->pGroup->ResumeLayout(false);
 			this->panel4->ResumeLayout(false);
@@ -386,36 +423,42 @@ namespace Integra {
 		}
 #pragma endregion
 
-		private:
-			void SetDgvSources()
-			{
-				_sourceAttrs = _sourceBook->GetUseAttrs();
-				_targetAttrs = _targetBook->GetUseAttrs();
-				_sourceAttrsFree = _sourceAttrs;
-				_targetAttrsFree = _targetAttrs;
+	private:
+		void SetDgvSources()
+		{
+			_sourceAttrs = _sourceBook->GetUseAttrs();
+			_targetAttrs = _targetBook->GetUseAttrs();
+			_sourceAttrsFree = gcnew List<Attribute ^>();
+			_sourceAttrsFree->AddRange(_sourceAttrs);
+			_targetAttrsFree = gcnew List<Attribute ^>();
+			_targetAttrsFree->AddRange(_targetAttrs);
 
-				SetColumnCode(ColumnSourceCode,  _sourceAttrsFree);
-				SetColumnCode(ColumnTargetCode,  _targetAttrsFree);
-			}
+			//SetColumnCode(ColumnSourceCode,  _sourceAttrsFree);
+			//SetColumnCode(ColumnTargetCode,  _targetAttrsFree);
+		}
 
-			void SetColumnCode(DataGridViewComboBoxColumn^ column, List<Attribute^>^ list)
+		void SetColumnCode(DataGridViewComboBoxColumn^ column, List<Attribute^>^ list)
+		{
+			column->Items->Clear();
+			for each (Attribute^ attr in list)
 			{
-				column->Items->Clear();
-				for each (Attribute^ attr in list)
+				if (String::IsNullOrEmpty(attr->Name))
 				{
 					column->Items->Add(attr->FullCode);
 				}
-				/*DataGridViewComboBoxCell^ comboBoxCell = (DataGridViewComboBoxCell^)dgv[iCol, iRow];
-				comboBoxCell->Items->Clear();
-				for each (Attribute^ attr in list)
+				else
 				{
-				comboBoxCell->Items->Add(attr->FullCode);
-				}*/
+					column->Items->Add(attr->Name);
+				}
 			}
+			column->Items->Add("<-- Добавить комплексный атрибут -->");
+		}
 
-			void RemoveFromList(List<Attribute^>^ list, String^ code)
+		void RemoveFromList(List<Attribute^>^ list, String^ code)
+		{
+			for each (Attribute^ attr in list)
 			{
-				for each (Attribute^ attr in list)
+				if (String::IsNullOrEmpty(attr->Name))
 				{
 					if (attr->FullCode == code)
 					{
@@ -423,18 +466,69 @@ namespace Integra {
 						return;
 					}
 				}
-			}
-
-			Attribute^ GetAttr(List<Attribute^>^ list, String^ code)
-			{
-				for each (Attribute^ attr in list)
+				else
 				{
-					if (attr->FullCode == code)
+					if (attr->Name == code)
+					{
+						list->Remove(attr);
+						return;
+					}
+				}
+				
+			}
+		}
+
+		void RemoveOnColumn(int iCol, List<Attribute^>^ list)
+		{
+			for (int i = 0; i < dgv->RowCount; i++)
+			{
+				Object^ cell = dgv[iCol, i]->Value;
+				if (cell == nullptr || String::IsNullOrEmpty(cell->ToString()))
+				{
+					continue;
+				}
+				RemoveFromList(list, cell->ToString());
+			}
+		}
+
+		Attribute^ GetAttr(List<Attribute^>^ list, String^ name)
+		{
+			for each (Attribute^ attr in list)
+			{
+				if (String::IsNullOrEmpty(attr->Name))
+				{
+					if (attr->FullCode == name)
 					{
 						return attr;
 					}
 				}
+				else
+				{
+					if (attr->Name == name)
+					{
+						return attr;
+					}
+				}
+
+				if (attr->Name == name)
+				{
+					return attr;
+				}
 			}
+			return nullptr;
+		}
+
+		bool ContainsInComplex(String^ name)
+		{
+			for each (ComplexAttribute^ attr in _complexAttrs)
+			{
+				if (attr->Name == name)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 
 	private: System::Void bAddGroup_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
@@ -447,33 +541,62 @@ namespace Integra {
 
 
 			 }
-private: System::Void dgv_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
+	private: System::Void dgv_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
 		 {
 			 if (e->RowIndex < 0 || e->ColumnIndex < 0)
 			 {
 				 return;
 			 }
-			 if (dgv[e->ColumnIndex, e->RowIndex]->Value == nullptr &&
-				 String::IsNullOrEmpty(dgv[e->ColumnIndex, e->RowIndex]->Value->ToString()))
+			 if (dgv[e->ColumnIndex, e->RowIndex]->Value == nullptr ||
+				String::IsNullOrEmpty(dgv[e->ColumnIndex, e->RowIndex]->Value->ToString()))
 			 {
-				 return;
+				return;
 			 }
 
 			 if (e->ColumnIndex == 0)
 			 {
+				 //DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
+				 //if (cb->Value != nullptr)
+				 //{
+					// // do stuff
+					// dgv->Invalidate();
+				 //}
 
+				 String^ cell = dgv[e->ColumnIndex, e->RowIndex]->Value->ToString();
+					 Attribute^ attr = GetAttr(_sourceAttrs, cell);
+					 dgv[1, e->RowIndex]->Value = attr->FullCode;
+					 dgv[2, e->RowIndex]->Value = attr->DataType;
+					 dgv[3, e->RowIndex]->Value = attr->MaxLength;
+					 _sourceAttrsFree->Clear();
+					 _sourceAttrsFree->AddRange(_sourceAttrs);
+					 RemoveOnColumn(0, _sourceAttrsFree);
 			 }
 			 if (e->ColumnIndex == 4)
 			 {
+				 //DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
+				 //if (cb->Value != nullptr)
+				 //{
+					// // do stuff
+					// dgv->Invalidate();
+				 //}
 
+				 String^ cell = dgv[e->ColumnIndex, e->RowIndex]->Value->ToString();
+
+					 Attribute^ attr = GetAttr(_targetAttrs, cell);
+					 dgv[5, e->RowIndex]->Value = attr->FullCode;
+					 dgv[6, e->RowIndex]->Value = attr->DataType;
+					 dgv[7, e->RowIndex]->Value = attr->MaxLength;
+					 _targetAttrsFree->Clear();
+					 _targetAttrsFree->AddRange(_targetAttrs);
+					 RemoveOnColumn(4, _targetAttrsFree);
 			 }
 		 }
-private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
+	private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 attrPairs = nullptr;
 			 Close();
 		 }
-private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
+	private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 attrPairs = gcnew Dictionary<Attribute ^, Attribute ^>();
 			 for (int i = 0; i < dgv->Rows->Count; i++)
@@ -489,6 +612,115 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 			 }
 			 
 			 Close();
+		 }
+
+private: System::Void dgv_CurrentCellDirtyStateChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 //if (dgv->IsCurrentCellDirty)
+			 //{
+				// // This fires the cell value changed handler below
+				// dgv->CommitEdit(DataGridViewDataErrorContexts::Commit);
+			 //}
+		 }
+private: System::Void dgv_CellBeginEdit(System::Object^  sender, System::Windows::Forms::DataGridViewCellCancelEventArgs^  e) 
+		 {
+			 if (e->RowIndex < 0 || e->ColumnIndex < 0)
+			 {
+				 return;
+			 }
+
+
+			 if (e->ColumnIndex == 0)
+			 {
+				 DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
+				 Object^ currCell = cb->Value;
+				 cb->Items->Clear();
+				 Object^ complexAttrName = dgv->Rows[e->RowIndex]->Cells[1]->Value;
+				 if (complexAttrName == nullptr || 
+					 String::IsNullOrEmpty(complexAttrName->ToString()) || 
+					 !ContainsInComplex(complexAttrName->ToString()))
+				 {
+					 if (currCell != nullptr)
+					 {
+						 Attribute^ attr = GetAttr(_sourceAttrs, currCell->ToString());
+						 _sourceAttrsFree->Add(attr);
+
+					 }
+					 for each (Attribute^ attr in _sourceAttrsFree)
+					 {
+						 if (String::IsNullOrEmpty(attr->Name))
+						 {
+							 cb->Items->Add(attr->FullCode);
+						 }
+						 else
+						 {
+							 cb->Items->Add(attr->Name);
+						 }
+					 }
+
+				 }
+			 }
+			 if (e->ColumnIndex == 4)
+			 {
+				 DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
+				 cb->Items->Clear();
+				 for each (Attribute^ attr in _targetAttrsFree)
+				 {
+					 if (String::IsNullOrEmpty(attr->Name))
+					 {
+						 cb->Items->Add(attr->FullCode);
+					 }
+					 else
+					 {
+						 cb->Items->Add(attr->Name);
+					 }
+				 }
+			 }
+		 }
+private: System::Void bAddComplexAttr_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 AddComplexAttrForm^ complexAttrForm;
+			 int iCol = dgv->SelectedCells[0]->ColumnIndex;
+			 if (iCol < 4)
+			 {
+				 complexAttrForm = gcnew AddComplexAttrForm(_sourceAttrs, _targetAttrs, _odbc);
+			 }
+			 else
+			 {
+				 complexAttrForm = gcnew AddComplexAttrForm(_targetAttrs, _sourceAttrs, _odbc);
+			 }
+			 
+			 complexAttrForm->ShowDialog();
+			 if (complexAttrForm->complexAttr != nullptr)
+			 {
+				 array<Object^>^ row = gcnew array<Object ^>(8);
+				 row[0] = nullptr;
+				 row[1] = complexAttrForm->complexAttr->Name;
+				 row[2] = "";
+				 row[3] = "";
+				 row[4] = nullptr;
+				 row[5] = complexAttrForm->complexAttr->Name;
+				 row[6] = "";
+				 row[7] = "";
+				 dgv->Rows->Add(row);
+
+				 int r = dgv->RowCount - 2;
+				 dgv[0, r]->ReadOnly = true;
+				 dgv[4, r]->ReadOnly = true;
+				 _complexAttrs->Add(complexAttrForm->complexAttr);
+			 }
+
+		 }
+private: System::Void bDelComplexAttr_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 int iRow = dgv->SelectedCells[0]->RowIndex;
+			 Object^ cell = dgv->Rows[iRow]->Cells[1]->Value;
+			 if (cell != nullptr && 
+				 !String::IsNullOrEmpty(cell->ToString()) && 
+				 ContainsInComplex(cell->ToString()))
+			 {
+				 dgv->Rows->RemoveAt(iRow);
+			 }
 		 }
 };
 }

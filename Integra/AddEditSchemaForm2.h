@@ -24,7 +24,8 @@ namespace Integra {
 		Dictionary<Attribute^, Attribute^>^ _attrPairs;
 
 		BookSettings^ _sourceBook;
-		BookSettings^ _targetBook;
+	private: System::Windows::Forms::Button^  button1;
+			 BookSettings^ _targetBook;
 
 	public:
 		AddEditSchemaForm2(Settings^ settings, OdbcClass^ odbc)
@@ -113,6 +114,7 @@ namespace Integra {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->cbBook = (gcnew System::Windows::Forms::ComboBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSource))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->BeginInit();
 			this->groupBox1->SuspendLayout();
@@ -174,7 +176,7 @@ namespace Integra {
 			// cbIntgr
 			// 
 			this->cbIntgr->FormattingEnabled = true;
-			this->cbIntgr->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Односторонняя", L"Двусторонняя"});
+			this->cbIntgr->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Одностороннее", L"Двустороннее"});
 			this->cbIntgr->Location = System::Drawing::Point(42, 342);
 			this->cbIntgr->Name = L"cbIntgr";
 			this->cbIntgr->Size = System::Drawing::Size(231, 21);
@@ -185,9 +187,9 @@ namespace Integra {
 			this->label5->AutoSize = true;
 			this->label5->Location = System::Drawing::Point(39, 326);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(90, 13);
+			this->label5->Size = System::Drawing::Size(159, 13);
 			this->label5->TabIndex = 4;
-			this->label5->Text = L"Тип интеграции:";
+			this->label5->Text = L"Тип направления интеграции:";
 			// 
 			// dgvTarget
 			// 
@@ -249,11 +251,11 @@ namespace Integra {
 			// bLinks
 			// 
 			this->bLinks->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bLinks->Location = System::Drawing::Point(414, 326);
+			this->bLinks->Location = System::Drawing::Point(345, 326);
 			this->bLinks->Name = L"bLinks";
 			this->bLinks->Size = System::Drawing::Size(109, 39);
 			this->bLinks->TabIndex = 9;
-			this->bLinks->Text = L"Связи";
+			this->bLinks->Text = L"Задать соответствия";
 			this->bLinks->UseVisualStyleBackColor = false;
 			this->bLinks->Click += gcnew System::EventHandler(this, &AddEditSchemaForm2::bLinks_Click);
 			// 
@@ -286,12 +288,25 @@ namespace Integra {
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Фильтр справочников:";
 			// 
+			// button1
+			// 
+			this->button1->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->button1->Location = System::Drawing::Point(486, 326);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(109, 39);
+			this->button1->TabIndex = 10;
+			this->button1->Text = L"Задать групповые соответствия";
+			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Visible = false;
+			this->button1->Click += gcnew System::EventHandler(this, &AddEditSchemaForm2::button1_Click);
+			// 
 			// AddEditSchemaForm2
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->ClientSize = System::Drawing::Size(945, 379);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->bLinks);
 			this->Controls->Add(this->bSave);
 			this->Controls->Add(this->bCancel);
@@ -368,7 +383,7 @@ private: System::Void bLinks_Click(System::Object^  sender, System::EventArgs^  
 			 String^ oT = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
 			 _sourceBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oS)), _odbc);
 			 _targetBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oT)), _odbc);
-			 AddGroupLinksForm^ form = gcnew AddGroupLinksForm(_sourceBook, _targetBook);
+			 AddGroupLinksForm^ form = gcnew AddGroupLinksForm(_sourceBook, _targetBook, _odbc);
 			 form->ShowDialog();
 			 if (form->attrPairs != nullptr)
 			 {
@@ -405,6 +420,10 @@ private: System::Void cbBook_SelectedIndexChanged(System::Object^  sender, Syste
 			 array<String^, 2>^ systemBooks = _settings->GetSystemBooks(id);
 			 SetDgv(dgvSource, systemBooks);
 			 SetDgv(dgvTarget, systemBooks);
+		 }
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 int i = Int32::Parse("s");
 		 }
 };
 }

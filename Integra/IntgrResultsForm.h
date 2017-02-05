@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IntegrationResult.h"
+#include "DetailResults.h"
 
 namespace Integra {
 
@@ -38,18 +39,7 @@ namespace Integra {
 			}
 		}
 	private: System::Windows::Forms::DataGridView^  dgv;
-	protected: 
-
-	protected: 
-
-
-
-
-
-
-
-
-	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^  bDetails;
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::Label^  label3;
@@ -61,6 +51,20 @@ namespace Integra {
 	private: System::Windows::Forms::ComboBox^  comboBox2;
 	private: System::Windows::Forms::ComboBox^  comboBox1;
 	private: System::Windows::Forms::Button^  bClose;
+
+
+
+
+
+
+
+
+	private: System::Windows::Forms::Panel^  panel1;
+	private: System::Windows::Forms::Panel^  panel2;
+	private: System::Windows::Forms::Panel^  panel3;
+	private: System::Windows::Forms::Panel^  panel4;
+	private: System::Windows::Forms::Panel^  panel5;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column9;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column8;
@@ -69,11 +73,6 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
-	private: System::Windows::Forms::Panel^  panel1;
-	private: System::Windows::Forms::Panel^  panel2;
-	private: System::Windows::Forms::Panel^  panel3;
-	private: System::Windows::Forms::Panel^  panel4;
-	private: System::Windows::Forms::Panel^  panel5;
 
 
 	private:
@@ -86,7 +85,8 @@ namespace Integra {
 	private:
 		void SetDgv()
 		{
-			String^ squery = String::Format("select IRR.INTEG_DATE, BB.NAME, IRR.STATE, " + 
+			int colColumns = 9;
+			String^ squery = String::Format("select IRR.ID, IRR.INTEG_DATE, BB.NAME, IRR.STATE, " + 
 				"(select INTEGRATED_SYSTEMS.NAME from {0}INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from {0}INTEGRATION_BOOK where INTEGRATION_BOOK.ID = IPP.ID_SOURCE_BOOK) )," + 
 				"(select INTEGRATED_SYSTEMS.NAME from {0}INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from {0}INTEGRATION_BOOK where INTEGRATION_BOOK.ID = IPP.ID_TARGET_BOOK) )," + 
 				"IRR.INT_TYPE, IPP.TYPE, IRR.INTEG_USER from " + 
@@ -95,33 +95,52 @@ namespace Integra {
 			List<Object^>^ qList = _odbc->ExecuteQuery(squery);
 
 			dgv->Rows->Clear();
-			for (int i = 0; i < qList->Count; i+=8)
+			for (int i = 0; i < qList->Count; i+=colColumns)
 			{
-				array<String^>^ row = gcnew array<String ^>(8);
-				row[0] = qList[i+0]->ToString();
+				array<String^>^ row = gcnew array<String ^>(colColumns);
+				int id = OdbcClass::GetInt(qList[i+0]);
+				row[0] = id + "";
 				row[1] = qList[i+1]->ToString();
 				row[2] = qList[i+2]->ToString();
 				row[3] = qList[i+3]->ToString();
 				row[4] = qList[i+4]->ToString();
-				int intType = OdbcClass::GetInt(qList[i+5]);
+				row[5] = qList[i+5]->ToString();
+				int intType = OdbcClass::GetInt(qList[i+6]);
 				switch (intType)
 				{
 				case 0:
-					row[5] = "Автоматическая";
+					row[6] = "Автоматическая";
 					break;
 				case 1:
-					row[5] = "Ручная (точный)";
+					row[6] = "Ручная (точный)";
 					break;
 				case 2:
-					row[5] = "Ручная (грубый)";
+					row[6] = "Ручная (грубый)";
 					break;
 				}
 
-				row[6] = qList[i+6]->ToString();
 				row[7] = qList[i+7]->ToString();
+				row[8] = qList[i+8]->ToString();
 				dgv->Rows->Add(row);
 			}
 
+		}
+
+		void StartDetails()
+		{
+			if (dgv->RowCount <= 0 || dgv->ColumnCount <= 0)
+			{
+				return;
+			}
+			if (dgv->SelectedCells == nullptr)
+			{
+				return;
+			}
+
+			String^ sval = dgv[0, dgv->SelectedCells[0]->RowIndex]->Value->ToString();
+			int val = int::Parse(sval);
+			DetailResults^ form = gcnew DetailResults(val, _odbc);
+			form->ShowDialog();
 		}
 
 
@@ -134,15 +153,7 @@ namespace Integra {
 		void InitializeComponent(void)
 		{
 			this->dgv = (gcnew System::Windows::Forms::DataGridView());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column7 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column6 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->bDetails = (gcnew System::Windows::Forms::Button());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
@@ -159,6 +170,15 @@ namespace Integra {
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
 			this->panel4 = (gcnew System::Windows::Forms::Panel());
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
+			this->Column9 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column7 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column6 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgv))->BeginInit();
 			this->panel1->SuspendLayout();
 			this->panel2->SuspendLayout();
@@ -172,71 +192,25 @@ namespace Integra {
 			this->dgv->AllowUserToAddRows = false;
 			this->dgv->AllowUserToDeleteRows = false;
 			this->dgv->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {this->Column1, this->Column7, 
-				this->Column8, this->Column5, this->Column6, this->Column3, this->Column4, this->Column2});
+			this->dgv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(9) {this->Column9, this->Column1, 
+				this->Column7, this->Column8, this->Column5, this->Column6, this->Column3, this->Column4, this->Column2});
 			this->dgv->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->dgv->Location = System::Drawing::Point(10, 10);
 			this->dgv->Name = L"dgv";
 			this->dgv->ReadOnly = true;
 			this->dgv->Size = System::Drawing::Size(845, 205);
 			this->dgv->TabIndex = 0;
+			this->dgv->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &IntgrResultsForm::dgv_CellDoubleClick);
 			// 
-			// Column1
+			// bDetails
 			// 
-			this->Column1->HeaderText = L"Дата проведения интеграции";
-			this->Column1->Name = L"Column1";
-			this->Column1->ReadOnly = true;
-			// 
-			// Column7
-			// 
-			this->Column7->HeaderText = L"Справочник";
-			this->Column7->Name = L"Column7";
-			this->Column7->ReadOnly = true;
-			// 
-			// Column8
-			// 
-			this->Column8->HeaderText = L"Состояние";
-			this->Column8->Name = L"Column8";
-			this->Column8->ReadOnly = true;
-			// 
-			// Column5
-			// 
-			this->Column5->HeaderText = L"Система-источник";
-			this->Column5->Name = L"Column5";
-			this->Column5->ReadOnly = true;
-			// 
-			// Column6
-			// 
-			this->Column6->HeaderText = L"Система-приемник";
-			this->Column6->Name = L"Column6";
-			this->Column6->ReadOnly = true;
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Тип интеграции";
-			this->Column3->Name = L"Column3";
-			this->Column3->ReadOnly = true;
-			// 
-			// Column4
-			// 
-			this->Column4->HeaderText = L"Направление интеграции";
-			this->Column4->Name = L"Column4";
-			this->Column4->ReadOnly = true;
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Пользователь, проводивший интеграцию";
-			this->Column2->Name = L"Column2";
-			this->Column2->ReadOnly = true;
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(21, 13);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(249, 23);
-			this->button1->TabIndex = 24;
-			this->button1->Text = L"Просмотр результатов интеграции";
-			this->button1->UseVisualStyleBackColor = true;
+			this->bDetails->Location = System::Drawing::Point(21, 13);
+			this->bDetails->Name = L"bDetails";
+			this->bDetails->Size = System::Drawing::Size(249, 23);
+			this->bDetails->TabIndex = 24;
+			this->bDetails->Text = L"Просмотр результатов интеграции";
+			this->bDetails->UseVisualStyleBackColor = true;
+			this->bDetails->Click += gcnew System::EventHandler(this, &IntgrResultsForm::bDetails_Click);
 			// 
 			// label5
 			// 
@@ -352,7 +326,7 @@ namespace Integra {
 			// panel2
 			// 
 			this->panel2->Controls->Add(this->panel3);
-			this->panel2->Controls->Add(this->button1);
+			this->panel2->Controls->Add(this->bDetails);
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Bottom;
 			this->panel2->Location = System::Drawing::Point(0, 353);
 			this->panel2->Name = L"panel2";
@@ -387,6 +361,61 @@ namespace Integra {
 			this->panel5->Size = System::Drawing::Size(865, 225);
 			this->panel5->TabIndex = 0;
 			// 
+			// Column9
+			// 
+			this->Column9->HeaderText = L"ID";
+			this->Column9->Name = L"Column9";
+			this->Column9->ReadOnly = true;
+			this->Column9->Visible = false;
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Дата проведения интеграции";
+			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
+			// 
+			// Column7
+			// 
+			this->Column7->HeaderText = L"Справочник";
+			this->Column7->Name = L"Column7";
+			this->Column7->ReadOnly = true;
+			// 
+			// Column8
+			// 
+			this->Column8->HeaderText = L"Состояние";
+			this->Column8->Name = L"Column8";
+			this->Column8->ReadOnly = true;
+			// 
+			// Column5
+			// 
+			this->Column5->HeaderText = L"Система-источник";
+			this->Column5->Name = L"Column5";
+			this->Column5->ReadOnly = true;
+			// 
+			// Column6
+			// 
+			this->Column6->HeaderText = L"Система-приемник";
+			this->Column6->Name = L"Column6";
+			this->Column6->ReadOnly = true;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Тип интеграции";
+			this->Column3->Name = L"Column3";
+			this->Column3->ReadOnly = true;
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"Направление интеграции";
+			this->Column4->Name = L"Column4";
+			this->Column4->ReadOnly = true;
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Пользователь, проводивший интеграцию";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			// 
 			// IntgrResultsForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -418,6 +447,14 @@ namespace Integra {
 private: System::Void IntgrResultsForm_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 SetDgv();
+		 }
+private: System::Void dgv_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
+		 {
+			 StartDetails();
+		 }
+private: System::Void bDetails_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 StartDetails();
 		 }
 };
 }

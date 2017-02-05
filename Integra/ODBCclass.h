@@ -176,7 +176,7 @@ namespace Integra {
 			{
 				if (o == nullptr || String::IsNullOrEmpty(o->ToString()))
 				{
-					return 0;
+					return -1;
 				}
 				return Decimal::ToInt32((Decimal)o);
 			}

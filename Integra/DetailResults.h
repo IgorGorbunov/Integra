@@ -75,13 +75,13 @@ namespace Integra {
 		void SetEdittings()
 		{
 			int colCount = 8;
-			String^ squery = String::Format("select IEE.ID, IEE.EDIT_DATE, IEE.EDIT_TYPE, ISS.NAME, IAA.ATTR_NAME, IAA.NAME, IEE.OLD_VAL, IEE.NEW_VAL " + 
-				"from {0}INTEGRATION_EDITINGS IEE, {0}INTEGRATION_ATTRIBUTES IAA, {0}INTEGRATION_BOOK IBB, {0}INTEGRATED_SYSTEMS ISS "+
-				"where IAA.ID = IEE.ID_ATTR and IAA.ID_INTGR_BOOK = IBB.ID and IBB.ID_SYSTEM = ISS.ID and IEE.ID_INTGR = {1}", _odbc->schema, _idIntgr);
+			String^ squery = String::Format("select IEE.ID, IEE.EDIT_DATE, IEE.EDIT_TYPE, IEE.ID_ATTR, IEE.OLD_VAL, IEE.NEW_VAL, IEE.SYSTEM_N " + 
+				"from {0}INTEGRATION_EDITINGS IEE "+
+				"where IEE.ID_INTGR = {1}", _odbc->schema, _idIntgr);
 			List<Object^>^ qList = _odbc->ExecuteQuery(squery);
 
 			dgv->Rows->Clear();
-			for (int i = 0; i < qList->Count; i+=colCount)
+			for (int i = 0; i < qList->Count; i+=7)
 			{
 				array<String^>^ row = gcnew array<String ^>(colCount);
 				int id = OdbcClass::GetInt(qList[i+0]);
@@ -100,11 +100,40 @@ namespace Integra {
 					row[2] = "Исключение позиции";
 					break;
 				}
-				row[3] = qList[i+3]->ToString();
-				row[4] = qList[i+4]->ToString();
-				row[5] = qList[i+5]->ToString();
-				row[6] = qList[i+6]->ToString();
-				row[7] = qList[i+7]->ToString();
+				int attrId = OdbcClass::GetInt(qList[i+3]);
+				if (attrId == -1)
+				{
+					row[4] = "";
+					row[5] = "";
+					int nSystem = OdbcClass::GetInt(qList[i+6]);
+					String^ intBook;
+					if (nSystem = 1)
+					{
+						intBook = "ID_TARGET_BOOK";
+					}
+					else
+					{
+						intBook = "ID_SOURCE_BOOK";
+					}
+					String^ squery2 = String::Format("select ISS.NAME " + 
+						"from {0}INTEGRATION_RESULTS IRR, {0}INTEGRATION_PARAMS IPP, {0}INTEGRATION_BOOK IBB, {0}INTEGRATED_SYSTEMS ISS "+
+						"where IRR.ID_INTGR = IPP.ID and IPP.{2} = IBB.ID and IBB.ID_SYSTEM = ISS.ID and IRR.ID = {1}", _odbc->schema, _idIntgr, intBook);
+					List<Object^>^ qList2 = _odbc->ExecuteQuery(squery2);
+					row[3] = qList2[0]->ToString();
+				}
+				else
+				{
+					String^ squery2 = String::Format("select ISS.NAME, IAA.ATTR_NAME, IAA.NAME " + 
+						"from {0}INTEGRATION_ATTRIBUTES IAA, {0}INTEGRATION_BOOK IBB, {0}INTEGRATED_SYSTEMS ISS "+
+						"where IAA.ID_INTGR_BOOK = IBB.ID and IBB.ID_SYSTEM = ISS.ID and IAA.ID = {1}", _odbc->schema, attrId);
+					List<Object^>^ qList2 = _odbc->ExecuteQuery(squery2);
+					row[3] = qList2[0]->ToString();
+					row[4] = qList2[1]->ToString();
+					row[5] = qList2[2]->ToString();
+				}
+				
+				row[6] = qList[i+4]->ToString();
+				row[7] = qList[i+5]->ToString();
 				dgv->Rows->Add(row);
 			}
 		}

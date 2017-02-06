@@ -1,4 +1,4 @@
-﻿Построение начато 05.02.2017 20:39:05.
+﻿Построение начато 06.02.2017 11:58:19.
      1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
      1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(2015,5): warning MSB3284: Не удается получить путь файла для библиотеки типа "307168c0-39ae-42ad-953f-a09f8a81520f" версии 1.0. Библиотека не зарегистрирована. (Исключение из HRESULT: 0x8002801D (TYPE_E_LIBNOTREGISTERED))
      1>ClCompile:
@@ -7,11 +7,11 @@
          AddDbAttrsForm.cpp
          AddEditGroupForm.cpp
          AddEditSchemaForm2.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(202): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          AddEditSystemBookForm.cpp
          AddEditUserRole.cpp
          AddGroupLinksForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(202): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          AddNewTableForm.cpp
          AddNewUser.cpp
          AddSemAttrForm.cpp
@@ -19,31 +19,35 @@
          AutoSettingsForm.cpp
          DbFiltersForm.cpp
          DetailResults.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          DifferencesForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          EditForm.cpp
          GroupParamsForm.cpp
          IntgrResultsForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(202): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          JournalChangesForm.cpp
          LoginForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(202): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          Создание кода...
          Компиляция...
          MainForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(202): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          ManualIntegrationForm.cpp
          ManualIntegrationForm1.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(202): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          NormIntegrForm.cpp
          NoticesForm.cpp
          ODBCclass.h
          Results.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          Results2.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          Results3.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(202): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          RoughInterg.cpp
          SettingsForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(202): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          TableLinksForm.cpp
          Создание кода...
          D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt "C:\Users\igor\AppData\Local\Temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
@@ -89,4 +93,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:11.76
+Затраченное время: 00:00:10.93

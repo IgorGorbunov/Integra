@@ -201,6 +201,21 @@ namespace Integra {
 			_id = id;
 		}
 
+		Object^ GetValue(String^ condition, bool isDb)
+		{
+			//todo
+			if (isDb)
+			{
+				String^ query = String::Format("select {0}ATABLE.{1} from {0}{2} ATABLE {3}", _odbc->schema, Code, Table, condition);
+				List<Object^>^ qlist = _odbc->ExecuteQuery(query);
+				return qlist[0];
+			}
+			else
+			{
+				//todo
+				return nullptr;
+			}
+		}
 
 	protected:
 		/// <summary>

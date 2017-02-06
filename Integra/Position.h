@@ -2,6 +2,7 @@
 
 #include "Logger.h"
 #include "Attribute.h"
+#include "BookSettings.h"
 
 
 namespace Integra {
@@ -43,7 +44,31 @@ namespace Integra {
 		String^ _unicId;
 		
 
+	private:
+		OdbcClass^ _odbc;
+		BookSettings^ _intgrBook;
+
 	public:
+		Position(Object^ id, int idIntgrBook, OdbcClass^ odbc) 
+		{
+			//todo
+			_odbc = odbc;
+			_intgrBook = gcnew BookSettings(idIntgrBook, odbc);
+			AttrIdCode = _intgrBook->AttrId->Code;
+			Attribute^ attrCaption = _intgrBook->AttrCaption;
+			String^ condition;
+			if (attrCaption->DataType == "ÑÒÐÎÊÀ")
+			{
+				condition = String::Format("where ATABLE.{0} = '{1}'", AttrIdCode, id);
+			}
+			else
+			{
+				condition = String::Format("where ATABLE.{0} = {1}", AttrIdCode, id);
+			}
+			Object^ oCaption = attrCaption->GetValue(condition, true);
+			Caption = oCaption->ToString();
+		}
+
 		Position() 
 		{
 

@@ -123,6 +123,17 @@ namespace Integra {
 				return _attrId;
 			}
 		}
+		property Attribute^ AttrCaption
+		{
+			Attribute^ get()
+			{
+				if (_attrCaption == nullptr)
+				{
+					SetAttrCaption();
+				}
+				return _attrCaption;
+			}
+		}
 
 		int BookId;
 
@@ -152,6 +163,7 @@ namespace Integra {
 		String^ _attrTitleFullcode;
 
 		Attribute^ _attrId;
+		Attribute^ _attrCaption;
 		
 
 	public:
@@ -185,6 +197,7 @@ namespace Integra {
 			}
 			return list;
 		}
+
 
 	private:
 		Void Set(int id)
@@ -230,6 +243,11 @@ namespace Integra {
 		void SetAttrId()
 		{
 			_attrId = gcnew Attribute(_attrIdId, _odbc);
+		}
+
+		void SetAttrCaption()
+		{
+			_attrCaption = gcnew Attribute(_attrTitleId, _odbc);
 		}
 
 		void SetAttrTitleName()

@@ -70,6 +70,11 @@ namespace Integra {
 		}
 
 	public:
+		virtual Dictionary<String^, String^>^ GetAllGroupNames() override
+		{
+			return nullptr;
+		}
+
 		virtual List<Position^>^ GetAllPositions() override
 		{
 			return GetMaxLevelPositions();

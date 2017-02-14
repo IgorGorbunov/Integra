@@ -532,11 +532,11 @@ namespace Integra {
 
 	private: System::Void bAddGroup_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				 AddEditGroupForm^ form = gcnew AddEditGroupForm();
+				 AddEditGroupForm^ form = gcnew AddEditGroupForm(_sourceBook, _targetBook, _odbc);
 				 form->ShowDialog();
 				 if (form->GroupName != nullptr)
 				 {
-					 lbGroups->Items->Add(form->GroupName + " " + form->DoubleName);
+					 lbGroups->Items->Add(String::Format("{0} ({1} {2} - {3} {4})", form->GroupName, form->SourceId, form->SourceName, form->TargetId, form->SourceName));
 				 }
 
 

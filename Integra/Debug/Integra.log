@@ -1,4 +1,4 @@
-﻿Построение начато 14.02.2017 11:24:44.
+﻿Построение начато 14.02.2017 16:47:48.
      1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
      1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(2015,5): warning MSB3284: Не удается получить путь файла для библиотеки типа "307168c0-39ae-42ad-953f-a09f8a81520f" версии 1.0. Библиотека не зарегистрирована. (Исключение из HRESULT: 0x8002801D (TYPE_E_LIBNOTREGISTERED))
      1>ClCompile:
@@ -6,6 +6,7 @@
          AddComplexAttrForm.cpp
          AddDbAttrsForm.cpp
          AddEditGroupForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          AddEditSchemaForm2.cpp
      1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          AddEditSystemBookForm.cpp
@@ -95,4 +96,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:12.25
+Затраченное время: 00:00:12.05

@@ -43,6 +43,8 @@ namespace Integra {
 
 
 	public:
+		virtual Dictionary<String^, String^>^ GetAllGroupNames() abstract;
+
 		virtual List<Position^>^ GetAllPositions() abstract;
 		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs) abstract;
 		virtual List<Position^>^ GetAllPositions2(System::ComponentModel::BackgroundWorker^ worker, System::ComponentModel::DoWorkEventArgs ^ e) abstract;

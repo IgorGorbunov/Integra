@@ -28,16 +28,20 @@ namespace Integra {
 		DbBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, bool isSource, OdbcClass^ odbc) : Book(bookSettings, intSettings, odbc)
 		{
 			_isSource = isSource;
-			if (_isSource)
+			if (intSettings != nullptr)
 			{
-				_attributes = intSettings->SourceAttributes;
-				_equivAttr = _intSettings->SourceEquivAttr;
-			} 
-			else
-			{
-				_attributes = intSettings->TargetAttributes;
-				_equivAttr = _intSettings->TargetEquivAttr;
+				if (_isSource)
+				{
+					_attributes = _intSettings->SourceAttributes;
+					_equivAttr = _intSettings->SourceEquivAttr;
+				} 
+				else
+				{
+					_attributes = _intSettings->TargetAttributes;
+					_equivAttr = _intSettings->TargetEquivAttr;
+				}
 			}
+			
 		}
 
 
@@ -108,7 +112,36 @@ namespace Integra {
  			return poses;
 		}
 
-		
+		virtual Dictionary<String^, String^>^ GetAllGroupNames() override
+		{
+			String^ squery = String::Format("select IAA.SCHEMA_NAME, IAA.TABLE_NAME, IAA.ATTR_NAME from {0}INTEGRATION_ATTRIBUTES IAA, {0}INTEGRATION_BOOK IBB, {0}GROUP_PARAMS GPP " + 
+				"where IBB.ID = {1} and IBB.GROUP_ID = GPP.ID and GPP.NAME_ATTR = IAA.ID", _odbc->schema, BookSetting->Id);
+			List<Object^>^ list1 = BookSetting->Odbc->ExecuteQuery(squery);
+			String^ grAttrSchema = list1[0]->ToString();
+			String^ grAttrTable = list1[1]->ToString();
+			String^ grAttrCode = list1[2]->ToString();
+
+			squery = String::Format("select IAA.SCHEMA_NAME, IAA.TABLE_NAME, IAA.ATTR_NAME from {0}INTEGRATION_ATTRIBUTES IAA, {0}INTEGRATION_BOOK IBB, {0}GROUP_PARAMS GPP " + 
+				"where IBB.ID = {1} and IBB.GROUP_ID = GPP.ID and GPP.ID_ATTR = IAA.ID", _odbc->schema, BookSetting->Id);
+			list1 = BookSetting->Odbc->ExecuteQuery(squery);
+			String^ grIdAttrSchema = list1[0]->ToString();
+			String^ grIdAttrTable = list1[1]->ToString();
+			String^ grIdAttrCode = list1[2]->ToString();
+
+			if (!String::IsNullOrEmpty(grIdAttrSchema))
+			{
+				grIdAttrSchema += ".";
+			}
+
+			squery = String::Format("select {0}{1}.{2}, {3}{4}.{5} from {0}{1}", grIdAttrSchema, grIdAttrTable, grIdAttrCode, grAttrSchema, grAttrTable, grAttrCode);
+			List<Object^>^ list2 = BookSetting->Odbc->ExecuteQuery(squery);
+			Dictionary<String^, String^>^ resList = gcnew Dictionary<String^, String^>();
+			for (int i = 0; i < list2->Count; i+=2)
+			{
+				resList->Add(list2[i]->ToString(), list2[i+1]->ToString());
+			}
+			return resList;
+		}
 
 
 		virtual List<Position^>^ GetAllPositions2(System::ComponentModel::BackgroundWorker^ worker, System::ComponentModel::DoWorkEventArgs^ e) override
@@ -148,7 +181,7 @@ namespace Integra {
 			strQuery = strQuery->Substring(0, strQuery->Length - 2);
 			strQuery += String::Format(" order by {0}.{1}", _equivAttr->FullTable, _equivAttr->Code);
 
-			List<Object^>^ query = _odbc->ExecuteQuery(strQuery);
+			List<Object^>^ query = BookSetting->Odbc->ExecuteQuery(strQuery);
 
 			if ( worker->CancellationPending )
 			{
@@ -216,7 +249,7 @@ namespace Integra {
 			strQuery = strQuery->Substring(0, strQuery->Length - 2);
 			strQuery += String::Format(" order by {0}.{1}", _equivAttr->FullTable, _equivAttr->Code);
 
-			List<Object^>^ query = _odbc->ExecuteQuery(strQuery);
+			List<Object^>^ query = BookSetting->Odbc->ExecuteQuery(strQuery);
 
 				n = query->Count;
 				for (int i = 0; i < n; i += nAttr)

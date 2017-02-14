@@ -1,6 +1,7 @@
 #pragma once
 
-
+#include "Book.h"
+#include "DbBook.h"
 
 namespace Integra {
 
@@ -17,24 +18,50 @@ namespace Integra {
 	public ref class AddEditGroupForm : public System::Windows::Forms::Form
 	{
 		public:
-			String^ DoubleName;
+			String^ SourceId;
+			String^ SourceName;
+			String^ TargetId;
+			String^ TargetName;
 			String^ GroupName;
 
 	private:
+		BookSettings^ _sourceSettingsBook;
+		BookSettings^ _targetSettingsBook;
 
-
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  IdColT;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  IdColS;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
-
+		Book^ _sourceBook;
+		Book^ _targetBook;
+		OdbcClass^ _odbc;
 	
 	public:
-		AddEditGroupForm()
+		AddEditGroupForm(BookSettings^ sourceBook, BookSettings^ targetBook, OdbcClass^ odbc)
 		{
 			InitializeComponent();
 
-
+			_odbc = odbc;
+			_sourceSettingsBook = sourceBook;
+			_targetSettingsBook = targetBook;
+			if (_sourceSettingsBook->IsSemantic)
+			{
+				tvSource->Visible = true;
+				dgvSource->Visible = false;
+			}
+			else
+			{
+				tvSource->Visible = false;
+				dgvSource->Visible = true;
+			}
+			if (_targetSettingsBook->IsSemantic)
+			{
+				tvTarget->Visible = true;
+				dgvTarget->Visible = false;
+			}
+			else
+			{
+				tvTarget->Visible = false;
+				dgvTarget->Visible = true;
+			}
+			LoadSourceGroups();
+			LoadTargetGroups();
 		}
 
 	protected:
@@ -58,14 +85,63 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridView^  dgvTarget;
 	private: System::Windows::Forms::Button^  bCancel;
 	private: System::Windows::Forms::Button^  bOk;
+			 System::Windows::Forms::DataGridViewTextBoxColumn^ IdColT;
+			 System::Windows::Forms::DataGridViewTextBoxColumn^ Column1;
+			 System::Windows::Forms::DataGridViewTextBoxColumn^ IdColS;
+			 System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn1;
 
-
+	private: System::Windows::Forms::TreeView^  tvTarget;
 
 	private:
 		/// <summary>
 		/// Требуется переменная конструктора.
 		/// </summary>
 		System::ComponentModel::Container ^components;
+
+		void LoadSourceGroups()
+		{
+			
+			if (_sourceSettingsBook->IsSemantic)
+			{
+				//todo
+			}
+			else
+			{
+				_sourceBook = gcnew DbBook(_sourceSettingsBook, nullptr, true, _odbc);
+				Dictionary<String^, String^>^ grNames = _sourceBook->GetAllGroupNames();
+				dgvSource->Rows->Clear();
+				for each (KeyValuePair<String^, String^>^ s in grNames)
+				{
+					array<String^>^ row = gcnew array<String ^>(2);
+					row[0] = s->Key;
+					row[1] = s->Value;
+					dgvSource->Rows->Add(row);
+				}
+			}
+		}
+
+		void LoadTargetGroups()
+		{
+			
+			if (_targetSettingsBook->IsSemantic)
+			{
+				//todo
+			}
+			else
+			{
+				_targetBook = gcnew DbBook(_targetSettingsBook, nullptr, false, _odbc);
+				Dictionary<String^, String^>^ grNames = _sourceBook->GetAllGroupNames();
+				dgvTarget->Rows->Clear();
+				for each (KeyValuePair<String^, String^>^ s in grNames)
+				{
+					array<String^>^ row = gcnew array<String ^>(2);
+					row[0] = s->Key;
+					row[1] = s->Value;
+					dgvTarget->Rows->Add(row);
+				}
+			}
+		}
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -83,10 +159,11 @@ namespace Integra {
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->bOk = (gcnew System::Windows::Forms::Button());
 			this->dgvSource = (gcnew System::Windows::Forms::DataGridView());
-			this->IdColS = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->tvTarget = (gcnew System::Windows::Forms::TreeView());
 			this->IdColT = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->IdColS = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSource))->BeginInit();
 			this->SuspendLayout();
@@ -110,9 +187,9 @@ namespace Integra {
 			// tvSource
 			// 
 			this->tvSource->BackColor = System::Drawing::SystemColors::Window;
-			this->tvSource->Location = System::Drawing::Point(24, 92);
+			this->tvSource->Location = System::Drawing::Point(24, 97);
 			this->tvSource->Name = L"tvSource";
-			this->tvSource->Size = System::Drawing::Size(313, 196);
+			this->tvSource->Size = System::Drawing::Size(291, 196);
 			this->tvSource->TabIndex = 2;
 			// 
 			// label2
@@ -140,7 +217,7 @@ namespace Integra {
 			this->dgvTarget->BackgroundColor = System::Drawing::SystemColors::Window;
 			this->dgvTarget->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvTarget->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->IdColT, this->Column1});
-			this->dgvTarget->Location = System::Drawing::Point(363, 92);
+			this->dgvTarget->Location = System::Drawing::Point(350, 92);
 			this->dgvTarget->Name = L"dgvTarget";
 			this->dgvTarget->ReadOnly = true;
 			this->dgvTarget->RowHeadersVisible = false;
@@ -180,22 +257,16 @@ namespace Integra {
 			this->dgvSource->Name = L"dgvSource";
 			this->dgvSource->ReadOnly = true;
 			this->dgvSource->RowHeadersVisible = false;
-			this->dgvSource->Size = System::Drawing::Size(313, 196);
+			this->dgvSource->Size = System::Drawing::Size(291, 196);
 			this->dgvSource->TabIndex = 8;
 			// 
-			// IdColS
+			// tvTarget
 			// 
-			this->IdColS->HeaderText = L"Id";
-			this->IdColS->Name = L"IdColS";
-			this->IdColS->ReadOnly = true;
-			this->IdColS->Visible = false;
-			// 
-			// dataGridViewTextBoxColumn1
-			// 
-			this->dataGridViewTextBoxColumn1->HeaderText = L"Наименование";
-			this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
-			this->dataGridViewTextBoxColumn1->ReadOnly = true;
-			this->dataGridViewTextBoxColumn1->Width = 200;
+			this->tvTarget->BackColor = System::Drawing::SystemColors::Window;
+			this->tvTarget->Location = System::Drawing::Point(350, 97);
+			this->tvTarget->Name = L"tvTarget";
+			this->tvTarget->Size = System::Drawing::Size(291, 196);
+			this->tvTarget->TabIndex = 9;
 			// 
 			// IdColT
 			// 
@@ -209,7 +280,22 @@ namespace Integra {
 			this->Column1->HeaderText = L"Наименование";
 			this->Column1->Name = L"Column1";
 			this->Column1->ReadOnly = true;
-			this->Column1->Width = 200;
+			this->Column1->Width = 280;
+			// 
+			// IdColS
+			// 
+			this->IdColS->HeaderText = L"Id";
+			this->IdColS->Name = L"IdColS";
+			this->IdColS->ReadOnly = true;
+			this->IdColS->Visible = false;
+			this->IdColS->Width = 280;
+			// 
+			// dataGridViewTextBoxColumn1
+			// 
+			this->dataGridViewTextBoxColumn1->HeaderText = L"Наименование";
+			this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
+			this->dataGridViewTextBoxColumn1->ReadOnly = true;
+			this->dataGridViewTextBoxColumn1->Width = 270;
 			// 
 			// AddEditGroupForm
 			// 
@@ -217,6 +303,7 @@ namespace Integra {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->ClientSize = System::Drawing::Size(670, 347);
+			this->Controls->Add(this->tvTarget);
 			this->Controls->Add(this->bOk);
 			this->Controls->Add(this->bCancel);
 			this->Controls->Add(this->dgvTarget);
@@ -240,28 +327,40 @@ namespace Integra {
 	private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
 				 GroupName = tbName->Text;
-				 DoubleName = tvSource->SelectedNode->Text + " - " + dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
+				 if (_sourceSettingsBook->IsSemantic)
+				 {
+					 SourceId = tvSource->SelectedNode->Name;
+					 SourceName = tvSource->SelectedNode->Text;
+				 }
+				 else
+				 {
+					 SourceId = dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
+					 SourceName = dgvSource[1, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
+				 }
+				 if (_targetSettingsBook->IsSemantic)
+				 {
+					 TargetId = tvTarget->SelectedNode->Name;
+					 TargetName = tvTarget->SelectedNode->Text;
+				 }
+				 else
+				 {
+					 TargetId = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
+					 TargetName = dgvTarget[1, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
+				 }
 				 Close();
 			 }
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 GroupName = nullptr;
-			 DoubleName = nullptr;
+			 SourceId = nullptr;
+			 SourceName = nullptr;
+			 TargetId = nullptr;
+			 TargetName = nullptr;
 			 Close();
 		 }
 private: System::Void AddEditGroupForm_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 /*tvSource->Nodes->Add("0", "Технологическое оборудование");
-			 tvSource->Nodes[0]->Nodes->Add("1", "1 Металлорежущие оборудование");
-			 tvSource->Nodes[0]->Nodes["1"]->Nodes->Add("2", "11 Станки токарной группы");
-			 tvSource->Nodes[0]->Nodes["1"]->Nodes["2"]->Nodes->Add("3", "110 Станки токарные прочие");
-			 tvSource->Nodes[0]->Nodes["1"]->Nodes["2"]->Nodes["3"]->Nodes->Add("4", "1101 Токарные обрабатывающие центры");
-			 tvSource->Nodes[0]->Nodes["1"]->Nodes["2"]->Nodes["3"]->Nodes["4"]->Nodes->Add("5", "11010600 MAZAK INTEGREX 200-IVST");
-			 tvSource->Nodes[0]->Nodes["1"]->Nodes["2"]->Nodes->Add("6", "111 Станки токарные автоматы и полуавтоматы");
-			 tvSource->Nodes[0]->Nodes["1"]->Nodes["2"]->Nodes["6"]->Nodes->Add("7", "1110 Автоматы и полуавтоматы прочие");
-			 tvSource->Nodes[0]->Nodes["1"]->Nodes["2"]->Nodes["6"]->Nodes["7"]->Nodes->Add("8", "11100370 АТ-220В");
-
-			 dgvTarget->Rows->Add("Станки радиально-сверлильные");*/
+			 
 
 		 }
 };

@@ -130,6 +130,12 @@ namespace Integra {
 		int _idIntgrBook;
 
 	public:
+
+		static void WriteAttribute()
+		{
+
+		}
+
 		void Init(String^ schema, String^ table, String^ code, String^ name)
 		{
 			_schemaName = schema;

@@ -1,8 +1,8 @@
-﻿Построение начато 06.02.2017 11:58:19.
+﻿Построение начато 14.02.2017 11:24:44.
      1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
      1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(2015,5): warning MSB3284: Не удается получить путь файла для библиотеки типа "307168c0-39ae-42ad-953f-a09f8a81520f" версии 1.0. Библиотека не зарегистрирована. (Исключение из HRESULT: 0x8002801D (TYPE_E_LIBNOTREGISTERED))
      1>ClCompile:
-         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FUD:\Work\Coding\Github\repos\Integra\Integra\Debug\Interop.Microsoft.Office.Interop.Excel.dll /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt AddComplexAttrForm.cpp AddDbAttrsForm.cpp AddEditGroupForm.cpp AddEditSchemaForm2.cpp AddEditSystemBookForm.cpp AddEditUserRole.cpp AddGroupLinksForm.cpp AddNewTableForm.cpp AddNewUser.cpp AddSemAttrForm.cpp AutoConfigsForm.cpp AutoSettingsForm.cpp DbFiltersForm.cpp DetailResults.cpp DifferencesForm.cpp EditForm.cpp GroupParamsForm.cpp IntgrResultsForm.cpp JournalChangesForm.cpp LoginForm.cpp MainForm.cpp ManualIntegrationForm.cpp ManualIntegrationForm1.cpp NormIntegrForm.cpp NoticesForm.cpp ODBCclass.h Results.cpp Results2.cpp Results3.cpp RoughInterg.cpp SettingsForm.cpp TableLinksForm.cpp /clr:nostdlib 
+         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FUD:\Work\Coding\Github\repos\Integra\Integra\Debug\Interop.Microsoft.Office.Interop.Excel.dll /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt AddComplexAttrForm.cpp AddDbAttrsForm.cpp AddEditGroupForm.cpp AddEditSchemaForm2.cpp AddEditSystemBookForm.cpp AddEditUserRole.cpp AddGroupLinksForm.cpp AddNewTableForm.cpp AddNewUser.cpp AddSemAttrForm.cpp AutoConfigsForm.cpp AutoSettingsForm.cpp DbFiltersForm.cpp DetailResults.cpp DifferencesForm.cpp EditForm.cpp GroupParamsForm.cpp GroupTableAttrs.h IntgrResultsForm.cpp JournalChangesForm.cpp LoginForm.cpp MainForm.cpp ManualIntegrationForm.cpp ManualIntegrationForm1.cpp NormIntegrForm.cpp NoticesForm.cpp ODBCclass.h Results.cpp Results2.cpp Results3.cpp RoughInterg.cpp SettingsForm.cpp TableLinksForm.cpp /clr:nostdlib 
          AddComplexAttrForm.cpp
          AddDbAttrsForm.cpp
          AddEditGroupForm.cpp
@@ -24,13 +24,14 @@
      1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          EditForm.cpp
          GroupParamsForm.cpp
+         GroupTableAttrs.h
          IntgrResultsForm.cpp
      1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          JournalChangesForm.cpp
-         LoginForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          Создание кода...
          Компиляция...
+         LoginForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          MainForm.cpp
      1>d:\work\coding\github\repos\integra\integra\BookSettings.h(215): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          ManualIntegrationForm.cpp
@@ -70,6 +71,7 @@
          Debug\DifferencesForm.obj
          Debug\EditForm.obj
          Debug\GroupParamsForm.obj
+         Debug\GroupTableAttrs.obj
          Debug\IntgrResultsForm.obj
          Debug\JournalChangesForm.obj
          Debug\LoginForm.obj
@@ -93,4 +95,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:10.93
+Затраченное время: 00:00:12.25

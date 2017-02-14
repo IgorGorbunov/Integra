@@ -476,10 +476,12 @@ namespace Integra {
 				int idName = WriteSingleAttr(_groupNameCol, intgrId);
 				int idGroupParams = _odbc->GetMinFreeId(_odbc->schema + "GROUP_PARAMS");
 				String^ sFullTable = OdbcClass::GetSqlString(_groupSchtab);
-				String^ columns = "ID,ID_ATTR,NAME_ATTR,FULL_TABLE";
-				//todo add user and data to table
-				String^ squery = String::Format("insert into {0}GROUP_PARAMS ({1}) values ({2}, {3}, {4}, {5})",
-					_odbc->schema, columns, idGroupParams, idId, idName, sFullTable);
+				String^ columns = "ID,ID_ATTR,NAME_ATTR,FULL_TABLE,CREATE_USER,CREATE_DATE";
+				String^ user = OdbcClass::GetSqlString(_odbc->Login);
+				String^ sDate = _odbc->GetSqlDate(DateTime::Now);
+
+				String^ squery = String::Format("insert into {0}GROUP_PARAMS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7})",
+					_odbc->schema, columns, idGroupParams, idId, idName, sFullTable, user, sDate);
 				_odbc->ExecuteNonQuery(squery);
 
 				for each (KeyValuePair<Attribute^, Attribute^>^ pair in _groupAttrs)
@@ -487,10 +489,10 @@ namespace Integra {
 					int idAttrPair = _odbc->GetMinFreeId(_odbc->schema + "GROUP_ATTRIBUTE_PAIRS");
 					int idTitleAttr = WriteSingleAttr(pair->Key, intgrId);
 					int idNameAttr = WriteSingleAttr(pair->Value, intgrId);
-					columns = "ID,ID_TITLE,ID_NAME,ID_GROUP_PARAMS";
+					columns = "ID,ID_TITLE,ID_NAME,ID_GROUP_PARAMS,CREATE_USER,CREATE_DATE";
 					//todo add user and data to table
-					squery = String::Format("insert into {0}GROUP_ATTRIBUTE_PAIRS ({1}) values ({2}, {3}, {4}, {5})",
-						_odbc->schema, columns, idAttrPair, idTitleAttr, idNameAttr, idGroupParams);
+					squery = String::Format("insert into {0}GROUP_ATTRIBUTE_PAIRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7})",
+						_odbc->schema, columns, idAttrPair, idTitleAttr, idNameAttr, idGroupParams, user, sDate);
 					_odbc->ExecuteNonQuery(squery);
 				}
 

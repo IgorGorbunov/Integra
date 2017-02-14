@@ -106,6 +106,7 @@
     <ClCompile Include="DifferencesForm.cpp" />
     <ClCompile Include="EditForm.cpp" />
     <ClCompile Include="GroupParamsForm.cpp" />
+    <ClCompile Include="GroupTableAttrs.h" />
     <ClCompile Include="IntgrResultsForm.cpp" />
     <ClCompile Include="JournalChangesForm.cpp" />
     <ClCompile Include="LoginForm.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="GroupParamsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="GroupTablePair.h" />
     <ClInclude Include="Integration.h" />
     <ClInclude Include="IntegrationResult.h" />
     <ClInclude Include="IntegrationSettings.h" />

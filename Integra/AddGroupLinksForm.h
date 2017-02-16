@@ -566,6 +566,15 @@ namespace Integra {
 			ColumnSourceNamee->DataSource = sourceNameList;
 
 			Dictionary<Attribute^, Attribute^>^ targetAttrs = _targetBook->GetGroupAttrs();
+			Book^ targetBook = gcnew DbBook(_targetBook, nullptr, false, _odbc);
+			List<String^>^ targetNameList = gcnew List<String ^>();
+			for each (KeyValuePair<Attribute^, Attribute^>^ pair in targetAttrs)
+			{
+				Attribute^ nameAttr = pair->Value;
+				String^ valueName = targetBook->GetGroupAttrValue(nameAttr, integrationGroup->TargetGroupId)->ToString();
+				targetNameList->Add(valueName);
+			}
+			ColumnTargetNamee->DataSource = targetNameList;
 		}
 
 		IntegrationGroupPair^ GetIntegrationGroupPair(String^ fullCode)
@@ -629,8 +638,13 @@ namespace Integra {
 					// // do stuff
 					// dgv->Invalidate();
 				 //}
+				 if (_targetBook->HasGroup)
+				 {
 
-				 String^ cell = dgv[e->ColumnIndex, e->RowIndex]->Value->ToString();
+				 }
+				 else
+				 {
+					String^ cell = dgv[e->ColumnIndex, e->RowIndex]->Value->ToString();
 
 					 Attribute^ attr = GetAttr(_targetAttrs, cell);
 					 dgv[5, e->RowIndex]->Value = attr->FullCode;
@@ -639,6 +653,7 @@ namespace Integra {
 					 _targetAttrsFree->Clear();
 					 _targetAttrsFree->AddRange(_targetAttrs);
 					 RemoveOnColumn(4, _targetAttrsFree);
+				 }
 			 }
 		 }
 	private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
@@ -719,17 +734,24 @@ private: System::Void dgv_CellBeginEdit(System::Object^  sender, System::Windows
 			 }
 			 if (e->ColumnIndex == 4)
 			 {
-				 DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
-				 cb->Items->Clear();
-				 for each (Attribute^ attr in _targetAttrsFree)
+				 if (_sourceBook->HasGroup)
 				 {
-					 if (String::IsNullOrEmpty(attr->Name))
+
+				 }
+				 else
+				 {
+					 DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
+					 cb->Items->Clear();
+					 for each (Attribute^ attr in _targetAttrsFree)
 					 {
-						 cb->Items->Add(attr->FullCode);
-					 }
-					 else
-					 {
-						 cb->Items->Add(attr->Name);
+						 if (String::IsNullOrEmpty(attr->Name))
+						 {
+							 cb->Items->Add(attr->FullCode);
+						 }
+						 else
+						 {
+							 cb->Items->Add(attr->Name);
+						 }
 					 }
 				 }
 			 }

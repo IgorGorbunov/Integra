@@ -36,6 +36,8 @@ namespace Integra {
 		List<ComplexAttribute^>^ _complexAttrs;
 		List<IntegrationGroupPair^>^ _integrationGroups;
 
+		Dictionary<String^, String^>^ _currentSourceNameList;
+		Dictionary<String^, String^>^ _currentTargetNameList;
 
 	private: System::Windows::Forms::Panel^  panel4;
 	private: System::Windows::Forms::Panel^  pListBox;
@@ -556,25 +558,35 @@ namespace Integra {
 		{
 			Dictionary<Attribute^, Attribute^>^ sourceAttrs = _sourceBook->GetGroupAttrs();
 			Book^ sourceBook = gcnew DbBook(_sourceBook, nullptr, true, _odbc);
-			List<String^>^ sourceNameList = gcnew List<String ^>();
+			Dictionary<String^, String^>^ sourceNameList = gcnew Dictionary<String^, String^>();
 			for each (KeyValuePair<Attribute^, Attribute^>^ pair in sourceAttrs)
 			{
 				Attribute^ nameAttr = pair->Value;
 				String^ valueName = sourceBook->GetGroupAttrValue(nameAttr, integrationGroup->SourceGroupId)->ToString();
-				sourceNameList->Add(valueName);
+				Attribute^ codeAttr = pair->Key;
+				String^ valueCode = sourceBook->GetGroupAttrValue(codeAttr, integrationGroup->SourceGroupId)->ToString();
+				sourceNameList->Add(valueName, valueCode);
 			}
-			ColumnSourceNamee->DataSource = sourceNameList;
+			_currentSourceNameList = sourceNameList;
+			List<String^>^ list1 = gcnew List<String ^>(_currentSourceNameList->Keys);
+			ColumnSourceNamee->DataSource = list1;
+			
 
 			Dictionary<Attribute^, Attribute^>^ targetAttrs = _targetBook->GetGroupAttrs();
 			Book^ targetBook = gcnew DbBook(_targetBook, nullptr, false, _odbc);
-			List<String^>^ targetNameList = gcnew List<String ^>();
+			Dictionary<String^, String^>^ targetNameList = gcnew Dictionary<String^, String^>();
 			for each (KeyValuePair<Attribute^, Attribute^>^ pair in targetAttrs)
 			{
 				Attribute^ nameAttr = pair->Value;
 				String^ valueName = targetBook->GetGroupAttrValue(nameAttr, integrationGroup->TargetGroupId)->ToString();
-				targetNameList->Add(valueName);
+				Attribute^ codeAttr = pair->Key;
+				String^ valueCode = targetBook->GetGroupAttrValue(codeAttr, integrationGroup->TargetGroupId)->ToString();
+				targetNameList->Add(valueName, valueCode);
 			}
-			ColumnTargetNamee->DataSource = targetNameList;
+			_currentTargetNameList = targetNameList;
+			List<String^>^ list2 = gcnew List<String ^>(_currentTargetNameList->Keys);
+			ColumnTargetNamee->DataSource = list2;
+			
 		}
 
 		IntegrationGroupPair^ GetIntegrationGroupPair(String^ fullCode)
@@ -616,7 +628,14 @@ namespace Integra {
 			 {
 				 if (_sourceBook->HasGroup)
 				 {
-
+					 String^ nameAttr = dgv[0, e->RowIndex]->Value->ToString();
+					 if (_currentSourceNameList->ContainsKey(nameAttr))
+					 {
+						 dgv[1, e->RowIndex]->Value = _currentSourceNameList[nameAttr];
+						 //todo add from pos?
+						 dgv[2, e->RowIndex]->Value = "岩形世";
+						 dgv[3, e->RowIndex]->Value = 8;
+					 }
 				 }
 				 else
 				 {
@@ -640,7 +659,14 @@ namespace Integra {
 				 //}
 				 if (_targetBook->HasGroup)
 				 {
-
+					 String^ nameAttr = dgv[4, e->RowIndex]->Value->ToString();
+					 if (_currentTargetNameList->ContainsKey(nameAttr))
+					 {
+						 dgv[5, e->RowIndex]->Value = _currentTargetNameList[nameAttr];
+						 //todo add from pos?
+						 dgv[6, e->RowIndex]->Value = "岩形世";
+						 dgv[7, e->RowIndex]->Value = 8;
+					 }
 				 }
 				 else
 				 {

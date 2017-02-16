@@ -75,6 +75,11 @@ namespace Integra {
 			return nullptr;
 		}
 
+		virtual Object^ GetGroupAttrValue(Attribute^ attribute, String^ idGroup) override
+		{
+			return nullptr;
+		}
+
 		virtual List<Position^>^ GetAllPositions() override
 		{
 			return GetMaxLevelPositions();

@@ -2,6 +2,7 @@
 
 #include "Book.h"
 #include "DbBook.h"
+#include "IntegrationGroupPair.h"
 
 namespace Integra {
 
@@ -18,11 +19,7 @@ namespace Integra {
 	public ref class AddEditGroupForm : public System::Windows::Forms::Form
 	{
 		public:
-			String^ SourceId;
-			String^ SourceName;
-			String^ TargetId;
-			String^ TargetName;
-			String^ GroupName;
+			IntegrationGroupPair^ IntegrationGroup;
 
 	private:
 		BookSettings^ _sourceSettingsBook;
@@ -326,36 +323,36 @@ namespace Integra {
 #pragma endregion
 	private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				 GroupName = tbName->Text;
+				 String^ groupName = tbName->Text;
+				 String^ sourceId;
+				 String^ sourceName;
+				 String^ targetId;
+				 String^ targetName;
 				 if (_sourceSettingsBook->IsSemantic)
 				 {
-					 SourceId = tvSource->SelectedNode->Name;
-					 SourceName = tvSource->SelectedNode->Text;
+					 sourceId = tvSource->SelectedNode->Name;
+					 sourceName = tvSource->SelectedNode->Text;
 				 }
 				 else
 				 {
-					 SourceId = dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
-					 SourceName = dgvSource[1, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
+					 sourceId = dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
+					 sourceName = dgvSource[1, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
 				 }
 				 if (_targetSettingsBook->IsSemantic)
 				 {
-					 TargetId = tvTarget->SelectedNode->Name;
-					 TargetName = tvTarget->SelectedNode->Text;
+					 targetId = tvTarget->SelectedNode->Name;
+					 targetName = tvTarget->SelectedNode->Text;
 				 }
 				 else
 				 {
-					 TargetId = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
-					 TargetName = dgvTarget[1, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
+					 targetId = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
+					 targetName = dgvTarget[1, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
 				 }
+				 IntegrationGroup = gcnew IntegrationGroupPair(groupName, sourceId, sourceName, targetId, targetName);
 				 Close();
 			 }
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 GroupName = nullptr;
-			 SourceId = nullptr;
-			 SourceName = nullptr;
-			 TargetId = nullptr;
-			 TargetName = nullptr;
 			 Close();
 		 }
 private: System::Void AddEditGroupForm_Load(System::Object^  sender, System::EventArgs^  e) 

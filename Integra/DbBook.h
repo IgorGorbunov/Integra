@@ -143,6 +143,23 @@ namespace Integra {
 			return resList;
 		}
 
+		virtual Object^ GetGroupAttrValue(Attribute^ attribute, String^ idGroup) override
+		{
+			Attribute^ groupIdAttr = BookSetting->AttrGroupId;
+			String^ sIdGroup;
+			if (groupIdAttr->IsString)
+			{
+				sIdGroup = OdbcClass::GetSqlString(idGroup);
+			}
+			else
+			{
+				sIdGroup = idGroup;
+			}
+
+			String^ squery = String::Format("select {0} from {1} where {2} = {3}", attribute->FullCode, attribute->FullTable, groupIdAttr->FullCode, sIdGroup);
+			List<Object^>^ list2 = BookSetting->Odbc->ExecuteQuery(squery);
+			return list2[0];
+		}
 
 		virtual List<Position^>^ GetAllPositions2(System::ComponentModel::BackgroundWorker^ worker, System::ComponentModel::DoWorkEventArgs^ e) override
 		{

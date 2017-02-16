@@ -134,6 +134,28 @@ namespace Integra {
 				return _attrCaption;
 			}
 		}
+		property Attribute^ AttrGroupId
+		{
+			Attribute^ get()
+			{
+				if (_attrGroupId == nullptr)
+				{
+					SetAttrGroup();
+				}
+				return _attrGroupId;
+			}
+		}
+		property Attribute^ AttrGroupName
+		{
+			Attribute^ get()
+			{
+				if (_attrGroupName == nullptr)
+				{
+					SetAttrGroup();
+				}
+				return _attrGroupName;
+			}
+		}
 
 		int BookId;
 
@@ -164,6 +186,9 @@ namespace Integra {
 
 		Attribute^ _attrId;
 		Attribute^ _attrCaption;
+		Attribute^ _attrGroupId;
+		Attribute^ _attrGroupName;
+
 		
 
 	public:
@@ -197,6 +222,24 @@ namespace Integra {
 			}
 			return list;
 		}
+
+		Dictionary<Attribute^, Attribute^>^ GetGroupAttrs()
+		{
+			String^ squery = String::Format("select GAAP.ID_TITLE, GAAP.ID_NAME from {0}INTEGRATION_BOOK IBB, {0}GROUP_ATTRIBUTE_PAIRS GAAP where IBB.GROUP_ID = GAAP.ID_GROUP_PARAMS and IBB.ID = {1}", _odbc->schema, _id);
+			List<Object^>^ oList = _odbc->ExecuteQuery(squery);
+			Dictionary<Attribute^, Attribute^>^ list = gcnew Dictionary<Attribute^, Attribute^>();
+			for (int i = 0; i < oList->Count; i+=2)
+			{
+				int id1 = OdbcClass::GetInt(oList[i]);
+				int id2 = OdbcClass::GetInt(oList[i+1]);
+				Attribute^ attr1 = gcnew Attribute(id1, _odbc);
+				Attribute^ attr2 = gcnew Attribute(id2, _odbc);
+				list->Add(attr1, attr2);
+			}
+			return list;
+		}
+
+
 
 
 	private:
@@ -243,6 +286,18 @@ namespace Integra {
 		void SetAttrId()
 		{
 			_attrId = gcnew Attribute(_attrIdId, _odbc);
+		}
+
+		void SetAttrGroup()
+		{
+			String^ squery = String::Format("select GPP.ID_ATTR, GPP.NAME_ATTR from {0}INTEGRATION_BOOK IBB, {0}GROUP_PARAMS GPP where IBB.GROUP_ID = GPP.ID and IBB.ID = {1}", _odbc->schema, _id);
+			List<Object^>^ oList = _odbc->ExecuteQuery(squery);
+
+			int id1 = OdbcClass::GetInt(oList[0]);
+			int id2 = OdbcClass::GetInt(oList[1]);
+
+			_attrGroupId = gcnew Attribute(id1, _odbc);
+			_attrGroupName = gcnew Attribute(id2, _odbc);
 		}
 
 		void SetAttrCaption()

@@ -6,6 +6,7 @@
 #include "TableLinksForm.h"
 #include "GroupParamsForm.h"
 #include "DbLink.h"
+#include "PosGroupParamsForm.h"
 
 
 namespace Integra {
@@ -41,42 +42,34 @@ namespace Integra {
 		String^ _filter;
 		List<DbLink^>^ _links;
 
-		
-
 		Dictionary<String^, List<Attribute^>^>^ _allAttrs;
 		bool _programCheck;
-
-
 
 	private: System::Windows::Forms::Button^  bAddTableLinks;
 	private: System::Windows::Forms::Button^  bAddFilter;
 	private: System::Windows::Forms::Button^  bGroupParams;
 	private: System::Windows::Forms::ComboBox^  cbRoughAttr;
-
-
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::TextBox^  tbRoughSymbols;
-
 	private: System::Windows::Forms::Label^  label5;
-
-
-
-
-
-
 	private: System::Windows::Forms::GroupBox^  groupBox1;
+	private: System::Windows::Forms::Label^  label6;
+
+
+
+
+
+
+
+
+	private: System::Windows::Forms::Button^  bPosGroupParams;
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column8;
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column5;
-	private: System::Windows::Forms::Label^  label6;
-
-
 	private: System::Windows::Forms::TreeView^  tv;
-			 
-		
 
 	public:
 		void Init()
@@ -152,12 +145,6 @@ namespace Integra {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->bAddNewTable = (gcnew System::Windows::Forms::Button());
 			this->dgvFields = (gcnew System::Windows::Forms::DataGridView());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column5 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
 			this->bClose = (gcnew System::Windows::Forms::Button());
 			this->bRecord = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
@@ -174,6 +161,13 @@ namespace Integra {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->bPosGroupParams = (gcnew System::Windows::Forms::Button());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
@@ -247,46 +241,6 @@ namespace Integra {
 			this->dgvFields->Size = System::Drawing::Size(756, 210);
 			this->dgvFields->TabIndex = 6;
 			this->dgvFields->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AddDbAttrsForm::dgvFields_CellValueChanged);
-			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Используемость";
-			this->Column1->Name = L"Column1";
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Код реквизита";
-			this->Column2->Name = L"Column2";
-			this->Column2->ReadOnly = true;
-			this->Column2->Width = 80;
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Наименование реквизита";
-			this->Column3->Name = L"Column3";
-			this->Column3->Width = 300;
-			// 
-			// Column4
-			// 
-			this->Column4->HeaderText = L"Тип данных";
-			this->Column4->Name = L"Column4";
-			this->Column4->ReadOnly = true;
-			this->Column4->Width = 80;
-			// 
-			// Column8
-			// 
-			this->Column8->HeaderText = L"Размерность";
-			this->Column8->Name = L"Column8";
-			this->Column8->ReadOnly = true;
-			this->Column8->Width = 80;
-			// 
-			// Column5
-			// 
-			this->Column5->HeaderText = L"Может быть пустым";
-			this->Column5->Name = L"Column5";
-			this->Column5->ReadOnly = true;
-			this->Column5->Resizable = System::Windows::Forms::DataGridViewTriState::True;
-			this->Column5->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::Automatic;
 			// 
 			// bClose
 			// 
@@ -373,9 +327,9 @@ namespace Integra {
 			// bAddFilter
 			// 
 			this->bAddFilter->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddFilter->Location = System::Drawing::Point(637, 236);
+			this->bAddFilter->Location = System::Drawing::Point(627, 236);
 			this->bAddFilter->Name = L"bAddFilter";
-			this->bAddFilter->Size = System::Drawing::Size(118, 45);
+			this->bAddFilter->Size = System::Drawing::Size(128, 45);
 			this->bAddFilter->TabIndex = 15;
 			this->bAddFilter->Text = L"Добавить фильтры";
 			this->bAddFilter->UseVisualStyleBackColor = false;
@@ -386,7 +340,7 @@ namespace Integra {
 			this->bGroupParams->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->bGroupParams->Location = System::Drawing::Point(479, 298);
 			this->bGroupParams->Name = L"bGroupParams";
-			this->bGroupParams->Size = System::Drawing::Size(276, 35);
+			this->bGroupParams->Size = System::Drawing::Size(118, 35);
 			this->bGroupParams->TabIndex = 16;
 			this->bGroupParams->Text = L"Добавить параметры групп";
 			this->bGroupParams->UseVisualStyleBackColor = false;
@@ -448,12 +402,64 @@ namespace Integra {
 			this->label6->TabIndex = 22;
 			this->label6->Text = L"Поля базы данных:";
 			// 
+			// bPosGroupParams
+			// 
+			this->bPosGroupParams->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bPosGroupParams->Location = System::Drawing::Point(627, 298);
+			this->bPosGroupParams->Name = L"bPosGroupParams";
+			this->bPosGroupParams->Size = System::Drawing::Size(128, 35);
+			this->bPosGroupParams->TabIndex = 23;
+			this->bPosGroupParams->Text = L"Добавить групповые параметры позиций";
+			this->bPosGroupParams->UseVisualStyleBackColor = false;
+			this->bPosGroupParams->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::bPosGroupParams_Click);
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Используемость";
+			this->Column1->Name = L"Column1";
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Код реквизита";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			this->Column2->Width = 80;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Наименование реквизита";
+			this->Column3->Name = L"Column3";
+			this->Column3->Width = 300;
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"Тип данных";
+			this->Column4->Name = L"Column4";
+			this->Column4->ReadOnly = true;
+			this->Column4->Width = 80;
+			// 
+			// Column8
+			// 
+			this->Column8->HeaderText = L"Размерность";
+			this->Column8->Name = L"Column8";
+			this->Column8->ReadOnly = true;
+			this->Column8->Width = 80;
+			// 
+			// Column5
+			// 
+			this->Column5->HeaderText = L"Может быть пустым";
+			this->Column5->Name = L"Column5";
+			this->Column5->ReadOnly = true;
+			this->Column5->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+			this->Column5->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::Automatic;
+			// 
 			// AddDbAttrsForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->ClientSize = System::Drawing::Size(791, 633);
+			this->Controls->Add(this->bPosGroupParams);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->bGroupParams);
@@ -689,8 +695,9 @@ namespace Integra {
 					{
 						attr = gcnew Attribute(schema, table, fieldCode, fieldName);
 					}
-
 					attr->UseChecked = ch;
+
+
 					Object^ obj = dgvFields[3, i]->Value;
 					if(obj != nullptr)
 					{
@@ -956,6 +963,11 @@ private: System::Void cbRoughAttr_Click(System::Object^  sender, System::EventAr
 private: System::Void tv_BeforeSelect(System::Object^  sender, System::Windows::Forms::TreeViewCancelEventArgs^  e) 
 		 {
 			 ReadAttrsFromDataGridView();
+		 }
+private: System::Void bPosGroupParams_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 PosGroupParamsForm^ form = gcnew PosGroupParamsForm(0, _allAttrs);
+			 form->ShowDialog();
 		 }
 };
 }

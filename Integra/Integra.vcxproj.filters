@@ -132,6 +132,9 @@
     <ClCompile Include="GroupTableAttrs.h">
       <Filter>Заголовочные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="PosGroupParamsForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -318,6 +321,18 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="GroupTablePair.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="IntegrationGroupPair.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PosGroupParamsForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="PosGroupParams.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupParam.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

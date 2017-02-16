@@ -29,6 +29,22 @@ namespace Integra {
 				}
 			}
 		}
+		property bool IsString
+		{
+			bool get()
+			{
+				if (DataType == "—“–Œ ¿")
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+		}
+
 		property String^ Code
 		{
 			String^ get()
@@ -112,6 +128,7 @@ namespace Integra {
 
 		}
 
+
 		bool UseChecked;
 		String^ MaxLength;
 		bool CanBeNull;
@@ -128,6 +145,7 @@ namespace Integra {
 		String^ _attrName;
 		String^ _dataType;
 		int _idIntgrBook;
+
 
 	public:
 

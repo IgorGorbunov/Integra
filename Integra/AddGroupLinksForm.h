@@ -3,6 +3,8 @@
 #include "AddComplexAttrForm.h"
 #include "ComplexAttribute.h"
 #include "ODBCclass.h"
+#include "IntegrationGroupPair.h"
+
 
 namespace Integra {
 
@@ -32,21 +34,22 @@ namespace Integra {
 		List<Attribute^>^ _targetAttrsFree;
 
 		List<ComplexAttribute^>^ _complexAttrs;
+		List<IntegrationGroupPair^>^ _integrationGroups;
 
 
 	private: System::Windows::Forms::Panel^  panel4;
 	private: System::Windows::Forms::Panel^  pListBox;
 	private: System::Windows::Forms::Panel^  panel3;
 	private: System::Windows::Forms::Panel^  panel5;
-	private: System::Windows::Forms::DataGridViewComboBoxColumn^  ColumnSourceCode;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
+	private: System::Windows::Forms::Button^  bDelComplexAttr;
+	private: System::Windows::Forms::DataGridViewComboBoxColumn^  ColumnSourceNamee;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  ColumnSourceCode;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
-	private: System::Windows::Forms::DataGridViewComboBoxColumn^  ColumnTargetCode;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
+	private: System::Windows::Forms::DataGridViewComboBoxColumn^  ColumnTargetNamee;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  ColumnTargetCode;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column6;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column8;
-	private: System::Windows::Forms::Button^  bDelComplexAttr;
 	private: System::Windows::Forms::Button^  bAddComplexAttr;
 
 
@@ -58,11 +61,17 @@ namespace Integra {
 			_complexAttrs = gcnew List<ComplexAttribute ^>();
 			_sourceBook = sourceBook;
 			_targetBook = targetBook;
-			if (!_sourceBook->HasGroup || !_targetBook->HasGroup)
+			if (_sourceBook->HasGroup && _targetBook->HasGroup)
+			{
+				_integrationGroups = gcnew List<IntegrationGroupPair ^>();
+			}
+			else
 			{
 				pGroup->Visible = false;
+				SetDgvSources();
 			}
-			SetDgvSources();
+			
+			
 		}
 
 	protected:
@@ -120,12 +129,12 @@ namespace Integra {
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->dgv = (gcnew System::Windows::Forms::DataGridView());
-			this->ColumnSourceCode = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->ColumnSourceNamee = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
+			this->ColumnSourceCode = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column7 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->ColumnTargetCode = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
-			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->ColumnTargetNamee = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
+			this->ColumnTargetCode = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column6 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->bCancel = (gcnew System::Windows::Forms::Button());
@@ -158,8 +167,9 @@ namespace Integra {
 			this->lbGroups->FormattingEnabled = true;
 			this->lbGroups->Location = System::Drawing::Point(10, 10);
 			this->lbGroups->Name = L"lbGroups";
-			this->lbGroups->Size = System::Drawing::Size(766, 166);
+			this->lbGroups->Size = System::Drawing::Size(863, 166);
 			this->lbGroups->TabIndex = 0;
+			this->lbGroups->SelectedIndexChanged += gcnew System::EventHandler(this, &AddGroupLinksForm::lbGroups_SelectedIndexChanged);
 			// 
 			// label1
 			// 
@@ -175,7 +185,7 @@ namespace Integra {
 			// bAddGroup
 			// 
 			this->bAddGroup->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddGroup->Location = System::Drawing::Point(15, 13);
+			this->bAddGroup->Location = System::Drawing::Point(15, 39);
 			this->bAddGroup->Name = L"bAddGroup";
 			this->bAddGroup->Size = System::Drawing::Size(75, 23);
 			this->bAddGroup->TabIndex = 2;
@@ -186,7 +196,7 @@ namespace Integra {
 			// button2
 			// 
 			this->button2->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->button2->Location = System::Drawing::Point(15, 42);
+			this->button2->Location = System::Drawing::Point(15, 68);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(75, 23);
 			this->button2->TabIndex = 3;
@@ -197,7 +207,7 @@ namespace Integra {
 			// button3
 			// 
 			this->button3->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->button3->Location = System::Drawing::Point(15, 71);
+			this->button3->Location = System::Drawing::Point(15, 97);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 4;
@@ -210,29 +220,29 @@ namespace Integra {
 			this->dgv->AllowUserToDeleteRows = false;
 			this->dgv->BackgroundColor = System::Drawing::SystemColors::Window;
 			this->dgv->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {this->ColumnSourceCode, 
-				this->Column1, this->Column5, this->Column7, this->ColumnTargetCode, this->Column4, this->Column6, this->Column8});
+			this->dgv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {this->ColumnSourceNamee, 
+				this->ColumnSourceCode, this->Column5, this->Column7, this->ColumnTargetNamee, this->ColumnTargetCode, this->Column6, this->Column8});
 			this->dgv->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->dgv->Location = System::Drawing::Point(13, 13);
 			this->dgv->Name = L"dgv";
 			this->dgv->RowHeadersVisible = false;
-			this->dgv->Size = System::Drawing::Size(867, 223);
+			this->dgv->Size = System::Drawing::Size(964, 234);
 			this->dgv->TabIndex = 5;
 			this->dgv->CellBeginEdit += gcnew System::Windows::Forms::DataGridViewCellCancelEventHandler(this, &AddGroupLinksForm::dgv_CellBeginEdit);
 			this->dgv->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AddGroupLinksForm::dgv_CellValueChanged);
 			this->dgv->CurrentCellDirtyStateChanged += gcnew System::EventHandler(this, &AddGroupLinksForm::dgv_CurrentCellDirtyStateChanged);
 			// 
+			// ColumnSourceNamee
+			// 
+			this->ColumnSourceNamee->HeaderText = L"Ќаименование реквизита системы-источника";
+			this->ColumnSourceNamee->Name = L"ColumnSourceNamee";
+			this->ColumnSourceNamee->Width = 223;
+			// 
 			// ColumnSourceCode
 			// 
-			this->ColumnSourceCode->HeaderText = L"Ќаименование реквизита системы-источника";
+			this->ColumnSourceCode->HeaderText = L"ќбозначение реквизита системы-источника";
 			this->ColumnSourceCode->Name = L"ColumnSourceCode";
-			this->ColumnSourceCode->Width = 223;
-			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"ќбозначение реквизита системы-источника";
-			this->Column1->Name = L"Column1";
-			this->Column1->ReadOnly = true;
+			this->ColumnSourceCode->ReadOnly = true;
 			// 
 			// Column5
 			// 
@@ -248,17 +258,17 @@ namespace Integra {
 			this->Column7->ReadOnly = true;
 			this->Column7->Width = 71;
 			// 
+			// ColumnTargetNamee
+			// 
+			this->ColumnTargetNamee->HeaderText = L"Ќаименование реквизита системы-получател€";
+			this->ColumnTargetNamee->Name = L"ColumnTargetNamee";
+			this->ColumnTargetNamee->Width = 228;
+			// 
 			// ColumnTargetCode
 			// 
-			this->ColumnTargetCode->HeaderText = L"Ќаименование реквизита системы-получател€";
+			this->ColumnTargetCode->HeaderText = L"ќбозначение реквизита системы-получател€";
 			this->ColumnTargetCode->Name = L"ColumnTargetCode";
-			this->ColumnTargetCode->Width = 228;
-			// 
-			// Column4
-			// 
-			this->Column4->HeaderText = L"ќбозначение реквизита системы-получател€";
-			this->Column4->Name = L"Column4";
-			this->Column4->ReadOnly = true;
+			this->ColumnTargetCode->ReadOnly = true;
 			// 
 			// Column6
 			// 
@@ -301,7 +311,7 @@ namespace Integra {
 			this->pGroup->Dock = System::Windows::Forms::DockStyle::Top;
 			this->pGroup->Location = System::Drawing::Point(0, 0);
 			this->pGroup->Name = L"pGroup";
-			this->pGroup->Size = System::Drawing::Size(893, 209);
+			this->pGroup->Size = System::Drawing::Size(990, 209);
 			this->pGroup->TabIndex = 8;
 			// 
 			// panel4
@@ -311,7 +321,7 @@ namespace Integra {
 			this->panel4->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel4->Location = System::Drawing::Point(0, 0);
 			this->panel4->Name = L"panel4";
-			this->panel4->Size = System::Drawing::Size(786, 209);
+			this->panel4->Size = System::Drawing::Size(883, 209);
 			this->panel4->TabIndex = 6;
 			// 
 			// pListBox
@@ -321,7 +331,7 @@ namespace Integra {
 			this->pListBox->Location = System::Drawing::Point(0, 23);
 			this->pListBox->Name = L"pListBox";
 			this->pListBox->Padding = System::Windows::Forms::Padding(10);
-			this->pListBox->Size = System::Drawing::Size(786, 186);
+			this->pListBox->Size = System::Drawing::Size(883, 186);
 			this->pListBox->TabIndex = 3;
 			// 
 			// panel3
@@ -330,7 +340,7 @@ namespace Integra {
 			this->panel3->Controls->Add(this->button3);
 			this->panel3->Controls->Add(this->button2);
 			this->panel3->Dock = System::Windows::Forms::DockStyle::Right;
-			this->panel3->Location = System::Drawing::Point(786, 0);
+			this->panel3->Location = System::Drawing::Point(883, 0);
 			this->panel3->Name = L"panel3";
 			this->panel3->Size = System::Drawing::Size(107, 209);
 			this->panel3->TabIndex = 5;
@@ -341,9 +351,9 @@ namespace Integra {
 			this->panel2->Controls->Add(this->bAddComplexAttr);
 			this->panel2->Controls->Add(this->panel5);
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel2->Location = System::Drawing::Point(0, 458);
+			this->panel2->Location = System::Drawing::Point(0, 469);
 			this->panel2->Name = L"panel2";
-			this->panel2->Size = System::Drawing::Size(893, 51);
+			this->panel2->Size = System::Drawing::Size(990, 51);
 			this->panel2->TabIndex = 9;
 			// 
 			// bDelComplexAttr
@@ -371,7 +381,7 @@ namespace Integra {
 			this->panel5->Controls->Add(this->bCancel);
 			this->panel5->Controls->Add(this->bOk);
 			this->panel5->Dock = System::Windows::Forms::DockStyle::Right;
-			this->panel5->Location = System::Drawing::Point(693, 0);
+			this->panel5->Location = System::Drawing::Point(790, 0);
 			this->panel5->Name = L"panel5";
 			this->panel5->Size = System::Drawing::Size(200, 51);
 			this->panel5->TabIndex = 8;
@@ -382,7 +392,7 @@ namespace Integra {
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel1->Location = System::Drawing::Point(0, 209);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(893, 249);
+			this->panel1->Size = System::Drawing::Size(990, 260);
 			this->panel1->TabIndex = 10;
 			// 
 			// pDgv
@@ -392,7 +402,7 @@ namespace Integra {
 			this->pDgv->Location = System::Drawing::Point(0, 0);
 			this->pDgv->Name = L"pDgv";
 			this->pDgv->Padding = System::Windows::Forms::Padding(13);
-			this->pDgv->Size = System::Drawing::Size(893, 249);
+			this->pDgv->Size = System::Drawing::Size(990, 260);
 			this->pDgv->TabIndex = 6;
 			// 
 			// AddGroupLinksForm
@@ -400,7 +410,7 @@ namespace Integra {
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->ClientSize = System::Drawing::Size(893, 509);
+			this->ClientSize = System::Drawing::Size(990, 520);
 			this->Controls->Add(this->panel1);
 			this->Controls->Add(this->panel2);
 			this->Controls->Add(this->pGroup);
@@ -530,16 +540,56 @@ namespace Integra {
 			return false;
 		}
 
+		bool IntegrationGroupsContains(String^ groupFullname)
+		{
+			for each (IntegrationGroupPair^ integrationGroup in _integrationGroups)
+			{
+				if (integrationGroup->FullName == groupFullname)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		void SetDgvGroupParamSources(IntegrationGroupPair^ integrationGroup)
+		{
+			Dictionary<Attribute^, Attribute^>^ sourceAttrs = _sourceBook->GetGroupAttrs();
+			Book^ sourceBook = gcnew DbBook(_sourceBook, nullptr, true, _odbc);
+			List<String^>^ sourceNameList = gcnew List<String ^>();
+			for each (KeyValuePair<Attribute^, Attribute^>^ pair in sourceAttrs)
+			{
+				Attribute^ nameAttr = pair->Value;
+				String^ valueName = sourceBook->GetGroupAttrValue(nameAttr, integrationGroup->SourceGroupId)->ToString();
+				sourceNameList->Add(valueName);
+			}
+			ColumnSourceNamee->DataSource = sourceNameList;
+
+			Dictionary<Attribute^, Attribute^>^ targetAttrs = _targetBook->GetGroupAttrs();
+		}
+
+		IntegrationGroupPair^ GetIntegrationGroupPair(String^ fullCode)
+		{
+			for each (IntegrationGroupPair^ integrationGroup in _integrationGroups)
+			{
+				if (integrationGroup->FullName == fullCode)
+				{
+					return integrationGroup;
+				}
+			}
+			return nullptr;
+		}
+
 	private: System::Void bAddGroup_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
 				 AddEditGroupForm^ form = gcnew AddEditGroupForm(_sourceBook, _targetBook, _odbc);
 				 form->ShowDialog();
-				 if (form->GroupName != nullptr)
+				 IntegrationGroupPair^ integrationGroup = form->IntegrationGroup;
+				 if (integrationGroup != nullptr)
 				 {
-					 lbGroups->Items->Add(String::Format("{0} ({1} {2} - {3} {4})", form->GroupName, form->SourceId, form->SourceName, form->TargetId, form->SourceName));
+					 lbGroups->Items->Add(integrationGroup->FullName);
+					 _integrationGroups->Add(integrationGroup);
 				 }
-
-
 			 }
 	private: System::Void dgv_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
 		 {
@@ -555,14 +605,13 @@ namespace Integra {
 
 			 if (e->ColumnIndex == 0)
 			 {
-				 //DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
-				 //if (cb->Value != nullptr)
-				 //{
-					// // do stuff
-					// dgv->Invalidate();
-				 //}
+				 if (_sourceBook->HasGroup)
+				 {
 
-				 String^ cell = dgv[e->ColumnIndex, e->RowIndex]->Value->ToString();
+				 }
+				 else
+				 {
+					String^ cell = dgv[e->ColumnIndex, e->RowIndex]->Value->ToString();
 					 Attribute^ attr = GetAttr(_sourceAttrs, cell);
 					 dgv[1, e->RowIndex]->Value = attr->FullCode;
 					 dgv[2, e->RowIndex]->Value = attr->DataType;
@@ -570,6 +619,7 @@ namespace Integra {
 					 _sourceAttrsFree->Clear();
 					 _sourceAttrsFree->AddRange(_sourceAttrs);
 					 RemoveOnColumn(0, _sourceAttrsFree);
+				 }
 			 }
 			 if (e->ColumnIndex == 4)
 			 {
@@ -632,33 +682,40 @@ private: System::Void dgv_CellBeginEdit(System::Object^  sender, System::Windows
 
 			 if (e->ColumnIndex == 0)
 			 {
-				 DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
-				 Object^ currCell = cb->Value;
-				 cb->Items->Clear();
-				 Object^ complexAttrName = dgv->Rows[e->RowIndex]->Cells[1]->Value;
-				 if (complexAttrName == nullptr || 
-					 String::IsNullOrEmpty(complexAttrName->ToString()) || 
-					 !ContainsInComplex(complexAttrName->ToString()))
+				 if (_sourceBook->HasGroup)
 				 {
-					 if (currCell != nullptr)
-					 {
-						 Attribute^ attr = GetAttr(_sourceAttrs, currCell->ToString());
-						 _sourceAttrsFree->Add(attr);
-
-					 }
-					 for each (Attribute^ attr in _sourceAttrsFree)
-					 {
-						 if (String::IsNullOrEmpty(attr->Name))
-						 {
-							 cb->Items->Add(attr->FullCode);
-						 }
-						 else
-						 {
-							 cb->Items->Add(attr->Name);
-						 }
-					 }
 
 				 }
+				 else
+				 {
+					 DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
+					 Object^ currCell = cb->Value;
+					 cb->Items->Clear();
+					 Object^ complexAttrName = dgv->Rows[e->RowIndex]->Cells[1]->Value;
+					 if (complexAttrName == nullptr || 
+						 String::IsNullOrEmpty(complexAttrName->ToString()) || 
+						 !ContainsInComplex(complexAttrName->ToString()))
+					 {
+						 if (currCell != nullptr)
+						 {
+							 Attribute^ attr = GetAttr(_sourceAttrs, currCell->ToString());
+							 _sourceAttrsFree->Add(attr);
+
+						 }
+						 for each (Attribute^ attr in _sourceAttrsFree)
+						 {
+							 if (String::IsNullOrEmpty(attr->Name))
+							 {
+								 cb->Items->Add(attr->FullCode);
+							 }
+							 else
+							 {
+								 cb->Items->Add(attr->Name);
+							 }
+						 }
+					 }
+				 }
+				 
 			 }
 			 if (e->ColumnIndex == 4)
 			 {
@@ -720,6 +777,18 @@ private: System::Void bDelComplexAttr_Click(System::Object^  sender, System::Eve
 				 ContainsInComplex(cell->ToString()))
 			 {
 				 dgv->Rows->RemoveAt(iRow);
+			 }
+		 }
+private: System::Void lbGroups_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (lbGroups->SelectedItem != nullptr && !String::IsNullOrEmpty(lbGroups->SelectedItem->ToString()))
+			 {
+				 IntegrationGroupPair^ integrationGroup = GetIntegrationGroupPair(lbGroups->SelectedItem->ToString());
+				 SetDgvGroupParamSources(integrationGroup);
+			 }
+			 else
+			 {
+				 dgv->Rows->Clear();
 			 }
 		 }
 };

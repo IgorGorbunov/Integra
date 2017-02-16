@@ -116,6 +116,7 @@
     <ClCompile Include="NormIntegrForm.cpp" />
     <ClCompile Include="NoticesForm.cpp" />
     <ClCompile Include="ODBCclass.h" />
+    <ClCompile Include="PosGroupParamsForm.cpp" />
     <ClCompile Include="Results.cpp" />
     <ClCompile Include="Results2.cpp" />
     <ClCompile Include="Results3.cpp" />
@@ -183,6 +184,8 @@
     </ClInclude>
     <ClInclude Include="Editting.h" />
     <ClInclude Include="ExcelClass.h" />
+    <ClInclude Include="GroupParam.h" />
+    <ClInclude Include="IntegrationGroupPair.h" />
     <ClInclude Include="GroupParamsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -214,6 +217,10 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="NoticesForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="PosGroupParams.h" />
+    <ClInclude Include="PosGroupParamsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Position.h" />
@@ -326,6 +333,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NoticesForm.resx">
       <DependentUpon>NoticesForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PosGroupParamsForm.resx">
+      <DependentUpon>PosGroupParamsForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Results.resx">
       <DependentUpon>Results.h</DependentUpon>

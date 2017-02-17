@@ -34,10 +34,12 @@ namespace Integra {
 		List<Attribute^>^ _targetAttrsFree;
 
 		List<ComplexAttribute^>^ _complexAttrs;
-		List<IntegrationGroupPair^>^ _integrationGroups;
 
-		Dictionary<String^, String^>^ _currentSourceNameList;
-		Dictionary<String^, String^>^ _currentTargetNameList;
+		List<IntegrationGroupPair^>^ _integrationGroups;
+		Object^ _prevSelectGroupItem;
+
+		Dictionary<String^, String^>^ _currentSourceList;
+		Dictionary<String^, String^>^ _currentTargetList;
 
 	private: System::Windows::Forms::Panel^  panel4;
 	private: System::Windows::Forms::Panel^  pListBox;
@@ -558,33 +560,33 @@ namespace Integra {
 		{
 			Dictionary<Attribute^, Attribute^>^ sourceAttrs = _sourceBook->GetGroupAttrs();
 			Book^ sourceBook = gcnew DbBook(_sourceBook, nullptr, true, _odbc);
-			Dictionary<String^, String^>^ sourceNameList = gcnew Dictionary<String^, String^>();
+			Dictionary<String^, String^>^ sourceList = gcnew Dictionary<String^, String^>();
 			for each (KeyValuePair<Attribute^, Attribute^>^ pair in sourceAttrs)
 			{
 				Attribute^ nameAttr = pair->Value;
 				String^ valueName = sourceBook->GetGroupAttrValue(nameAttr, integrationGroup->SourceGroupId)->ToString();
 				Attribute^ codeAttr = pair->Key;
 				String^ valueCode = sourceBook->GetGroupAttrValue(codeAttr, integrationGroup->SourceGroupId)->ToString();
-				sourceNameList->Add(valueName, valueCode);
+				sourceList->Add(valueName, valueCode);
 			}
-			_currentSourceNameList = sourceNameList;
-			List<String^>^ list1 = gcnew List<String ^>(_currentSourceNameList->Keys);
+			_currentSourceList = sourceList;
+			List<String^>^ list1 = gcnew List<String ^>(_currentSourceList->Keys);
 			ColumnSourceNamee->DataSource = list1;
 			
 
 			Dictionary<Attribute^, Attribute^>^ targetAttrs = _targetBook->GetGroupAttrs();
 			Book^ targetBook = gcnew DbBook(_targetBook, nullptr, false, _odbc);
-			Dictionary<String^, String^>^ targetNameList = gcnew Dictionary<String^, String^>();
+			Dictionary<String^, String^>^ targetList = gcnew Dictionary<String^, String^>();
 			for each (KeyValuePair<Attribute^, Attribute^>^ pair in targetAttrs)
 			{
 				Attribute^ nameAttr = pair->Value;
 				String^ valueName = targetBook->GetGroupAttrValue(nameAttr, integrationGroup->TargetGroupId)->ToString();
 				Attribute^ codeAttr = pair->Key;
 				String^ valueCode = targetBook->GetGroupAttrValue(codeAttr, integrationGroup->TargetGroupId)->ToString();
-				targetNameList->Add(valueName, valueCode);
+				targetList->Add(valueName, valueCode);
 			}
-			_currentTargetNameList = targetNameList;
-			List<String^>^ list2 = gcnew List<String ^>(_currentTargetNameList->Keys);
+			_currentTargetList = targetList;
+			List<String^>^ list2 = gcnew List<String ^>(_currentTargetList->Keys);
 			ColumnTargetNamee->DataSource = list2;
 			
 		}
@@ -600,6 +602,53 @@ namespace Integra {
 			}
 			return nullptr;
 		}
+
+		void SaveCurrentDgv()
+		{
+			for (int i = 0; i < _integrationGroups->Count; i++)
+			{
+				if (_integrationGroups[i]->FullName == _prevSelectGroupItem->ToString())
+				{
+					_integrationGroups[i]->SourceNamesDataSource = gcnew List<String ^>(_currentSourceList->Keys);
+					_integrationGroups[i]->TargetNamesDataSource = gcnew List<String ^>(_currentTargetList->Keys);
+
+					List<array<String^>^>^ attrDataList = gcnew List<array<String ^> ^>();
+					for (int i = 0; i < dgv->RowCount; i++)
+					{
+						bool allOk = true;
+						array<String^>^ row = gcnew array<String ^>(8);
+						for (int j = 0; j < 8; j++)
+						{
+							if (dgv[j,i]->Value == nullptr || String::IsNullOrEmpty(dgv[j,i]->Value->ToString()))
+							{
+								allOk = false;
+								break;
+							}
+							row[j] = dgv[j,i]->Value->ToString();
+						}
+						if (allOk)
+						{
+							attrDataList->Add(row);
+						}
+					}
+					_integrationGroups[i]->AttributesDataDgv = attrDataList;
+					break;
+				}
+			}
+		}
+
+		void GetDgvParams(IntegrationGroupPair^ integrationGroup)
+		{
+			ColumnSourceNamee->DataSource = integrationGroup->SourceNamesDataSource;
+			ColumnTargetNamee->DataSource = integrationGroup->TargetNamesDataSource;
+			
+			List<array<String^>^>^ attrDataList = integrationGroup->AttributesDataDgv;
+			for each (array<String^>^ row in attrDataList)
+			{
+				dgv->Rows->Add(row);
+			}
+		}
+
 
 	private: System::Void bAddGroup_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
@@ -629,12 +678,18 @@ namespace Integra {
 				 if (_sourceBook->HasGroup)
 				 {
 					 String^ nameAttr = dgv[0, e->RowIndex]->Value->ToString();
-					 if (_currentSourceNameList->ContainsKey(nameAttr))
+					 if (_currentSourceList->ContainsKey(nameAttr))
 					 {
-						 dgv[1, e->RowIndex]->Value = _currentSourceNameList[nameAttr];
+						 dgv[1, e->RowIndex]->Value = _currentSourceList[nameAttr];
 						 //todo add from pos?
 						 dgv[2, e->RowIndex]->Value = "ÑÒÐÎÊÀ";
 						 dgv[3, e->RowIndex]->Value = 8;
+					 }
+					 else
+					 {
+						 dgv[1, e->RowIndex]->Value = nullptr;
+						 dgv[2, e->RowIndex]->Value = nullptr;
+						 dgv[3, e->RowIndex]->Value = nullptr;
 					 }
 				 }
 				 else
@@ -660,12 +715,18 @@ namespace Integra {
 				 if (_targetBook->HasGroup)
 				 {
 					 String^ nameAttr = dgv[4, e->RowIndex]->Value->ToString();
-					 if (_currentTargetNameList->ContainsKey(nameAttr))
+					 if (_currentTargetList->ContainsKey(nameAttr))
 					 {
-						 dgv[5, e->RowIndex]->Value = _currentTargetNameList[nameAttr];
+						 dgv[5, e->RowIndex]->Value = _currentTargetList[nameAttr];
 						 //todo add from pos?
 						 dgv[6, e->RowIndex]->Value = "ÑÒÐÎÊÀ";
 						 dgv[7, e->RowIndex]->Value = 8;
+					 }
+					 else
+					 {
+						 dgv[5, e->RowIndex]->Value = nullptr;
+						 dgv[6, e->RowIndex]->Value = nullptr;
+						 dgv[7, e->RowIndex]->Value = nullptr;
 					 }
 				 }
 				 else
@@ -829,15 +890,27 @@ private: System::Void bDelComplexAttr_Click(System::Object^  sender, System::Eve
 		 }
 private: System::Void lbGroups_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 if (_prevSelectGroupItem != nullptr && !String::IsNullOrEmpty(_prevSelectGroupItem->ToString()))
+			 {
+				 SaveCurrentDgv();
+			 }
+			 
+			 dgv->Rows->Clear();
 			 if (lbGroups->SelectedItem != nullptr && !String::IsNullOrEmpty(lbGroups->SelectedItem->ToString()))
 			 {
 				 IntegrationGroupPair^ integrationGroup = GetIntegrationGroupPair(lbGroups->SelectedItem->ToString());
-				 SetDgvGroupParamSources(integrationGroup);
+				 //åñëè dgv åùå íå çàïîëíÿëñÿ
+				 if (integrationGroup->SourceNamesDataSource == nullptr)
+				 {
+					 SetDgvGroupParamSources(integrationGroup);
+				 }
+				 else
+				 {
+					 GetDgvParams(integrationGroup);
+				 }
+				 
 			 }
-			 else
-			 {
-				 dgv->Rows->Clear();
-			 }
+			 _prevSelectGroupItem = lbGroups->SelectedItem;
 		 }
 };
 }

@@ -59,6 +59,40 @@ namespace Integra {
 			}
 		}
 
+		property Object^ SourceNamesDataSource
+		{
+			Object^ get()
+			{
+				return _sourceNamesDataSource;
+			}
+			void set(Object^ value)
+			{
+				_sourceNamesDataSource = value;
+			}
+		}
+		property Object^ TargetNamesDataSource
+		{
+			Object^ get()
+			{
+				return _targetNamesDataSource;
+			}
+			void set(Object^ value)
+			{
+				_targetNamesDataSource = value;
+			}
+		}
+		property List<array<String^>^>^ AttributesDataDgv
+		{
+			List<array<String^>^>^ get()
+			{
+				return _dgvAttrs;
+			}
+			void set(List<array<String^>^>^ value)
+			{
+				_dgvAttrs = value;
+			}
+		}
+
 	private:
 		OdbcClass^ _odbc;
 
@@ -67,6 +101,10 @@ namespace Integra {
 		String^ _sourceGroupName;
 		String^ _targetGroupId;
 		String^ _targetGroupName;
+
+		Object^ _sourceNamesDataSource;
+		Object^ _targetNamesDataSource;
+		List<array<String^>^>^ _dgvAttrs;
 
 	public:
 

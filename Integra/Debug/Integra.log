@@ -1,10 +1,116 @@
-﻿Построение начато 16.02.2017 14:46:07.
+﻿Построение начато 17.02.2017 13:42:40.
      1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
      1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(2015,5): warning MSB3284: Не удается получить путь файла для библиотеки типа "307168c0-39ae-42ad-953f-a09f8a81520f" версии 1.0. Библиотека не зарегистрирована. (Исключение из HRESULT: 0x8002801D (TYPE_E_LIBNOTREGISTERED))
-     1>Link:
+     1>ClCompile:
+         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FUD:\Work\Coding\Github\repos\Integra\Integra\Debug\Interop.Microsoft.Office.Interop.Excel.dll /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt AddComplexAttrForm.cpp AddDbAttrsForm.cpp AddEditGroupForm.cpp AddEditSchemaForm2.cpp AddEditSystemBookForm.cpp AddEditUserRole.cpp AddGroupLinksForm.cpp AddNewTableForm.cpp AddNewUser.cpp AddSemAttrForm.cpp AutoConfigsForm.cpp AutoSettingsForm.cpp DbFiltersForm.cpp DetailResults.cpp DifferencesForm.cpp EditForm.cpp GroupParamsForm.cpp GroupTableAttrs.h IntgrResultsForm.cpp JournalChangesForm.cpp LoginForm.cpp MainForm.cpp ManualIntegrationForm.cpp ManualIntegrationForm1.cpp NormIntegrForm.cpp NoticesForm.cpp ODBCclass.h PosGroupParamsForm.cpp Results.cpp Results2.cpp Results3.cpp RoughInterg.cpp SettingsForm.cpp TableLinksForm.cpp /clr:nostdlib 
+         AddComplexAttrForm.cpp
+         AddDbAttrsForm.cpp
+         AddEditGroupForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+         AddEditSchemaForm2.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+         AddEditSystemBookForm.cpp
+         AddEditUserRole.cpp
+         AddGroupLinksForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+         AddNewTableForm.cpp
+         AddNewUser.cpp
+         AddSemAttrForm.cpp
+         AutoConfigsForm.cpp
+         AutoSettingsForm.cpp
+         DbFiltersForm.cpp
+         DetailResults.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+         DifferencesForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+         EditForm.cpp
+         GroupParamsForm.cpp
+         GroupTableAttrs.h
+         IntgrResultsForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+         JournalChangesForm.cpp
+         Создание кода...
+         Компиляция...
+         LoginForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+         MainForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+         ManualIntegrationForm.cpp
+         ManualIntegrationForm1.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+         NormIntegrForm.cpp
+         NoticesForm.cpp
+         ODBCclass.h
+         PosGroupParamsForm.cpp
+         Results.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+         Results2.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+         Results3.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+         RoughInterg.cpp
+         SettingsForm.cpp
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+         TableLinksForm.cpp
+         Создание кода...
+         D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt "C:\Users\igor\AppData\Local\Temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
+         .NETFramework,Version=v4.0.AssemblyAttributes.cpp
+       Link:
+         D:\soft\Visual Studio 2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe" /INCREMENTAL:NO /NOLOGO /ASSEMBLYRESOURCE:Debug\Integra.AddComplexAttrForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddDbAttrsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditGroupForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSchemaForm2.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditSystemBookForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddEditUserRole.resources /ASSEMBLYRESOURCE:Debug\Integra.AddGroupLinksForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddNewTableForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AddNewUser.resources /ASSEMBLYRESOURCE:Debug\Integra.AddSemAttrForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AutoConfigsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.AutoSettingsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DbFiltersForm.resources /ASSEMBLYRESOURCE:Debug\Integra.DetailResults.resources /ASSEMBLYRESOURCE:Debug\Integra.DifferencesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.EditForm.resources /ASSEMBLYRESOURCE:Debug\Integra.GroupParamsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.IntgrResultsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.JournalChangesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.LoginForm.resources /ASSEMBLYRESOURCE:Debug\Integra.MainForm.resources /ASSEMBLYRESOURCE:Debug\Integra.ManualIntegrationForm.resources /ASSEMBLYRESOURCE:Debug\Integra.ManualIntegrationForm1.resources /ASSEMBLYRESOURCE:Debug\Integra.NormIntegrForm.resources /ASSEMBLYRESOURCE:Debug\Integra.NoticesForm.resources /ASSEMBLYRESOURCE:Debug\Integra.PosGroupParamsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.Results.resources /ASSEMBLYRESOURCE:Debug\Integra.Results2.resources /ASSEMBLYRESOURCE:Debug\Integra.Results3.resources /ASSEMBLYRESOURCE:Debug\Integra.RoughInterg.resources /ASSEMBLYRESOURCE:Debug\Integra.SettingsForm.resources /ASSEMBLYRESOURCE:Debug\Integra.TableLinksForm.resources /MANIFEST /ManifestFile:"Debug\Integra.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\AddComplexAttrForm.obj
+         Debug\AddDbAttrsForm.obj
+         Debug\AddEditGroupForm.obj
+         Debug\AddEditSchemaForm2.obj
+         Debug\AddEditSystemBookForm.obj
+         Debug\AddEditUserRole.obj
+         Debug\AddGroupLinksForm.obj
+         Debug\AddNewTableForm.obj
+         Debug\AddNewUser.obj
+         Debug\AddSemAttrForm.obj
+         Debug\AutoConfigsForm.obj
+         Debug\AutoSettingsForm.obj
+         Debug\DbFiltersForm.obj
+         Debug\DetailResults.obj
+         Debug\DifferencesForm.obj
+         Debug\EditForm.obj
+         Debug\GroupParamsForm.obj
+         Debug\GroupTableAttrs.obj
+         Debug\IntgrResultsForm.obj
+         Debug\JournalChangesForm.obj
+         Debug\LoginForm.obj
+         Debug\MainForm.obj
+         Debug\ManualIntegrationForm.obj
+         Debug\ManualIntegrationForm1.obj
+         Debug\NormIntegrForm.obj
+         Debug\NoticesForm.obj
+         Debug\ODBCclass.obj
+         Debug\PosGroupParamsForm.obj
+         Debug\Results.obj
+         Debug\Results2.obj
+         Debug\Results3.obj
+         Debug\RoughInterg.obj
+         Debug\SettingsForm.obj
+         Debug\TableLinksForm.obj
+         "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
          Integra.vcxproj -> D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe;#1" /manifest Debug\Integra.exe.intermediate.manifest
      1>Построение проекта "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" завершено (целевые объекты Build).
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:00.19
+Затраченное время: 00:00:12.88

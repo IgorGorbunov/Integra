@@ -76,7 +76,7 @@ namespace Integra {
 
 
 			String^ columns = "ID,ID_INTGR,EDIT_DATE,ID_ATTR,OLD_VAL,NEW_VAL,ID_POS,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE,EDIT_TYPE,SYSTEM_N";
-			_id = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_EDITINGS");
+			_id = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATION_EDITINGS");
 			int idInteg = _result->Id;
 			String^ editDate = _odbc->GetSqlDate(_editDate);
 			String^ login = _odbc->GetSqlString(_createUser);
@@ -97,7 +97,7 @@ namespace Integra {
 
 
 			String^ columns = "ID,ID_INTGR,EDIT_DATE,ID_ATTR,OLD_VAL,NEW_VAL,ID_POS,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE,EDIT_TYPE,SYSTEM_N";
-			_id = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_EDITINGS");
+			_id = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATION_EDITINGS");
 			int idInteg = _result->Id;
 			String^ editDate = _odbc->GetSqlDate(_editDate);
 			String^ login = _odbc->GetSqlString(_createUser);

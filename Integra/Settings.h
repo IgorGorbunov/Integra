@@ -62,7 +62,7 @@ namespace Integra {
 			List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + name->Trim() + "\'");
 			if (query->Count == 0)
 			{
-				int id = _odbc->GetMinFreeId(_odbc->schema + "BOOKS");
+				int id = _odbc->GetLastFreeId(_odbc->schema + "BOOKS");
 				String^ squery = String::Format("insert into {0}BOOKS (ID, NAME, CREATE_USER, CREATE_DATE) values ({1}, '{2}', {3})", _odbc->schema,  id, name, _odbc->GetActionDataTo());
 				_odbc->ExecuteNonQuery(squery);
 				return true;
@@ -78,7 +78,7 @@ namespace Integra {
 			List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + name->Trim() + "\'");
 			if (query->Count == 0)
 			{
-				int id = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATED_SYSTEMS");
+				int id = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATED_SYSTEMS");
 				String^ squery = String::Format("insert into {0}INTEGRATED_SYSTEMS (ID, NAME, CREATE_USER, CREATE_DATE) values ({1}, '{2}', {3})", _odbc->schema,  id, name, _odbc->GetActionDataTo());
 				_odbc->ExecuteNonQuery(squery);
 				return true;

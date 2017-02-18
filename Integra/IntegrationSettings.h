@@ -205,7 +205,7 @@ namespace Integra {
 		void CreateIntgrSchema()
 		{
 			String^ columns = "ID,ID_SOURCE_BOOK,ID_TARGET_BOOK,TYPE,CREATE_USER,CREATE_DATE,BOOK_TYPE_ID";
-			_id = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_PARAMS");
+			_id = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATION_PARAMS");
 			int idS = _sourceBook->Id;
 			int idT = _targetBook->Id;
 			String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
@@ -221,7 +221,7 @@ namespace Integra {
 			String^ columns = "ID,ID_SOURCE_ATTRIBUTE,ID_TARGET_ATTRIBUTE,ID_PARAMETRS,CREATE_USER,CREATE_DATE";
 			for each (KeyValuePair<Attribute^, Attribute^>^ pair in AttributePairs)
 			{
-				int idPair = _odbc->GetMinFreeId(_odbc->schema + "ATTRIBUTE_PAIRS");
+				int idPair = _odbc->GetLastFreeId(_odbc->schema + "ATTRIBUTE_PAIRS");
 				int idS = pair->Key->Id;
 				int idT = pair->Value->Id;
 				String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);

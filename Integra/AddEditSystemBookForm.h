@@ -373,7 +373,7 @@ namespace Integra {
 			{
 				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE,NAME";
 				
-				_intgrBookId = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_BOOK");
+				_intgrBookId = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATION_BOOK");
 				List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
 				List<Object^>^ idSystem = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystem->Text + "\'");
 
@@ -422,7 +422,7 @@ namespace Integra {
 				else
 				{
 					String^ columns = "ID,FULL_CODE,NAME,SCHEMA_NAME,TABLE_NAME,ATTR_NAME,ID_INTGR_BOOK,CREATE_USER,CREATE_DATE,DATA_TYPE,MAX_LENGTH";
-					int id = _odbc->GetMinFreeId(_odbc->schema + "integration_attributes");
+					int id = _odbc->GetLastFreeId(_odbc->schema + "integration_attributes");
 					String^ fullTable = OdbcClass::GetSqlString(col->FullTable);
 					String^ name = OdbcClass::GetSqlString(col->Name);
 					String^ schemaName = OdbcClass::GetSqlString(col->Schema);
@@ -445,7 +445,7 @@ namespace Integra {
 			{
 				for (int i = 0; i < dbAttrs->Count; i++)
 				{
-					int id = _odbc->GetMinFreeId("" + _odbc->schema + "integration_attributes");
+					int id = _odbc->GetLastFreeId("" + _odbc->schema + "integration_attributes");
 					array<String^>^ attributeData = dbAttrs[i];
 					String^ squery = String::Format("insert into " + _odbc->schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', {6})", 
 						id, attributeData[0], attributeData[1], attributeData[2], attributeData[3], attributeData[4], intgrId);
@@ -466,7 +466,7 @@ namespace Integra {
 				String^ columns = "ID,FULL_CODE,NAME,SCHEMA_NAME,TABLE_NAME,ATTR_NAME,ID_INTGR_BOOK,CREATE_USER,CREATE_DATE,DATA_TYPE,MAX_LENGTH";
 				for each (Attribute^ attr in dbAttrs)
 				{
-					int id = _odbc->GetMinFreeId(_odbc->schema + "integration_attributes");
+					int id = _odbc->GetLastFreeId(_odbc->schema + "integration_attributes");
 					String^ fullTable = OdbcClass::GetSqlString(attr->FullTable);
 					String^ name = OdbcClass::GetSqlString(attr->Name);
 					String^ schemaName = OdbcClass::GetSqlString(attr->Schema);
@@ -515,7 +515,7 @@ namespace Integra {
 			{
 				int idId = WriteSingleAttr(_groupIdCol, intgrId);
 				int idName = WriteSingleAttr(_groupNameCol, intgrId);
-				int idGroupParams = _odbc->GetMinFreeId(_odbc->schema + "GROUP_PARAMS");
+				int idGroupParams = _odbc->GetLastFreeId(_odbc->schema + "GROUP_PARAMS");
 				String^ sFullTable = OdbcClass::GetSqlString(_groupSchtab);
 				String^ columns = "ID,ID_ATTR,NAME_ATTR,FULL_TABLE,CREATE_USER,CREATE_DATE";
 				String^ user = OdbcClass::GetSqlString(_odbc->Login);
@@ -527,7 +527,7 @@ namespace Integra {
 
 				for each (KeyValuePair<Attribute^, Attribute^>^ pair in _groupAttrs)
 				{
-					int idAttrPair = _odbc->GetMinFreeId(_odbc->schema + "GROUP_ATTRIBUTE_PAIRS");
+					int idAttrPair = _odbc->GetLastFreeId(_odbc->schema + "GROUP_ATTRIBUTE_PAIRS");
 					int idTitleAttr = WriteSingleAttr(pair->Key, intgrId);
 					int idNameAttr = WriteSingleAttr(pair->Value, intgrId);
 					columns = "ID,ID_TITLE,ID_NAME,ID_GROUP_PARAMS,CREATE_USER,CREATE_DATE";
@@ -551,7 +551,7 @@ namespace Integra {
 				{
 					for each (KeyValuePair<int, String^>^ pair in _users)
 					{
-						int id = _odbc->GetMinFreeId(_odbc->schema + "USERS_BOOKS");
+						int id = _odbc->GetLastFreeId(_odbc->schema + "USERS_BOOKS");
 						String^ sQuery = String::Format("insert into {0}USERS_BOOKS ({1}) values ({2}, {3}, {4}, {5}, {6})",
 							_odbc->schema, columns, id, pair->Key, _intgrBookId, sqlUser, sqlDate);
 						_odbc->ExecuteNonQuery(sQuery);

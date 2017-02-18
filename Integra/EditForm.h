@@ -123,7 +123,7 @@ namespace Integra {
 			 {
 				 table = "BOOKS";
 			 }
-			 int id = _odbc->GetMinFreeId(_odbc->schema + table);
+			 int id = _odbc->GetLastFreeId(_odbc->schema + table);
 			 String^ columns = "ID,NAME,CREATE_USER,CREATE_DATE";
 			 String^ squery = String::Format("insert into {0}{1} ({2}) values ({3},{4},{5},{6})", _odbc->schema, table, 
 				 columns, id, name, OdbcClass::GetSqlString(_odbc->Login), _odbc->GetSqlDate(DateTime::Now));

@@ -493,6 +493,20 @@ namespace Integra {
 				return list;
 			}	
 
+			int GetLastFreeId(String^ fullTableName)
+			{
+				List<Object^>^ query = ExecuteQuery("select MAX(ID) from " + fullTableName);
+				if (query == nullptr || query->Count <= 0)
+				{
+					return 1;
+				}
+				else
+				{
+					int p = GetInt(query[0]);
+					return ++p;
+				}
+			}
+
 			int GetMinFreeId(String^ fullTableName)
 			{
 				List<Object^>^ query = ExecuteQuery("select ID from " + fullTableName + " order by ID");

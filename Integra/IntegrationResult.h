@@ -98,7 +98,7 @@ namespace Integra {
 			_startTime = DateTime::Now;
 
 			String^ columns = "ID,ID_INTGR,STATE,INTEG_USER,INTEG_DATE,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE,INT_TYPE";
-			_id = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_RESULTS");
+			_id = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATION_RESULTS");
 			_idInteg = _settings->Id;
 			String^ state = OdbcClass::GetSqlString(_state);
 			String^ startTime = _odbc->GetSqlDate(_startTime);

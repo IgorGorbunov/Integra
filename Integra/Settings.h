@@ -109,9 +109,9 @@ namespace Integra {
 
 		array<String^, 2>^ GetSystemBooks()
 		{
-			String^ squery = String::Format("select IB.ID, BB.NAME, ISS.NAME " +
-				"from {0}BOOKS BB, {0}INTEGRATION_BOOK IB, {0}INTEGRATED_SYSTEMS ISS where BB.ID = IB.ID_BOOK and ISS.ID = IB.ID_SYSTEM", _odbc->schema);
-			_systemBooks = SetList(squery, 3);
+			String^ squery = String::Format("select IBB.ID, IBB.NAME, BB.NAME, ISS.NAME " +
+				"from {0}BOOKS BB, {0}INTEGRATION_BOOK IBB, {0}INTEGRATED_SYSTEMS ISS where BB.ID = IBB.ID_BOOK and ISS.ID = IBB.ID_SYSTEM", _odbc->schema);
+			_systemBooks = SetList(squery, 4);
 			return _systemBooks;
 		}
 

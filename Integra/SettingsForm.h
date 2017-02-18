@@ -47,13 +47,17 @@ namespace Integra {
 
 
 			 OdbcClass^ _odbc;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
+
+
+
 	private: System::Windows::Forms::Button^  bEditSystem2;
 	private: System::Windows::Forms::Button^  bDeleteSystem2;
 	private: System::Windows::Forms::Button^  bEditBook2;
 	private: System::Windows::Forms::Button^  bDeleteBook2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
 
 
 
@@ -186,9 +190,6 @@ namespace Integra {
 			this->bEditSystemBook = (gcnew System::Windows::Forms::Button());
 			this->bAddSystemBook = (gcnew System::Windows::Forms::Button());
 			this->dgvSystemBooks = (gcnew System::Windows::Forms::DataGridView());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->cbSystems = (gcnew System::Windows::Forms::ComboBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->tpIntegrationSchemas = (gcnew System::Windows::Forms::TabPage());
@@ -201,6 +202,10 @@ namespace Integra {
 			this->SchemaSourceCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaTargetCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaDirectionCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->panel1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
 			this->tpBooks->SuspendLayout();
@@ -329,9 +334,9 @@ namespace Integra {
 			this->label1->AutoSize = true;
 			this->label1->Location = System::Drawing::Point(363, 24);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(135, 13);
+			this->label1->Size = System::Drawing::Size(183, 13);
 			this->label1->TabIndex = 1;
-			this->label1->Text = L"Созданные справочники:";
+			this->label1->Text = L"Добавленные типы справочников:";
 			// 
 			// dgvBooks
 			// 
@@ -375,9 +380,9 @@ namespace Integra {
 			this->label4->AutoSize = true;
 			this->label4->Location = System::Drawing::Point(19, 24);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(115, 13);
+			this->label4->Size = System::Drawing::Size(129, 13);
 			this->label4->TabIndex = 7;
-			this->label4->Text = L"Созданные системы:";
+			this->label4->Text = L"Добавленные системы:";
 			// 
 			// dataGridView1
 			// 
@@ -582,7 +587,7 @@ namespace Integra {
 			// bEditSystemBook
 			// 
 			this->bEditSystemBook->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bEditSystemBook->Location = System::Drawing::Point(533, 36);
+			this->bEditSystemBook->Location = System::Drawing::Point(534, 20);
 			this->bEditSystemBook->Name = L"bEditSystemBook";
 			this->bEditSystemBook->Size = System::Drawing::Size(75, 23);
 			this->bEditSystemBook->TabIndex = 5;
@@ -593,7 +598,7 @@ namespace Integra {
 			// bAddSystemBook
 			// 
 			this->bAddSystemBook->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddSystemBook->Location = System::Drawing::Point(625, 36);
+			this->bAddSystemBook->Location = System::Drawing::Point(626, 20);
 			this->bAddSystemBook->Name = L"bAddSystemBook";
 			this->bAddSystemBook->Size = System::Drawing::Size(75, 23);
 			this->bAddSystemBook->TabIndex = 4;
@@ -607,35 +612,14 @@ namespace Integra {
 			this->dgvSystemBooks->AllowUserToDeleteRows = false;
 			this->dgvSystemBooks->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dgvSystemBooks->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgvSystemBooks->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->Column1, 
-				this->Column2, this->Column3});
-			this->dgvSystemBooks->Location = System::Drawing::Point(26, 85);
+			this->dgvSystemBooks->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->Column1, 
+				this->Column2, this->Column4, this->Column3});
+			this->dgvSystemBooks->Location = System::Drawing::Point(26, 49);
 			this->dgvSystemBooks->Name = L"dgvSystemBooks";
 			this->dgvSystemBooks->ReadOnly = true;
 			this->dgvSystemBooks->RowHeadersVisible = false;
-			this->dgvSystemBooks->Size = System::Drawing::Size(675, 150);
+			this->dgvSystemBooks->Size = System::Drawing::Size(675, 229);
 			this->dgvSystemBooks->TabIndex = 2;
-			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Номер справочника";
-			this->Column1->Name = L"Column1";
-			this->Column1->ReadOnly = true;
-			this->Column1->Width = 250;
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Наименование справочника";
-			this->Column2->Name = L"Column2";
-			this->Column2->ReadOnly = true;
-			this->Column2->Width = 200;
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Наименование системы";
-			this->Column3->Name = L"Column3";
-			this->Column3->ReadOnly = true;
-			this->Column3->Width = 200;
 			// 
 			// cbSystems
 			// 
@@ -752,6 +736,35 @@ namespace Integra {
 			this->SchemaDirectionCol->HeaderText = L"Направление интеграции";
 			this->SchemaDirectionCol->Name = L"SchemaDirectionCol";
 			this->SchemaDirectionCol->ReadOnly = true;
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Номер справочника";
+			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
+			this->Column1->Visible = false;
+			this->Column1->Width = 250;
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Наименование справочника";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			this->Column2->Width = 260;
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"Тип справочника";
+			this->Column4->Name = L"Column4";
+			this->Column4->ReadOnly = true;
+			this->Column4->Width = 230;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Система";
+			this->Column3->Name = L"Column3";
+			this->Column3->ReadOnly = true;
+			this->Column3->Width = 150;
 			// 
 			// SettingsForm
 			// 
@@ -890,10 +903,11 @@ namespace Integra {
 				
 				for(int i = 0; i < _currentSystemBooks->GetLength(0); i++)
 				{
-					array<String^>^ row = gcnew array<String ^>(3);
+					array<String^>^ row = gcnew array<String ^>(4);
 					row[0] = _currentSystemBooks[i, 0];
 					row[1] = _currentSystemBooks[i, 1];
 					row[2] = _currentSystemBooks[i, 2];
+					row[3] = _currentSystemBooks[i, 3];
 					dgvSystemBooks->Rows->Add(row);
 				}
 			}

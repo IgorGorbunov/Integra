@@ -68,6 +68,8 @@ namespace Integra {
 	private: System::Windows::Forms::Button^  bOk;
 	private: System::Windows::Forms::Button^  bCancel;
 	private: System::Windows::Forms::Button^  bAddEditUsers;
+	private: System::Windows::Forms::Label^  label6;
+	private: System::Windows::Forms::TextBox^  tbName;
 
 	private:
 		/// <summary>
@@ -99,30 +101,32 @@ namespace Integra {
 			this->bOk = (gcnew System::Windows::Forms::Button());
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->bAddEditUsers = (gcnew System::Windows::Forms::Button());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->tbName = (gcnew System::Windows::Forms::TextBox());
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(33, 15);
+			this->label1->Location = System::Drawing::Point(22, 59);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(67, 13);
+			this->label1->Size = System::Drawing::Size(97, 13);
 			this->label1->TabIndex = 15;
-			this->label1->Text = L"Справочник";
+			this->label1->Text = L"Тип справочника:";
 			// 
 			// cbBook
 			// 
 			this->cbBook->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::SuggestAppend;
 			this->cbBook->FormattingEnabled = true;
-			this->cbBook->Location = System::Drawing::Point(23, 34);
+			this->cbBook->Location = System::Drawing::Point(12, 78);
 			this->cbBook->Name = L"cbBook";
 			this->cbBook->Size = System::Drawing::Size(216, 21);
 			this->cbBook->TabIndex = 16;
 			// 
 			// bAddAttrs
 			// 
-			this->bAddAttrs->Location = System::Drawing::Point(36, 336);
+			this->bAddAttrs->Location = System::Drawing::Point(25, 380);
 			this->bAddAttrs->Name = L"bAddAttrs";
 			this->bAddAttrs->Size = System::Drawing::Size(177, 23);
 			this->bAddAttrs->TabIndex = 5;
@@ -140,7 +144,7 @@ namespace Integra {
 			this->groupBox1->Controls->Add(this->tbPass);
 			this->groupBox1->Controls->Add(this->label3);
 			this->groupBox1->Controls->Add(this->tbLogin);
-			this->groupBox1->Location = System::Drawing::Point(23, 128);
+			this->groupBox1->Location = System::Drawing::Point(12, 172);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(216, 202);
 			this->groupBox1->TabIndex = 4;
@@ -219,7 +223,7 @@ namespace Integra {
 			// cbSystem
 			// 
 			this->cbSystem->FormattingEnabled = true;
-			this->cbSystem->Location = System::Drawing::Point(23, 85);
+			this->cbSystem->Location = System::Drawing::Point(12, 129);
 			this->cbSystem->Name = L"cbSystem";
 			this->cbSystem->Size = System::Drawing::Size(216, 21);
 			this->cbSystem->TabIndex = 3;
@@ -228,15 +232,15 @@ namespace Integra {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(33, 69);
+			this->label2->Location = System::Drawing::Point(22, 113);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(51, 13);
+			this->label2->Size = System::Drawing::Size(54, 13);
 			this->label2->TabIndex = 2;
-			this->label2->Text = L"Система";
+			this->label2->Text = L"Система:";
 			// 
 			// bOk
 			// 
-			this->bOk->Location = System::Drawing::Point(83, 412);
+			this->bOk->Location = System::Drawing::Point(72, 456);
 			this->bOk->Name = L"bOk";
 			this->bOk->Size = System::Drawing::Size(75, 23);
 			this->bOk->TabIndex = 17;
@@ -247,7 +251,7 @@ namespace Integra {
 			// bCancel
 			// 
 			this->bCancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-			this->bCancel->Location = System::Drawing::Point(164, 412);
+			this->bCancel->Location = System::Drawing::Point(153, 456);
 			this->bCancel->Name = L"bCancel";
 			this->bCancel->Size = System::Drawing::Size(75, 23);
 			this->bCancel->TabIndex = 18;
@@ -257,13 +261,29 @@ namespace Integra {
 			// 
 			// bAddEditUsers
 			// 
-			this->bAddEditUsers->Location = System::Drawing::Point(36, 365);
+			this->bAddEditUsers->Location = System::Drawing::Point(25, 409);
 			this->bAddEditUsers->Name = L"bAddEditUsers";
 			this->bAddEditUsers->Size = System::Drawing::Size(177, 23);
 			this->bAddEditUsers->TabIndex = 19;
 			this->bAddEditUsers->Text = L"Задать доступ пользователй";
 			this->bAddEditUsers->UseVisualStyleBackColor = true;
 			this->bAddEditUsers->Click += gcnew System::EventHandler(this, &AddEditSystemBookForm::bAddEditUsers_Click);
+			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Location = System::Drawing::Point(22, 9);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(154, 13);
+			this->label6->TabIndex = 20;
+			this->label6->Text = L"Наименование справочника:";
+			// 
+			// tbName
+			// 
+			this->tbName->Location = System::Drawing::Point(12, 29);
+			this->tbName->Name = L"tbName";
+			this->tbName->Size = System::Drawing::Size(216, 20);
+			this->tbName->TabIndex = 21;
 			// 
 			// AddEditSystemBookForm
 			// 
@@ -272,7 +292,9 @@ namespace Integra {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->CancelButton = this->bCancel;
-			this->ClientSize = System::Drawing::Size(255, 447);
+			this->ClientSize = System::Drawing::Size(245, 502);
+			this->Controls->Add(this->tbName);
+			this->Controls->Add(this->label6);
 			this->Controls->Add(this->bAddEditUsers);
 			this->Controls->Add(this->bCancel);
 			this->Controls->Add(this->bOk);
@@ -349,7 +371,7 @@ namespace Integra {
 
 			Void WriteIntegrBook()
 			{
-				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE";
+				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE,NAME";
 				
 				_intgrBookId = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_BOOK");
 				List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
@@ -363,6 +385,8 @@ namespace Integra {
 				String^ sqlDb = "NULL";
 				String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
 				String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+
+				String^ sqlName = OdbcClass::GetSqlString(tbName->Text->Trim());
 
 				if (_systemTypeId == 1)
 				{
@@ -383,8 +407,8 @@ namespace Integra {
 					}
 				}
 				String^ query;
-				query = String::Format("insert into {0}INTEGRATION_BOOK ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11})", 
-					_odbc->schema, columns, _intgrBookId, sqlIdSystem, sqlIdBook, sqlLogin, sqlPassword, sqlDb, sqlDriver, _systemTypeId, sqlUser, sqlDate);
+				query = String::Format("insert into {0}INTEGRATION_BOOK ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12})", 
+					_odbc->schema, columns, _intgrBookId, sqlIdSystem, sqlIdBook, sqlLogin, sqlPassword, sqlDb, sqlDriver, _systemTypeId, sqlUser, sqlDate, sqlName);
 				_odbc->ExecuteNonQuery(query);
 			}
 
@@ -594,6 +618,11 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 if (String::IsNullOrEmpty(tbName->Text))
+			 {
+				 MessageBox::Show("Не задано наименование справочника!");
+				 return;
+			 }
 			 if (String::IsNullOrEmpty(cbBook->Text))
 			 {
 				 MessageBox::Show("Не задан справочник!");

@@ -74,8 +74,6 @@ namespace Integra {
 				pGroup->Visible = false;
 				SetDgvSources();
 			}
-			
-			
 		}
 
 	protected:
@@ -222,6 +220,7 @@ namespace Integra {
 			// dgv
 			// 
 			this->dgv->AllowUserToDeleteRows = false;
+			this->dgv->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dgv->BackgroundColor = System::Drawing::SystemColors::Window;
 			this->dgv->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {this->ColumnSourceNamee, 
@@ -240,7 +239,6 @@ namespace Integra {
 			// 
 			this->ColumnSourceNamee->HeaderText = L"Наименование реквизита системы-источника";
 			this->ColumnSourceNamee->Name = L"ColumnSourceNamee";
-			this->ColumnSourceNamee->Width = 223;
 			// 
 			// ColumnSourceCode
 			// 
@@ -253,20 +251,17 @@ namespace Integra {
 			this->Column5->HeaderText = L"Тип данных";
 			this->Column5->Name = L"Column5";
 			this->Column5->ReadOnly = true;
-			this->Column5->Width = 84;
 			// 
 			// Column7
 			// 
 			this->Column7->HeaderText = L"Размер";
 			this->Column7->Name = L"Column7";
 			this->Column7->ReadOnly = true;
-			this->Column7->Width = 71;
 			// 
 			// ColumnTargetNamee
 			// 
 			this->ColumnTargetNamee->HeaderText = L"Наименование реквизита системы-получателя";
 			this->ColumnTargetNamee->Name = L"ColumnTargetNamee";
-			this->ColumnTargetNamee->Width = 228;
 			// 
 			// ColumnTargetCode
 			// 
@@ -279,14 +274,12 @@ namespace Integra {
 			this->Column6->HeaderText = L"Тип данных";
 			this->Column6->Name = L"Column6";
 			this->Column6->ReadOnly = true;
-			this->Column6->Width = 84;
 			// 
 			// Column8
 			// 
 			this->Column8->HeaderText = L"Размер";
 			this->Column8->Name = L"Column8";
 			this->Column8->ReadOnly = true;
-			this->Column8->Width = 71;
 			// 
 			// bCancel
 			// 

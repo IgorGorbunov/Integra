@@ -24,7 +24,15 @@ namespace Integra {
 		Dictionary<Attribute^, Attribute^>^ _attrPairs;
 
 		BookSettings^ _sourceBook;
-	private: System::Windows::Forms::Button^  button1;
+
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
 			 BookSettings^ _targetBook;
 
 	public:
@@ -76,12 +84,12 @@ namespace Integra {
 	private: System::Windows::Forms::ComboBox^  cbBook;
 
 	private: System::Windows::Forms::GroupBox^  groupBox1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
+
+
+
+
+
+
 
 	private:
 		/// <summary>
@@ -98,6 +106,7 @@ namespace Integra {
 		{
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->dgvSource = (gcnew System::Windows::Forms::DataGridView());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -105,6 +114,7 @@ namespace Integra {
 			this->cbIntgr = (gcnew System::Windows::Forms::ComboBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->dgvTarget = (gcnew System::Windows::Forms::DataGridView());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->dataGridViewTextBoxColumn2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->dataGridViewTextBoxColumn3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -114,7 +124,6 @@ namespace Integra {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->cbBook = (gcnew System::Windows::Forms::ComboBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSource))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->BeginInit();
 			this->groupBox1->SuspendLayout();
@@ -123,11 +132,11 @@ namespace Integra {
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(42, 119);
+			this->label3->Location = System::Drawing::Point(38, 20);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(103, 13);
+			this->label3->Size = System::Drawing::Size(216, 13);
 			this->label3->TabIndex = 3;
-			this->label3->Text = L"Система-источник:";
+			this->label3->Text = L"Декларированный справочник-источник:";
 			// 
 			// dgvSource
 			// 
@@ -136,25 +145,31 @@ namespace Integra {
 			this->dgvSource->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dgvSource->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dgvSource->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgvSource->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->Column1, this->Column2, 
-				this->Column3});
-			this->dgvSource->Location = System::Drawing::Point(22, 135);
+			this->dgvSource->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->Column4, this->Column1, 
+				this->Column2, this->Column3});
+			this->dgvSource->Location = System::Drawing::Point(22, 49);
 			this->dgvSource->Name = L"dgvSource";
 			this->dgvSource->ReadOnly = true;
 			this->dgvSource->RowHeadersVisible = false;
-			this->dgvSource->Size = System::Drawing::Size(432, 176);
+			this->dgvSource->Size = System::Drawing::Size(432, 262);
 			this->dgvSource->TabIndex = 4;
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"ID";
+			this->Column4->Name = L"Column4";
+			this->Column4->ReadOnly = true;
+			this->Column4->Visible = false;
 			// 
 			// Column1
 			// 
 			this->Column1->HeaderText = L"Наименование";
 			this->Column1->Name = L"Column1";
 			this->Column1->ReadOnly = true;
-			this->Column1->Visible = false;
 			// 
 			// Column2
 			// 
-			this->Column2->HeaderText = L"Справочник";
+			this->Column2->HeaderText = L"Тип справочника";
 			this->Column2->Name = L"Column2";
 			this->Column2->ReadOnly = true;
 			// 
@@ -167,11 +182,11 @@ namespace Integra {
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(499, 119);
+			this->label4->Location = System::Drawing::Point(495, 20);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(114, 13);
+			this->label4->Size = System::Drawing::Size(227, 13);
 			this->label4->TabIndex = 5;
-			this->label4->Text = L"Система-получатель:";
+			this->label4->Text = L"Декларированный справочник-получатель:";
 			// 
 			// cbIntgr
 			// 
@@ -198,21 +213,27 @@ namespace Integra {
 			this->dgvTarget->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dgvTarget->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dgvTarget->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgvTarget->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->dataGridViewTextBoxColumn1, 
+			this->dgvTarget->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->Column5, this->dataGridViewTextBoxColumn1, 
 				this->dataGridViewTextBoxColumn2, this->dataGridViewTextBoxColumn3});
-			this->dgvTarget->Location = System::Drawing::Point(486, 135);
+			this->dgvTarget->Location = System::Drawing::Point(486, 49);
 			this->dgvTarget->Name = L"dgvTarget";
 			this->dgvTarget->ReadOnly = true;
 			this->dgvTarget->RowHeadersVisible = false;
-			this->dgvTarget->Size = System::Drawing::Size(431, 176);
+			this->dgvTarget->Size = System::Drawing::Size(431, 262);
 			this->dgvTarget->TabIndex = 6;
+			// 
+			// Column5
+			// 
+			this->Column5->HeaderText = L"ID";
+			this->Column5->Name = L"Column5";
+			this->Column5->ReadOnly = true;
+			this->Column5->Visible = false;
 			// 
 			// dataGridViewTextBoxColumn1
 			// 
 			this->dataGridViewTextBoxColumn1->HeaderText = L"Наименование";
 			this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
 			this->dataGridViewTextBoxColumn1->ReadOnly = true;
-			this->dataGridViewTextBoxColumn1->Visible = false;
 			// 
 			// dataGridViewTextBoxColumn2
 			// 
@@ -251,11 +272,11 @@ namespace Integra {
 			// bLinks
 			// 
 			this->bLinks->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bLinks->Location = System::Drawing::Point(345, 326);
+			this->bLinks->Location = System::Drawing::Point(312, 326);
 			this->bLinks->Name = L"bLinks";
-			this->bLinks->Size = System::Drawing::Size(109, 39);
+			this->bLinks->Size = System::Drawing::Size(223, 39);
 			this->bLinks->TabIndex = 9;
-			this->bLinks->Text = L"Задать соответствия";
+			this->bLinks->Text = L"Задать соответствия реквизитов";
 			this->bLinks->UseVisualStyleBackColor = false;
 			this->bLinks->Click += gcnew System::EventHandler(this, &AddEditSchemaForm2::bLinks_Click);
 			// 
@@ -281,24 +302,13 @@ namespace Integra {
 			// 
 			this->groupBox1->Controls->Add(this->cbBook);
 			this->groupBox1->Controls->Add(this->label1);
-			this->groupBox1->Location = System::Drawing::Point(22, 24);
+			this->groupBox1->Location = System::Drawing::Point(107, 103);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(277, 77);
 			this->groupBox1->TabIndex = 2;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Фильтр справочников:";
-			// 
-			// button1
-			// 
-			this->button1->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->button1->Location = System::Drawing::Point(486, 326);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(109, 39);
-			this->button1->TabIndex = 10;
-			this->button1->Text = L"Задать групповые соответствия";
-			this->button1->UseVisualStyleBackColor = false;
-			this->button1->Visible = false;
-			this->button1->Click += gcnew System::EventHandler(this, &AddEditSchemaForm2::button1_Click);
+			this->groupBox1->Visible = false;
 			// 
 			// AddEditSchemaForm2
 			// 
@@ -306,7 +316,6 @@ namespace Integra {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->ClientSize = System::Drawing::Size(945, 379);
-			this->Controls->Add(this->button1);
 			this->Controls->Add(this->bLinks);
 			this->Controls->Add(this->bSave);
 			this->Controls->Add(this->bCancel);
@@ -421,9 +430,6 @@ private: System::Void cbBook_SelectedIndexChanged(System::Object^  sender, Syste
 			 SetDgv(dgvSource, systemBooks);
 			 SetDgv(dgvTarget, systemBooks);
 		 }
-private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) 
-		 {
-			 int i = Int32::Parse("s");
-		 }
+
 };
 }

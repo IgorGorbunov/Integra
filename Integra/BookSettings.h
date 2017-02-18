@@ -16,6 +16,13 @@ namespace Integra {
 	public ref class BookSettings 
 	{
 	public:
+		property String^ Name
+		{
+			String^ get()
+			{
+				return _name;
+			}
+		}
 		property String^ SystemName
 		{
 			String^ get()
@@ -55,7 +62,7 @@ namespace Integra {
 		{
 			bool get()
 			{
-				if (_groupId == 0)
+				if (_groupId == -1)
 				{
 					return false;
 				}
@@ -166,6 +173,7 @@ namespace Integra {
 
 		String^ _systemName;
 		String^ _bookName;
+		String^ _name;
 
 		String^ _login;
 		String^ _password;
@@ -245,7 +253,7 @@ namespace Integra {
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE, NAME from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
 			SetSystem(Decimal::ToInt32((Decimal)parametrs[0]));
 			SetBook(Decimal::ToInt32((Decimal)parametrs[1]));
 			SetLogPass(parametrs[2]->ToString(), parametrs[3]->ToString());
@@ -259,6 +267,7 @@ namespace Integra {
 			_groupId = OdbcClass::GetInt(parametrs[11]);
 			_attrIdId = OdbcClass::GetInt(parametrs[12]);
 			_attrTitleId = OdbcClass::GetInt(parametrs[13]);
+			_name = parametrs[14]->ToString();
 		}
 
 		Void SetSystem(int id)

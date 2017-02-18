@@ -50,6 +50,13 @@ namespace Integra {
 				return _type;
 			}
 		}
+		property String^ Name
+		{
+			String^ get()
+			{
+				return _name;
+			}
+		}
 
 		property List<Attribute^>^ SourceAttributes
 		{
@@ -124,6 +131,7 @@ namespace Integra {
 		BookSettings^ _targetBook;
 		IntegrationType _type;
 		int _intType;
+		String^ _name;
 		Attribute^ _sourceAttributeEquil;
 		Attribute^ _targetAttributeEquil;
 		
@@ -164,7 +172,7 @@ namespace Integra {
 	private:
 		Void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SOURCE_BOOK, ID_TARGET_BOOK, TYPE, CREATE_USER, CREATE_DATE from " + _odbc->schema + "INTEGRATION_PARAMS where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SOURCE_BOOK, ID_TARGET_BOOK, TYPE, CREATE_USER, CREATE_DATE, INT_NAME from " + _odbc->schema + "INTEGRATION_PARAMS where ID = " + id);
 			SetSourceBook(Decimal::ToInt32((Decimal)parametrs[0]));
 			SetTargetBook(Decimal::ToInt32((Decimal)parametrs[1]));
 			Decimal^ typ = (Decimal)parametrs[2];
@@ -176,7 +184,7 @@ namespace Integra {
 			{
 				_type = IntegrationType::OneWay;
 			}
-
+			_name = parametrs[5]->ToString();
 
 
 

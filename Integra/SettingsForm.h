@@ -29,11 +29,11 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  BookNameCol;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SystemIdCol;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SystemName;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaIdCol;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaBookNameCol;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaSourceCol;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaTargetCol;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaDirectionCol;
+
+
+
+
+
 	private: System::Windows::Forms::TabPage^  tpIntegrBook;
 	private: System::Windows::Forms::DataGridView^  dgvSystemBooks;
 	private: System::Windows::Forms::ComboBox^  cbSystems;
@@ -59,6 +59,14 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaIdCol;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaBookNameCol;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column6;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaSourceCol;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaTargetCol;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaDirectionCol;
 
 
 
@@ -203,8 +211,11 @@ namespace Integra {
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->dgvSchemas = (gcnew System::Windows::Forms::DataGridView());
 			this->SchemaIdCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaBookNameCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column6 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaSourceCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column7 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaTargetCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaDirectionCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->panel1->SuspendLayout();
@@ -349,6 +360,7 @@ namespace Integra {
 			this->dgvBooks->Location = System::Drawing::Point(363, 56);
 			this->dgvBooks->Name = L"dgvBooks";
 			this->dgvBooks->ReadOnly = true;
+			this->dgvBooks->RowHeadersVisible = false;
 			this->dgvBooks->Size = System::Drawing::Size(324, 193);
 			this->dgvBooks->TabIndex = 0;
 			// 
@@ -396,6 +408,7 @@ namespace Integra {
 			this->dataGridView1->Location = System::Drawing::Point(19, 56);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->ReadOnly = true;
+			this->dataGridView1->RowHeadersVisible = false;
 			this->dataGridView1->Size = System::Drawing::Size(324, 193);
 			this->dataGridView1->TabIndex = 6;
 			// 
@@ -689,7 +702,7 @@ namespace Integra {
 			// bEditSchema
 			// 
 			this->bEditSchema->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bEditSchema->Location = System::Drawing::Point(533, 10);
+			this->bEditSchema->Location = System::Drawing::Point(625, 10);
 			this->bEditSchema->Name = L"bEditSchema";
 			this->bEditSchema->Size = System::Drawing::Size(75, 23);
 			this->bEditSchema->TabIndex = 3;
@@ -701,7 +714,7 @@ namespace Integra {
 			// bAddSchema
 			// 
 			this->bAddSchema->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddSchema->Location = System::Drawing::Point(625, 10);
+			this->bAddSchema->Location = System::Drawing::Point(544, 10);
 			this->bAddSchema->Name = L"bAddSchema";
 			this->bAddSchema->Size = System::Drawing::Size(75, 23);
 			this->bAddSchema->TabIndex = 2;
@@ -724,13 +737,14 @@ namespace Integra {
 			this->dgvSchemas->AllowUserToDeleteRows = false;
 			this->dgvSchemas->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dgvSchemas->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgvSchemas->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(5) {this->SchemaIdCol, 
-				this->SchemaBookNameCol, this->SchemaSourceCol, this->SchemaTargetCol, this->SchemaDirectionCol});
-			this->dgvSchemas->Location = System::Drawing::Point(25, 42);
+			this->dgvSchemas->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {this->SchemaIdCol, 
+				this->Column5, this->SchemaBookNameCol, this->Column6, this->SchemaSourceCol, this->Column7, this->SchemaTargetCol, this->SchemaDirectionCol});
+			this->dgvSchemas->Location = System::Drawing::Point(8, 42);
 			this->dgvSchemas->Name = L"dgvSchemas";
 			this->dgvSchemas->ReadOnly = true;
+			this->dgvSchemas->RowHeadersVisible = false;
 			this->dgvSchemas->RowHeadersWidth = 25;
-			this->dgvSchemas->Size = System::Drawing::Size(675, 199);
+			this->dgvSchemas->Size = System::Drawing::Size(713, 243);
 			this->dgvSchemas->TabIndex = 0;
 			// 
 			// SchemaIdCol
@@ -740,26 +754,46 @@ namespace Integra {
 			this->SchemaIdCol->ReadOnly = true;
 			this->SchemaIdCol->Visible = false;
 			// 
+			// Column5
+			// 
+			this->Column5->HeaderText = L"Наименование";
+			this->Column5->Name = L"Column5";
+			this->Column5->ReadOnly = true;
+			this->Column5->Width = 200;
+			// 
 			// SchemaBookNameCol
 			// 
-			this->SchemaBookNameCol->HeaderText = L"Справочник";
+			this->SchemaBookNameCol->HeaderText = L"Тип справочника";
 			this->SchemaBookNameCol->Name = L"SchemaBookNameCol";
 			this->SchemaBookNameCol->ReadOnly = true;
-			this->SchemaBookNameCol->Width = 260;
+			// 
+			// Column6
+			// 
+			this->Column6->HeaderText = L"Справочник-источник";
+			this->Column6->Name = L"Column6";
+			this->Column6->ReadOnly = true;
+			this->Column6->Width = 120;
 			// 
 			// SchemaSourceCol
 			// 
 			this->SchemaSourceCol->HeaderText = L"Система-источник";
 			this->SchemaSourceCol->Name = L"SchemaSourceCol";
 			this->SchemaSourceCol->ReadOnly = true;
-			this->SchemaSourceCol->Width = 140;
+			this->SchemaSourceCol->Width = 120;
+			// 
+			// Column7
+			// 
+			this->Column7->HeaderText = L"Справочник-получатель";
+			this->Column7->Name = L"Column7";
+			this->Column7->ReadOnly = true;
+			this->Column7->Width = 120;
 			// 
 			// SchemaTargetCol
 			// 
 			this->SchemaTargetCol->HeaderText = L"Система-получатель";
 			this->SchemaTargetCol->Name = L"SchemaTargetCol";
 			this->SchemaTargetCol->ReadOnly = true;
-			this->SchemaTargetCol->Width = 140;
+			this->SchemaTargetCol->Width = 120;
 			// 
 			// SchemaDirectionCol
 			// 
@@ -845,16 +879,19 @@ namespace Integra {
 				{
 					array<String^>^ row = gcnew array<String ^>(5);
 					row[0] = setting->Id + "";
-					row[1] = setting->SourceBook->BookName;
-					row[2] = setting->SourceBook->SystemName;
-					row[3] = setting->TargetBook->SystemName;
+					row[1] = setting->Name;
+					row[2] = setting->SourceBook->BookName;
+					row[3] = setting->SourceBook->Name;
+					row[4] = setting->SourceBook->SystemName;
+					row[5] = setting->TargetBook->Name;
+					row[6] = setting->TargetBook->SystemName;
 					if (setting->Type == IntegrationSettings::IntegrationType::OneWay)
 					{
-						row[4] = "Односторонняя";
+						row[7] = "Односторонняя";
 					} 
 					else
 					{
-						row[4] = "Двусторонняя";
+						row[7] = "Двусторонняя";
 					}
 					dgvSchemas->Rows->Add(row);
 				}
@@ -1002,7 +1039,6 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bAddSchema_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 //AddEditSchemaForm^ form = gcnew AddEditSchemaForm(_settings);
 			 AddEditSchemaForm2^ form = gcnew AddEditSchemaForm2(_settings, _odbc);
 			 form->ShowDialog();
 			 List<Object^>^ integrationIds = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATION_PARAMS");

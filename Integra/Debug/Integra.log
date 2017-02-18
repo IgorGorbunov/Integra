@@ -1,4 +1,4 @@
-﻿Построение начато 18.02.2017 17:43:05.
+﻿Построение начато 18.02.2017 18:26:37.
      1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
      1>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Common.Targets(2015,5): warning MSB3284: Не удается получить путь файла для библиотеки типа "307168c0-39ae-42ad-953f-a09f8a81520f" версии 1.0. Библиотека не зарегистрирована. (Исключение из HRESULT: 0x8002801D (TYPE_E_LIBNOTREGISTERED))
      1>ClCompile:
@@ -6,19 +6,19 @@
          AddComplexAttrForm.cpp
          AddDbAttrsForm.cpp
          AddEditGroupForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          AddEditSchemaForm2.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
-     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(627): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(609): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(601): используется определение "i"
          AddEditSystemBookForm.cpp
          AddEditUserRole.cpp
          AddGroupLinksForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
-     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(627): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(609): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(601): используется определение "i"
          AddNewTableForm.cpp
          AddNewUser.cpp
          AddSemAttrForm.cpp
@@ -26,46 +26,46 @@
          AutoSettingsForm.cpp
          DbFiltersForm.cpp
          DetailResults.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          DifferencesForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          EditForm.cpp
          GroupParamsForm.cpp
          GroupTableAttrs.h
          IntgrResultsForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          JournalChangesForm.cpp
          Создание кода...
          Компиляция...
          LoginForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
-     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(627): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(609): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(601): используется определение "i"
          MainForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
-     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(627): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(609): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(601): используется определение "i"
          ManualIntegrationForm.cpp
          ManualIntegrationForm1.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          NormIntegrForm.cpp
          NoticesForm.cpp
          ODBCclass.h
          PosGroupParamsForm.cpp
          Results.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          Results2.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          Results3.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
          RoughInterg.cpp
          SettingsForm.cpp
-     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(258): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
-     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(634): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(616): пропуск определения "i"
-                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(608): используется определение "i"
+     1>d:\work\coding\github\repos\integra\integra\BookSettings.h(266): warning C4800: int: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+     1>d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(627): warning C4258: i: определение из цикла for игнорируется; используется определение из внешней области видимости
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(609): пропуск определения "i"
+                 d:\work\coding\github\repos\integra\integra\AddGroupLinksForm.h(601): используется определение "i"
          TableLinksForm.cpp
          UserBookAccessForm.cpp
          Создание кода...
@@ -115,4 +115,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:13.20
+Затраченное время: 00:00:12.93

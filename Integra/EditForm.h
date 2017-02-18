@@ -17,25 +17,65 @@ namespace Integra {
 	public ref class EditForm : public System::Windows::Forms::Form
 	{
 	private:
-		String^ _bookId;
+		Object^ _bookId;
 		OdbcClass^ _odbc;
+		// 0 - system, 1 - book
 		int _typeI;
+		// 0 - add, 1 - edit, 2 - delete
+		int _actionType;
 
 	public:
-		EditForm(Object^ id, String^ name, int typeI, OdbcClass^ odbc)
+		EditForm(Object^ id, String^ name, int typeI, int actType, OdbcClass^ odbc)
 		{
-			_bookId = id->ToString();
-			_odbc = odbc;
-			// 0 - book, 1 - system
-			_typeI = typeI;
 			InitializeComponent();
+
+			_bookId = id;
+			_odbc = odbc;
+			// 0 - system, 1 - book
+			_typeI = typeI;
+			// 0 - add, 1 - edit, 2 - delete
+			_actionType = actType;
+
 			tbName->Text = name;
+			Text = "Изменить";
+			bEditBook->Text = "Изменить";
+			String^ sItem;
+			if	(typeI == 0)
+			{
+				sItem = " систему";
+			}
+			else
+			{
+				sItem = " справочник";
+			}
+			Text += sItem;
+
+			if (_actionType == 2)
+			{
+				System::Windows::Forms::DialogResult result = 
+					MessageBox::Show("Вы действительно хотите удалить" + sItem + "?", "Предупреждение", 
+					MessageBoxButtons::YesNoCancel, MessageBoxIcon::Warning);
+
+				if (result == System::Windows::Forms::DialogResult::Yes)
+				{
+					DeleteItem();
+					Close();
+				}
+				else
+				{
+					Close();
+				}
+			}
 		}
 
 		EditForm(int type, OdbcClass^ odbc)
 		{
+			InitializeComponent();
+
 			_odbc = odbc;
+			// 0 - system, 1 - book
 			_typeI = type;
+			Text = "Добавить";
 			if	(type == 0)
 			{
 				Text += " новую систему";
@@ -44,7 +84,6 @@ namespace Integra {
 			{
 				Text += " новый справочник";
 			}
-			InitializeComponent();
 		}
 
 	protected:
@@ -71,6 +110,63 @@ namespace Integra {
 		/// Требуется переменная конструктора.
 		/// </summary>
 		System::ComponentModel::Container ^components;
+
+		void AddItem()
+		{
+			String^ name = OdbcClass::GetSqlString(tbName->Text->Trim());
+			 String^ table;
+			 if	(_typeI == 0)
+			 {
+				 table = "INTEGRATED_SYSTEMS";
+			 }
+			 else
+			 {
+				 table = "BOOKS";
+			 }
+			 int id = _odbc->GetMinFreeId(_odbc->schema + table);
+			 String^ columns = "ID,NAME,CREATE_USER,CREATE_DATE";
+			 String^ squery = String::Format("insert into {0}{1} ({2}) values ({3},{4},{5},{6})", _odbc->schema, table, 
+				 columns, id, name, OdbcClass::GetSqlString(_odbc->Login), _odbc->GetSqlDate(DateTime::Now));
+			 _odbc->ExecuteNonQuery(squery);
+		}
+
+		void EditItem()
+		{
+			 String^ name = OdbcClass::GetSqlString(tbName->Text->Trim());
+			 String^ table;
+			 if	(_typeI == 0)
+			 {
+				 table = "INTEGRATED_SYSTEMS";
+			 }
+			 else
+			 {
+				 table = "BOOKS";
+			 }
+			 String^ user = OdbcClass::GetSqlString(_odbc->Login);
+			 String^ date = _odbc->GetSqlDate(DateTime::Now);
+			 int id = _odbc->GetInt(_bookId);
+			 
+			 String^ squery = String::Format("update {0}{1} set NAME = {2}, UPDATE_USER = {3}, UPDATE_DATE = {4} where ID = {5}", _odbc->schema, table, 
+				 name, user, date, id);
+			 _odbc->ExecuteNonQuery(squery);
+		}
+
+		void DeleteItem()
+		{
+			 String^ table;
+			 if	(_typeI == 0)
+			 {
+				 table = "INTEGRATED_SYSTEMS";
+			 }
+			 else
+			 {
+				 table = "BOOKS";
+			 }
+			 int id = _odbc->GetInt(_bookId);
+			 
+			 String^ squery = String::Format("delete from {0}{1} where ID = {2}", _odbc->schema, table, id);
+			 _odbc->ExecuteNonQuery(squery);
+		}
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -126,7 +222,6 @@ namespace Integra {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"EditForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-			this->Text = L"Добавить";
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -149,32 +244,17 @@ private: System::Void tbName_TextChanged(System::Object^  sender, System::EventA
 		 }
 private: System::Void bEditBook_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 /*String^ table = "";
-			 if (_typeI == 0)
+			 switch (_actionType)
 			 {
-				 table = "" + _odbc->schema + "BOOKS";
+			 case 0:
+				 AddItem();
+				 break;
+			 case 1:
+				 EditItem();
+				 break;
+			 default:
+				 break;
 			 }
-			 if (_typeI == 1)
-			 {
-				 table = "" + _odbc->schema + "INTEGRATED_SYSTEMS";
-			 }
-			 _odbc->ExecuteNonQuery("update " + table + " set NAME = \'" + tbName->Text->Trim() + "\' where ID = " + _bookId);
-			 this->Visible = false;*/
-			 String^ name = OdbcClass::GetSqlString(tbName->Text->Trim());
-			 String^ table;
-			 if	(_typeI == 0)
-			 {
-				 table = "INTEGRATED_SYSTEMS";
-			 }
-			 else
-			 {
-				 table = "BOOKS";
-			 }
-			 int id = _odbc->GetMinFreeId(_odbc->schema + table);
-			 String^ columns = "ID,NAME,CREATE_USER,CREATE_DATE";
-			 String^ squery = String::Format("insert into {0}{1} ({2}) values ({3},{4},{5},{6})", _odbc->schema, table, 
-				 columns, id, name, OdbcClass::GetSqlString(_odbc->Login), _odbc->GetSqlDate(DateTime::Now));
-			 _odbc->ExecuteNonQuery(squery);
 
 			 Close();
 		 }

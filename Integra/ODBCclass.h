@@ -178,7 +178,25 @@ namespace Integra {
 				{
 					return -1;
 				}
-				return Decimal::ToInt32((Decimal)o);
+				int i;
+				try
+				{
+					double is;
+					bool isParse = double::TryParse(o->ToString(), is);
+					if (isParse)
+					{
+						i = Decimal::ToInt32((Decimal)is);
+					}
+					else
+					{
+						i = Decimal::ToInt32((Decimal)o);
+					}
+				}
+				catch (InvalidCastException^)
+				{
+					i = (int)o;
+				}
+				return i;
 			}
 
 			String^ GetSqlDate(DateTime^ dateTime)
@@ -481,7 +499,8 @@ namespace Integra {
 				int i = 1;
 				for each (Object^ o in query)
 				{
-					int p = Decimal::ToInt32((Decimal)o);
+					int p = GetInt(o);
+
 					if (p > i)
 					{
 						return i;

@@ -503,6 +503,10 @@ namespace Integra {
 				else
 				{
 					int p = GetInt(query[0]);
+					if (p == -1)
+					{
+						return 1;
+					}
 					return ++p;
 				}
 			}

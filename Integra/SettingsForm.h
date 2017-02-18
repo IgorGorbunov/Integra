@@ -38,7 +38,8 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridView^  dgvSystemBooks;
 	private: System::Windows::Forms::ComboBox^  cbSystems;
 	private: System::Windows::Forms::Label^  label3;
-	private: System::Windows::Forms::Button^  bEditSystemBook;
+	private: System::Windows::Forms::Button^  bDeleteSystemBook;
+
 	private: System::Windows::Forms::Button^  bAddSystemBook;
 
 
@@ -187,9 +188,13 @@ namespace Integra {
 			this->SystemIdCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SystemName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->tpIntegrBook = (gcnew System::Windows::Forms::TabPage());
-			this->bEditSystemBook = (gcnew System::Windows::Forms::Button());
+			this->bDeleteSystemBook = (gcnew System::Windows::Forms::Button());
 			this->bAddSystemBook = (gcnew System::Windows::Forms::Button());
 			this->dgvSystemBooks = (gcnew System::Windows::Forms::DataGridView());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->cbSystems = (gcnew System::Windows::Forms::ComboBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->tpIntegrationSchemas = (gcnew System::Windows::Forms::TabPage());
@@ -202,10 +207,6 @@ namespace Integra {
 			this->SchemaSourceCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaTargetCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->SchemaDirectionCol = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->panel1->SuspendLayout();
 			this->tabControl1->SuspendLayout();
 			this->tpBooks->SuspendLayout();
@@ -571,7 +572,7 @@ namespace Integra {
 			// tpIntegrBook
 			// 
 			this->tpIntegrBook->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->tpIntegrBook->Controls->Add(this->bEditSystemBook);
+			this->tpIntegrBook->Controls->Add(this->bDeleteSystemBook);
 			this->tpIntegrBook->Controls->Add(this->bAddSystemBook);
 			this->tpIntegrBook->Controls->Add(this->dgvSystemBooks);
 			this->tpIntegrBook->Controls->Add(this->cbSystems);
@@ -584,21 +585,21 @@ namespace Integra {
 			this->tpIntegrBook->Text = L"Декларированные справочники";
 			this->tpIntegrBook->Enter += gcnew System::EventHandler(this, &SettingsForm::tpIntegrBook_Enter);
 			// 
-			// bEditSystemBook
+			// bDeleteSystemBook
 			// 
-			this->bEditSystemBook->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bEditSystemBook->Location = System::Drawing::Point(534, 20);
-			this->bEditSystemBook->Name = L"bEditSystemBook";
-			this->bEditSystemBook->Size = System::Drawing::Size(75, 23);
-			this->bEditSystemBook->TabIndex = 5;
-			this->bEditSystemBook->Text = L"Изменить";
-			this->bEditSystemBook->UseVisualStyleBackColor = false;
-			this->bEditSystemBook->Visible = false;
+			this->bDeleteSystemBook->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bDeleteSystemBook->Location = System::Drawing::Point(626, 20);
+			this->bDeleteSystemBook->Name = L"bDeleteSystemBook";
+			this->bDeleteSystemBook->Size = System::Drawing::Size(75, 23);
+			this->bDeleteSystemBook->TabIndex = 5;
+			this->bDeleteSystemBook->Text = L"Удалить";
+			this->bDeleteSystemBook->UseVisualStyleBackColor = false;
+			this->bDeleteSystemBook->Click += gcnew System::EventHandler(this, &SettingsForm::bDeleteSystemBook_Click);
 			// 
 			// bAddSystemBook
 			// 
 			this->bAddSystemBook->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bAddSystemBook->Location = System::Drawing::Point(626, 20);
+			this->bAddSystemBook->Location = System::Drawing::Point(545, 20);
 			this->bAddSystemBook->Name = L"bAddSystemBook";
 			this->bAddSystemBook->Size = System::Drawing::Size(75, 23);
 			this->bAddSystemBook->TabIndex = 4;
@@ -620,6 +621,35 @@ namespace Integra {
 			this->dgvSystemBooks->RowHeadersVisible = false;
 			this->dgvSystemBooks->Size = System::Drawing::Size(675, 229);
 			this->dgvSystemBooks->TabIndex = 2;
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Номер справочника";
+			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
+			this->Column1->Visible = false;
+			this->Column1->Width = 250;
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Наименование справочника";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			this->Column2->Width = 260;
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"Тип справочника";
+			this->Column4->Name = L"Column4";
+			this->Column4->ReadOnly = true;
+			this->Column4->Width = 230;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Система";
+			this->Column3->Name = L"Column3";
+			this->Column3->ReadOnly = true;
+			this->Column3->Width = 150;
 			// 
 			// cbSystems
 			// 
@@ -736,35 +766,6 @@ namespace Integra {
 			this->SchemaDirectionCol->HeaderText = L"Направление интеграции";
 			this->SchemaDirectionCol->Name = L"SchemaDirectionCol";
 			this->SchemaDirectionCol->ReadOnly = true;
-			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Номер справочника";
-			this->Column1->Name = L"Column1";
-			this->Column1->ReadOnly = true;
-			this->Column1->Visible = false;
-			this->Column1->Width = 250;
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Наименование справочника";
-			this->Column2->Name = L"Column2";
-			this->Column2->ReadOnly = true;
-			this->Column2->Width = 260;
-			// 
-			// Column4
-			// 
-			this->Column4->HeaderText = L"Тип справочника";
-			this->Column4->Name = L"Column4";
-			this->Column4->ReadOnly = true;
-			this->Column4->Width = 230;
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Система";
-			this->Column3->Name = L"Column3";
-			this->Column3->ReadOnly = true;
-			this->Column3->Width = 150;
 			// 
 			// SettingsForm
 			// 
@@ -1106,6 +1107,25 @@ private: System::Void bDeleteBook2_Click(System::Object^  sender, System::EventA
 				  //form->ShowDialog();
 				  SetBooks(_settings->Books);
 			 }
+		 }
+private: System::Void bDeleteSystemBook_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (dgvSystemBooks->CurrentCell != nullptr && dgvSystemBooks->CurrentCell->RowIndex >= 0)
+			 {
+				 System::Windows::Forms::DialogResult result = 
+					 MessageBox::Show("Вы действительно хотите удалить декларированный справочник?", "Предупреждение", 
+					 MessageBoxButtons::YesNoCancel, MessageBoxIcon::Warning);
+
+				 if (result == System::Windows::Forms::DialogResult::Yes)
+				 {
+					 Object^ value = dgvSystemBooks->Rows[dgvSystemBooks->CurrentCell->RowIndex]->Cells[0]->Value;
+					 String^ squery = String::Format("delete from {0}INTEGRATION_BOOK IBB where IBB.ID = {1}", _odbc->schema, value);
+					 _odbc->ExecuteNonQuery(squery);
+					 SetSystemBooks("");
+				 }
+			 
+			 }
+			 
 		 }
 };
 }

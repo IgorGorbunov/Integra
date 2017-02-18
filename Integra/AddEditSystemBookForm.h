@@ -329,6 +329,8 @@ namespace Integra {
 			List<Attribute^>^ _dbAttrs;
 			Attribute^ _idCol;
 			Attribute^ _titleCol;
+			Attribute^ _dateCol;
+
 			Attribute^ _roughCol;
 			String^ _roughSymbols;
 			int _intgrBookId;
@@ -484,7 +486,7 @@ namespace Integra {
 
 			}
 
-			void WriteSingleAttrs(Attribute^ idCol, Attribute^ titleCol, Attribute^ roughCol, int intgrId)
+			void WriteSingleAttrs(Attribute^ idCol, Attribute^ titleCol, Attribute^ dateCol, Attribute^ roughCol, int intgrId)
 			{
 				int id = WriteSingleAttr(idCol, intgrId);
 				String^ squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_ID = " + id + " where ID = " + intgrId;
@@ -493,6 +495,13 @@ namespace Integra {
 				int titleAttrId = WriteSingleAttr(titleCol, intgrId);
 				squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_TITLE = " + titleAttrId + " where ID = " + intgrId;
 				_odbc->ExecuteNonQuery(squery);
+
+				if (dateCol != nullptr)
+				{
+					int dateAttrId = WriteSingleAttr(dateCol, intgrId);
+					squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_DATE = " + dateAttrId + " where ID = " + intgrId;
+					_odbc->ExecuteNonQuery(squery);
+				}
 
 				if (roughCol != nullptr)
 				{
@@ -563,7 +572,7 @@ namespace Integra {
 			{
 				WriteIntegrBook();
 				WriteUseAttrs(_dbAttrs, _intgrBookId);
-				WriteSingleAttrs(_idCol, _titleCol, _roughCol, _intgrBookId);
+				WriteSingleAttrs(_idCol, _titleCol, _dateCol, _roughCol, _intgrBookId);
 				WriteRoughSymbols(_roughSymbols, _intgrBookId);
 				if (!String::IsNullOrEmpty(_groupSchtab))
 				{
@@ -746,6 +755,7 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 					 addAttrForm->ShowDialog();
 					 _idCol = addAttrForm->IdCol;
 					 _titleCol = addAttrForm->TitleCol;
+					 _dateCol = addAttrForm->DateCol;
 					 _roughCol = addAttrForm->RoughCol;
 					 _roughSymbols = addAttrForm->RoughSymbols;
 					 _dbAttrs = addAttrForm->Attributes;

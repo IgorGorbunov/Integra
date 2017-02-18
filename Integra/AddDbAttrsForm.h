@@ -819,10 +819,10 @@ private: System::Void dgvFields_CellValueChanged(System::Object^  sender, System
 				 }
 				 else if (e->ColumnIndex == 2)
 				 {
-					 String^ schtab = String::Format("{0}.{1}", tv->SelectedNode->Parent->Name, tv->SelectedNode->Name);
+					 /*String^ schtab = String::Format("{0}.{1}", tv->SelectedNode->Parent->Name, tv->SelectedNode->Name);
 					 String^ field = dgvFields[1, e->RowIndex]->Value->ToString();
 					 String^ fullCode = String::Format("{0}.{1}", schtab, field);
-					 _odbc->AddColumnComment(fullCode,  dgvFields[e->ColumnIndex, e->RowIndex]->Value->ToString());
+					 _odbc->AddColumnComment(fullCode,  dgvFields[e->ColumnIndex, e->RowIndex]->Value->ToString());*/
 					 
 				 }
 			 }

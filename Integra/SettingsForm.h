@@ -877,7 +877,7 @@ namespace Integra {
 				dgvSchemas->Rows->Clear();
 				for each (IntegrationSettings^ setting in settings)
 				{
-					array<String^>^ row = gcnew array<String ^>(5);
+					array<String^>^ row = gcnew array<String ^>(8);
 					row[0] = setting->Id + "";
 					row[1] = setting->Name;
 					row[2] = setting->SourceBook->BookName;

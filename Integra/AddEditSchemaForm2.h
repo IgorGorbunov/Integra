@@ -33,6 +33,8 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
+	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::TextBox^  tbName;
 			 BookSettings^ _targetBook;
 
 	public:
@@ -124,6 +126,8 @@ namespace Integra {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->cbBook = (gcnew System::Windows::Forms::ComboBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->tbName = (gcnew System::Windows::Forms::TextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSource))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->BeginInit();
 			this->groupBox1->SuspendLayout();
@@ -132,7 +136,7 @@ namespace Integra {
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(38, 20);
+			this->label3->Location = System::Drawing::Point(42, 72);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(216, 13);
 			this->label3->TabIndex = 3;
@@ -147,7 +151,7 @@ namespace Integra {
 			this->dgvSource->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvSource->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->Column4, this->Column1, 
 				this->Column2, this->Column3});
-			this->dgvSource->Location = System::Drawing::Point(22, 49);
+			this->dgvSource->Location = System::Drawing::Point(26, 101);
 			this->dgvSource->Name = L"dgvSource";
 			this->dgvSource->ReadOnly = true;
 			this->dgvSource->RowHeadersVisible = false;
@@ -182,7 +186,7 @@ namespace Integra {
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(495, 20);
+			this->label4->Location = System::Drawing::Point(499, 72);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(227, 13);
 			this->label4->TabIndex = 5;
@@ -191,8 +195,8 @@ namespace Integra {
 			// cbIntgr
 			// 
 			this->cbIntgr->FormattingEnabled = true;
-			this->cbIntgr->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Одностороннее", L"Двустороннее"});
-			this->cbIntgr->Location = System::Drawing::Point(42, 342);
+			this->cbIntgr->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Односторонняя", L"Двусторонняя"});
+			this->cbIntgr->Location = System::Drawing::Point(390, 37);
 			this->cbIntgr->Name = L"cbIntgr";
 			this->cbIntgr->Size = System::Drawing::Size(231, 21);
 			this->cbIntgr->TabIndex = 5;
@@ -200,7 +204,7 @@ namespace Integra {
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(39, 326);
+			this->label5->Location = System::Drawing::Point(387, 21);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(159, 13);
 			this->label5->TabIndex = 4;
@@ -215,7 +219,7 @@ namespace Integra {
 			this->dgvTarget->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvTarget->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->Column5, this->dataGridViewTextBoxColumn1, 
 				this->dataGridViewTextBoxColumn2, this->dataGridViewTextBoxColumn3});
-			this->dgvTarget->Location = System::Drawing::Point(486, 49);
+			this->dgvTarget->Location = System::Drawing::Point(490, 101);
 			this->dgvTarget->Name = L"dgvTarget";
 			this->dgvTarget->ReadOnly = true;
 			this->dgvTarget->RowHeadersVisible = false;
@@ -250,7 +254,7 @@ namespace Integra {
 			// bCancel
 			// 
 			this->bCancel->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bCancel->Location = System::Drawing::Point(842, 344);
+			this->bCancel->Location = System::Drawing::Point(846, 382);
 			this->bCancel->Name = L"bCancel";
 			this->bCancel->Size = System::Drawing::Size(75, 23);
 			this->bCancel->TabIndex = 7;
@@ -261,7 +265,7 @@ namespace Integra {
 			// bSave
 			// 
 			this->bSave->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bSave->Location = System::Drawing::Point(745, 344);
+			this->bSave->Location = System::Drawing::Point(749, 382);
 			this->bSave->Name = L"bSave";
 			this->bSave->Size = System::Drawing::Size(75, 23);
 			this->bSave->TabIndex = 8;
@@ -272,7 +276,7 @@ namespace Integra {
 			// bLinks
 			// 
 			this->bLinks->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bLinks->Location = System::Drawing::Point(312, 326);
+			this->bLinks->Location = System::Drawing::Point(674, 21);
 			this->bLinks->Name = L"bLinks";
 			this->bLinks->Size = System::Drawing::Size(223, 39);
 			this->bLinks->TabIndex = 9;
@@ -302,7 +306,7 @@ namespace Integra {
 			// 
 			this->groupBox1->Controls->Add(this->cbBook);
 			this->groupBox1->Controls->Add(this->label1);
-			this->groupBox1->Location = System::Drawing::Point(107, 103);
+			this->groupBox1->Location = System::Drawing::Point(182, 117);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(277, 77);
 			this->groupBox1->TabIndex = 2;
@@ -310,12 +314,30 @@ namespace Integra {
 			this->groupBox1->Text = L"Фильтр справочников:";
 			this->groupBox1->Visible = false;
 			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(42, 21);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(183, 13);
+			this->label2->TabIndex = 10;
+			this->label2->Text = L"Наименование схемы интеграции:";
+			// 
+			// tbName
+			// 
+			this->tbName->Location = System::Drawing::Point(26, 37);
+			this->tbName->Name = L"tbName";
+			this->tbName->Size = System::Drawing::Size(311, 20);
+			this->tbName->TabIndex = 11;
+			// 
 			// AddEditSchemaForm2
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->ClientSize = System::Drawing::Size(945, 379);
+			this->ClientSize = System::Drawing::Size(933, 419);
+			this->Controls->Add(this->tbName);
+			this->Controls->Add(this->label2);
 			this->Controls->Add(this->bLinks);
 			this->Controls->Add(this->bSave);
 			this->Controls->Add(this->bCancel);
@@ -371,18 +393,24 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bSave_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 if (cbIntgr->SelectedItem == nullptr)
+			 if (String::IsNullOrEmpty(tbName->Text))
+			 {
+				 MessageBox::Show("Не задано наименование схемы интеграции!");
+				 return;
+			 }
+			 else if (cbIntgr->SelectedItem == nullptr)
 			 {
 				 MessageBox::Show("Не задан тип интеграции!");
 				 return;
 			 }
-			 if (_attrPairs == nullptr)
+			 else if (_attrPairs == nullptr)
 			 {
 				 MessageBox::Show("Не заданы связи между реквизитами!");
 				 return;
 			 }
 			 int intgrType = cbIntgr->SelectedIndex;
-			 IntegrationSettings^ intSettings = gcnew IntegrationSettings(_odbc, _sourceBook, _targetBook, intgrType, _attrPairs); 
+			 String^ name = tbName->Text->Trim();
+			 IntegrationSettings^ intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType, _attrPairs); 
 
 			 Close();
 		 }

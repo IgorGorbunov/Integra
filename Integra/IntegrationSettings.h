@@ -147,9 +147,10 @@ namespace Integra {
 			Set(_id);
 		}
 
-		IntegrationSettings(OdbcClass^ odbc, BookSettings^ sourceBook, BookSettings^ targetBook, int type, Dictionary<Attribute^, Attribute^>^ attrPairs)
+		IntegrationSettings(OdbcClass^ odbc, String^ name, BookSettings^ sourceBook, BookSettings^ targetBook, int type, Dictionary<Attribute^, Attribute^>^ attrPairs)
 		{
 			_odbc = odbc;
+			_name = name;
 			_sourceBook = sourceBook;
 			_targetBook = targetBook;
 			_attributePairs = attrPairs;
@@ -212,15 +213,16 @@ namespace Integra {
 
 		void CreateIntgrSchema()
 		{
-			String^ columns = "ID,ID_SOURCE_BOOK,ID_TARGET_BOOK,TYPE,CREATE_USER,CREATE_DATE,BOOK_TYPE_ID";
+			String^ columns = "ID,ID_SOURCE_BOOK,ID_TARGET_BOOK,TYPE,CREATE_USER,CREATE_DATE,BOOK_TYPE_ID,INT_NAME";
 			_id = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATION_PARAMS");
 			int idS = _sourceBook->Id;
 			int idT = _targetBook->Id;
 			String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
 			String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+			String^ sqlName = OdbcClass::GetSqlString(_name);
 
-			String^ squery = String::Format("insert into {0}INTEGRATION_PARAMS ({1}) values ({2},{3},{4},{5},{6},{7},{8})",
-				_odbc->schema, columns, _id, idS, idT, _intType, sqlUser, sqlDate, _sourceBook->BookId);
+			String^ squery = String::Format("insert into {0}INTEGRATION_PARAMS ({1}) values ({2},{3},{4},{5},{6},{7},{8}, {9})",
+				_odbc->schema, columns, _id, idS, idT, _intType, sqlUser, sqlDate, _sourceBook->BookId, sqlName);
 			_odbc->ExecuteNonQuery(squery);
 		}
 

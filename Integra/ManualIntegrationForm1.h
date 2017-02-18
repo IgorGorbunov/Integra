@@ -53,33 +53,18 @@ namespace Integra {
 	private: System::Windows::Forms::Button^  bStartRough;
 	private: System::Windows::Forms::Panel^  panel5;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column8;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column9;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column10;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column12;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column11;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column13;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column6;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	private:
@@ -105,11 +90,14 @@ namespace Integra {
 			this->panel4 = (gcnew System::Windows::Forms::Panel());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column9 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column10 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column12 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column11 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column13 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column6 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -126,16 +114,16 @@ namespace Integra {
 			// 
 			this->panel1->Controls->Add(this->panel5);
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->panel1->Location = System::Drawing::Point(0, 313);
+			this->panel1->Location = System::Drawing::Point(0, 346);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(751, 58);
+			this->panel1->Size = System::Drawing::Size(1158, 58);
 			this->panel1->TabIndex = 0;
 			// 
 			// panel5
 			// 
 			this->panel5->Controls->Add(this->bCancel);
 			this->panel5->Dock = System::Windows::Forms::DockStyle::Right;
-			this->panel5->Location = System::Drawing::Point(628, 0);
+			this->panel5->Location = System::Drawing::Point(1035, 0);
 			this->panel5->Name = L"panel5";
 			this->panel5->Size = System::Drawing::Size(123, 58);
 			this->panel5->TabIndex = 2;
@@ -157,7 +145,7 @@ namespace Integra {
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Top;
 			this->panel2->Location = System::Drawing::Point(0, 0);
 			this->panel2->Name = L"panel2";
-			this->panel2->Size = System::Drawing::Size(751, 52);
+			this->panel2->Size = System::Drawing::Size(1158, 52);
 			this->panel2->TabIndex = 1;
 			// 
 			// bStartAccurate
@@ -186,7 +174,7 @@ namespace Integra {
 			this->panel3->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel3->Location = System::Drawing::Point(0, 52);
 			this->panel3->Name = L"panel3";
-			this->panel3->Size = System::Drawing::Size(751, 261);
+			this->panel3->Size = System::Drawing::Size(1158, 294);
 			this->panel3->TabIndex = 2;
 			// 
 			// panel4
@@ -196,7 +184,7 @@ namespace Integra {
 			this->panel4->Location = System::Drawing::Point(0, 0);
 			this->panel4->Name = L"panel4";
 			this->panel4->Padding = System::Windows::Forms::Padding(10);
-			this->panel4->Size = System::Drawing::Size(751, 261);
+			this->panel4->Size = System::Drawing::Size(1158, 294);
 			this->panel4->TabIndex = 0;
 			// 
 			// dataGridView1
@@ -205,14 +193,15 @@ namespace Integra {
 			this->dataGridView1->AllowUserToDeleteRows = false;
 			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(10) {this->Column1, 
-				this->Column9, this->Column2, this->Column10, this->Column3, this->Column11, this->Column4, this->Column5, this->Column6, this->Column7});
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(13) {this->Column1, 
+				this->Column8, this->Column9, this->Column2, this->Column10, this->Column12, this->Column3, this->Column11, this->Column13, this->Column4, 
+				this->Column5, this->Column6, this->Column7});
 			this->dataGridView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->dataGridView1->Location = System::Drawing::Point(10, 10);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->ReadOnly = true;
 			this->dataGridView1->RowHeadersVisible = false;
-			this->dataGridView1->Size = System::Drawing::Size(731, 241);
+			this->dataGridView1->Size = System::Drawing::Size(1138, 274);
 			this->dataGridView1->TabIndex = 0;
 			// 
 			// Column1
@@ -221,6 +210,12 @@ namespace Integra {
 			this->Column1->Name = L"Column1";
 			this->Column1->ReadOnly = true;
 			this->Column1->Visible = false;
+			// 
+			// Column8
+			// 
+			this->Column8->HeaderText = L"Наименование схемы";
+			this->Column8->Name = L"Column8";
+			this->Column8->ReadOnly = true;
 			// 
 			// Column9
 			// 
@@ -231,7 +226,7 @@ namespace Integra {
 			// 
 			// Column2
 			// 
-			this->Column2->HeaderText = L"Справочник";
+			this->Column2->HeaderText = L"Тип справочника";
 			this->Column2->Name = L"Column2";
 			this->Column2->ReadOnly = true;
 			// 
@@ -241,6 +236,12 @@ namespace Integra {
 			this->Column10->Name = L"Column10";
 			this->Column10->ReadOnly = true;
 			this->Column10->Visible = false;
+			// 
+			// Column12
+			// 
+			this->Column12->HeaderText = L"Наименование справочника-источника";
+			this->Column12->Name = L"Column12";
+			this->Column12->ReadOnly = true;
 			// 
 			// Column3
 			// 
@@ -255,9 +256,15 @@ namespace Integra {
 			this->Column11->ReadOnly = true;
 			this->Column11->Visible = false;
 			// 
+			// Column13
+			// 
+			this->Column13->HeaderText = L"Наименование справочника-получателя";
+			this->Column13->Name = L"Column13";
+			this->Column13->ReadOnly = true;
+			// 
 			// Column4
 			// 
-			this->Column4->HeaderText = L"Система-приемник";
+			this->Column4->HeaderText = L"Система-получатель";
 			this->Column4->Name = L"Column4";
 			this->Column4->ReadOnly = true;
 			// 
@@ -283,7 +290,7 @@ namespace Integra {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(751, 371);
+			this->ClientSize = System::Drawing::Size(1158, 404);
 			this->Controls->Add(this->panel3);
 			this->Controls->Add(this->panel2);
 			this->Controls->Add(this->panel1);
@@ -306,16 +313,16 @@ namespace Integra {
 			 }
 private: System::Void ManualIntegrationForm1_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			String^ squery = String::Format("select IP.ID, BB.ID, BB.NAME, " + 
-				"IP.ID_SOURCE_BOOK, (select INTEGRATED_SYSTEMS.NAME from {0}INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from {0}INTEGRATION_BOOK where INTEGRATION_BOOK.ID = IP.ID_SOURCE_BOOK) ), " + 
-				"IP.ID_TARGET_BOOK, (select INTEGRATED_SYSTEMS.NAME from {0}INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from {0}INTEGRATION_BOOK where INTEGRATION_BOOK.ID = IP.ID_TARGET_BOOK) ), " + 
+			String^ squery = String::Format("select IP.ID, IP.INT_NAME, BB.ID, BB.NAME, " + 
+				"IP.ID_SOURCE_BOOK, (select NAME from {0}INTEGRATION_BOOK IBS where IBS.ID = IP.ID_SOURCE_BOOK), (select INTEGRATED_SYSTEMS.NAME from {0}INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from {0}INTEGRATION_BOOK where INTEGRATION_BOOK.ID = IP.ID_SOURCE_BOOK) ), " + 
+				"IP.ID_TARGET_BOOK, (select NAME from {0}INTEGRATION_BOOK IBT where IBT.ID = IP.ID_TARGET_BOOK), (select INTEGRATED_SYSTEMS.NAME from {0}INTEGRATED_SYSTEMS where INTEGRATED_SYSTEMS.ID = (select ID_SYSTEM from {0}INTEGRATION_BOOK where INTEGRATION_BOOK.ID = IP.ID_TARGET_BOOK) ), " + 
 				"IP.TYPE, IP.CREATE_DATE, IP.CREATE_USER " +
 				"from {0}INTEGRATION_PARAMS IP, {0}BOOKS BB where IP.BOOK_TYPE_ID = BB.ID", _odbc->schema);
 			List<Object^>^ list = _odbc->ExecuteQuery(squery);
 
-			for (int i = 0; i < list->Count; i+=10)
+			for (int i = 0; i < list->Count; i+=13)
 			{
-				array<Object^>^ row = gcnew array<Object^>(10);
+				array<Object^>^ row = gcnew array<Object^>(13);
 				row[0] = list[i];
 				row[1] = list[i+1];
 				row[2] = list[i+2];
@@ -323,23 +330,29 @@ private: System::Void ManualIntegrationForm1_Load(System::Object^  sender, Syste
 				row[4] = list[i+4];
 				row[5] = list[i+5];
 				row[6] = list[i+6];
-				int io = Decimal::ToInt32((Decimal)list[i+7]);
+				row[7] = list[i+7];
+				row[8] = list[i+8];
+				row[9] = list[i+9];
+				int io = Decimal::ToInt32((Decimal)list[i+10]);
 				if (io == 0)
 				{
-					row[7] = "Односторонняя";
+					row[10] = "Односторонняя";
 				}
 				else
 				{
-					row[7] = "Двусторонняя";
+					row[10] = "Двусторонняя";
 				}
-				row[8] = list[i+8];
-				row[9] = list[i+9];
+				row[11] = list[i+11];
+				row[12] = list[i+12];
 				dataGridView1->Rows->Add(row);
 			}
 		 }
 private: System::Void bStartRough_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 int i = Int32::Parse("s");
+			 if (dataGridView1->RowCount < 0 || dataGridView1->ColumnCount < 0)
+			 {
+				 return;
+			 }
 		 }
 private: System::Void bStartAccurate_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {

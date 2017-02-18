@@ -21,7 +21,7 @@ namespace Integra {
 		User(String^ login, String^ password)
 		{
 			_login = login;
-			_pass = pass;
+			_pass = password;
 		}
 
 	protected:

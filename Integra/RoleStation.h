@@ -79,6 +79,24 @@ namespace Integra {
 			return results[0]->ToString();
 		}
 
+		static Dictionary<int, String^>^ GetAllUsers()
+		{
+			String^ sQuery =  String::Format("select {0}ID, {0}USER_BD_CODE from ROLE_USERS", _odbc->schema);
+			List<Object^>^ resList = _odbc->ExecuteQuery(sQuery);
+			Dictionary<int, String^>^ list = gcnew Dictionary<int, String^>();
+			for (int i = 0; i < resList->Count; i+=2)
+			{
+				int id = _odbc->GetInt(resList[i]);
+				String^ code = resList[i+1]->ToString();
+				list->Add(id, code);
+			}
+
+			return list;
+		}
+
+
+
+
 		static bool BookSettingsHidden()
 		{
 			if	(_role == Role::Master ||

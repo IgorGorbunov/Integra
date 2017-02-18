@@ -141,7 +141,7 @@ namespace Integra {
 
 	private: System::Void bAdd_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				 if (!String::IsNullOrEmpty(cbTable->SelectedItem->ToString()->Trim()))
+				 if (cbTable->SelectedItem != nullptr && !String::IsNullOrEmpty(cbTable->SelectedItem->ToString()->Trim()))
 				 {
 					 if (cbSchema->SelectedItem != nullptr && cbSchema->SelectedItem->ToString() != "")
 					 {

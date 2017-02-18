@@ -4,6 +4,7 @@
 #include "ODBCclass.h"
 #include "AddDbAttrsForm.h"
 #include "AddSemAttrForm.h"
+#include "UserBookAccessForm.h"
 
 namespace Integra {
 
@@ -66,6 +67,7 @@ namespace Integra {
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Button^  bOk;
 	private: System::Windows::Forms::Button^  bCancel;
+	private: System::Windows::Forms::Button^  bAddEditUsers;
 
 	private:
 		/// <summary>
@@ -96,6 +98,7 @@ namespace Integra {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->bOk = (gcnew System::Windows::Forms::Button());
 			this->bCancel = (gcnew System::Windows::Forms::Button());
+			this->bAddEditUsers = (gcnew System::Windows::Forms::Button());
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -233,7 +236,7 @@ namespace Integra {
 			// 
 			// bOk
 			// 
-			this->bOk->Location = System::Drawing::Point(83, 381);
+			this->bOk->Location = System::Drawing::Point(83, 412);
 			this->bOk->Name = L"bOk";
 			this->bOk->Size = System::Drawing::Size(75, 23);
 			this->bOk->TabIndex = 17;
@@ -244,13 +247,23 @@ namespace Integra {
 			// bCancel
 			// 
 			this->bCancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-			this->bCancel->Location = System::Drawing::Point(164, 381);
+			this->bCancel->Location = System::Drawing::Point(164, 412);
 			this->bCancel->Name = L"bCancel";
 			this->bCancel->Size = System::Drawing::Size(75, 23);
 			this->bCancel->TabIndex = 18;
 			this->bCancel->Text = L"Отмена";
 			this->bCancel->UseVisualStyleBackColor = true;
 			this->bCancel->Click += gcnew System::EventHandler(this, &AddEditSystemBookForm::bCancel_Click);
+			// 
+			// bAddEditUsers
+			// 
+			this->bAddEditUsers->Location = System::Drawing::Point(36, 365);
+			this->bAddEditUsers->Name = L"bAddEditUsers";
+			this->bAddEditUsers->Size = System::Drawing::Size(177, 23);
+			this->bAddEditUsers->TabIndex = 19;
+			this->bAddEditUsers->Text = L"Задать доступ пользователй";
+			this->bAddEditUsers->UseVisualStyleBackColor = true;
+			this->bAddEditUsers->Click += gcnew System::EventHandler(this, &AddEditSystemBookForm::bAddEditUsers_Click);
 			// 
 			// AddEditSystemBookForm
 			// 
@@ -259,7 +272,8 @@ namespace Integra {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->CancelButton = this->bCancel;
-			this->ClientSize = System::Drawing::Size(255, 416);
+			this->ClientSize = System::Drawing::Size(255, 447);
+			this->Controls->Add(this->bAddEditUsers);
 			this->Controls->Add(this->bCancel);
 			this->Controls->Add(this->bOk);
 			this->Controls->Add(this->bAddAttrs);
@@ -295,12 +309,14 @@ namespace Integra {
 			Attribute^ _titleCol;
 			Attribute^ _roughCol;
 			String^ _roughSymbols;
-			int _intgrId;
+			int _intgrBookId;
 
 			String^ _groupSchtab;
 			Attribute^ _groupIdCol;
 			Attribute^ _groupNameCol;
 			Dictionary<Attribute^,Attribute^>^ _groupAttrs;
+
+			Dictionary<int, String^>^ _users;
 
 			Void SetComboBox(ComboBox^ comboBox, array<String^, 2>^ list)
 			{
@@ -335,7 +351,7 @@ namespace Integra {
 			{
 				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE";
 				
-				_intgrId = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_BOOK");
+				_intgrBookId = _odbc->GetMinFreeId(_odbc->schema + "INTEGRATION_BOOK");
 				List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
 				List<Object^>^ idSystem = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystem->Text + "\'");
 
@@ -368,7 +384,7 @@ namespace Integra {
 				}
 				String^ query;
 				query = String::Format("insert into {0}INTEGRATION_BOOK ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11})", 
-					_odbc->schema, columns, _intgrId, sqlIdSystem, sqlIdBook, sqlLogin, sqlPassword, sqlDb, sqlDriver, _systemTypeId, sqlUser, sqlDate);
+					_odbc->schema, columns, _intgrBookId, sqlIdSystem, sqlIdBook, sqlLogin, sqlPassword, sqlDb, sqlDriver, _systemTypeId, sqlUser, sqlDate);
 				_odbc->ExecuteNonQuery(query);
 			}
 
@@ -406,8 +422,9 @@ namespace Integra {
 				for (int i = 0; i < dbAttrs->Count; i++)
 				{
 					int id = _odbc->GetMinFreeId("" + _odbc->schema + "integration_attributes");
+					array<String^>^ attributeData = dbAttrs[i];
 					String^ squery = String::Format("insert into " + _odbc->schema + "integration_attributes values ({0}, \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', {6})", 
-						id, dbAttrs[i][0], dbAttrs[i][1], dbAttrs[i][2], dbAttrs[i][3], dbAttrs[i][4], intgrId);
+						id, attributeData[0], attributeData[1], attributeData[2], attributeData[3], attributeData[4], intgrId);
 					_odbc->ExecuteNonQuery(squery);
 				}
 
@@ -500,16 +517,35 @@ namespace Integra {
 				_odbc->ExecuteNonQuery(squery);
 			}
 
+			void WriteUserAccess()
+			{
+				String^ columns = "ID,ID_USER_ROLE,ID_INT_BOOK,CREATE_USER,CREATE_DATE";
+				String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
+				String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+
+				if (_users != nullptr && _users->Count > 0)
+				{
+					for each (KeyValuePair<int, String^>^ pair in _users)
+					{
+						int id = _odbc->GetMinFreeId(_odbc->schema + "USERS_BOOKS");
+						String^ sQuery = String::Format("insert into {0}USERS_BOOKS ({1}) values ({2}, {3}, {4}, {5}, {6})",
+							_odbc->schema, columns, id, pair->Key, _intgrBookId, sqlUser, sqlDate);
+						_odbc->ExecuteNonQuery(sQuery);
+					}
+				}
+			}
+
 			Void WriteToDb()
 			{
 				WriteIntegrBook();
-				WriteUseAttrs(_dbAttrs, _intgrId);
-				WriteSingleAttrs(_idCol, _titleCol, _roughCol, _intgrId);
-				WriteRoughSymbols(_roughSymbols, _intgrId);
+				WriteUseAttrs(_dbAttrs, _intgrBookId);
+				WriteSingleAttrs(_idCol, _titleCol, _roughCol, _intgrBookId);
+				WriteRoughSymbols(_roughSymbols, _intgrBookId);
 				if (!String::IsNullOrEmpty(_groupSchtab))
 				{
-					WriteGroup(_intgrId);
+					WriteGroup(_intgrBookId);
 				}
+				WriteUserAccess();
 			}
 
 	private: System::Void cbSystem_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
@@ -584,6 +620,11 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 				 MessageBox::Show("Не задан основной атрибут!");
 				 return;
 			 }
+			 else if (_users == nullptr || _users->Count <= 0)
+			 {
+				 MessageBox::Show("Не задан доступ для пользователей!");
+				 return;
+			 }
 			 else if (cbConnType->SelectedIndex == 1)
 			 {
 				 if (String::IsNullOrEmpty(tbDriver->Text))
@@ -613,6 +654,7 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 					 }
 				 }
 			 }
+
 			 WriteToDb();
 			 Close();
 		 }
@@ -692,6 +734,24 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 				 
 			 }
 			 
+		 }
+private: System::Void bAddEditUsers_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 UserBookAccessForm^ form;
+			 if (_users == nullptr)
+			 {
+				 form = gcnew UserBookAccessForm(0, _users);
+			 }
+			 else
+			 {
+				 form = gcnew UserBookAccessForm(1, _users);
+			 }
+			 form->ShowDialog();
+
+			 if (form->IsOk)
+			 {
+				 _users = form->Users;
+			 }
 		 }
 };
 }

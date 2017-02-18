@@ -123,6 +123,7 @@
     <ClCompile Include="RoughInterg.cpp" />
     <ClCompile Include="SettingsForm.cpp" />
     <ClCompile Include="TableLinksForm.cpp" />
+    <ClCompile Include="UserBookAccessForm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddComplexAttrForm.h">
@@ -254,6 +255,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="User.h" />
+    <ClInclude Include="UserBookAccessForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="WrongPassSemanticException.h" />
   </ItemGroup>
   <ItemGroup>
@@ -354,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TableLinksForm.resx">
       <DependentUpon>TableLinksForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserBookAccessForm.resx">
+      <DependentUpon>UserBookAccessForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

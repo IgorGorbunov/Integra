@@ -168,6 +168,7 @@
     <ClInclude Include="ComplexAttribute.h" />
     <ClInclude Include="ComposeAttr.h" />
     <ClInclude Include="DbBook.h" />
+    <ClInclude Include="DbFilter.h" />
     <ClInclude Include="DbFiltersForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

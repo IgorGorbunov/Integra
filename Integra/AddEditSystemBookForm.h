@@ -331,6 +331,8 @@ namespace Integra {
 			Attribute^ _titleCol;
 			Attribute^ _dateCol;
 
+			List<DbFilter^>^ _dbFilters;
+
 			Attribute^ _roughCol;
 			String^ _roughSymbols;
 			int _intgrBookId;
@@ -442,6 +444,17 @@ namespace Integra {
 				}
 			}
 
+			Attribute^ GetAttr(String^ fullCode)
+			{
+				for each (Attribute^ attr in _dbAttrs) 
+				{
+					if (attr->FullCode == fullCode)
+					{
+						return attr;
+					}
+				}
+				return nullptr;
+			}
 
 			void WriteDbAttrs(Attribute^ idCol, Attribute^ titleCol, List<array<String^>^>^ dbAttrs, int intgrId)
 			{
@@ -466,18 +479,19 @@ namespace Integra {
 			void WriteUseAttrs(List<Attribute^>^ dbAttrs, int intgrId)
 			{
 				String^ columns = "ID,FULL_CODE,NAME,SCHEMA_NAME,TABLE_NAME,ATTR_NAME,ID_INTGR_BOOK,CREATE_USER,CREATE_DATE,DATA_TYPE,MAX_LENGTH";
-				for each (Attribute^ attr in dbAttrs)
+				for (int i = 0; i < dbAttrs->Count; i++)
 				{
 					int id = _odbc->GetLastFreeId(_odbc->schema + "integration_attributes");
-					String^ fullTable = OdbcClass::GetSqlString(attr->FullTable);
-					String^ name = OdbcClass::GetSqlString(attr->Name);
-					String^ schemaName = OdbcClass::GetSqlString(attr->Schema);
-					String^ tableName = OdbcClass::GetSqlString(attr->Table);
-					String^ attrName = OdbcClass::GetSqlString(attr->Code);
+					dbAttrs[i]->Id = id;
+					String^ fullTable = OdbcClass::GetSqlString(dbAttrs[i]->FullTable);
+					String^ name = OdbcClass::GetSqlString(dbAttrs[i]->Name);
+					String^ schemaName = OdbcClass::GetSqlString(dbAttrs[i]->Schema);
+					String^ tableName = OdbcClass::GetSqlString(dbAttrs[i]->Table);
+					String^ attrName = OdbcClass::GetSqlString(dbAttrs[i]->Code);
 					String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
 					String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
-					String^ dataType = OdbcClass::GetSqlString(attr->DataType);
-					String^ maxLen = OdbcClass::GetSqlString(attr->MaxLength);
+					String^ dataType = OdbcClass::GetSqlString(dbAttrs[i]->DataType);
+					String^ maxLen = OdbcClass::GetSqlString(dbAttrs[i]->MaxLength);
 
 					String^ squery = String::Format("insert into {0}integration_attributes ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12})",
 						_odbc->schema, columns, id, fullTable, name, schemaName, tableName, attrName, intgrId,  sqlUser, sqlDate,  dataType, maxLen);
@@ -517,6 +531,15 @@ namespace Integra {
 				{
 					String^ squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ROUGH_SYMBOLS = '" + symbols + "' where ID = " + intgrId;
 					_odbc->ExecuteNonQuery(squery);
+				}
+			}
+
+			void WriteDbFilters()
+			{
+				for each (DbFilter^ filter in _dbFilters)
+				{
+					int attrId = GetAttr(filter->AttributeFullCode)->Id;
+					filter->InsertToDb(_intgrBookId, attrId);
 				}
 			}
 
@@ -573,6 +596,10 @@ namespace Integra {
 				WriteIntegrBook();
 				WriteUseAttrs(_dbAttrs, _intgrBookId);
 				WriteSingleAttrs(_idCol, _titleCol, _dateCol, _roughCol, _intgrBookId);
+				if (_dbFilters != nullptr)
+				{
+					WriteDbFilters();
+				}
 				WriteRoughSymbols(_roughSymbols, _intgrBookId);
 				if (!String::IsNullOrEmpty(_groupSchtab))
 				{
@@ -759,6 +786,8 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 					 _roughCol = addAttrForm->RoughCol;
 					 _roughSymbols = addAttrForm->RoughSymbols;
 					 _dbAttrs = addAttrForm->Attributes;
+
+					 _dbFilters = addAttrForm->DbFilters;
 
 					 _groupSchtab = addAttrForm->GroupSchtab;
 					 if (!String::IsNullOrEmpty(_groupSchtab))

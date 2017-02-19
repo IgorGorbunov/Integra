@@ -125,7 +125,10 @@ namespace Integra {
 			{
 				return _id;
 			}
-
+			void set(int id)
+			{
+				_id = id;
+			}
 		}
 
 

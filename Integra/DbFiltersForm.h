@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DbFilter.h"
+
 namespace Integra {
 
 	using namespace System;
@@ -14,12 +16,16 @@ namespace Integra {
 	public ref class DbFiltersForm : public System::Windows::Forms::Form
 	{
 	public:
-		String^ Condition;
+		List<DbFilter^>^ DbFilters;
 
 	private:
+		OdbcClass^ _odbc;
+
 		List<String^>^ _conditions;
 		List<String^>^ _codes;
 		List<String^>^ _comparators;
+
+		List<Attribute^>^ _attributes;
 
 	private: System::Windows::Forms::Panel^  panel2;
 	private: System::Windows::Forms::Panel^  panel3;
@@ -32,10 +38,17 @@ namespace Integra {
 			 
 
 	public:
-		DbFiltersForm(List<String^>^ codes)
+		DbFiltersForm(List<Attribute^>^ allAttrs, OdbcClass^ odbc)
 		{
 			InitializeComponent();
-			_codes = codes;
+			_odbc = odbc;
+			_attributes = allAttrs;
+
+			_codes = gcnew List<String ^>();
+			for each (Attribute^ attr in allAttrs)
+			{
+				_codes->Add(attr->FullCode);
+			}
 		}
 
 	protected:
@@ -221,6 +234,18 @@ namespace Integra {
 				Column1->DataSource = _codes;
 			}
 
+			Attribute^ GetAttr(String^ fullCode)
+			{
+				for each (Attribute^ attr in _attributes)
+				{
+					if (attr->FullCode == fullCode)
+					{
+						return attr;
+					}
+				}
+				return nullptr;
+			}
+
 
 	private: System::Void DbFiltersForm_Load(System::Object^  sender, System::EventArgs^  e) 
 			 {
@@ -229,22 +254,28 @@ namespace Integra {
 			 }
 	private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				 Condition = nullptr;
+				 DbFilters = nullptr;
 				 Close();
 			 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 Condition = "";
+			 DbFilters = gcnew List<DbFilter ^>();
 			 for (int i = 0; i < dataGridView1->Rows->Count; i++)
 			 {
-				 if (dataGridView1[3, i]->Value == nullptr)
+				 //todo add check сочетание на пустоту
+				 if (dataGridView1[0, i]->Value != nullptr)
 				 {
-					 dataGridView1[3, i]->Value = "";
-				 }
-				 Condition += String::Format("{0} {1} {2}", dataGridView1[0, i]->Value, dataGridView1[1, i]->Value, dataGridView1[2, i]->Value);
-				 if (i < dataGridView1->Rows->Count - 1)
-				 {
-					 Condition += String::Format(" {0} ", dataGridView1[3, i]->Value);
+					 Attribute^ attr = GetAttr(dataGridView1[0, i]->Value->ToString());
+					 String^ condition = dataGridView1[1, i]->Value->ToString();
+					 String^ condValue = dataGridView1[2, i]->Value->ToString();
+					 String^ concatValue = String::Empty;
+					 if (dataGridView1[3, i]->Value != nullptr)
+					 {
+						 concatValue = dataGridView1[3, i]->Value->ToString();
+					 }
+
+					 DbFilter^ filter = gcnew DbFilter(attr, condition, condValue, concatValue, _odbc);
+					 DbFilters->Add(filter);
 				 }
 			 }
 			 Close();

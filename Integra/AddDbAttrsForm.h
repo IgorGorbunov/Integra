@@ -32,6 +32,8 @@ namespace Integra {
 		String^ RoughSymbols;
 		List<Attribute^>^ Attributes;
 
+		List<DbFilter^>^ DbFilters;
+
 		String^ GroupSchtab;
 		Attribute^ GroupIdCol;
 		Attribute^ GroupNameCol;
@@ -40,7 +42,6 @@ namespace Integra {
 	private:
 		List<String^>^ _fieldNames;
 		OdbcClass^ _odbc;
-		String^ _filter;
 		List<DbLink^>^ _links;
 
 		Dictionary<String^, List<Attribute^>^>^ _allAttrs;
@@ -55,14 +56,6 @@ namespace Integra {
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::GroupBox^  groupBox1;
 	private: System::Windows::Forms::Label^  label6;
-
-
-
-
-
-
-
-
 	private: System::Windows::Forms::Button^  bPosGroupParams;
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
@@ -879,7 +872,15 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 			 }
 			 IdCol = GetAttribute(cbId->SelectedItem->ToString());
 			 TitleCol = GetAttribute(cbTitle->SelectedItem->ToString());
-			 DateCol = GetAttribute(cbDateAttr->SelectedItem->ToString());
+			 if (cbDateAttr->SelectedItem != nullptr)
+			 {
+				 DateCol = GetAttribute(cbDateAttr->SelectedItem->ToString());
+			 }
+			 else
+			 {
+				 DateCol = nullptr;
+			 }
+			 
 
 			 RoughCol = nullptr;
 			 RoughSymbols = nullptr;
@@ -921,19 +922,19 @@ private: System::Void tv_AfterSelect(System::Object^  sender, System::Windows::F
 		 }
 private: System::Void bAddFilter_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 List<String^>^ list = gcnew List<String ^>();
+			 List<Attribute^>^ list = gcnew List<Attribute ^>();
 			 for each (KeyValuePair<String^, List<Attribute^>^>^ pair in _allAttrs)
 			 {
 				 for each (Attribute^ attr in pair->Value)
 				 {
-					 list->Add(String::Format("{0}.{1}", pair->Key, attr->Code));
+					 list->Add(attr);
 				 }
 			 }
-			 DbFiltersForm^ form = gcnew DbFiltersForm(list);
+			 DbFiltersForm^ form = gcnew DbFiltersForm(list, _odbc);
 			 form->ShowDialog();
-			 if (!String::IsNullOrEmpty(form->Condition))
+			 if (form->DbFilters != nullptr && form->DbFilters->Count > 0)
 			 {
-				 _filter = form->Condition;
+				 DbFilters = form->DbFilters;
 			 }
 		 }
 private: System::Void bAddTableLinks_Click(System::Object^  sender, System::EventArgs^  e) 

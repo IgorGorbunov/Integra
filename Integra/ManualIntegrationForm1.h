@@ -350,14 +350,14 @@ private: System::Void ManualIntegrationForm1_Load(System::Object^  sender, Syste
 		 }
 private: System::Void bStartRough_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 if (dataGridView1->RowCount < 0 || dataGridView1->ColumnCount < 0)
+			 if (dataGridView1->RowCount <= 0 || dataGridView1->ColumnCount <= 0)
 			 {
 				 return;
 			 }
 		 }
 private: System::Void bStartAccurate_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 if (dataGridView1->RowCount < 0 || dataGridView1->ColumnCount < 0)
+			 if (dataGridView1->RowCount <= 0 || dataGridView1->ColumnCount <= 0)
 			 {
 				 return;
 			 }

@@ -541,9 +541,9 @@ private: System::Void lbDifferences_MouseDoubleClick(System::Object^  sender, Sy
 				 {
 					 if (pos->UnicId == lbDifferences->SelectedItem->ToString())
 					 {
-						 DifferencesForm^ form = gcnew DifferencesForm(pos);
+						 /*DifferencesForm^ form = gcnew DifferencesForm(pos);
 						 form->ShowDialog();
-						 break;
+						 break;*/
 					 }
 				 }
 			 }

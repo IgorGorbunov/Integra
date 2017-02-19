@@ -37,18 +37,18 @@ namespace Integra {
 		System::ComponentModel::DoWorkEventArgs ^ eWorker;
 
 	private: System::Windows::Forms::GroupBox^  groupBox1;
-	public: System::Windows::Forms::Label^  LblSourceAllCount;
 
-	private: System::Windows::Forms::Label^  label12;
+
+
 	public: System::Windows::Forms::Label^  LblSourceCount;
 	public: System::Windows::Forms::Label^  LblSourceStatus;
 
 	private: System::Windows::Forms::Label^  label7;
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::GroupBox^  groupBox2;
-	public: System::Windows::Forms::Label^  LblTargetAllCount;
 
-	private: System::Windows::Forms::Label^  label14;
+
+
 	public: System::Windows::Forms::Label^  LblTargetCount;
 	public: System::Windows::Forms::Label^  LblTargetStatus;
 
@@ -66,18 +66,45 @@ namespace Integra {
 
 	private:
 		int selectId;
-	private: System::Windows::Forms::Button^  bIntegNewSource;
-	private: System::Windows::Forms::Button^  bIntegNewTarget;
+	private: System::Windows::Forms::Button^  bIntegNewSourceToTarget;
+	private: System::Windows::Forms::Button^  bIntegNewTargetToSource;
+
+
 	private: System::Windows::Forms::Button^  button4;
 	private: System::Windows::Forms::Button^  button5;
 	private: System::Windows::Forms::Label^  label10;
+	private: System::Windows::Forms::Button^  bDeleteFromTarget;
+
+	private: System::Windows::Forms::Button^  bDeleteFromSource;
+	private: System::Windows::Forms::GroupBox^  groupBox3;
+	private: System::Windows::Forms::Label^  label13;
+	public: System::Windows::Forms::Label^  lblMatchingStatus;
+	private: 
+
+	private: 
+	private: System::Windows::Forms::Label^  label12;
+	public: System::Windows::Forms::Label^  lblNequal;
+	private: 
+	public: System::Windows::Forms::Label^  lblNmatching;
+	public: 
+
 			 IntegrationSettings^ _settings;
 
 	public:
 		Results3 (IntegrationSettings^ settings)
 		{
-			_settings = settings;
 			InitializeComponent();
+			_settings = settings;
+			if (_settings->Type == IntegrationSettings::IntegrationType::OneWay)
+			{
+				bDeleteFromSource->Enabled = false;
+				bIntegNewTargetToSource->Enabled = false;
+			}
+			else
+			{
+				bDeleteFromSource->Enabled = true;
+				bIntegNewTargetToSource->Enabled = true;
+			}
 		}
 
 	protected:
@@ -123,15 +150,11 @@ namespace Integra {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->lbDifferences = (gcnew System::Windows::Forms::ListBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->LblSourceAllCount = (gcnew System::Windows::Forms::Label());
-			this->label12 = (gcnew System::Windows::Forms::Label());
-			this->LblSourceCount = (gcnew System::Windows::Forms::Label());
 			this->LblSourceStatus = (gcnew System::Windows::Forms::Label());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->LblSourceCount = (gcnew System::Windows::Forms::Label());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
-			this->LblTargetAllCount = (gcnew System::Windows::Forms::Label());
-			this->label14 = (gcnew System::Windows::Forms::Label());
 			this->LblTargetCount = (gcnew System::Windows::Forms::Label());
 			this->LblTargetStatus = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
@@ -142,17 +165,26 @@ namespace Integra {
 			this->label9 = (gcnew System::Windows::Forms::Label());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->dataGridView2 = (gcnew System::Windows::Forms::DataGridView());
-			this->bIntegNewSource = (gcnew System::Windows::Forms::Button());
-			this->bIntegNewTarget = (gcnew System::Windows::Forms::Button());
+			this->bIntegNewSourceToTarget = (gcnew System::Windows::Forms::Button());
+			this->bIntegNewTargetToSource = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->bDeleteFromTarget = (gcnew System::Windows::Forms::Button());
+			this->bDeleteFromSource = (gcnew System::Windows::Forms::Button());
+			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
+			this->lblMatchingStatus = (gcnew System::Windows::Forms::Label());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->label13 = (gcnew System::Windows::Forms::Label());
+			this->lblNmatching = (gcnew System::Windows::Forms::Label());
+			this->lblNequal = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSourceNew))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTargetNew))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView2))->BeginInit();
+			this->groupBox3->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// dgvSourceNew
@@ -186,27 +218,27 @@ namespace Integra {
 			this->label1->AutoSize = true;
 			this->label1->Location = System::Drawing::Point(38, 126);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(190, 13);
+			this->label1->Size = System::Drawing::Size(215, 13);
 			this->label1->TabIndex = 3;
-			this->label1->Text = L"Новые записи в системе источнике";
+			this->label1->Text = L"Новые записи в справочнике-источнике:";
 			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
 			this->label2->Location = System::Drawing::Point(38, 438);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(195, 13);
+			this->label2->Size = System::Drawing::Size(220, 13);
 			this->label2->TabIndex = 4;
-			this->label2->Text = L"Новые записи в системе получателе";
+			this->label2->Text = L"Новые записи в справочнике-получателе:";
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
 			this->label3->Location = System::Drawing::Point(920, 125);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(208, 13);
+			this->label3->Size = System::Drawing::Size(219, 13);
 			this->label3->TabIndex = 5;
-			this->label3->Text = L"Записи с различающимися атрибутами";
+			this->label3->Text = L"Записи с различающимися реквизитами:";
 			// 
 			// lbDifferences
 			// 
@@ -219,59 +251,28 @@ namespace Integra {
 			// 
 			// groupBox1
 			// 
-			this->groupBox1->Controls->Add(this->LblSourceAllCount);
-			this->groupBox1->Controls->Add(this->label12);
 			this->groupBox1->Controls->Add(this->LblSourceStatus);
 			this->groupBox1->Controls->Add(this->label7);
 			this->groupBox1->Controls->Add(this->label4);
-			this->groupBox1->Location = System::Drawing::Point(122, 16);
+			this->groupBox1->Controls->Add(this->LblSourceCount);
+			this->groupBox1->Location = System::Drawing::Point(31, 12);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(393, 100);
+			this->groupBox1->Size = System::Drawing::Size(250, 100);
 			this->groupBox1->TabIndex = 7;
 			this->groupBox1->TabStop = false;
-			this->groupBox1->Text = L"Обработка данных системы-источника";
-			this->groupBox1->Visible = false;
-			// 
-			// LblSourceAllCount
-			// 
-			this->LblSourceAllCount->AutoSize = true;
-			this->LblSourceAllCount->Location = System::Drawing::Point(194, 50);
-			this->LblSourceAllCount->Name = L"LblSourceAllCount";
-			this->LblSourceAllCount->Size = System::Drawing::Size(13, 13);
-			this->LblSourceAllCount->TabIndex = 10;
-			this->LblSourceAllCount->Text = L"0";
-			this->LblSourceAllCount->Visible = false;
-			// 
-			// label12
-			// 
-			this->label12->AutoSize = true;
-			this->label12->Location = System::Drawing::Point(173, 50);
-			this->label12->Name = L"label12";
-			this->label12->Size = System::Drawing::Size(19, 13);
-			this->label12->TabIndex = 9;
-			this->label12->Text = L"из";
-			this->label12->Visible = false;
-			// 
-			// LblSourceCount
-			// 
-			this->LblSourceCount->AutoSize = true;
-			this->LblSourceCount->Location = System::Drawing::Point(374, 62);
-			this->LblSourceCount->Name = L"LblSourceCount";
-			this->LblSourceCount->Size = System::Drawing::Size(13, 13);
-			this->LblSourceCount->TabIndex = 8;
-			this->LblSourceCount->Text = L"0";
-			this->LblSourceCount->Visible = false;
+			this->groupBox1->Text = L"Обработка данных справочника-источника";
 			// 
 			// LblSourceStatus
 			// 
 			this->LblSourceStatus->AutoSize = true;
-			this->LblSourceStatus->ForeColor = System::Drawing::Color::Black;
+			this->LblSourceStatus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(204)));
+			this->LblSourceStatus->ForeColor = System::Drawing::Color::Blue;
 			this->LblSourceStatus->Location = System::Drawing::Point(71, 26);
 			this->LblSourceStatus->Name = L"LblSourceStatus";
-			this->LblSourceStatus->Size = System::Drawing::Size(68, 13);
+			this->LblSourceStatus->Size = System::Drawing::Size(32, 13);
 			this->LblSourceStatus->TabIndex = 7;
-			this->LblSourceStatus->Text = L"В процессе:";
-			this->LblSourceStatus->Visible = false;
+			this->LblSourceStatus->Text = L"Идет";
 			// 
 			// label7
 			// 
@@ -291,47 +292,33 @@ namespace Integra {
 			this->label4->TabIndex = 0;
 			this->label4->Text = L"Обработано данных:";
 			// 
+			// LblSourceCount
+			// 
+			this->LblSourceCount->AutoSize = true;
+			this->LblSourceCount->Location = System::Drawing::Point(150, 50);
+			this->LblSourceCount->Name = L"LblSourceCount";
+			this->LblSourceCount->Size = System::Drawing::Size(13, 13);
+			this->LblSourceCount->TabIndex = 8;
+			this->LblSourceCount->Text = L"0";
+			this->LblSourceCount->Visible = false;
+			// 
 			// groupBox2
 			// 
-			this->groupBox2->Controls->Add(this->LblTargetAllCount);
-			this->groupBox2->Controls->Add(this->label14);
 			this->groupBox2->Controls->Add(this->LblTargetCount);
 			this->groupBox2->Controls->Add(this->LblTargetStatus);
 			this->groupBox2->Controls->Add(this->label6);
 			this->groupBox2->Controls->Add(this->label5);
-			this->groupBox2->Controls->Add(this->groupBox1);
-			this->groupBox2->Location = System::Drawing::Point(450, 12);
+			this->groupBox2->Location = System::Drawing::Point(310, 12);
 			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(393, 100);
+			this->groupBox2->Size = System::Drawing::Size(260, 100);
 			this->groupBox2->TabIndex = 8;
 			this->groupBox2->TabStop = false;
-			this->groupBox2->Text = L"Обработка данных системы-приемника";
-			this->groupBox2->Visible = false;
-			// 
-			// LblTargetAllCount
-			// 
-			this->LblTargetAllCount->AutoSize = true;
-			this->LblTargetAllCount->Location = System::Drawing::Point(207, 50);
-			this->LblTargetAllCount->Name = L"LblTargetAllCount";
-			this->LblTargetAllCount->Size = System::Drawing::Size(37, 13);
-			this->LblTargetAllCount->TabIndex = 13;
-			this->LblTargetAllCount->Text = L"50000";
-			this->LblTargetAllCount->Visible = false;
-			// 
-			// label14
-			// 
-			this->label14->AutoSize = true;
-			this->label14->Location = System::Drawing::Point(186, 50);
-			this->label14->Name = L"label14";
-			this->label14->Size = System::Drawing::Size(19, 13);
-			this->label14->TabIndex = 12;
-			this->label14->Text = L"из";
-			this->label14->Visible = false;
+			this->groupBox2->Text = L"Обработка данных справочника-получателя";
 			// 
 			// LblTargetCount
 			// 
 			this->LblTargetCount->AutoSize = true;
-			this->LblTargetCount->Location = System::Drawing::Point(143, 50);
+			this->LblTargetCount->Location = System::Drawing::Point(152, 50);
 			this->LblTargetCount->Name = L"LblTargetCount";
 			this->LblTargetCount->Size = System::Drawing::Size(13, 13);
 			this->LblTargetCount->TabIndex = 11;
@@ -341,13 +328,12 @@ namespace Integra {
 			// LblTargetStatus
 			// 
 			this->LblTargetStatus->AutoSize = true;
-			this->LblTargetStatus->ForeColor = System::Drawing::Color::Black;
+			this->LblTargetStatus->ForeColor = System::Drawing::Color::Blue;
 			this->LblTargetStatus->Location = System::Drawing::Point(76, 26);
 			this->LblTargetStatus->Name = L"LblTargetStatus";
-			this->LblTargetStatus->Size = System::Drawing::Size(68, 13);
+			this->LblTargetStatus->Size = System::Drawing::Size(32, 13);
 			this->LblTargetStatus->TabIndex = 6;
-			this->LblTargetStatus->Text = L"В процессе:";
-			this->LblTargetStatus->Visible = false;
+			this->LblTargetStatus->Text = L"Идет";
 			// 
 			// label6
 			// 
@@ -391,7 +377,7 @@ namespace Integra {
 			// label8
 			// 
 			this->label8->AutoSize = true;
-			this->label8->Location = System::Drawing::Point(312, 306);
+			this->label8->Location = System::Drawing::Point(755, 410);
 			this->label8->Name = L"label8";
 			this->label8->Size = System::Drawing::Size(219, 13);
 			this->label8->TabIndex = 14;
@@ -401,7 +387,7 @@ namespace Integra {
 			// label9
 			// 
 			this->label9->AutoSize = true;
-			this->label9->Location = System::Drawing::Point(312, 126);
+			this->label9->Location = System::Drawing::Point(755, 230);
 			this->label9->Name = L"label9";
 			this->label9->Size = System::Drawing::Size(214, 13);
 			this->label9->TabIndex = 13;
@@ -414,7 +400,7 @@ namespace Integra {
 			this->dataGridView1->AllowUserToDeleteRows = false;
 			this->dataGridView1->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Location = System::Drawing::Point(305, 322);
+			this->dataGridView1->Location = System::Drawing::Point(748, 426);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->ReadOnly = true;
 			this->dataGridView1->Size = System::Drawing::Size(262, 129);
@@ -427,37 +413,37 @@ namespace Integra {
 			this->dataGridView2->AllowUserToDeleteRows = false;
 			this->dataGridView2->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dataGridView2->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView2->Location = System::Drawing::Point(305, 142);
+			this->dataGridView2->Location = System::Drawing::Point(748, 246);
 			this->dataGridView2->Name = L"dataGridView2";
 			this->dataGridView2->ReadOnly = true;
 			this->dataGridView2->Size = System::Drawing::Size(262, 115);
 			this->dataGridView2->TabIndex = 11;
 			this->dataGridView2->Visible = false;
 			// 
-			// bIntegNewSource
+			// bIntegNewSourceToTarget
 			// 
-			this->bIntegNewSource->Location = System::Drawing::Point(92, 390);
-			this->bIntegNewSource->Name = L"bIntegNewSource";
-			this->bIntegNewSource->Size = System::Drawing::Size(112, 29);
-			this->bIntegNewSource->TabIndex = 15;
-			this->bIntegNewSource->Text = L"Интегрировать";
-			this->bIntegNewSource->UseVisualStyleBackColor = true;
-			this->bIntegNewSource->Click += gcnew System::EventHandler(this, &Results3::bIntegNewSource_Click);
+			this->bIntegNewSourceToTarget->Location = System::Drawing::Point(41, 390);
+			this->bIntegNewSourceToTarget->Name = L"bIntegNewSourceToTarget";
+			this->bIntegNewSourceToTarget->Size = System::Drawing::Size(250, 29);
+			this->bIntegNewSourceToTarget->TabIndex = 15;
+			this->bIntegNewSourceToTarget->Text = L"Интегрировать в справочник-получатель";
+			this->bIntegNewSourceToTarget->UseVisualStyleBackColor = true;
+			this->bIntegNewSourceToTarget->Click += gcnew System::EventHandler(this, &Results3::bIntegNewSource_Click);
 			// 
-			// bIntegNewTarget
+			// bIntegNewTargetToSource
 			// 
-			this->bIntegNewTarget->Enabled = false;
-			this->bIntegNewTarget->Location = System::Drawing::Point(92, 645);
-			this->bIntegNewTarget->Name = L"bIntegNewTarget";
-			this->bIntegNewTarget->Size = System::Drawing::Size(112, 29);
-			this->bIntegNewTarget->TabIndex = 16;
-			this->bIntegNewTarget->Text = L"Интегрировать";
-			this->bIntegNewTarget->UseVisualStyleBackColor = true;
-			this->bIntegNewTarget->Click += gcnew System::EventHandler(this, &Results3::bIntegNewTarget_Click);
+			this->bIntegNewTargetToSource->Enabled = false;
+			this->bIntegNewTargetToSource->Location = System::Drawing::Point(41, 645);
+			this->bIntegNewTargetToSource->Name = L"bIntegNewTargetToSource";
+			this->bIntegNewTargetToSource->Size = System::Drawing::Size(250, 29);
+			this->bIntegNewTargetToSource->TabIndex = 16;
+			this->bIntegNewTargetToSource->Text = L"Интегрировать в справочник-источник";
+			this->bIntegNewTargetToSource->UseVisualStyleBackColor = true;
+			this->bIntegNewTargetToSource->Click += gcnew System::EventHandler(this, &Results3::bIntegNewTarget_Click);
 			// 
 			// button4
 			// 
-			this->button4->Location = System::Drawing::Point(377, 457);
+			this->button4->Location = System::Drawing::Point(820, 561);
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(112, 29);
 			this->button4->TabIndex = 18;
@@ -467,7 +453,7 @@ namespace Integra {
 			// 
 			// button5
 			// 
-			this->button5->Location = System::Drawing::Point(377, 263);
+			this->button5->Location = System::Drawing::Point(820, 367);
 			this->button5->Name = L"button5";
 			this->button5->Size = System::Drawing::Size(112, 29);
 			this->button5->TabIndex = 17;
@@ -478,11 +464,92 @@ namespace Integra {
 			// label10
 			// 
 			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(232, 62);
+			this->label10->Location = System::Drawing::Point(18, 50);
 			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(116, 13);
+			this->label10->Size = System::Drawing::Size(135, 13);
 			this->label10->TabIndex = 11;
-			this->label10->Text = L"Обработано позиций:";
+			this->label10->Text = L"Произведено сравенний:";
+			// 
+			// bDeleteFromTarget
+			// 
+			this->bDeleteFromTarget->Location = System::Drawing::Point(310, 645);
+			this->bDeleteFromTarget->Name = L"bDeleteFromTarget";
+			this->bDeleteFromTarget->Size = System::Drawing::Size(250, 29);
+			this->bDeleteFromTarget->TabIndex = 19;
+			this->bDeleteFromTarget->Text = L"Удалить из справочника-получателя";
+			this->bDeleteFromTarget->UseVisualStyleBackColor = true;
+			// 
+			// bDeleteFromSource
+			// 
+			this->bDeleteFromSource->Location = System::Drawing::Point(310, 390);
+			this->bDeleteFromSource->Name = L"bDeleteFromSource";
+			this->bDeleteFromSource->Size = System::Drawing::Size(250, 29);
+			this->bDeleteFromSource->TabIndex = 20;
+			this->bDeleteFromSource->Text = L"Удалить из справочника-источника";
+			this->bDeleteFromSource->UseVisualStyleBackColor = true;
+			// 
+			// groupBox3
+			// 
+			this->groupBox3->Controls->Add(this->lblNequal);
+			this->groupBox3->Controls->Add(this->lblNmatching);
+			this->groupBox3->Controls->Add(this->label13);
+			this->groupBox3->Controls->Add(this->lblMatchingStatus);
+			this->groupBox3->Controls->Add(this->label12);
+			this->groupBox3->Controls->Add(this->label10);
+			this->groupBox3->Location = System::Drawing::Point(599, 12);
+			this->groupBox3->Name = L"groupBox3";
+			this->groupBox3->Size = System::Drawing::Size(270, 100);
+			this->groupBox3->TabIndex = 21;
+			this->groupBox3->TabStop = false;
+			this->groupBox3->Text = L"Сравнение позиций";
+			// 
+			// lblMatchingStatus
+			// 
+			this->lblMatchingStatus->AutoSize = true;
+			this->lblMatchingStatus->ForeColor = System::Drawing::Color::Blue;
+			this->lblMatchingStatus->Location = System::Drawing::Point(68, 26);
+			this->lblMatchingStatus->Name = L"lblMatchingStatus";
+			this->lblMatchingStatus->Size = System::Drawing::Size(32, 13);
+			this->lblMatchingStatus->TabIndex = 13;
+			this->lblMatchingStatus->Text = L"Идет";
+			// 
+			// label12
+			// 
+			this->label12->AutoSize = true;
+			this->label12->Location = System::Drawing::Point(18, 26);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(44, 13);
+			this->label12->TabIndex = 12;
+			this->label12->Text = L"Статус:";
+			// 
+			// label13
+			// 
+			this->label13->AutoSize = true;
+			this->label13->Location = System::Drawing::Point(18, 73);
+			this->label13->Name = L"label13";
+			this->label13->Size = System::Drawing::Size(116, 13);
+			this->label13->TabIndex = 14;
+			this->label13->Text = L"Идентичных записей:";
+			// 
+			// lblNmatching
+			// 
+			this->lblNmatching->AutoSize = true;
+			this->lblNmatching->Location = System::Drawing::Point(186, 50);
+			this->lblNmatching->Name = L"lblNmatching";
+			this->lblNmatching->Size = System::Drawing::Size(13, 13);
+			this->lblNmatching->TabIndex = 15;
+			this->lblNmatching->Text = L"0";
+			this->lblNmatching->Visible = false;
+			// 
+			// lblNequal
+			// 
+			this->lblNequal->AutoSize = true;
+			this->lblNequal->Location = System::Drawing::Point(186, 73);
+			this->lblNequal->Name = L"lblNequal";
+			this->lblNequal->Size = System::Drawing::Size(13, 13);
+			this->lblNequal->TabIndex = 16;
+			this->lblNequal->Text = L"0";
+			this->lblNequal->Visible = false;
 			// 
 			// Results3
 			// 
@@ -490,19 +557,21 @@ namespace Integra {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->ClientSize = System::Drawing::Size(1199, 709);
-			this->Controls->Add(this->label10);
+			this->Controls->Add(this->groupBox3);
+			this->Controls->Add(this->bDeleteFromSource);
+			this->Controls->Add(this->bDeleteFromTarget);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button5);
-			this->Controls->Add(this->LblSourceCount);
-			this->Controls->Add(this->bIntegNewTarget);
-			this->Controls->Add(this->bIntegNewSource);
+			this->Controls->Add(this->groupBox2);
+			this->Controls->Add(this->groupBox1);
+			this->Controls->Add(this->bIntegNewTargetToSource);
+			this->Controls->Add(this->bIntegNewSourceToTarget);
 			this->Controls->Add(this->label8);
 			this->Controls->Add(this->label9);
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->dataGridView2);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->bCancel);
-			this->Controls->Add(this->groupBox2);
 			this->Controls->Add(this->lbDifferences);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->label2);
@@ -523,6 +592,8 @@ namespace Integra {
 			this->groupBox2->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView2))->EndInit();
+			this->groupBox3->ResumeLayout(false);
+			this->groupBox3->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -564,10 +635,19 @@ namespace Integra {
 						for each (KeyValuePair<Attribute^, String^>^ pair in attrs)
 						{
 							DataGridViewTextBoxColumn^ col = gcnew DataGridViewTextBoxColumn();
-							col->Name = pair->Key->FullCode;
-							col->HeaderText = pair->Key->Name;
+							Attribute^ attibute = pair->Key;
+							col->Name = attibute->FullCode;
+							if (String::IsNullOrEmpty(attibute->Name))
+							{
+								col->HeaderText = attibute->Code;
+							}
+							else
+							{
+								col->HeaderText = attibute->Name;
+							}
+							
 							grid->Columns->Add(col);
-							if (pair->Key->FullCode == position->AttrIdCode)
+							if (attibute->FullCode == position->AttrIdCode)
 							{
 								iColId = i;
 							}
@@ -598,19 +678,6 @@ namespace Integra {
 
 			}
 
-			void SetVisibleStartLabels()
-			{
-				label12->Visible = true;
-				//label14->Visible = true;
-				LblSourceStatus->Visible = true;
-				LblSourceCount->Visible = true;
-				LblSourceAllCount->Visible = true;
-
-				/*LblTargetStatus->Visible = true;
-				LblTargetCount->Visible = true;
-				LblTargetAllCount->Visible = true;*/
-			}
-
 			void SetListDiff()
 			{
 				if (Differences->Count > 0)
@@ -623,12 +690,37 @@ namespace Integra {
 
 			}
 
-			
+			void SetLablesReady()
+			{
+				LblSourceStatus->Text = "Окончено!";
+				LblSourceStatus->ForeColor = Color::Green;
+				LblSourceStatus->Font = gcnew System::Drawing::Font(LblSourceStatus->Font, FontStyle::Bold);
+
+				LblSourceCount->Text = ProgramIntegration::NinSource + "";
+				LblSourceCount->Visible = true;
+				
+				LblTargetStatus->Text = "Окончено!";
+				LblTargetStatus->ForeColor = Color::Green;
+				LblTargetStatus->Font = gcnew System::Drawing::Font(LblTargetStatus->Font, FontStyle::Bold);
+
+				LblTargetCount->Text = ProgramIntegration::NinTarget + "";
+				LblTargetCount->Visible = true;
+
+				lblMatchingStatus->Text = "Окончено!";
+				lblMatchingStatus->ForeColor = Color::Green;
+				lblMatchingStatus->Font = gcnew System::Drawing::Font(lblMatchingStatus->Font, FontStyle::Bold);
+
+				lblNequal->Text = ProgramIntegration::Nequal + "";
+				lblNequal->Visible = true;
+
+				lblNmatching->Text = ProgramIntegration::Nmatches + "";
+				lblNmatching->Visible = true;
+			}
 
 
 private: System::Void Results_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 SetVisibleStartLabels();
+			 
 		 }
 private: System::Void lbDifferences_MouseDoubleClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) 
 		 {
@@ -638,12 +730,20 @@ private: System::Void lbDifferences_MouseDoubleClick(System::Object^  sender, Sy
 				 {
 					 if (pos->UnicId == lbDifferences->SelectedItem->ToString())
 					 {
-						 DifferencesForm^ form = gcnew DifferencesForm(pos);
+						 DifferencesForm^ form = gcnew DifferencesForm(pos, _settings->Type);
 						 form->ShowDialog();
 						 if (form->NewAttrNames != nullptr)
 						 {
-							 ProgramIntegration::UpdatePosTarget(pos->TPos, form->NewAttrNames);
+							 if (form->InTarget)
+							 {
+								 ProgramIntegration::UpdatePosTarget(pos->TPos, form->NewAttrNames);
+							 }
+							 else
+							 {
+								 ProgramIntegration::UpdatePosSource(pos->SPos, form->NewAttrNames);
+							 }
 							 lbDifferences->Items->Remove(lbDifferences->SelectedItem);
+							 MessageBox::Show("Позиция интегрирована");
 						 }
 						 break;
 					 }
@@ -665,8 +765,7 @@ private: System::Void Results3_Shown(System::Object^  sender, System::EventArgs^
 		 {
 			 Application::DoEvents();
 			 ProgramIntegration::StartIntegrationTable(_settings, this, LblSourceCount);
-			 LblSourceStatus->Text = "Окончено";
-			 LblTargetStatus->Text = "Окончено";
+			 SetLablesReady();
 
 			 _sourceNew = ProgramIntegration::SourceNew;
 			 _targetNew = ProgramIntegration::TargetNew;

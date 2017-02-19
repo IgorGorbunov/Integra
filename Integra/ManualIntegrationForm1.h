@@ -295,6 +295,7 @@ namespace Integra {
 			this->Controls->Add(this->panel2);
 			this->Controls->Add(this->panel1);
 			this->Name = L"ManualIntegrationForm1";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Интеграция в ручном режиме";
 			this->Load += gcnew System::EventHandler(this, &ManualIntegrationForm1::ManualIntegrationForm1_Load);
 			this->panel1->ResumeLayout(false);

@@ -35,6 +35,11 @@ namespace Integra {
 		List<List<Object^>^>^ SourceTabNew;
 		List<List<Object^>^>^ TargetTabNew;
 
+		int NinSource;
+		int NinTarget;
+		int Nequal;
+		long Nmatches;
+
 	private:
 		Results2^ _resultForm;
 
@@ -144,11 +149,15 @@ namespace Integra {
 			{
 				_sourcePositions = _sourceStaicPositions;
 			}
+			NinSource = _sourcePositions->Count;
 			if(_targetPositions == nullptr)
 			{
 				_targetPositions = _targetStaicPositions;
 			}
+			NinTarget = _targetPositions->Count;
 
+			Nequal = 0;
+			Nmatches = 0;
 			if	(!secondIsSemantic)
 			{
 				for (int i = 0; i < _sourcePositions->Count; i++)
@@ -159,6 +168,7 @@ namespace Integra {
 					for (int j = 0; j < _targetPositions->Count; j++)
 					{
 						Position^ tPos = _targetPositions[j];
+						Nmatches++;
 						if (sPos->UnicId == tPos->UnicId)
 						{
 							contains = true;
@@ -166,6 +176,7 @@ namespace Integra {
 							DifferencePosition^ diffPos;
 							if (AttrsIsFullyEqual(sPos, tPos, diffPos))
 							{
+								Nequal++;
 								break;
 							}
 							else
@@ -326,6 +337,11 @@ namespace Integra {
 		void UpdatePosToTarget(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)
 		{
 			_targetBook->UpdatePositionForEachAttr(currentPos, newAttrVals, _intgrResults, 1);
+		}
+
+		void UpdatePosToSource(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)
+		{
+			_sourceBook->UpdatePositionForEachAttr(currentPos, newAttrVals, _intgrResults, 0);
 		}
 
 		Void SetPositionsAndCompare()

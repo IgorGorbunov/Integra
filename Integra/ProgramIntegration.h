@@ -29,6 +29,10 @@ namespace Integra {
 		static List<List<Object^>^>^ SourceTabNew;
 		static List<List<Object^>^>^ TargetTabNew;
 
+		static int NinSource;
+		static int NinTarget;
+		static int Nequal;
+		static long Nmatches;
 
 	private:
 		static SystemSettings^ _accessSettings;
@@ -55,9 +59,15 @@ namespace Integra {
 		{
 			_integration = gcnew Integration(intSet, Odbc);
 			_integration->StartIntegrationTable(form, lblCount);
+
 			SourceNew = _integration->SourceNew;
 			TargetNew = _integration->TargetNew;
 			Differences = _integration->Differences;
+
+			NinSource = _integration->NinSource;
+			NinTarget = _integration->NinTarget;
+			Nequal = _integration->Nequal;
+			Nmatches = _integration->Nmatches;
 		}
 
 
@@ -74,6 +84,11 @@ namespace Integra {
 		static void UpdatePosTarget(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)
 		{
 			_integration->UpdatePosToTarget(currentPos, newAttrVals);
+		}
+
+		static void UpdatePosSource(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)
+		{
+			_integration->UpdatePosToSource(currentPos, newAttrVals);
 		}
 
 		static Void StartIntegration(IntegrationSettings^ intSet) 

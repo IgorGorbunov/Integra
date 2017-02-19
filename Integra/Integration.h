@@ -109,13 +109,13 @@ namespace Integra {
 			{
 				_bWorker = _backgroundWorker1;
 				_targetBook = GetBook(_settings->TargetBook, false);
-				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs);
+				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs, _settings->TargetBook->DbFilters);
 			}
 			if (!_settings->SourceBook->IsSemantic && _settings->TargetBook->IsSemantic)
 			{
 				secondIsSemantic = true;
 				_sourceBook = GetBook(_settings->SourceBook, true);
-				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs);
+				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs, _settings->SourceBook->DbFilters);
 				_bWorker = _backgroundWorker2;
 			}
 			
@@ -123,8 +123,8 @@ namespace Integra {
 			{
 				_sourceBook = GetBook(_settings->SourceBook, true);
 				_targetBook = GetBook(_settings->TargetBook, false);
-				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs);
-				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs);
+				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs, _settings->SourceBook->DbFilters);
+				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs, _settings->TargetBook->DbFilters);
 			}
 			else
 			{

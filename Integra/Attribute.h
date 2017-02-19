@@ -67,6 +67,17 @@ namespace Integra {
 		{
 			String^ get()
 			{
+				if (_fullCode == nullptr)
+				{
+					if (String::IsNullOrEmpty(_schemaName))
+					{
+						_fullCode = String::Format("{0}.{1}", _tableName, _attrName);
+					}
+					else
+					{
+						_fullCode = String::Format("{0}.{1}.{2}", _schemaName, _tableName, _attrName);
+					}
+				}
 				return _fullCode;
 			}
 		}
@@ -178,6 +189,19 @@ namespace Integra {
 			_id = id;
 			_odbc = odbc;
 			Set(_id);
+		}
+
+		Attribute(int id, String^ name, String^ schemaName, String^ tableName, String^ attrCode, int integrationBookId, String^ dataType, String^ maxLength, OdbcClass^ odbc)
+		{
+			_id = id;
+			_name = name;
+			_schemaName = schemaName;
+			_tableName = tableName;
+			_attrName = attrCode;
+			_idIntgrBook = integrationBookId;
+			_dataType = dataType;
+			MaxLength = maxLength;
+			_odbc = odbc;
 		}
 
 		Attribute(String^ schema, String^ table, String^ code, String^ name)

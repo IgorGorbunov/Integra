@@ -2,6 +2,7 @@
 
 #include "ODBCclass.h"
 #include "Attribute.h"
+#include "DbFilter.h"
 
 namespace Integra {
 
@@ -164,6 +165,19 @@ namespace Integra {
 			}
 		}
 
+		property List<Object^>^ DbFilters
+		{
+			List<Object^>^ get()
+			{
+				if (!_dbFiltersIsSet)
+				{
+					_dbFilters = DbFilter::GetFilters(_id, _odbc);
+					_dbFiltersIsSet = true;
+				}
+				return _dbFilters;
+			}
+		}
+
 		int BookId;
 
 	private:
@@ -192,6 +206,9 @@ namespace Integra {
 		int _attrTitleId;
 		String^ _attrTitleFullcode;
 
+		bool _dbFiltersIsSet;
+		List<Object^>^ _dbFilters;
+
 		Attribute^ _attrId;
 		Attribute^ _attrCaption;
 		Attribute^ _attrGroupId;
@@ -205,6 +222,8 @@ namespace Integra {
 			_odbc = odbc;
 			_id = parametrsId;
 			Set(parametrsId);
+
+			_dbFiltersIsSet = false;
 		}
 
 	protected:

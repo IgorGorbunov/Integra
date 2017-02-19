@@ -7,6 +7,7 @@
 #include "Results2.h"
 #include "ODBCclass.h"
 #include "Editting.h"
+#include "DbFilter.h"
 
 namespace Integra {
 
@@ -71,9 +72,9 @@ namespace Integra {
 			return list;
 		}
 
-		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs) override
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters) override
 		{
-			String^ globalSquery = GetGlobalSquery(attrs);
+			String^ globalSquery = GetGlobalSquery(attrs, filters);
 
 // 			List<Object^>^ tableCodeAttrs = GetTableCodeAttrs();
 // 			List<String^>^ tables = GetTables(tableCodeAttrs);
@@ -431,7 +432,7 @@ namespace Integra {
 				return list;
 			}
 
-			String^ GetGlobalSquery(List<Attribute^>^ attrNames)
+			String^ GetGlobalSquery(List<Attribute^>^ attrNames, List<Object^>^ filters)
 			{
 				String^ s = "select ";
 				for each (Attribute^ attr in attrNames)
@@ -442,7 +443,26 @@ namespace Integra {
 				s += " from ";
 				s += attrNames[0]->FullTable;
 
+				s = SetFilters(s, filters);
+
 				return s;
 			}
+
+			String^ SetFilters(String^ squery, List<Object^>^ filters)
+			{
+				if (filters != nullptr && filters->Count > 0)
+				{
+					squery += " where ";
+					String^ prevConcatValue = String::Empty;
+					for each (DbFilter^ filter in filters)
+					{
+						String^ line = String::Format("{0} {1} {2} {3} ", prevConcatValue, filter->AttributeFullCode, filter->Condition, filter->ConditionValue);
+						squery += line;
+						prevConcatValue = filter->ConcatinationValue;
+					}
+				}
+				return squery;
+			}
+			
 	};
 }

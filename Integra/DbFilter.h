@@ -23,7 +23,27 @@ namespace Integra {
 				return _attribute->FullCode;
 			}
 		}
-
+		property String^ Condition
+		{
+			String^ get()
+			{
+				return _condition;
+			}
+		}
+		property String^ ConditionValue
+		{
+			String^ get()
+			{
+				return _condValue;
+			}
+		}
+		property String^ ConcatinationValue
+		{
+			String^ get()
+			{
+				return _concatValue;
+			}
+		}
 
 	private:
 		OdbcClass^ _odbc;
@@ -45,6 +65,61 @@ namespace Integra {
 			_condition = condition;
 			_condValue = condValue;
 			_concatValue = concatValue;
+		}
+
+		DbFilter(int id, Attribute^ attribute, String^ condition, String^ condValue, String^ concatValue, OdbcClass^ odbc)
+		{
+			_id = id;
+			_odbc = odbc;
+
+			_attribute = attribute;
+			_condition = condition;
+			_condValue = condValue;
+			_concatValue = concatValue;
+		}
+
+		static List<Object^>^ GetFilters(int integrationBookId, OdbcClass^ odbc)
+		{
+			List<Object^>^ list;
+			String^ squery = "select DBF.ID,IAA.ID,IAA.NAME,IAA.SCHEMA_NAME,IAA.TABLE_NAME,IAA.ATTR_NAME,IAA.ID_INTGR_BOOK,IAA.DATA_TYPE,IAA.MAX_LENGTH,DBF.CONDITION,DBF.VALU,DBF.CONCAT_VALUE from " +
+				"{0}DB_FILTERS DBF, {0}INTEGRATION_ATTRIBUTES IAA where DBF.ID_INTGR_BOOK = {1} and DBF.ATTR_ID = IAA.ID order by DBF.ID";
+			squery = String::Format(squery, odbc->schema, integrationBookId);
+
+			List<Object^>^ resList = odbc->ExecuteQuery(squery);
+			if (resList != nullptr && resList->Count > 0)
+			{
+				list = gcnew List<Object ^>();
+				for (int i = 0; i < resList->Count; i+=12)
+				{
+					int filterId = odbc->GetInt(resList[i+0]);
+					int attrId = odbc->GetInt(resList[i+1]);
+					String^ attrName = resList[i+2]->ToString();
+					String^ attrSchemaName = resList[i+3]->ToString();
+					String^ attrTableName = resList[i+4]->ToString();
+					String^ attrCode = resList[i+5]->ToString();
+					int attrIntBookId = odbc->GetInt(resList[i+6]);
+					String^ attrDataType = resList[i+7]->ToString();
+					int attrMaxLength = odbc->GetInt(resList[i+8]);
+					Attribute^ attr = gcnew Attribute(attrId, attrName, attrSchemaName, attrTableName, attrCode, attrIntBookId, attrDataType, attrMaxLength + "", odbc);
+
+					String^ filterCondition = resList[i+9]->ToString();
+					String^ filterConditionValue = resList[i+10]->ToString();
+					int filterConcatValue = odbc->GetInt(resList[i+11]);
+					String^ sConcatValue = String::Empty;
+					if (filterConcatValue == 0)
+					{
+						sConcatValue = "AND";
+					}
+					else if (filterConcatValue == 1)
+					{
+						sConcatValue = "OR";
+					}
+					DbFilter^ filter = gcnew DbFilter(filterId, attr, filterCondition, filterConditionValue, sConcatValue, odbc);
+					list->Add(filter);
+				}
+			}
+
+			return list;
 		}
 
 		void InsertToDb(int integrationBookId, int attrId)

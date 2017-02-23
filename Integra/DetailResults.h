@@ -94,10 +94,10 @@ namespace Integra {
 			for (int i = 0; i < qList->Count; i+=8)
 			{
 				array<String^>^ row = gcnew array<String ^>(colCount);
-				int id = OdbcClass::GetInt(qList[i+0]);
+				int id = OdbcClass::GetResInt(qList[i+0]);
 				row[0] = id + "";
 				row[1] = qList[i+1]->ToString();
-				int intType = OdbcClass::GetInt(qList[i+2]);
+				int intType = OdbcClass::GetResInt(qList[i+2]);
 				switch (intType)
 				{
 				case 0:
@@ -113,12 +113,12 @@ namespace Integra {
 				Object^ iPos = qList[i+7]->ToString();
 				int idIntgrBook;
 
-				int attrId = OdbcClass::GetInt(qList[i+3]);
+				int attrId = OdbcClass::GetResInt(qList[i+3]);
 				if (attrId == -1)
 				{
 					row[5] = "";
 					row[6] = "";
-					int nSystem = OdbcClass::GetInt(qList[i+6]);
+					int nSystem = OdbcClass::GetResInt(qList[i+6]);
 					String^ intBook;
 					if (nSystem = 1)
 					{
@@ -133,7 +133,7 @@ namespace Integra {
 						"where IRR.ID_INTGR = IPP.ID and IPP.{2} = IBB.ID and IBB.ID_SYSTEM = ISS.ID and IRR.ID = {1}", _odbc->schema, _idIntgr, intBook);
 					List<Object^>^ qList2 = _odbc->ExecuteQuery(squery2);
 					row[3] = qList2[0]->ToString();
-					idIntgrBook = OdbcClass::GetInt(qList2[1]);
+					idIntgrBook = OdbcClass::GetResInt(qList2[1]);
 				}
 				else
 				{
@@ -144,7 +144,7 @@ namespace Integra {
 					row[3] = qList2[0]->ToString();
 					row[5] = qList2[1]->ToString();
 					row[6] = qList2[2]->ToString();
-					idIntgrBook = OdbcClass::GetInt(qList2[3]);
+					idIntgrBook = OdbcClass::GetResInt(qList2[3]);
 				}
 				Position^ position = gcnew Position(iPos, idIntgrBook, _odbc);
 				row[4] = position->Caption;

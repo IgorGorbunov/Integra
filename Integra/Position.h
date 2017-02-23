@@ -34,8 +34,17 @@ namespace Integra {
 				return _unicId;
 			}
 		}
-
-		String^ AttrIdCode;
+		property Attribute^ AttrId
+		{
+			Attribute^ get()
+			{
+				return _attrId;
+			}
+			void set(Attribute^ attr)
+			{
+				_attrId = attr;
+			}
+		}
 
 		String^ Caption;
 
@@ -43,6 +52,8 @@ namespace Integra {
 		Dictionary<Attribute^, String^>^ _attributes;
 		String^ _unicId;
 		
+		Attribute^ _attrId;
+		String^ _attrIdCode;
 
 	private:
 		OdbcClass^ _odbc;
@@ -54,16 +65,16 @@ namespace Integra {
 			//todo
 			_odbc = odbc;
 			_intgrBook = gcnew BookSettings(idIntgrBook, odbc);
-			AttrIdCode = _intgrBook->AttrId->Code;
+			_attrId = _intgrBook->AttrId;
 			Attribute^ attrCaption = _intgrBook->AttrCaption;
 			String^ condition;
 			if (attrCaption->DataType == "ÑÒÐÎÊÀ")
 			{
-				condition = String::Format("where ATABLE.{0} = '{1}'", AttrIdCode, id);
+				condition = String::Format("where ATABLE.{0} = '{1}'", AttrId->Code, id);
 			}
 			else
 			{
-				condition = String::Format("where ATABLE.{0} = {1}", AttrIdCode, id);
+				condition = String::Format("where ATABLE.{0} = {1}", AttrId->Code, id);
 			}
 			Object^ oCaption = attrCaption->GetValue(condition, true, _intgrBook->Odbc);
 			Caption = oCaption->ToString();

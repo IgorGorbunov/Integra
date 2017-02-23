@@ -110,13 +110,13 @@ namespace Integra {
 			{
 				_bWorker = _backgroundWorker1;
 				_targetBook = GetBook(_settings->TargetBook, false);
-				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs, _settings->TargetBook->DbFilters);
+				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs, _settings->TargetBook->DbFilters, _settings->TargetBook->DbLinks);
 			}
 			if (!_settings->SourceBook->IsSemantic && _settings->TargetBook->IsSemantic)
 			{
 				secondIsSemantic = true;
 				_sourceBook = GetBook(_settings->SourceBook, true);
-				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs, _settings->SourceBook->DbFilters);
+				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs, _settings->SourceBook->DbFilters, _settings->SourceBook->DbLinks);
 				_bWorker = _backgroundWorker2;
 			}
 			
@@ -124,8 +124,8 @@ namespace Integra {
 			{
 				_sourceBook = GetBook(_settings->SourceBook, true);
 				_targetBook = GetBook(_settings->TargetBook, false);
-				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs, _settings->SourceBook->DbFilters);
-				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs, _settings->TargetBook->DbFilters);
+				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs, _settings->SourceBook->DbFilters, _settings->SourceBook->DbLinks);
+				_targetPositions = _targetBook->GetAllPositionsTable(_targetAttrs, _settings->TargetBook->DbFilters, _settings->TargetBook->DbLinks);
 			}
 			else
 			{
@@ -483,13 +483,9 @@ namespace Integra {
 
 		void SetAttrLists()
 		{
-			_sourceAttrs = gcnew List<Attribute ^>();
-			_targetAttrs = gcnew List<Attribute ^>();
-			for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrPairs)
-			{
-				_sourceAttrs->Add(pair->Key);
-				_targetAttrs->Add(pair->Value);
-			}
+			_sourceAttrs = _settings->SourceBook->Attributes;
+			_targetAttrs = _settings->TargetBook->Attributes;
+
 		}
 
 		int GetAttrId(List<Attribute^>^ list, String^ name)
@@ -567,30 +563,34 @@ namespace Integra {
 			{
 				Attribute^ sAttr = pair->Key;
 				String^ sValue = pair->Value;
-				Attribute^ pAttr = _settings->AttributePairs[sAttr];
-				String^ tValue = targetPos->AttributesAndValues[pAttr];
 
-				Object^ sVal;
-				Object^ tVal;
-				if	(IsBothDouble(sValue, tValue))
+				if (_settings->AttributePairs->ContainsKey(sAttr))
 				{
-					sVal = Double::Parse(sValue);
-					tVal = Double::Parse(tValue);
-				}
-				else
-				{
-					sVal = sValue->Trim();
-					tVal = tValue->Trim();
-				}
+					Attribute^ pAttr = _settings->AttributePairs[sAttr];
+					String^ tValue = targetPos->AttributesAndValues[pAttr];
 
-				if (sVal->ToString() != tVal->ToString())
-				{
-					equal = false;
-					diffPos->AddDifferenceAttr(sAttr, sValue, pAttr, tValue);
-				}
-				else
-				{
-					diffPos->AddEqualAttr(sAttr, pAttr, tValue);
+					Object^ sVal;
+					Object^ tVal;
+					if	(IsBothDouble(sValue, tValue))
+					{
+						sVal = Double::Parse(sValue);
+						tVal = Double::Parse(tValue);
+					}
+					else
+					{
+						sVal = sValue->Trim();
+						tVal = tValue->Trim();
+					}
+
+					if (sVal->ToString() != tVal->ToString())
+					{
+						equal = false;
+						diffPos->AddDifferenceAttr(sAttr, sValue, pAttr, tValue);
+					}
+					else
+					{
+						diffPos->AddEqualAttr(sAttr, pAttr, tValue);
+					}
 				}
 			}
 			return equal;

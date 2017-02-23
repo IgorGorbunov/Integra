@@ -86,7 +86,7 @@ namespace Integra {
 			Dictionary<int, String^>^ list = gcnew Dictionary<int, String^>();
 			for (int i = 0; i < resList->Count; i+=2)
 			{
-				int id = _odbc->GetInt(resList[i]);
+				int id = _odbc->GetResInt(resList[i]);
 				String^ code = resList[i+1]->ToString();
 				list->Add(id, code);
 			}

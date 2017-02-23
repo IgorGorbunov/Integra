@@ -29,28 +29,12 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  BookNameCol;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SystemIdCol;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SystemName;
-
-
-
-
-
 	private: System::Windows::Forms::TabPage^  tpIntegrBook;
 	private: System::Windows::Forms::DataGridView^  dgvSystemBooks;
 	private: System::Windows::Forms::ComboBox^  cbSystems;
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::Button^  bDeleteSystemBook;
-
 	private: System::Windows::Forms::Button^  bAddSystemBook;
-
-
-
-
-
-
-			 OdbcClass^ _odbc;
-
-
-
 	private: System::Windows::Forms::Button^  bEditSystem2;
 	private: System::Windows::Forms::Button^  bDeleteSystem2;
 	private: System::Windows::Forms::Button^  bEditBook2;
@@ -67,16 +51,43 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaTargetCol;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  SchemaDirectionCol;
+	private: System::Windows::Forms::Panel^  panel1;
+	protected: 
+	private: System::Windows::Forms::Button^  bCancel;
+	private: System::Windows::Forms::TabControl^  tabControl1;
+	private: System::Windows::Forms::TabPage^  tpBooks;
+	private: System::Windows::Forms::Button^  bEditBook;
+	private: System::Windows::Forms::GroupBox^  groupBox1;
+	private: System::Windows::Forms::Button^  bAddBook;
+	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::TextBox^  tbBookName;
+	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::DataGridView^  dgvBooks;
+	private: System::Windows::Forms::TabPage^  tpSystems;
+	private: System::Windows::Forms::Button^  bEditSystem;
+	private: System::Windows::Forms::GroupBox^  groupBox4;
+	private: System::Windows::Forms::Button^  bAddSystem;
+	private: System::Windows::Forms::Label^  label5;
+	private: System::Windows::Forms::TextBox^  tbSystemName;
+	private: System::Windows::Forms::Label^  label6;
+	private: System::Windows::Forms::DataGridView^  dgvSystems;
+	private: System::Windows::Forms::TabPage^  tpIntegrationSchemas;
+	private: System::Windows::Forms::Button^  bAddSchema;
+	private: System::Windows::Forms::Label^  label7;
+	private: System::Windows::Forms::DataGridView^  dgvSchemas;
+	private: System::Windows::Forms::Button^  bEditSchema;
+	private: System::Windows::Forms::Label^ label4;
+	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn2;
+	private: System::Windows::Forms::Button^  bAddNewBook;
+	private: System::Windows::Forms::Button^  bAddNewSystem;
 
 
 
-
-
-
-
-
-			 array<String^, 2>^ _currentSystemBooks;
-			 //List<IntegrationSettings^>^ _integrSettings;
+	OdbcClass^ _odbc;
+	array<String^, 2>^ _currentSystemBooks;
+	//List<IntegrationSettings^>^ _integrSettings;
 
 	public:
 		SettingsForm(OdbcClass^ odbc)
@@ -97,58 +108,7 @@ namespace Integra {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Panel^  panel1;
-	protected: 
-	private: System::Windows::Forms::Button^  bCancel;
-
-	private: System::Windows::Forms::TabControl^  tabControl1;
-	private: System::Windows::Forms::TabPage^  tpBooks;
-
-	private: System::Windows::Forms::Button^  bEditBook;
-
-
-
-	private: System::Windows::Forms::GroupBox^  groupBox1;
-	private: System::Windows::Forms::Button^  bAddBook;
-	private: System::Windows::Forms::Label^  label2;
-	private: System::Windows::Forms::TextBox^  tbBookName;
-
-	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::DataGridView^  dgvBooks;
-
-	private: System::Windows::Forms::TabPage^  tpSystems;
-
-	private: System::Windows::Forms::Button^  bEditSystem;
-
-
-
-	private: System::Windows::Forms::GroupBox^  groupBox4;
-	private: System::Windows::Forms::Button^  bAddSystem;
-
-	private: System::Windows::Forms::Label^  label5;
-	private: System::Windows::Forms::TextBox^  tbSystemName;
-
-	private: System::Windows::Forms::Label^  label6;
-	private: System::Windows::Forms::DataGridView^  dgvSystems;
-
-	private: System::Windows::Forms::TabPage^  tpIntegrationSchemas;
-	private: System::Windows::Forms::Button^  bAddSchema;
-
-	private: System::Windows::Forms::Label^  label7;
-	private: System::Windows::Forms::DataGridView^  dgvSchemas;
-
-	private: System::Windows::Forms::Button^  bEditSchema;
-
-
-			 private: System::Windows::Forms::Label^ label4;
-					  private: System::Windows::Forms::DataGridView^ dataGridView1;
-					  private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn1;
-					  private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn2;
-	private: System::Windows::Forms::Button^  bAddNewBook;
-
-	private: System::Windows::Forms::Button^  bAddNewSystem;
-
-
+	
 	private:
 		/// <summary>
 		/// Требуется переменная конструктора.

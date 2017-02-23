@@ -52,8 +52,8 @@ namespace Integra {
 			List<Object^>^ queryList = odbc->ExecuteQuery(squery);
 			for (int i = 0; i < queryList->Count; i+=9)
 			{
-				int id = OdbcClass::GetInt(queryList[i+0]);
-				int idInteg = OdbcClass::GetInt(queryList[i+1]);
+				int id = OdbcClass::GetResInt(queryList[i+0]);
+				int idInteg = OdbcClass::GetResInt(queryList[i+1]);
 				String^ state = OdbcClass::GetResString(queryList[i+2]);
 				String^ integUser = OdbcClass::GetResString(queryList[i+3]);
 				DateTime^ integDate = OdbcClass::GetResDate(queryList[i+4]);

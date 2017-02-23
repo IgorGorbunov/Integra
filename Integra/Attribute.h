@@ -167,9 +167,74 @@ namespace Integra {
 
 	public:
 
-		static void WriteAttribute()
-		{
+		 virtual bool Equals(Object^ obj) override 
+		 {
+			 if (obj == nullptr || GetType() != obj->GetType()) 
+				 return false;
 
+			 Attribute^ attr2 = (Attribute^)obj;
+			 return attr2->FullCode == FullCode;
+		}
+
+		virtual int GetHashCode() override
+		{
+			return FullCode->GetHashCode();
+		}
+
+		static bool operator ==(Attribute^ attr1, Attribute^ attr2) 
+		{
+			// If both are null, or both are same instance, return true.
+			if (System::Object::ReferenceEquals(attr1, attr2))
+			{
+				return true;
+			}
+
+			// If one is null, but not both, return false.
+			if (((Object^)attr1 == nullptr) || ((Object^)attr2 == nullptr))
+			{
+				return false;
+			}
+
+			return attr1->Equals(attr2);
+		}
+
+		static bool operator !=(Attribute^ attr1, Attribute^ attr2) 
+		{
+			return !(attr1==attr2);
+		}
+
+		virtual String^ ToString() override
+		{
+			return String::Format("({0}, {1}, {2}, {3})", _id, FullCode, Name, DataType);
+		} 
+
+		static List<Attribute^>^ GetAttributes(OdbcClass^ odbc, int idIntgrBook)
+		{
+			List<Attribute^>^ list;
+			String^ squery = "select IAA.ID,IAA.NAME,IAA.SCHEMA_NAME,IAA.TABLE_NAME,IAA.ATTR_NAME,IAA.ID_INTGR_BOOK,IAA.DATA_TYPE,IAA.MAX_LENGTH from " +
+				"{0}INTEGRATION_ATTRIBUTES IAA where IAA.ID_INTGR_BOOK = {1}";
+			squery = String::Format(squery, odbc->schema, idIntgrBook);
+
+			List<Object^>^ resList = odbc->ExecuteQuery(squery);
+			if (resList != nullptr && resList->Count > 0)
+			{
+				list = gcnew List<Attribute ^>();
+				for (int i = 0; i < resList->Count; i+=8)
+				{
+					int attrId = odbc->GetResInt(resList[i+0]);
+					String^ attrName = resList[i+1]->ToString();
+					String^ attrSchemaName = resList[i+2]->ToString();
+					String^ attrTableName = resList[i+3]->ToString();
+					String^ attrCode = resList[i+4]->ToString();
+					int attrIntBookId = odbc->GetResInt(resList[i+5]);
+					String^ attrDataType = resList[i+6]->ToString();
+					int attrMaxLength = odbc->GetResInt(resList[i+7]);
+					Attribute^ attr = gcnew Attribute(attrId, attrName, attrSchemaName, attrTableName, attrCode, attrIntBookId, attrDataType, attrMaxLength + "", odbc);
+					list->Add(attr);
+				}
+			}
+
+			return list;
 		}
 
 		void Init(String^ schema, String^ table, String^ code, String^ name)

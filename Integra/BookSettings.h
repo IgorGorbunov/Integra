@@ -3,6 +3,7 @@
 #include "ODBCclass.h"
 #include "Attribute.h"
 #include "DbFilter.h"
+#include "DbLink.h"
 
 namespace Integra {
 
@@ -165,6 +166,17 @@ namespace Integra {
 			}
 		}
 
+		property List<Attribute^>^ Attributes
+		{
+			List<Attribute^>^ get()
+			{
+				if (_attributes == nullptr || _attributes->Count < 0)
+				{
+					_attributes = Attribute::GetAttributes(_odbc, Id);
+				}
+				return _attributes;
+			}
+		}
 		property List<Object^>^ DbFilters
 		{
 			List<Object^>^ get()
@@ -175,6 +187,18 @@ namespace Integra {
 					_dbFiltersIsSet = true;
 				}
 				return _dbFilters;
+			}
+		}
+		property List<Object^>^ DbLinks
+		{
+			List<Object^>^ get()
+			{
+				if (!_dbLinksIsSet)
+				{
+					_dbLinks = DbLink::GetLinks(_id, _odbc);
+					_dbLinksIsSet = true;
+				}
+				return _dbLinks;
 			}
 		}
 
@@ -206,8 +230,11 @@ namespace Integra {
 		int _attrTitleId;
 		String^ _attrTitleFullcode;
 
+		List<Attribute^>^ _attributes;
 		bool _dbFiltersIsSet;
 		List<Object^>^ _dbFilters;
+		bool _dbLinksIsSet;
+		List<Object^>^ _dbLinks;
 
 		Attribute^ _attrId;
 		Attribute^ _attrCaption;
@@ -224,6 +251,7 @@ namespace Integra {
 			Set(parametrsId);
 
 			_dbFiltersIsSet = false;
+			_dbLinksIsSet = false;
 		}
 
 	protected:
@@ -243,7 +271,7 @@ namespace Integra {
 			List<Attribute^>^ list = gcnew List<Attribute ^>();
 			for (int i = 0; i < oList->Count; i++)
 			{
-				int id = OdbcClass::GetInt(oList[i]);
+				int id = OdbcClass::GetResInt(oList[i]);
 				Attribute^ attr = gcnew Attribute(id, _odbc);
 				list->Add(attr);
 			}
@@ -257,8 +285,8 @@ namespace Integra {
 			Dictionary<Attribute^, Attribute^>^ list = gcnew Dictionary<Attribute^, Attribute^>();
 			for (int i = 0; i < oList->Count; i+=2)
 			{
-				int id1 = OdbcClass::GetInt(oList[i]);
-				int id2 = OdbcClass::GetInt(oList[i+1]);
+				int id1 = OdbcClass::GetResInt(oList[i]);
+				int id2 = OdbcClass::GetResInt(oList[i+1]);
 				Attribute^ attr1 = gcnew Attribute(id1, _odbc);
 				Attribute^ attr2 = gcnew Attribute(id2, _odbc);
 				list->Add(attr1, attr2);
@@ -283,9 +311,9 @@ namespace Integra {
 			_sid = parametrs[8]->ToString();
 			_driver = parametrs[9]->ToString();
 			_isSemantic = (bool) Decimal::ToInt32((Decimal)parametrs[10]);
-			_groupId = OdbcClass::GetInt(parametrs[11]);
-			_attrIdId = OdbcClass::GetInt(parametrs[12]);
-			_attrTitleId = OdbcClass::GetInt(parametrs[13]);
+			_groupId = OdbcClass::GetResInt(parametrs[11]);
+			_attrIdId = OdbcClass::GetResInt(parametrs[12]);
+			_attrTitleId = OdbcClass::GetResInt(parametrs[13]);
 			_name = parametrs[14]->ToString();
 		}
 
@@ -298,7 +326,7 @@ namespace Integra {
 		Void SetBook(int id)
 		{
 			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID, NAME from " + _odbc->schema + "BOOKS where ID = " + id);
-			BookId = OdbcClass::GetInt(parametrs[0]);
+			BookId = OdbcClass::GetResInt(parametrs[0]);
 			_bookName = parametrs[1]->ToString();
 
 		}
@@ -321,8 +349,8 @@ namespace Integra {
 			String^ squery = String::Format("select GPP.ID_ATTR, GPP.NAME_ATTR from {0}INTEGRATION_BOOK IBB, {0}GROUP_PARAMS GPP where IBB.GROUP_ID = GPP.ID and IBB.ID = {1}", _odbc->schema, _id);
 			List<Object^>^ oList = _odbc->ExecuteQuery(squery);
 
-			int id1 = OdbcClass::GetInt(oList[0]);
-			int id2 = OdbcClass::GetInt(oList[1]);
+			int id1 = OdbcClass::GetResInt(oList[0]);
+			int id2 = OdbcClass::GetResInt(oList[1]);
 
 			_attrGroupId = gcnew Attribute(id1, _odbc);
 			_attrGroupName = gcnew Attribute(id2, _odbc);

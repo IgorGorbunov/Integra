@@ -65,22 +65,19 @@ namespace Integra {
 				String^ sId = o->ToString();
 				int number;
 				bool result = Int32::TryParse(sId, number);
-				Position^ pos = gcnew DbPosition(sId, _equivAttr->Code, _attributes, _odbc);
+				Position^ pos = gcnew DbPosition(sId, _equivAttr, _attributes, _odbc);
 				list->Add(pos);
 			}
 
 			return list;
 		}
 
-		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters) override
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters, List<Object^>^ links) override
 		{
-			String^ globalSquery = GetGlobalSquery(attrs, filters);
+			String^ globalSquery = GetGlobalSquery(attrs, filters, links);
 
-// 			List<Object^>^ tableCodeAttrs = GetTableCodeAttrs();
-// 			List<String^>^ tables = GetTables(tableCodeAttrs);
-// 			attrNames = GetAttrsName(tableCodeAttrs);
-// 			
-			int iId, iTitle;
+	
+			int iId = -1, iTitle = -1;
 			bool idSet = false;
 			bool titleSet = false;
 			for (int i = 0; i < attrs->Count; i++)
@@ -169,6 +166,7 @@ namespace Integra {
 			int nAttr = _attributes->Count;
 			int iId;
 			String^ codeId;
+			Attribute^ attrId;
 			for (int i = 0; i < nAttr; i++)
 			{
 				strQuery += String::Format("{0}.{1}, ", _attributes[i]->FullTable, _attributes[i]->Code);
@@ -176,6 +174,7 @@ namespace Integra {
 				{
 					iId = i;
 					codeId = _attributes[i]->Code;
+					attrId = _attributes[i];
 				}
 			}
 			strQuery = strQuery->Substring(0, strQuery->Length - 2);
@@ -216,7 +215,7 @@ namespace Integra {
 						dic->Add(_attributes[j], query[i+j]->ToString());
 					}
 					String^ sId = query[i+iId]->ToString();
-					Position^ pos = gcnew DbPosition(sId, codeId, _attributes, dic);
+					Position^ pos = gcnew DbPosition(sId, attrId, _attributes, dic);
 					list->Add(pos);
 					worker->ReportProgress(i/nAttr, nullptr);
 
@@ -237,6 +236,7 @@ namespace Integra {
 			int nAttr = _attributes->Count;
 			int iId;
 			String^ codeId;
+			Attribute^ attrId;
 			for (int i = 0; i < nAttr; i++)
 			{
 				strQuery += String::Format("{0}.{1}, ", _attributes[i]->FullTable, _attributes[i]->Code);
@@ -244,6 +244,7 @@ namespace Integra {
 				{
 					iId = i;
 					codeId = _attributes[i]->Code;
+					attrId = _attributes[i];
 				}
 			}
 			strQuery = strQuery->Substring(0, strQuery->Length - 2);
@@ -278,7 +279,7 @@ namespace Integra {
 						dic->Add(_attributes[j], query[i+j]->ToString());
 					}
 					String^ sId = query[i+iId]->ToString();
-					Position^ pos = gcnew DbPosition(sId, codeId, _attributes, dic);
+					Position^ pos = gcnew DbPosition(sId, attrId, _attributes, dic);
 					list->Add(pos);
 				}
 
@@ -349,7 +350,7 @@ namespace Integra {
 				squery += String::Format(" {0} = {1},", pair->Key->FullCode, value);
 			}
 			squery = squery->Substring(0, squery->Length - 1);
-			squery += String::Format(" where {0} = {1}", currentPos->AttrIdCode, OdbcClass::GetSqlString(currentPos->UnicId));
+			squery += String::Format(" where {0} = {1}", currentPos->AttrId->Code, OdbcClass::GetSqlString(currentPos->UnicId));
 			BookSetting->Odbc->ExecuteNonQuery(squery);
 		}
 
@@ -360,25 +361,23 @@ namespace Integra {
 				Attribute^ attr = pair->Key;
 				String^ attrVal = pair->Value;
 
-				String^ table;
-				String^ squery = "update ";
-				if (String::IsNullOrEmpty(table))
-				{
-					table = attr->FullTable;
-					squery += String::Format("{0} set", table);
-				}
-				String^ value;
-				if (attr->DataType == "ÑÒÐÎÊÀ")
-				{
-					value = OdbcClass::GetSqlString(attrVal);
-				}
-				else
-				{
-					value = attrVal;
-				}
-				squery += String::Format(" {0} = {1},", attr->FullCode, value);
+				String^ table = attr->FullTable;
+				String^ squery = String::Format("update {0} set", table);
+
+
+				String^ strValueAttr = BookSetting->Odbc->GetSqlValue(attr->DataType, attrVal);
+				squery += String::Format(" {0} = {1},", attr->FullCode, strValueAttr);
 				squery = squery->Substring(0, squery->Length - 1);
-				squery += String::Format(" where {0} = {1}", currentPos->AttrIdCode, OdbcClass::GetSqlString(currentPos->UnicId));
+
+
+				Attribute^ whereAttr = GetAttrLinkId(table);
+				if (whereAttr == nullptr)
+				{
+					whereAttr = currentPos->AttrId;
+				}
+				strValueAttr = BookSetting->Odbc->GetSqlValue(whereAttr->DataType, currentPos->UnicId);
+				squery += String::Format(" where ({0} = {1})", whereAttr->FullCode, strValueAttr);
+
 				try
 				{
 					BookSetting->Odbc->ExecuteNonQuery(squery);
@@ -395,6 +394,28 @@ namespace Integra {
 		}
 
 		private:
+
+			Attribute^ GetAttrLinkId(String^ fullTable)
+			{
+				if (BookSetting->DbLinks == nullptr || BookSetting->DbLinks->Count <= 0)
+				{
+					return nullptr;
+				}
+
+				for each (DbLink^ link in BookSetting->DbLinks)
+				{
+					if (link->Attribute1->FullTable == fullTable)
+					{
+						return link->Attribute1;
+					}
+					if (link->Attribute2->FullTable == fullTable)
+					{
+						return link->Attribute2;
+					}
+				}
+				return nullptr;
+			}
+
 			List<Object^>^ GetTableCodeAttrs()
 			{
 				String^ squery = String::Format("select IA.FULL_CODE, IA.ATTR_NAME, IA.NAME from {0}INTEGRATION_ATTRIBUTES IA, {0}INTEGRATION_BOOK IB where " +
@@ -432,7 +453,7 @@ namespace Integra {
 				return list;
 			}
 
-			String^ GetGlobalSquery(List<Attribute^>^ attrNames, List<Object^>^ filters)
+			String^ GetGlobalSquery(List<Attribute^>^ attrNames, List<Object^>^ filters, List<Object^>^ links)
 			{
 				String^ s = "select ";
 				for each (Attribute^ attr in attrNames)
@@ -440,19 +461,75 @@ namespace Integra {
 					s += attr->FullCode + ",";
 				}
 				s = s->Substring(0, s->Length - 1);
-				s += " from ";
-				s += attrNames[0]->FullTable;
 
-				s = SetFilters(s, filters);
+				s = SetTables(s, attrNames[0]->FullTable, links);
+				s = SetFiltersAndLinks(s, filters, links);
+
 
 				return s;
+			}
+
+			String^ SetFiltersAndLinks(String^ squery, List<Object^>^ filters, List<Object^>^ links)
+			{
+				bool hasFilters = false;
+				if (filters != nullptr && filters->Count > 0)
+				{
+					squery += " where ";
+					squery = SetFilters(squery, filters);
+					hasFilters = true;
+				}
+				if (links != nullptr && links->Count > 0)
+				{
+					if (hasFilters)
+					{
+						squery += " AND ";
+					}
+					else
+					{
+						squery += " where ";
+					}
+					squery = SetLinks(squery, links);
+				}
+				return squery;
+			}
+
+			String^ SetTables(String^ squery, String^ attrFullTable, List<Object^>^ links)
+			{
+				squery += " from ";
+				if (links != nullptr && links->Count > 0)
+				{
+					List<String^>^ fullTables = gcnew List<String ^>();
+					for each (DbLink^ link in links)
+					{
+						String^ fullTable1 = link->Attribute1->FullTable;
+						if (!fullTables->Contains(fullTable1))
+						{
+							fullTables->Add(fullTable1);
+						}
+						String^ fullTable2 = link->Attribute2->FullTable;
+						if (!fullTables->Contains(fullTable2))
+						{
+							fullTables->Add(fullTable2);
+						}
+					}
+					for each (String^ fullTable in fullTables)
+					{
+						squery += String::Format("{0},", fullTable);
+					}
+					squery = squery->Substring(0, squery->Length - 1);
+				}
+				else
+				{
+					squery += attrFullTable;
+				}
+				return squery;
 			}
 
 			String^ SetFilters(String^ squery, List<Object^>^ filters)
 			{
 				if (filters != nullptr && filters->Count > 0)
 				{
-					squery += " where ";
+					squery += "(";
 					String^ prevConcatValue = String::Empty;
 					for each (DbFilter^ filter in filters)
 					{
@@ -460,6 +537,24 @@ namespace Integra {
 						squery += line;
 						prevConcatValue = filter->ConcatinationValue;
 					}
+					squery = String::Format("{0})", squery);
+				}
+				return squery;
+			}
+
+			String^ SetLinks(String^ squery, List<Object^>^ links)
+			{
+				if (links != nullptr && links->Count > 0)
+				{
+					squery += "(";
+					String^ sAnd = "";
+					for each (DbLink^ link in links)
+					{
+						String^ line = String::Format(" {0} {1} = {2}", sAnd, link->Attribute1->FullCode, link->Attribute2->FullCode);
+						squery += line;
+						sAnd = "AND";
+					}
+					squery = String::Format("{0})", squery);
 				}
 				return squery;
 			}

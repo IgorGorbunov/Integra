@@ -302,29 +302,38 @@ namespace Integra {
 		}
 #pragma endregion
 
-		void SetNewAttrVals()
+		void SetNewAttrVals(bool toSource)
 		{
 			Dictionary<Attribute^, String^>^ newAttrVals = gcnew Dictionary<Attribute ^, String ^>();
 			for (int i = 0; i < dgvDifferent->Rows->Count; i++)
 			{
 				Object^ boolVal = dgvDifferent[4, i]->Value;
 				bool fromSource =  (bool)boolVal;
+				String^ value;
+				Attribute^ attr;
 				if (fromSource)
 				{
+					//значение источника
+					value = dgvDifferent[5, i]->Value->ToString();
+				}
+				else
+				{
+					//значение получателя
+					value = dgvDifferent[7, i]->Value->ToString();
+				}
+				if (toSource)
+				{
 					array<Object^, 2>^ arr = _pos->Differences[i];
-					// атрибут получателя
-					Attribute^ tAttr = (Attribute^) arr[1,0];
-					String^ value = dgvDifferent[5, i]->Value->ToString();
-					newAttrVals->Add(tAttr, value);
+					// атрибут источника
+					attr = (Attribute^) arr[0,0];
 				}
 				else
 				{
 					array<Object^, 2>^ arr = _pos->Differences[i];
-					// атрибут источника
-					Attribute^ sAttr = (Attribute^) arr[0,0];
-					String^ value = dgvDifferent[7, i]->Value->ToString();
-					newAttrVals->Add(sAttr, value);
+					// атрибут получателя
+					attr = (Attribute^) arr[1,0];
 				}
+				newAttrVals->Add(attr, value);
 			}
 			NewAttrNames = newAttrVals;
 		}
@@ -403,13 +412,13 @@ private: System::Void dgvDifferent_CellValueChanged(System::Object^  sender, Sys
 		 }
 private: System::Void bIntegInTarget_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 SetNewAttrVals();
+			 SetNewAttrVals(false);
 			 InTarget = true;
 			 Close();
 		 }
 private: System::Void bIntegInSource_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 SetNewAttrVals();
+			 SetNewAttrVals(true);
 			 InTarget = false;
 			 Close();
 		 }

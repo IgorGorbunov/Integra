@@ -163,9 +163,9 @@ namespace Integra {
 
 			for (int i = 0; i < resList->Count; i+=8)
 			{
-				int id = odbc->GetInt(resList[i+0]);
+				int id = odbc->GetResInt(resList[i+0]);
 				DateTime^ createDate = odbc->GetResDate(resList[i+1]);
-				int soglas = odbc->GetInt(resList[i+2]);
+				int soglas = odbc->GetResInt(resList[i+2]);
 				String^ reason = odbc->GetResString(resList[i+3]);
 				String^ createUser = odbc->GetResString(resList[i+4]);
 				String^ integrationSchemaName = odbc->GetResString(resList[i+5]);

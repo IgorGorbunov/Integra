@@ -68,23 +68,16 @@ namespace Integra {
 		int selectId;
 	private: System::Windows::Forms::Button^  bIntegNewSourceToTarget;
 	private: System::Windows::Forms::Button^  bIntegNewTargetToSource;
-
-
 	private: System::Windows::Forms::Button^  button4;
 	private: System::Windows::Forms::Button^  button5;
 	private: System::Windows::Forms::Label^  label10;
 	private: System::Windows::Forms::Button^  bDeleteFromTarget;
-
 	private: System::Windows::Forms::Button^  bDeleteFromSource;
 	private: System::Windows::Forms::GroupBox^  groupBox3;
 	private: System::Windows::Forms::Label^  label13;
 	public: System::Windows::Forms::Label^  lblMatchingStatus;
-	private: 
-
-	private: 
 	private: System::Windows::Forms::Label^  label12;
 	public: System::Windows::Forms::Label^  lblNequal;
-	private: 
 	public: System::Windows::Forms::Label^  lblNmatching;
 	public: 
 
@@ -650,7 +643,7 @@ namespace Integra {
 							}
 							
 							grid->Columns->Add(col);
-							if (attibute->FullCode == position->AttrIdCode)
+							if (attibute->FullCode == position->AttrId->FullCode)
 							{
 								iColId = i;
 							}

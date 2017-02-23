@@ -91,20 +91,20 @@ namespace Integra {
 				list = gcnew List<Object ^>();
 				for (int i = 0; i < resList->Count; i+=12)
 				{
-					int filterId = odbc->GetInt(resList[i+0]);
-					int attrId = odbc->GetInt(resList[i+1]);
+					int filterId = odbc->GetResInt(resList[i+0]);
+					int attrId = odbc->GetResInt(resList[i+1]);
 					String^ attrName = resList[i+2]->ToString();
 					String^ attrSchemaName = resList[i+3]->ToString();
 					String^ attrTableName = resList[i+4]->ToString();
 					String^ attrCode = resList[i+5]->ToString();
-					int attrIntBookId = odbc->GetInt(resList[i+6]);
+					int attrIntBookId = odbc->GetResInt(resList[i+6]);
 					String^ attrDataType = resList[i+7]->ToString();
-					int attrMaxLength = odbc->GetInt(resList[i+8]);
+					int attrMaxLength = odbc->GetResInt(resList[i+8]);
 					Attribute^ attr = gcnew Attribute(attrId, attrName, attrSchemaName, attrTableName, attrCode, attrIntBookId, attrDataType, attrMaxLength + "", odbc);
 
 					String^ filterCondition = resList[i+9]->ToString();
 					String^ filterConditionValue = resList[i+10]->ToString();
-					int filterConcatValue = odbc->GetInt(resList[i+11]);
+					int filterConcatValue = odbc->GetResInt(resList[i+11]);
 					String^ sConcatValue = String::Empty;
 					if (filterConcatValue == 0)
 					{

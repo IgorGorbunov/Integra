@@ -98,14 +98,14 @@ namespace Integra {
 			for (int i = 0; i < qList->Count; i+=colColumns)
 			{
 				array<String^>^ row = gcnew array<String ^>(colColumns);
-				int id = OdbcClass::GetInt(qList[i+0]);
+				int id = OdbcClass::GetResInt(qList[i+0]);
 				row[0] = id + "";
 				row[1] = qList[i+1]->ToString();
 				row[2] = qList[i+2]->ToString();
 				row[3] = qList[i+3]->ToString();
 				row[4] = qList[i+4]->ToString();
 				row[5] = qList[i+5]->ToString();
-				int intType = OdbcClass::GetInt(qList[i+6]);
+				int intType = OdbcClass::GetResInt(qList[i+6]);
 				switch (intType)
 				{
 				case 0:

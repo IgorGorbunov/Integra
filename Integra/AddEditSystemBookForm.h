@@ -551,8 +551,8 @@ namespace Integra {
 			{
 				for each (DbLink^ link in _dbLinks)
 				{
-					int attr1Id = GetAttr(link->Attribute1FullCode)->Id;
-					int attr2Id = GetAttr(link->Attribute2FullCode)->Id;
+					int attr1Id = GetAttr(link->Attribute1->FullCode)->Id;
+					int attr2Id = GetAttr(link->Attribute2->FullCode)->Id;
 					link->InsertToDb(_odbc, _intgrBookId, attr1Id, attr2Id);
 				}
 			}

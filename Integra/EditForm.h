@@ -144,7 +144,7 @@ namespace Integra {
 			 }
 			 String^ user = OdbcClass::GetSqlString(_odbc->Login);
 			 String^ date = _odbc->GetSqlDate(DateTime::Now);
-			 int id = _odbc->GetInt(_bookId);
+			 int id = _odbc->GetResInt(_bookId);
 			 
 			 String^ squery = String::Format("update {0}{1} set NAME = {2}, UPDATE_USER = {3}, UPDATE_DATE = {4} where ID = {5}", _odbc->schema, table, 
 				 name, user, date, id);
@@ -162,7 +162,7 @@ namespace Integra {
 			 {
 				 table = "BOOKS";
 			 }
-			 int id = _odbc->GetInt(_bookId);
+			 int id = _odbc->GetResInt(_bookId);
 			 
 			 String^ squery = String::Format("delete from {0}{1} where ID = {2}", _odbc->schema, table, id);
 			 _odbc->ExecuteNonQuery(squery);

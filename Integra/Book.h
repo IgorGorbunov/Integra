@@ -47,7 +47,7 @@ namespace Integra {
 		virtual Object^ GetGroupAttrValue(Attribute^ attribute, String^ idGroup) abstract;
 
 		virtual List<Position^>^ GetAllPositions() abstract;
-		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters) abstract;
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters, List<Object^>^ links) abstract;
 		virtual List<Position^>^ GetAllPositions2(System::ComponentModel::BackgroundWorker^ worker, System::ComponentModel::DoWorkEventArgs ^ e) abstract;
 		virtual List<Position^>^ GetAllPositions22(int% n) abstract;
 

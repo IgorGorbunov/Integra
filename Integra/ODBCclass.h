@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Logger.h"
+//#include "Attribute.h"
 
 namespace Integra {
 
@@ -132,6 +133,33 @@ namespace Integra {
 				return ExecuteQuery(squery);
 			}
 
+			static int GetResInt(Object^ o)
+			{
+				if (o == nullptr || String::IsNullOrEmpty(o->ToString()))
+				{
+					return -1;
+				}
+				int i;
+				try
+				{
+					double is;
+					bool isParse = double::TryParse(o->ToString(), is);
+					if (isParse)
+					{
+						i = Decimal::ToInt32((Decimal)is);
+					}
+					else
+					{
+						i = Decimal::ToInt32((Decimal)o);
+					}
+				}
+				catch (InvalidCastException^)
+				{
+					i = (int)o;
+				}
+				return i;
+			}
+
 			static String^ GetResString(Object^ o)
 			{
 				if (o == nullptr)
@@ -173,42 +201,47 @@ namespace Integra {
 				return s;
 			}
 
-			static int GetInt(Object^ o)
+			String^ GetSqlValue(String^ attrDataType, String^ s)
 			{
-				if (o == nullptr || String::IsNullOrEmpty(o->ToString()))
+				if (attrDataType == "ÑÒÐÎÊÀ")
 				{
-					return -1;
+					return GetSqlString(s);
 				}
-				int i;
-				try
+				if (attrDataType == "ÖÅËÎÅ ×ÈÑËÎ")
 				{
-					double is;
-					bool isParse = double::TryParse(o->ToString(), is);
-					if (isParse)
-					{
-						i = Decimal::ToInt32((Decimal)is);
-					}
-					else
-					{
-						i = Decimal::ToInt32((Decimal)o);
-					}
+					return s;
 				}
-				catch (InvalidCastException^)
+				if (attrDataType == "ÄÀÒÀ")
 				{
-					i = (int)o;
+					return GetSqlDate(s);
 				}
-				return i;
+				if (attrDataType == "×ÈÑËÎ Ñ ÏËÀÂÀÞÙÅÉ ÒÎ×ÊÎÉ")
+				{
+					return s;
+				}
+				if (attrDataType == "ËÎÃÈ×ÅÑÊÈÉ")
+				{
+					//todo
+					return s;
+				}
+				return s;
 			}
+
 
 			String^ GetSqlDate(DateTime^ dateTime)
 			{
+				return GetSqlDate(dateTime->ToString("yyyy-MM-dd HH:mm:ss"));
+			}
+
+			String^ GetSqlDate(String^ dateTime)
+			{
 				if (_dataSource == "ACCESS")
 				{
-					return String::Format("CDate('{0}')", dateTime->ToString("yyyy-MM-dd HH:mm:ss"));
+					return String::Format("CDate('{0}')", dateTime);
 				}
 				else
 				{
-					return String::Format("TO_DATE('{0}', 'YYYY-MM-DD HH24:MI:SS')", dateTime->ToString("yyyy-MM-dd HH:mm:ss"));
+					return String::Format("TO_DATE('{0}', 'YYYY-MM-DD HH24:MI:SS')", dateTime);
 				}
 			}
 
@@ -503,7 +536,7 @@ namespace Integra {
 				}
 				else
 				{
-					int p = GetInt(query[0]);
+					int p = GetResInt(query[0]);
 					if (p == -1)
 					{
 						return 1;
@@ -518,7 +551,7 @@ namespace Integra {
 				int i = 1;
 				for each (Object^ o in query)
 				{
-					int p = GetInt(o);
+					int p = GetResInt(o);
 
 					if (p > i)
 					{

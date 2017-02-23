@@ -94,7 +94,7 @@ namespace Integra {
 			return nullptr;
 		}
 
-		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters) override
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters, List<Object^>^ links) override
 		{
 			return nullptr;
 		}

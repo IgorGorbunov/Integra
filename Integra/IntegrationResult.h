@@ -109,6 +109,13 @@ namespace Integra {
 			_odbc->ExecuteNonQuery(squery);
 		}
 
+		void StopIntegration()
+		{
+			_state = "Окончено успешно";
+			String^ squery = String::Format("update {0}INTEGRATION_RESULTS set STATE = {1} where ID = {2}", _odbc->schema, _odbc->GetSqlString(_state), _id);
+			_odbc->ExecuteNonQuery(squery);
+		}
+
 	protected:
 		/// <summary>
 		/// Освободить все используемые ресурсы.

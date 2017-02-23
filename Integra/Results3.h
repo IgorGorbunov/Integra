@@ -173,11 +173,11 @@ namespace Integra {
 			this->bDeleteFromTarget = (gcnew System::Windows::Forms::Button());
 			this->bDeleteFromSource = (gcnew System::Windows::Forms::Button());
 			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
+			this->lblNequal = (gcnew System::Windows::Forms::Label());
+			this->lblNmatching = (gcnew System::Windows::Forms::Label());
+			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->lblMatchingStatus = (gcnew System::Windows::Forms::Label());
 			this->label12 = (gcnew System::Windows::Forms::Label());
-			this->label13 = (gcnew System::Windows::Forms::Label());
-			this->lblNmatching = (gcnew System::Windows::Forms::Label());
-			this->lblNequal = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSourceNew))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTargetNew))->BeginInit();
 			this->groupBox1->SuspendLayout();
@@ -474,19 +474,21 @@ namespace Integra {
 			// 
 			this->bDeleteFromTarget->Location = System::Drawing::Point(310, 645);
 			this->bDeleteFromTarget->Name = L"bDeleteFromTarget";
-			this->bDeleteFromTarget->Size = System::Drawing::Size(250, 29);
+			this->bDeleteFromTarget->Size = System::Drawing::Size(410, 29);
 			this->bDeleteFromTarget->TabIndex = 19;
-			this->bDeleteFromTarget->Text = L"Удалить из справочника-получателя";
+			this->bDeleteFromTarget->Text = L"Сформировать извещение на удаление позиции из справочника-получателя";
 			this->bDeleteFromTarget->UseVisualStyleBackColor = true;
+			this->bDeleteFromTarget->Click += gcnew System::EventHandler(this, &Results3::bDeleteFromTarget_Click);
 			// 
 			// bDeleteFromSource
 			// 
 			this->bDeleteFromSource->Location = System::Drawing::Point(310, 390);
 			this->bDeleteFromSource->Name = L"bDeleteFromSource";
-			this->bDeleteFromSource->Size = System::Drawing::Size(250, 29);
+			this->bDeleteFromSource->Size = System::Drawing::Size(410, 29);
 			this->bDeleteFromSource->TabIndex = 20;
-			this->bDeleteFromSource->Text = L"Удалить из справочника-источника";
+			this->bDeleteFromSource->Text = L"Сформировать извещение на удаление позиции из справочника-источника";
 			this->bDeleteFromSource->UseVisualStyleBackColor = true;
+			this->bDeleteFromSource->Click += gcnew System::EventHandler(this, &Results3::bDeleteFromSource_Click);
 			// 
 			// groupBox3
 			// 
@@ -502,6 +504,35 @@ namespace Integra {
 			this->groupBox3->TabIndex = 21;
 			this->groupBox3->TabStop = false;
 			this->groupBox3->Text = L"Сравнение позиций";
+			// 
+			// lblNequal
+			// 
+			this->lblNequal->AutoSize = true;
+			this->lblNequal->Location = System::Drawing::Point(186, 73);
+			this->lblNequal->Name = L"lblNequal";
+			this->lblNequal->Size = System::Drawing::Size(13, 13);
+			this->lblNequal->TabIndex = 16;
+			this->lblNequal->Text = L"0";
+			this->lblNequal->Visible = false;
+			// 
+			// lblNmatching
+			// 
+			this->lblNmatching->AutoSize = true;
+			this->lblNmatching->Location = System::Drawing::Point(186, 50);
+			this->lblNmatching->Name = L"lblNmatching";
+			this->lblNmatching->Size = System::Drawing::Size(13, 13);
+			this->lblNmatching->TabIndex = 15;
+			this->lblNmatching->Text = L"0";
+			this->lblNmatching->Visible = false;
+			// 
+			// label13
+			// 
+			this->label13->AutoSize = true;
+			this->label13->Location = System::Drawing::Point(18, 73);
+			this->label13->Name = L"label13";
+			this->label13->Size = System::Drawing::Size(116, 13);
+			this->label13->TabIndex = 14;
+			this->label13->Text = L"Идентичных записей:";
 			// 
 			// lblMatchingStatus
 			// 
@@ -521,35 +552,6 @@ namespace Integra {
 			this->label12->Size = System::Drawing::Size(44, 13);
 			this->label12->TabIndex = 12;
 			this->label12->Text = L"Статус:";
-			// 
-			// label13
-			// 
-			this->label13->AutoSize = true;
-			this->label13->Location = System::Drawing::Point(18, 73);
-			this->label13->Name = L"label13";
-			this->label13->Size = System::Drawing::Size(116, 13);
-			this->label13->TabIndex = 14;
-			this->label13->Text = L"Идентичных записей:";
-			// 
-			// lblNmatching
-			// 
-			this->lblNmatching->AutoSize = true;
-			this->lblNmatching->Location = System::Drawing::Point(186, 50);
-			this->lblNmatching->Name = L"lblNmatching";
-			this->lblNmatching->Size = System::Drawing::Size(13, 13);
-			this->lblNmatching->TabIndex = 15;
-			this->lblNmatching->Text = L"0";
-			this->lblNmatching->Visible = false;
-			// 
-			// lblNequal
-			// 
-			this->lblNequal->AutoSize = true;
-			this->lblNequal->Location = System::Drawing::Point(186, 73);
-			this->lblNequal->Name = L"lblNequal";
-			this->lblNequal->Size = System::Drawing::Size(13, 13);
-			this->lblNequal->TabIndex = 16;
-			this->lblNequal->Text = L"0";
-			this->lblNequal->Visible = false;
 			// 
 			// Results3
 			// 
@@ -582,6 +584,7 @@ namespace Integra {
 			this->Name = L"Results3";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Обработка данных";
+			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &Results3::Results3_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &Results3::Results_Load);
 			this->Shown += gcnew System::EventHandler(this, &Results3::Results3_Shown);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSourceNew))->EndInit();
@@ -759,6 +762,7 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 ProgramIntegration::StopIntegration();
 			 Close();
 		 }
 private: System::Void Results3_Shown(System::Object^  sender, System::EventArgs^  e) 
@@ -806,5 +810,41 @@ private: System::Void bIntegNewTarget_Click(System::Object^  sender, System::Eve
 			 }
 		 }
 
+private: System::Void bDeleteFromSource_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 for (int i = 0; i < _sourceNew->Count; i++)
+			 {
+				 int iRow =  dgvSourceNew->SelectedCells[0]->RowIndex;
+				 String^ id = dgvSourceNew[iColIdNewS, iRow]->Value->ToString();
+				 if (_sourceNew[i]->UnicId == id)
+				 {
+					 ProgramIntegration::NoticeRemoveFromSource(_sourceNew[i]);
+					 dgvSourceNew->Rows->RemoveAt(iRow);
+					 _sourceNew->RemoveAt(i);
+					 MessageBox::Show("Извещение создано!");
+					 break;
+				 }
+			 }
+		 }
+private: System::Void bDeleteFromTarget_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 for (int i = 0; i < _targetNew->Count; i++)
+			 {
+				 int iRow =  dgvTargetNew->SelectedCells[0]->RowIndex;
+				 String^ id = dgvTargetNew[iColIdNewT, iRow]->Value->ToString();
+				 if (_targetNew[i]->UnicId == id)
+				 {
+					 ProgramIntegration::NoticeRemoveFromTarget(_targetNew[i]);
+					 dgvTargetNew->Rows->RemoveAt(iRow);
+					 _targetNew->RemoveAt(i);
+					 MessageBox::Show("Извещение создано!");
+					 break;
+				 }
+			 }
+		 }
+private: System::Void Results3_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e) 
+		 {
+			 ProgramIntegration::StopIntegration();
+		 }
 };
 }

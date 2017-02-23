@@ -8,6 +8,7 @@
 #include "Position.h"
 #include "Results2.h"
 
+
 namespace Integra {
 
 	using namespace System::Collections::Generic;
@@ -70,6 +71,15 @@ namespace Integra {
 		}
 
 	public:
+		virtual Dictionary<String^, String^>^ GetAllGroupNames() override
+		{
+			return nullptr;
+		}
+		virtual Object^ GetGroupAttrValue(Attribute^ attribute, String^ idGroup) override
+		{
+			return nullptr;
+		}
+
 		virtual List<Position^>^ GetAllPositions() override
 		{
 			return GetMaxLevelPositions();
@@ -84,10 +94,27 @@ namespace Integra {
 			return nullptr;
 		}
 
-		virtual List<Object^>^ GetAllPositionsTable(List<String^>^% attrNames) override
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters) override
 		{
 			return nullptr;
 		}
+
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		{
+
+		}
+
+		virtual void UpdatePosition(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		{
+
+		}
+
+		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) override
+		{
+
+		}
+
+
 
 	private:
 		Void SetBookObject()

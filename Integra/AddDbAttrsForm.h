@@ -459,6 +459,7 @@ namespace Integra {
 			this->cbDateAttr->Name = L"cbDateAttr";
 			this->cbDateAttr->Size = System::Drawing::Size(307, 21);
 			this->cbDateAttr->TabIndex = 25;
+			this->cbDateAttr->Visible = false;
 			this->cbDateAttr->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::cbDateAttr_Click);
 			// 
 			// label7
@@ -469,6 +470,7 @@ namespace Integra {
 			this->label7->Size = System::Drawing::Size(95, 13);
 			this->label7->TabIndex = 24;
 			this->label7->Text = L"Дата изменения:";
+			this->label7->Visible = false;
 			// 
 			// AddDbAttrsForm
 			// 

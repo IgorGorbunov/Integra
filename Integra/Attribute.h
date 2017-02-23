@@ -128,6 +128,10 @@ namespace Integra {
 				{
 					_dataType = "×ÈÑËÎ Ñ ÏËÀÂÀÞÙÅÉ ÒÎ×ÊÎÉ";
 				}
+				if(value == "ËÎÃÈ×ÅÑÊÈÉ"  || value == "BOOL"  || value == "BOOLEAN")
+				{
+					_dataType = "ËÎÃÈ×ÅÑÊÈÉ";
+				}
 			}
 		}
 		property int Id
@@ -252,13 +256,13 @@ namespace Integra {
 			_id = id;
 		}
 
-		Object^ GetValue(String^ condition, bool isDb)
+		Object^ GetValue(String^ condition, bool isDb, OdbcClass^ odbc)
 		{
 			//todo
 			if (isDb)
 			{
-				String^ query = String::Format("select {0}ATABLE.{1} from {0}{2} ATABLE {3}", _odbc->schema, Code, Table, condition);
-				List<Object^>^ qlist = _odbc->ExecuteQuery(query);
+				String^ query = String::Format("select ATABLE.{0} from {1}{2} ATABLE {3}", Code, odbc->schema, Table, condition);
+				List<Object^>^ qlist = odbc->ExecuteQuery(query);
 				return qlist[0];
 			}
 			else

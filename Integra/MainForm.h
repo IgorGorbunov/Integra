@@ -465,7 +465,7 @@ private: System::Void интеграцияToolStripMenuItem_Click(System::Object^  sender,
 		 }
 private: System::Void извещенияToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 NoticesForm^ form = gcnew NoticesForm();
+			 NoticesForm^ form = gcnew NoticesForm(ProgramIntegration::Odbc);
 			 form->ShowDialog();
 		 }
 private: System::Void журналИзмененийToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 

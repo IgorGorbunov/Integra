@@ -25,6 +25,8 @@ namespace Integra {
 
 	private:
 		OdbcClass^ _odbc;
+		// 0 - oneWay, 1 - twoWay
+		int _typeDir;
 
 		BookSettings^ _sourceBook;
 		BookSettings^ _targetBook;
@@ -40,6 +42,9 @@ namespace Integra {
 
 		Dictionary<String^, String^>^ _currentSourceList;
 		Dictionary<String^, String^>^ _currentTargetList;
+
+
+		bool _sAttrIsSet, _tAttrIsSet;
 
 	private: System::Windows::Forms::Panel^  panel4;
 	private: System::Windows::Forms::Panel^  pListBox;
@@ -58,10 +63,12 @@ namespace Integra {
 
 
 	public:
-		AddGroupLinksForm(BookSettings^ sourceBook, BookSettings^ targetBook, OdbcClass^ odbc)
+		AddGroupLinksForm(BookSettings^ sourceBook, BookSettings^ targetBook, int type, OdbcClass^ odbc)
 		{
 			InitializeComponent();
 			_odbc = odbc;
+			_typeDir = type;
+
 			_complexAttrs = gcnew List<ComplexAttribute ^>();
 			_sourceBook = sourceBook;
 			_targetBook = targetBook;
@@ -88,9 +95,6 @@ namespace Integra {
 			}
 		}
 	private: System::Windows::Forms::ListBox^  lbGroups;
-	protected: 
-
-	protected: 
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Button^  bAddGroup;
 	private: System::Windows::Forms::Button^  button2;
@@ -98,19 +102,10 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridView^  dgv;
 	private: System::Windows::Forms::Button^  bCancel;
 	private: System::Windows::Forms::Button^  bOk;
-
-
-
-
-
 	private: System::Windows::Forms::Panel^  pGroup;
 	private: System::Windows::Forms::Panel^  panel2;
-
-
 	private: System::Windows::Forms::Panel^  panel1;
 	private: System::Windows::Forms::Panel^  pDgv;
-
-
 
 	private:
 		/// <summary>
@@ -642,6 +637,64 @@ namespace Integra {
 			}
 		}
 
+		void CheckAttrDataLinks(String^ dataTypeSource, String^ dataTypeTarget)
+		{
+			if ((dataTypeSource == "СТРОКА" && dataTypeTarget == "ЛОГИЧЕСКИЙ") ||
+				(_typeDir == 1 && dataTypeSource == "ЛОГИЧЕСКИЙ" && dataTypeTarget == "СТРОКА"))
+			{
+				MessageBox::Show("Символьный реквизит может не содержать логического значения!\nПри интеграции значения \"1\", \"TRUE\", \"ДА\" переводятся в TRUE, \"0\", \"FALSE\", \"НЕТ\" - в FALSE.\nПри неудачной попытке перевода корректировка реквизита не будет произведена!");
+				return;
+			}
+			else if ((dataTypeSource == "СТРОКА" && dataTypeTarget == "ЦЕЛОЕ ЧИСЛО") ||
+				(_typeDir == 1 && dataTypeSource == "ЦЕЛОЕ ЧИСЛО" && dataTypeTarget == "СТРОКА"))
+			{
+				MessageBox::Show("Символьный реквизит может не содержать целочисленного значения!\nПри интеграции будет произведена попытка перевода с учетом символа дробной части (\".\"\",\").\nПри неудачной попытке перевода корректировка реквизита не будет произведена!");
+				return;
+			}
+			else if ((dataTypeSource == "СТРОКА" && dataTypeTarget == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ") ||
+				(_typeDir == 1 && dataTypeSource == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ" && dataTypeTarget == "СТРОКА"))
+			{
+				MessageBox::Show("Символьный реквизит может не содержать числового значения!\nПри неудачной попытке перевода корректировка реквизита не будет произведена!");
+				return;
+			}
+			else if ((dataTypeSource == "ЛОГИЧЕСКИЙ" && dataTypeTarget == "ЦЕЛОЕ ЧИСЛО") ||
+				(_typeDir == 1 && dataTypeSource == "ЦЕЛОЕ ЧИСЛО" && dataTypeTarget == "ЛОГИЧЕСКИЙ"))
+			{
+				MessageBox::Show("При интеграции будет произведен перевод значений TRUE в \"1\", а FALSE в \"0\".\nПри неудачной попытке перевода корректировка реквизита не будет произведена!");
+				return;
+			}
+			else if ((dataTypeSource == "ЛОГИЧЕСКИЙ" && dataTypeTarget == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ") ||
+				(_typeDir == 1 && dataTypeSource == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ" && dataTypeTarget == "ЛОГИЧЕСКИЙ"))
+			{
+				MessageBox::Show("При интеграции будет произведен перевод значений TRUE в \"1,00\", а FALSE в \"0,00\".\nПри неудачной попытке перевода корректировка реквизита не будет произведена!");
+				return;
+			}
+			else if ((dataTypeSource == "ЦЕЛОЕ ЧИСЛО" && dataTypeTarget == "ЛОГИЧЕСКИЙ") ||
+				(_typeDir == 1 && dataTypeSource == "ЛОГИЧЕСКИЙ" && dataTypeTarget == "ЦЕЛОЕ ЧИСЛО"))
+			{
+				MessageBox::Show("Целочисленный реквизит может не содержать логического значения!\nПри интеграции будет произведена попытка перевода значений \"1\" в TRUE, а \"0\" в FALSE.\nПри неудачной попытке перевода корректировка реквизита не будет произведена!");
+				return;
+			}
+			else if ((dataTypeSource == "ЦЕЛОЕ ЧИСЛО" && dataTypeTarget == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ") ||
+				(_typeDir == 1 && dataTypeSource == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ" && dataTypeTarget == "ЦЕЛОЕ ЧИСЛО"))
+			{
+				MessageBox::Show("При интеграции будет произведен перевод целочисленных значений с добавлением нулевой дробной части.");
+				return;
+			}
+			else if ((dataTypeSource == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ" && dataTypeTarget == "ЛОГИЧЕСКИЙ") ||
+				(_typeDir == 1 && dataTypeSource == "ЛОГИЧЕСКИЙ" && dataTypeTarget == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ"))
+			{
+				MessageBox::Show("Числовой реквизит может не содержать логического значения!\nПри интеграции будет произведена попытка перевода значений \"1,00\" в TRUE, а \"0,00\" в FALSE.\nПри неудачной попытке перевода корректировка реквизита не будет произведена!");
+				return;
+			}
+			else if ((dataTypeSource == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ" && dataTypeTarget == "ЦЕЛОЕ ЧИСЛО") ||
+				(_typeDir == 1 && dataTypeSource == "ЦЕЛОЕ ЧИСЛО" && dataTypeTarget == "ЧИСЛО С ПЛАВАЮЩЕЙ ТОЧКОЙ"))
+			{
+				MessageBox::Show("При интеграции будет произведен перевод  значений с учетом только целой части.\nВозможна частичная потеря данных!");
+				return;
+			}
+		}
+
 
 	private: System::Void bAddGroup_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
@@ -668,6 +721,7 @@ namespace Integra {
 
 			 if (e->ColumnIndex == 0)
 			 {
+				 _sAttrIsSet = false;
 				 if (_sourceBook->HasGroup)
 				 {
 					 String^ nameAttr = dgv[0, e->RowIndex]->Value->ToString();
@@ -696,6 +750,7 @@ namespace Integra {
 					 _sourceAttrsFree->AddRange(_sourceAttrs);
 					 RemoveOnColumn(0, _sourceAttrsFree);
 				 }
+				 _sAttrIsSet = true;
 			 }
 			 if (e->ColumnIndex == 4)
 			 {
@@ -705,6 +760,7 @@ namespace Integra {
 					// // do stuff
 					// dgv->Invalidate();
 				 //}
+				 _tAttrIsSet = false;
 				 if (_targetBook->HasGroup)
 				 {
 					 String^ nameAttr = dgv[4, e->RowIndex]->Value->ToString();
@@ -734,7 +790,23 @@ namespace Integra {
 					 _targetAttrsFree->AddRange(_targetAttrs);
 					 RemoveOnColumn(4, _targetAttrsFree);
 				 }
+				 _tAttrIsSet = true;
 			 }
+
+			 Object^ sourceAttrData = dgv[2, e->RowIndex]->Value;
+			 Object^ sourceAttrLen = dgv[3, e->RowIndex]->Value;
+			 Object^ targetAttrData = dgv[6, e->RowIndex]->Value;
+			 Object^ targetAttrLen = dgv[7, e->RowIndex]->Value;
+
+			 if (_sAttrIsSet && _tAttrIsSet)
+			 {
+				 if (sourceAttrData != nullptr && targetAttrData != nullptr)
+				 {
+					 CheckAttrDataLinks(sourceAttrData->ToString(), targetAttrData->ToString());
+				 }
+			 }
+			 
+
 		 }
 	private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {

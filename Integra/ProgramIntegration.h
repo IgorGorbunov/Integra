@@ -70,6 +70,11 @@ namespace Integra {
 			Nmatches = _integration->Nmatches;
 		}
 
+		static void StopIntegration()
+		{
+			_integration->StopIntegration();
+		}
+
 
 		static void AddPosToSource(Position^ pos)
 		{
@@ -89,6 +94,16 @@ namespace Integra {
 		static void UpdatePosSource(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)
 		{
 			_integration->UpdatePosToSource(currentPos, newAttrVals);
+		}
+
+		static void NoticeRemoveFromSource(Position^ currentPos)
+		{
+			_integration->NoticeRemoveFromSource(currentPos);
+		}
+
+		static void NoticeRemoveFromTarget(Position^ currentPos)
+		{
+			_integration->NoticeRemoveFromTarget(currentPos);
 		}
 
 		static Void StartIntegration(IntegrationSettings^ intSet) 

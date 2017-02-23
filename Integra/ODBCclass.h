@@ -38,6 +38,7 @@ namespace Integra {
 		public:
 			void Init()
 			{
+				//release
 				schema = ""; 
 				//schema = "INTEGRA.";
 			}
@@ -121,7 +122,7 @@ namespace Integra {
 
 			List<Object^>^ GetOracleTables(String^ schema)
 			{
-				String^ squery = String::Format("select table_name from all_tables where owner = '{0}'", schema);
+				String^ squery = String::Format("select table_name from all_tables where owner = '{0}' order by table_name", schema);
 				return ExecuteQuery(squery);
 			}
 

@@ -102,12 +102,11 @@ namespace Integra {
 			this->cbDb->Size = System::Drawing::Size(156, 21);
 			this->cbDb->TabIndex = 2;
 			this->cbDb->Text = L"OTL.KTPP.AVIASTAR.LINK-UL.RU";
-			this->cbDb->Visible = false;
 			// 
 			// bOk
 			// 
 			this->bOk->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bOk->Location = System::Drawing::Point(15, 125);
+			this->bOk->Location = System::Drawing::Point(21, 154);
 			this->bOk->Name = L"bOk";
 			this->bOk->Size = System::Drawing::Size(75, 32);
 			this->bOk->TabIndex = 3;
@@ -119,7 +118,7 @@ namespace Integra {
 			// 
 			this->bCancel->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->bCancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-			this->bCancel->Location = System::Drawing::Point(96, 125);
+			this->bCancel->Location = System::Drawing::Point(102, 154);
 			this->bCancel->Name = L"bCancel";
 			this->bCancel->Size = System::Drawing::Size(75, 32);
 			this->bCancel->TabIndex = 4;
@@ -152,7 +151,7 @@ namespace Integra {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->CancelButton = this->bCancel;
-			this->ClientSize = System::Drawing::Size(199, 167);
+			this->ClientSize = System::Drawing::Size(199, 202);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->bCancel);
@@ -207,6 +206,7 @@ namespace Integra {
 		     if (logOn)
 		     {
 				 login = odbc->Login;
+				 //todo
 				 _settingsFile->SetValue("LOGIN", login);
 				 _settingsFile->UpdateFile();
 				 RoleStation::SetOdbc(odbc);

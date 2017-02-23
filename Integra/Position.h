@@ -65,7 +65,7 @@ namespace Integra {
 			{
 				condition = String::Format("where ATABLE.{0} = {1}", AttrIdCode, id);
 			}
-			Object^ oCaption = attrCaption->GetValue(condition, true);
+			Object^ oCaption = attrCaption->GetValue(condition, true, _intgrBook->Odbc);
 			Caption = oCaption->ToString();
 		}
 

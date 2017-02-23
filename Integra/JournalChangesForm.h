@@ -129,7 +129,7 @@ namespace Integra {
 			this->dataGridView1->Location = System::Drawing::Point(10, 10);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->ReadOnly = true;
-			this->dataGridView1->Size = System::Drawing::Size(1045, 237);
+			this->dataGridView1->Size = System::Drawing::Size(1045, 299);
 			this->dataGridView1->TabIndex = 0;
 			// 
 			// Column1
@@ -296,7 +296,7 @@ namespace Integra {
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel1->Location = System::Drawing::Point(0, 0);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(1065, 72);
+			this->panel1->Size = System::Drawing::Size(1065, 10);
 			this->panel1->TabIndex = 11;
 			// 
 			// panel2
@@ -305,7 +305,7 @@ namespace Integra {
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Top;
 			this->panel2->Location = System::Drawing::Point(0, 0);
 			this->panel2->Name = L"panel2";
-			this->panel2->Size = System::Drawing::Size(1065, 72);
+			this->panel2->Size = System::Drawing::Size(1065, 10);
 			this->panel2->TabIndex = 12;
 			// 
 			// panel3
@@ -360,9 +360,9 @@ namespace Integra {
 			// 
 			this->panel5->Controls->Add(this->panel6);
 			this->panel5->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->panel5->Location = System::Drawing::Point(0, 72);
+			this->panel5->Location = System::Drawing::Point(0, 10);
 			this->panel5->Name = L"panel5";
-			this->panel5->Size = System::Drawing::Size(1065, 257);
+			this->panel5->Size = System::Drawing::Size(1065, 319);
 			this->panel5->TabIndex = 14;
 			// 
 			// panel6
@@ -372,7 +372,7 @@ namespace Integra {
 			this->panel6->Location = System::Drawing::Point(0, 0);
 			this->panel6->Name = L"panel6";
 			this->panel6->Padding = System::Windows::Forms::Padding(10);
-			this->panel6->Size = System::Drawing::Size(1065, 257);
+			this->panel6->Size = System::Drawing::Size(1065, 319);
 			this->panel6->TabIndex = 0;
 			// 
 			// JournalChangesForm

@@ -2,6 +2,7 @@
 
 #include "Logger.h"
 #include "WrongPassSemanticException.h"
+#include "Attribute.h"
 
 namespace Integra {
 
@@ -120,7 +121,7 @@ namespace Integra {
 			return list;
 		}
 
-		List<array<Object^>^>^ GetClassAttrs(List<String^>^ fullCode)
+		List<Attribute^>^ GetClassAttrs(List<String^>^ fullCode)
 		{
 			ISCGroupList^ groups = Core->GroupList();
 			ISCReferGroup^ group = groups->GroupByIndex(Int32::Parse(fullCode[0]));
@@ -133,29 +134,49 @@ namespace Integra {
 				i++;
 			}
 
-			List<array<Object^>^>^ attrs = gcnew List<array<Object^>^>();
+			List<Attribute^>^ attrs = gcnew List<Attribute^>();
 			int n = clas->CountAttrClasses;
 			for (int j = 0; j < n; j++)
 			{
 				ISCClassAttribute^ attr = clas->AttrClassByIndex(j);
-				array<Object^>^ arr = gcnew array<Object ^>(5);
-				arr[0] = false;
-				arr[1] = attr->NameAttr;
-				arr[2] = attr->NameScreen;
-				arr[3] = GetTypeName(attr->DataType);
-				arr[4] = attr->SizeAttr + "";
-				attrs->Add(arr);
+
+				Attribute^ attribute = gcnew Attribute("", attr->NameAttr, attr->NameScreen);
+				attribute->UseChecked = false;
+				attribute->DataType = GetTypeName(attr->DataType);
+				attribute->MaxLength = attr->SizeAttr + "";
+				attrs->Add(attribute);
 			}
 
-			array<Object^>^ arr = gcnew array<Object ^>(5);
-			arr[0] = false;
-			arr[1] = "^GUID";
-			arr[2] = "Глобальный идентификатор";
-			arr[3] = "Строка";
-			arr[4] = "22";
-			attrs->Add(arr);
+			Attribute^ attribute = gcnew Attribute("", "^GUID", "Глобальный идентификатор");
+			attribute->UseChecked = false;
+			attribute->DataType = "Строка";
+			attribute->MaxLength = "22";
+			attrs->Add(attribute);
+
 			return attrs;
 		}
+
+		Dictionary<String^, String^>^ GetKarts()
+        {
+            return nullptr;
+        }
+
+		Dictionary<String^, String^>^ GetSprs(String^ sprName)
+        {
+            return nullptr;
+        }
+
+        Dictionary<String^, String^>^ GetChilds(String^ location)
+        {
+            return nullptr;
+        }
+
+
+		String^ GetAttr(String^ location, String^ nameAttr)
+        {
+            return "";
+        }
+
 
 	public:
 		Void WriteToLog(String^ message)

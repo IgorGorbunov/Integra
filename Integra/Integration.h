@@ -11,6 +11,7 @@
 #include "DiffererncePosition.h"
 #include "Results2.h"
 #include "Editting.h"
+#include "Notice.h"
 
 
 namespace Integra {
@@ -304,6 +305,11 @@ namespace Integra {
 // 			}
 		}
 
+		void StopIntegration()
+		{
+			_intgrResults->StopIntegration();
+		}
+
 		void AddPosToSource(Position^ p)
 		{
 			Dictionary<Attribute^, String^>^ newAttrsAndVals = gcnew Dictionary<Attribute ^, String ^>();
@@ -343,6 +349,19 @@ namespace Integra {
 		{
 			_sourceBook->UpdatePositionForEachAttr(currentPos, newAttrVals, _intgrResults, 0);
 		}
+
+		void NoticeRemoveFromSource(Position^ currentPos)
+		{
+			Notice^ notice = gcnew Notice(_odbc, _intgrResults->Id, "На удаление", currentPos->UnicId, _settings->SourceBook->Id);
+			notice->InsertToDb();
+		}
+
+		void NoticeRemoveFromTarget(Position^ currentPos)
+		{
+			Notice^ notice = gcnew Notice(_odbc, _intgrResults->Id, "На удаление", currentPos->UnicId, _settings->TargetBook->Id);
+			notice->InsertToDb();
+		}
+
 
 		Void SetPositionsAndCompare()
 		{

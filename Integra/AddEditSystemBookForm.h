@@ -468,11 +468,11 @@ namespace Integra {
 				}
 
 				int id = WriteSingleAttr(idCol, intgrId);
-				String^ squery = "update INTEGRATION_BOOK set ATTR_ID = " + id + " where ID = " + intgrId;
+				String^ squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_ID = " + id + " where ID = " + intgrId;
 				_odbc->ExecuteNonQuery(squery);
 
 				int titleAttrId = WriteSingleAttr(titleCol, intgrId);
-				squery = "update INTEGRATION_BOOK set ATTR_TITLE = " + titleAttrId + " where ID = " + intgrId;
+				squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_TITLE = " + titleAttrId + " where ID = " + intgrId;
 				_odbc->ExecuteNonQuery(squery);
 			}
 

@@ -81,7 +81,7 @@ namespace Integra {
 
 		static Dictionary<int, String^>^ GetAllUsers()
 		{
-			String^ sQuery =  String::Format("select {0}ID, {0}USER_BD_CODE from ROLE_USERS", _odbc->schema);
+			String^ sQuery =  String::Format("select RU.ID, RU.USER_BD_CODE from {0}ROLE_USERS RU", _odbc->schema);
 			List<Object^>^ resList = _odbc->ExecuteQuery(sQuery);
 			Dictionary<int, String^>^ list = gcnew Dictionary<int, String^>();
 			for (int i = 0; i < resList->Count; i+=2)

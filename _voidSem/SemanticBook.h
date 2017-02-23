@@ -24,7 +24,6 @@ namespace Integra {
 		Semantic^ _semantic;
 		BookSettings^ BookSetting;
 		IntegrationSettings^ _intSettings;
-		OdbcClass^ _commonOdbc;
 
 		Object^ _root;
 		List<String^>^ _tables;
@@ -35,7 +34,7 @@ namespace Integra {
 		int _i;
 
 	public:
-		SemanticBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ commonOdbc, bool isSource, OdbcClass^ odbc) : Book(bookSettings, intSettings, odbc)
+		SemanticBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ odbc, bool isSource) : Book(bookSettings, intSettings, odbc)
 		{
 			/*_bookSettings = bookSettings;
 			_intSettings = intSettings;
@@ -71,6 +70,16 @@ namespace Integra {
 		}
 
 	public:
+		virtual Dictionary<String^, String^>^ GetAllGroupNames() override
+		{
+			return nullptr;
+		}
+
+		virtual Object^ GetGroupAttrValue(Attribute^ attribute, String^ idGroup) override
+		{
+			return nullptr;
+		}
+
 		virtual List<Position^>^ GetAllPositions() override
 		{
 			return GetMaxLevelPositions();
@@ -85,9 +94,24 @@ namespace Integra {
 			return nullptr;
 		}
 
-		virtual List<Object^>^ GetAllPositionsTable(List<String^>^% attrNames) override
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters) override
 		{
 			return nullptr;
+		}
+
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		{
+
+		}
+
+		virtual void UpdatePosition(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		{
+
+		}
+
+		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) override
+		{
+
 		}
 
 	private:

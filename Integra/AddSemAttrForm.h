@@ -81,22 +81,10 @@ namespace Integra {
 	private: System::Windows::Forms::Button^  bClose;
 	private: System::Windows::Forms::Button^  bRecord;
 	private: System::Windows::Forms::DataGridView^  dgvFields;
-
-
-
-
-
-
 	private: System::Windows::Forms::TreeView^  tvBooks;
-
-
 	private: System::Windows::Forms::Label^  label2;
-
 	private: System::Windows::Forms::Label^  lIdBook;
-
-
 	private: System::Windows::Forms::Label^  lNameBook;
-
 
 	private:
 		/// <summary>

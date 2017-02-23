@@ -58,40 +58,18 @@ namespace Integra {
 			}
 		}
 
-	protected: 
-
-
-
-
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::DataGridView^  dgvSource;
-
-
-
-
-
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::ComboBox^  cbIntgr;
-
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::DataGridView^  dgvTarget;
-
-
-
-
 	private: System::Windows::Forms::Button^  bCancel;
 	private: System::Windows::Forms::Button^  bSave;
 	private: System::Windows::Forms::Button^  bLinks;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::ComboBox^  cbBook;
-
 	private: System::Windows::Forms::GroupBox^  groupBox1;
-
-
-
-
-
-
 
 	private:
 		/// <summary>
@@ -416,11 +394,17 @@ private: System::Void bSave_Click(System::Object^  sender, System::EventArgs^  e
 		 }
 private: System::Void bLinks_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 if (cbIntgr->SelectedItem == nullptr)
+			 {
+				 MessageBox::Show("Не задан тип интеграции!");
+				 return;
+			 }
+
 			 String^ oS = dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
 			 String^ oT = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
 			 _sourceBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oS)), _odbc);
 			 _targetBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oT)), _odbc);
-			 AddGroupLinksForm^ form = gcnew AddGroupLinksForm(_sourceBook, _targetBook, _odbc);
+			 AddGroupLinksForm^ form = gcnew AddGroupLinksForm(_sourceBook, _targetBook, cbIntgr->SelectedIndex, _odbc);
 			 form->ShowDialog();
 			 if (form->attrPairs != nullptr)
 			 {

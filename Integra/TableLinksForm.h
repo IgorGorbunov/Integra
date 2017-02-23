@@ -25,25 +25,21 @@ namespace Integra {
 		Dictionary<String^, List<Attribute^>^>^ _attrs;
 		List<String^>^ _firstTables;
 		List<String^>^ _freeCodes;
-
+	private: System::Windows::Forms::DataGridView^  dataGridView1;
 	private: System::Windows::Forms::DataGridViewComboBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewComboBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewComboBoxColumn^  Column3;
 	private: System::Windows::Forms::DataGridViewComboBoxColumn^  Column4;
 
 
-
-
-
-
-			 
-
+		bool isOk;
 
 	public:
-		TableLinksForm(Dictionary<String^, List<Attribute^>^>^ attrs)
+		TableLinksForm(Dictionary<String^, List<Attribute^>^>^ attrs, List<DbLink^>^ editLinks)
 		{
 			InitializeComponent();
 			_attrs = attrs;
+			Links = editLinks;
 		}
 
 	protected:
@@ -58,17 +54,11 @@ namespace Integra {
 			}
 		}
 	private: System::Windows::Forms::Panel^  panel1;
-	private: System::Windows::Forms::DataGridView^  dataGridView1;
+
 	private: System::Windows::Forms::Panel^  panel2;
 	private: System::Windows::Forms::Panel^  panel3;
 	private: System::Windows::Forms::Button^  bOk;
 	private: System::Windows::Forms::Button^  bCancel;
-
-
-
-
-
-
 
 	private:
 		/// <summary>
@@ -85,14 +75,14 @@ namespace Integra {
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->panel2 = (gcnew System::Windows::Forms::Panel());
-			this->panel3 = (gcnew System::Windows::Forms::Panel());
-			this->bOk = (gcnew System::Windows::Forms::Button());
-			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->Column1 = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
 			this->Column2 = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
 			this->Column3 = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
 			this->Column4 = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
+			this->panel2 = (gcnew System::Windows::Forms::Panel());
+			this->panel3 = (gcnew System::Windows::Forms::Panel());
+			this->bOk = (gcnew System::Windows::Forms::Button());
+			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
 			this->panel2->SuspendLayout();
@@ -110,10 +100,8 @@ namespace Integra {
 			// 
 			// dataGridView1
 			// 
-			this->dataGridView1->AllowUserToAddRows = false;
 			this->dataGridView1->AllowUserToDeleteRows = false;
 			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
-			this->dataGridView1->BackgroundColor = System::Drawing::Color::WhiteSmoke;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->Column1, 
 				this->Column2, this->Column3, this->Column4});
@@ -123,8 +111,28 @@ namespace Integra {
 			this->dataGridView1->RowHeadersVisible = false;
 			this->dataGridView1->Size = System::Drawing::Size(405, 130);
 			this->dataGridView1->TabIndex = 0;
-			this->dataGridView1->CellClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &TableLinksForm::dataGridView1_CellClick);
 			this->dataGridView1->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &TableLinksForm::dataGridView1_CellValueChanged);
+			this->dataGridView1->DataError += gcnew System::Windows::Forms::DataGridViewDataErrorEventHandler(this, &TableLinksForm::dataGridView1_DataError);
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Таблица";
+			this->Column1->Name = L"Column1";
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Поле";
+			this->Column2->Name = L"Column2";
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Таблица";
+			this->Column3->Name = L"Column3";
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"Поле";
+			this->Column4->Name = L"Column4";
 			// 
 			// panel2
 			// 
@@ -167,27 +175,6 @@ namespace Integra {
 			this->bCancel->UseVisualStyleBackColor = false;
 			this->bCancel->Click += gcnew System::EventHandler(this, &TableLinksForm::bCancel_Click);
 			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Таблица";
-			this->Column1->Name = L"Column1";
-			this->Column1->ReadOnly = true;
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Поле";
-			this->Column2->Name = L"Column2";
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Таблица";
-			this->Column3->Name = L"Column3";
-			// 
-			// Column4
-			// 
-			this->Column4->HeaderText = L"Поле";
-			this->Column4->Name = L"Column4";
-			// 
 			// TableLinksForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -212,7 +199,20 @@ namespace Integra {
 		}
 #pragma endregion
 
-
+		Attribute^ GetAttr(String^ fullTable, String^ code)
+		{
+			if (_attrs->ContainsKey(fullTable))
+			{
+				for each (Attribute^ attr in _attrs[fullTable])
+				{
+					if (attr->Code == code)
+					{
+						return attr;
+					}
+				}
+			}
+			return nullptr;	
+		}
 
 		bool CheckVoidCells()
 		{
@@ -224,7 +224,6 @@ namespace Integra {
 					{
 						return true;
 					}
-					
 				}
 			}
 			return false;
@@ -236,48 +235,36 @@ namespace Integra {
 
 				 for each(KeyValuePair<String^, List<Attribute^>^>^ pair in _attrs)
 				 {
-					 array<String^>^ arr = gcnew array<String ^>(4);
-					 Integra::Attribute^ attr = pair->Value[0];
-					 arr[0] = attr->FullTable;
-					 arr[1] = nullptr;
-					 arr[2] = nullptr;
-					 arr[3] = nullptr;
-					 dataGridView1->Rows->Add(arr);
 					 _firstTables->Add(pair->Key);
 				 }
+
 				 Column1->DataSource = _firstTables;
 				 Column3->DataSource = _firstTables;
 			 }
-private: System::Void dataGridView1_CellClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
-		 {
-			 if (e->RowIndex < 0)
-			 {
-				 return;
-			 }
-			 int iCol = e->ColumnIndex;
 
-		 }
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 Links = nullptr;
 			 Close();
 		 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 int i = Int32::Parse("sdf");
-			 /*bool hasVoid = CheckVoidCells();
-			 if (hasVoid)
+			 Links = gcnew List<DbLink ^>();
+			 for (int i = 0; i < dataGridView1->RowCount; i++)
 			 {
-				 MessageBox::Show("Не все поля заполнены!");
-				 return;
+				 if (dataGridView1[1, i]->Value != nullptr &&
+					 dataGridView1[3, i]->Value != nullptr)
+				 {
+					 String^ fullTable1 = dataGridView1[0, i]->Value->ToString();
+					 String^ fullTable2 = dataGridView1[2, i]->Value->ToString();
+					 String^ code1 = dataGridView1[1, i]->Value->ToString();
+					 String^ code2 = dataGridView1[3, i]->Value->ToString();
+					 Attribute^ attr1 = GetAttr(fullTable1, code1);
+					 Attribute^ attr2 = GetAttr(fullTable2, code2);
+					 DbLink^ dbLink = gcnew DbLink(attr1, attr2);
+					 Links->Add(dbLink);
+				 }
 			 }
-			 Links = gcnew Dictionary<String ^, String ^>();
-			 for (int i = 0; i < dataGridView1->Rows->Count; i++)
-			 {
-				 String^ firstFullCode = String::Format("{0}.{1}", dataGridView1[0, i]->Value, dataGridView1[1, i]->Value);
-				 String^ secondFullCode = String::Format("{0}.{1}", dataGridView1[2, i]->Value, dataGridView1[3, i]->Value);
-				 Links->Add(firstFullCode, secondFullCode);
-			 }*/
+			 isOk = true;
 			 Close();
 		 }
 private: System::Void dataGridView1_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
@@ -286,19 +273,52 @@ private: System::Void dataGridView1_CellValueChanged(System::Object^  sender, Sy
 			 {
 				 return;
 			 }
-			 if (e->ColumnIndex == 2)
+
+			 int iRow = e->RowIndex;
+			 if (e->ColumnIndex == 0)
 			 {
-				 String^ secondTableName = dataGridView1[e->ColumnIndex, e->RowIndex]->Value->ToString();
-				 for (int i = 0; i < dataGridView1->Rows->Count; i++)
+				 if (dataGridView1[0, iRow]->Value != nullptr)
 				 {
-					 if (dataGridView1[0, i]->Value->ToString() == secondTableName &&
-						 (dataGridView1[2, i]->Value == nullptr || dataGridView1[2, i]->Value->ToString() == ""))
+					 String^ cellValue = dataGridView1[0, iRow]->Value->ToString();
+					 DataGridViewComboBoxCell^ cbCell = (DataGridViewComboBoxCell^)dataGridView1[1, iRow];
+					 if (_attrs->ContainsKey(cellValue))
 					 {
-						 dataGridView1->Rows->RemoveAt(i);
-						 i--;
+						 for each (Attribute^ attr in _attrs[cellValue])
+						 {
+
+							 cbCell->Items->Add(attr->Code);
+						 }
+					 }
+					 else
+					 {
+						 cbCell->Items->Clear();
 					 }
 				 }
 			 }
+			 if (e->ColumnIndex == 2)
+			 {
+				 if (dataGridView1[2, iRow]->Value != nullptr)
+				 {
+					 String^ cellValue = dataGridView1[2, iRow]->Value->ToString();
+					 DataGridViewComboBoxCell^ cbCell = (DataGridViewComboBoxCell^)dataGridView1[3, iRow];
+					 if (_attrs->ContainsKey(cellValue))
+					 {
+						 for each (Attribute^ attr in _attrs[cellValue])
+						 {
+							 cbCell->Items->Add(attr->Code);
+						 }
+					 }
+					 else
+					 {
+						 cbCell->Items->Clear();
+					 }
+				 }
+			 }
+		 }
+
+private: System::Void dataGridView1_DataError(System::Object^  sender, System::Windows::Forms::DataGridViewDataErrorEventArgs^  e) 
+		 {
+			 Object^ o = e;
 		 }
 };
 }

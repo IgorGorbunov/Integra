@@ -951,12 +951,9 @@ private: System::Void bAddTableLinks_Click(System::Object^  sender, System::Even
 				 }
 				 dict->Add(pair->Key, list);
 			 }
-			 TableLinksForm^ form = gcnew TableLinksForm(_allAttrs);
+			 TableLinksForm^ form = gcnew TableLinksForm(_allAttrs, _links);
 			 form->ShowDialog();
-			 if (_links != nullptr)
-			 {
-				 _links = form->Links;
-			 }
+			 _links = form->Links;
 		 }
 
 private: System::Void bGroupParams_Click(System::Object^  sender, System::EventArgs^  e) 

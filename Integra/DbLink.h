@@ -25,9 +25,8 @@ namespace Integra {
 
 	public:
 
-		DbLink(OdbcClass^ odbc, Attribute^ firstAttribute, Attribute^ secondAttribute)
+		DbLink(Attribute^ firstAttribute, Attribute^ secondAttribute)
 		{
-			_odbc = odbc;
 			_firstAttribute = firstAttribute;
 			_secondAttribute = secondAttribute;
 		}

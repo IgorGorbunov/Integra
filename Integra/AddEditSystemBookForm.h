@@ -335,6 +335,7 @@ namespace Integra {
 			Attribute^ _dateCol;
 
 			List<DbFilter^>^ _dbFilters;
+			List<DbLink^>^ _dbLinks;
 
 			Attribute^ _roughCol;
 			String^ _roughSymbols;
@@ -546,6 +547,16 @@ namespace Integra {
 				}
 			}
 
+			void WriteDbLinks()
+			{
+				for each (DbLink^ link in _dbLinks)
+				{
+					int attr1Id = GetAttr(link->Attribute1FullCode)->Id;
+					int attr2Id = GetAttr(link->Attribute2FullCode)->Id;
+					link->InsertToDb(_odbc, _intgrBookId, attr1Id, attr2Id);
+				}
+			}
+
 			void WriteGroup(int intgrId)
 			{
 				int idId = WriteSingleAttr(_groupIdCol, intgrId);
@@ -602,6 +613,10 @@ namespace Integra {
 				if (_dbFilters != nullptr)
 				{
 					WriteDbFilters();
+				}
+				if (_dbLinks != nullptr)
+				{
+					WriteDbLinks();
 				}
 				WriteRoughSymbols(_roughSymbols, _intgrBookId);
 				if (!String::IsNullOrEmpty(_groupSchtab))
@@ -791,6 +806,7 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 					 _dbAttrs = addAttrForm->Attributes;
 
 					 _dbFilters = addAttrForm->DbFilters;
+					 _dbLinks = addAttrForm->DbLinks;
 
 					 _groupSchtab = addAttrForm->GroupSchtab;
 					 if (!String::IsNullOrEmpty(_groupSchtab))

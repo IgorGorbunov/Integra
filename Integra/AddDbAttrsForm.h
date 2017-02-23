@@ -33,6 +33,7 @@ namespace Integra {
 		List<Attribute^>^ Attributes;
 
 		List<DbFilter^>^ DbFilters;
+		List<DbLink^>^ DbLinks;
 
 		String^ GroupSchtab;
 		Attribute^ GroupIdCol;
@@ -42,7 +43,7 @@ namespace Integra {
 	private:
 		List<String^>^ _fieldNames;
 		OdbcClass^ _odbc;
-		List<DbLink^>^ _links;
+		
 
 		Dictionary<String^, List<Attribute^>^>^ _allAttrs;
 		bool _programCheck;
@@ -951,9 +952,9 @@ private: System::Void bAddTableLinks_Click(System::Object^  sender, System::Even
 				 }
 				 dict->Add(pair->Key, list);
 			 }
-			 TableLinksForm^ form = gcnew TableLinksForm(_allAttrs, _links);
+			 TableLinksForm^ form = gcnew TableLinksForm(_allAttrs, DbLinks);
 			 form->ShowDialog();
-			 _links = form->Links;
+			 DbLinks = form->Links;
 		 }
 
 private: System::Void bGroupParams_Click(System::Object^  sender, System::EventArgs^  e) 

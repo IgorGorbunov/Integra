@@ -15,6 +15,8 @@
 #include "JournalChangesForm.h"
 #include "NoticesForm.h"
 #include "IntgrResultsForm.h"
+//#include "AttributePair.h"
+
 
 namespace Integra {
 
@@ -487,7 +489,7 @@ private: System::Void руководствоToolStripMenuItem_Click(System::Object^  sender
 		 }
 private: System::Void автоматическийРежимToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 int i = Int32::Parse("s");
+			 //List<AttributePair^>^ atrs = AttributePair::GetLinks(1, ProgramIntegration::Odbc);
 		 }
 private: System::Void normsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {

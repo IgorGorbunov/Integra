@@ -157,6 +157,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Attribute.h" />
+    <ClInclude Include="AttributePair.h" />
     <ClInclude Include="AutoConfigsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

@@ -37,8 +37,11 @@ namespace Integra {
 		bool _writeSource;
 
 		List<ComposeAttribute^>^ _composeAttributes;
+		int _firstComposeAttrId;
 
 		Attribute^ _selectAttribute;
+		int _selectAttributeId;
+
 		int _selectType;
 		int _iFirstSymbol;
 		int _nCol;
@@ -87,6 +90,16 @@ namespace Integra {
 			}
 		}
 
+		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, bool writeSource, int firstComposeAttrId)
+		{
+			_odbc = odbc;
+			_type = 0;
+			_name = name;
+			_recAttribute = recAttribute;
+			_writeSource = writeSource;
+			_firstComposeAttrId = firstComposeAttrId;
+		}
+
 		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, bool writeSource, Attribute^ selectAttribute, int iFirstSymbol, int nCol)
 		{
 			_odbc = odbc;
@@ -100,6 +113,19 @@ namespace Integra {
 			_selectAttribute = selectAttribute;
 		}
 
+		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, bool writeSource, int selectAttributeId, int iFirstSymbol, int nCol)
+		{
+			_odbc = odbc;
+			_name = name;
+			_type = 1;
+			_recAttribute = recAttribute;
+			_writeSource = writeSource;
+			_iFirstSymbol = iFirstSymbol;
+			_nCol = nCol;
+			_selectType = 0;
+			_selectAttributeId = selectAttributeId;
+		}
+
 		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, bool writeSource, Attribute^ selectAttribute, String^ splitSymbols, int selectPart)
 		{
 			_odbc = odbc;
@@ -111,6 +137,19 @@ namespace Integra {
 			_iSelectPart = selectPart;
 			_selectType = 1;
 			_selectAttribute = selectAttribute;
+		}
+
+		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, bool writeSource, int selectAttributeId, String^ splitSymbols, int selectPart)
+		{
+			_odbc = odbc;
+			_name = name;
+			_type = 1;
+			_recAttribute = recAttribute;
+			_writeSource = writeSource;
+			_symbols = splitSymbols;
+			_iSelectPart = selectPart;
+			_selectType = 1;
+			_selectAttributeId = selectAttributeId;
 		}
 
 		void AddFirstComposeAttr(Attribute^ attribute)
@@ -150,7 +189,7 @@ namespace Integra {
 				}
 			}
 
-			String^ columns = "ID,NAME_ATTR,COMPLEX_TYPE,START_COMPOSE_ATTR_ID,SELECT_TYPE,FIRST_SYMBOL_NUM,SYMBOL_COUNT,SPLIT_SYMBOLS,USE_PART,CREATE_USER,CREATE_DATE";
+			String^ columns = "ID,NAME_ATTR,COMPLEX_TYPE,START_COMPOSE_ATTR_ID,SELECT_TYPE,FIRST_SYMBOL_NUM,SYMBOL_COUNT,SPLIT_SYMBOLS,USE_PART,CREATE_USER,CREATE_DATE,SELECT_ATTR_ID";
 			String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
 			String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
 
@@ -170,10 +209,12 @@ namespace Integra {
 			String^ symbolCount;
 			String^ splitSymbols;
 			String^ usePart;
+			String^ sSelectAttrId;
 
 			if (_type == 1)
 			{
 				selectType = _selectType + "";
+				sSelectAttrId = _selectAttribute->Id + "";
 				if (_selectType == 0)
 				{
 					firstSymbol = _iFirstSymbol + "";
@@ -197,11 +238,12 @@ namespace Integra {
 				symbolCount = "NULL";
 				splitSymbols = "NULL";
 				usePart = "NULL";
+				sSelectAttrId = "NULL";
 			}
 
 
-			String^ sQuery = String::Format("insert into {0}COMPLEX_ATTRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12})",
-				_odbc->schema, columns, _id, sName, _type, sComposeID, selectType, firstSymbol, symbolCount, splitSymbols, usePart, sqlUser, sqlDate);
+			String^ sQuery = String::Format("insert into {0}COMPLEX_ATTRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13})",
+				_odbc->schema, columns, _id, sName, _type, sComposeID, selectType, firstSymbol, symbolCount, splitSymbols, usePart, sqlUser, sqlDate, sSelectAttrId);
 			_odbc->ExecuteNonQuery(sQuery);
 
 			if (_writeSource)

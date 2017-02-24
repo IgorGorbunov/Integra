@@ -81,9 +81,10 @@ namespace Integra {
 			String^ editDate = _odbc->GetSqlDate(_editDate);
 			String^ login = _odbc->GetSqlString(_createUser);
 			String^ createDate = _odbc->GetSqlDate(_createDate);
+			String^ sIdPos = _odbc->GetSqlString(_idPos->ToString());
 
 			String^ squery = String::Format("insert into {0}INTEGRATION_EDITINGS ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14})",
-				_odbc->schema, columns, _id, idInteg, editDate, "NULL", "NULL", "NULL", _idPos->ToString(), login, createDate, "NULL", "NULL", _type, _nSystem);
+				_odbc->schema, columns, _id, idInteg, editDate, "NULL", "NULL", "NULL", sIdPos, login, createDate, "NULL", "NULL", _type, _nSystem);
 			_odbc->ExecuteNonQuery(squery);
 		}
 
@@ -104,9 +105,10 @@ namespace Integra {
 			String^ createDate = _odbc->GetSqlDate(_createDate);
 			String^ oldVal = _odbc->GetSqlString(_oldValue->ToString());
 			String^ newVal = _odbc->GetSqlString(_newValue->ToString());
+			String^ sIdPos = _odbc->GetSqlString(_idPos->ToString());
 
 			String^ squery = String::Format("insert into {0}INTEGRATION_EDITINGS ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14})",
-				_odbc->schema, columns, _id, idInteg, editDate, _attr->Id, oldVal, newVal, _idPos->ToString(), login, createDate, "NULL", "NULL", _type, _nSystem);
+				_odbc->schema, columns, _id, idInteg, editDate, _attr->Id, oldVal, newVal, sIdPos, login, createDate, "NULL", "NULL", _type, _nSystem);
 			_odbc->ExecuteNonQuery(squery);
 		}
 

@@ -320,9 +320,7 @@ namespace Integra {
 					newAttrsAndVals->Add(pair->Key, p->AttributesAndValues[pair->Value]);
 				}
 			}
-			_sourceBook->AddPosition(newAttrsAndVals);
-			Editting^ newEdit = gcnew Editting(_odbc, _intgrResults, 0, 0, p->UnicId);
-			newEdit->WriteNewPos();
+			_sourceBook->AddPosition(newAttrsAndVals, p->UnicId, _intgrResults, 0);
 		}
 
 		void AddPosToTarget(Position^ p)
@@ -335,9 +333,8 @@ namespace Integra {
 					newAttrsAndVals->Add(pair->Value, p->AttributesAndValues[pair->Key]);
 				}
 			}
-			_targetBook->AddPosition(newAttrsAndVals);
-			Editting^ newEdit = gcnew Editting(_odbc, _intgrResults, 0, 1, p->UnicId);
-			newEdit->WriteNewPos();
+			_targetBook->AddPosition(newAttrsAndVals, p->UnicId, _intgrResults, 1);
+
 		}
 
 		void UpdatePosToTarget(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)

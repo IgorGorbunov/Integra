@@ -99,7 +99,7 @@ namespace Integra {
 			return nullptr;
 		}
 
-		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, IntegrationResult^ result, int isTarget) override
 		{
 
 		}

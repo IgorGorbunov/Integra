@@ -287,44 +287,76 @@ namespace Integra {
 			return list;
 		}
 
-		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, IntegrationResult^ result, int isTarget) override
 		{
-			String^ table;
-			List<String^>^ valueList = gcnew List<String ^>();
-			List<String^>^ titleList = gcnew List<String ^>();
-
-			for each (KeyValuePair<Attribute^, String^>^ pair in attrsAndNewVals)
+			List<String^>^ queres = gcnew List<String ^>();
+			if (BookSetting->DbLinks != nullptr && BookSetting->DbLinks->Count > 0)
 			{
-				titleList->Add(pair->Key->Code);
-				if (String::IsNullOrEmpty(table))
+				List<String^>^ linkQueres = AddPositonsOnLink(attrsAndNewVals, idVal);
+				queres->AddRange(linkQueres);
+			}
+			else
+			{
+				String^ table;
+				List<String^>^ valueList = gcnew List<String ^>();
+				List<String^>^ titleList = gcnew List<String ^>();
+
+				for each (KeyValuePair<Attribute^, String^>^ pair in attrsAndNewVals)
 				{
-					table = pair->Key->FullTable;
+					titleList->Add(pair->Key->Code);
+					if (String::IsNullOrEmpty(table))
+					{
+						table = pair->Key->FullTable;
+					}
+					valueList->Add(BookSetting->Odbc->GetSqlValue(pair->Key->DataType, pair->Value));
 				}
-				if (pair->Key->DataType == "ÑÒÐÎÊÀ")
+
+				String^ squery = String::Format("insert into {0} (", table);
+				bool isSetAttrId = false;
+				for each (String^ title in titleList)
 				{
-					valueList->Add(OdbcClass::GetSqlString(pair->Value));
+					if (title == BookSetting->AttrId->Code)
+					{
+						isSetAttrId = true;
+					}
+					squery += String::Format("{0},", title);
 				}
-				else
+				if (!isSetAttrId)
 				{
-					valueList->Add(pair->Value);
+					squery += String::Format("{0},", BookSetting->AttrId->Code);
 				}
+
+				squery = squery->Substring(0, squery->Length - 1);
+				squery += ") values (";
+				for each (String^ val in valueList)
+				{
+					squery += String::Format("{0},", val);
+				}
+				if (!isSetAttrId)
+				{
+					squery += String::Format("{0},", BookSetting->Odbc->GetSqlValue(BookSetting->AttrId->DataType, idVal->ToString()));
+				}
+
+				squery = squery->Substring(0, squery->Length - 1);
+				squery += ")";
+				queres->Add(squery);
 			}
 
-			String^ squery = String::Format("insert into {0} (", table);
-			for each (String^ title in titleList)
+			for each (String^ quer in queres)
 			{
-				squery += String::Format("{0},", title);
+				try
+				{
+					BookSetting->Odbc->ExecuteNonQuery(quer);
+				}
+				catch (Exception^ e)
+				{
+					throw e;
+				}
+				Editting^ newEdit = gcnew Editting(_odbc, result, 0, isTarget, idVal->ToString());
+				newEdit->WriteNewPos();
 			}
-			squery = squery->Substring(0, squery->Length - 1);
-			squery += ") values (";
-			for each (String^ val in valueList)
-			{
-				squery += String::Format("{0},", val);
-			}
-			squery = squery->Substring(0, squery->Length - 1);
-			squery += ")";
 
-			BookSetting->Odbc->ExecuteNonQuery(squery);
+			
 		}
 
 		virtual void UpdatePosition(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals) override
@@ -394,6 +426,71 @@ namespace Integra {
 		}
 
 		private:
+
+			List<String^>^ AddPositonsOnLink(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal)
+			{
+				List<Attribute^>^ tableAttrs = gcnew List<Attribute ^>();
+				for each (DbLink^ link in BookSetting->DbLinks)
+				{
+					Attribute^ attr1 = link->Attribute1;
+					if (!tableAttrs->Contains(attr1))
+					{
+						tableAttrs->Add(attr1);
+					}
+					Attribute^ attr2 = link->Attribute2;
+					if (!tableAttrs->Contains(attr2))
+					{
+						tableAttrs->Add(attr2);
+					}
+				}
+				List<String^>^ queres = gcnew List<String ^>();
+				for each (Attribute^ attr in tableAttrs)
+				{
+					List<String^>^ valueList = gcnew List<String ^>();
+					List<String^>^ titleList = gcnew List<String ^>();
+
+					String^ query = String::Format("insert into {0} (", attr->FullTable);
+					for each (KeyValuePair<Attribute^, String^>^ pairAttrNewVal in attrsAndNewVals)
+					{
+						if (pairAttrNewVal->Key->FullTable == attr->FullTable)
+						{
+							titleList->Add(pairAttrNewVal->Key->Code);
+							valueList->Add(BookSetting->Odbc->GetSqlValue(pairAttrNewVal->Key->DataType, pairAttrNewVal->Value));
+						}
+					}
+
+					bool isSetAttrId = false;
+					for each (String^ title in titleList)
+					{
+						if (title == attr->Code)
+						{
+							isSetAttrId = true;
+						}
+						query += String::Format("{0},", title);
+					}
+					if (!isSetAttrId)
+					{
+						query += String::Format("{0},", attr->Code);
+					}
+
+					query = query->Substring(0, query->Length - 1);
+					query += ") values (";
+					for each (String^ val in valueList)
+					{
+						query += String::Format("{0},", val);
+					}
+					if (!isSetAttrId)
+					{
+						query += String::Format("{0},", BookSetting->Odbc->GetSqlValue(attr->DataType, idVal->ToString()));
+					}
+
+					query = query->Substring(0, query->Length - 1);
+					query += ")";
+
+					queres->Add(query);
+				}
+				return queres;
+			}
 
 			Attribute^ GetAttrLinkId(String^ fullTable)
 			{

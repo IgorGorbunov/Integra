@@ -798,6 +798,7 @@ private: System::Void bIntegNewTarget_Click(System::Object^  sender, System::Eve
 					 ProgramIntegration::AddPosToSource(_targetNew[i]);
  					 dgvTargetNew->Rows->RemoveAt(iRow);
  					 _targetNew->RemoveAt(i);
+					 MessageBox::Show("Позиция интегрирована!");
 					 break;
 				 }
 			 }

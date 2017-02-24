@@ -51,6 +51,7 @@ namespace Integra {
 		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, List<Object^>^ composeAttrs, bool writeSource)
 		{
 			_odbc = odbc;
+			_type = 0;
 			_name = name;
 			_recAttribute = recAttribute;
 			_writeSource = writeSource;
@@ -90,6 +91,7 @@ namespace Integra {
 		{
 			_odbc = odbc;
 			_name = name;
+			_type = 1;
 			_recAttribute = recAttribute;
 			_writeSource = writeSource;
 			_iFirstSymbol = iFirstSymbol;
@@ -102,6 +104,7 @@ namespace Integra {
 		{
 			_odbc = odbc;
 			_name = name;
+			_type = 1;
 			_recAttribute = recAttribute;
 			_writeSource = writeSource;
 			_symbols = splitSymbols;
@@ -139,12 +142,15 @@ namespace Integra {
 
 		void InsertToDb(int intgrShemaId)
 		{
-			for (int i = _composeAttributes->Count - 1; i >= 0; i--)
+			if (_type == 0)
 			{
-				_composeAttributes[i]->InsertToDb();
+				for (int i = _composeAttributes->Count - 1; i >= 0; i--)
+				{
+					_composeAttributes[i]->InsertToDb();
+				}
 			}
 
-			String^ columns = "ID,NAME_ATTR,COMPLEX_TYPE,START_COMPOSE_ATTR_ID,SELECT_TYPE,FIRST_SYMBOL,SYMBOL_COUNT,SPLIT_SYMBOLS,USE_PART,CREATE_USER,CREATE_DATE";
+			String^ columns = "ID,NAME_ATTR,COMPLEX_TYPE,START_COMPOSE_ATTR_ID,SELECT_TYPE,FIRST_SYMBOL_NUM,SYMBOL_COUNT,SPLIT_SYMBOLS,USE_PART,CREATE_USER,CREATE_DATE";
 			String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
 			String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
 

@@ -87,9 +87,19 @@ namespace Integra {
 			{
 				nextId = _nextAttribute->_id + "";
 			}
+			String^ sAttrId;
+			if (_attribute == nullptr)
+			{
+				sAttrId = "NULL";
+			}
+			else
+			{
+				sAttrId = _attribute->Id + "";
+			}
+
 
 			String^ sQuery = String::Format("insert into {0}COMPOSE_ATTRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7})",
-				_odbc->schema, columns, _id, _attribute->Id, nextId, sVal, sqlUser, sqlDate);
+				_odbc->schema, columns, _id, sAttrId, nextId, sVal, sqlUser, sqlDate);
 			_odbc->ExecuteNonQuery(sQuery);
 		}
 

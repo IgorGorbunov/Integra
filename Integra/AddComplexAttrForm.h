@@ -674,9 +674,10 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 			 }
 			 else
 			 {
+				 Attribute^ selAttr = GetAttr(cbSelectAttr->Text, _selectAttrs);
 				 if (_selectType == 0)
 				 {
-					 complexAttr = gcnew ComplexAttribute(_odbc, recAttr, name, _writeSource, (int)nudFirstSymbol->Value, (int)nudNCol->Value);
+					 complexAttr = gcnew ComplexAttribute(_odbc, recAttr, name, _writeSource, selAttr, (int)nudFirstSymbol->Value, (int)nudNCol->Value);
 				 }
 				 else
 				 {
@@ -690,7 +691,7 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 						 MessageBox::Show("Выберите часть!");
 						 return;
 					 }
-					 complexAttr = gcnew ComplexAttribute(_odbc, recAttr, name, _writeSource, tbSplitSympols->Text, cbSelectPart->SelectedIndex);
+					 complexAttr = gcnew ComplexAttribute(_odbc, recAttr, name, _writeSource, selAttr, tbSplitSympols->Text, cbSelectPart->SelectedIndex);
 				 }
 			 }
 			 

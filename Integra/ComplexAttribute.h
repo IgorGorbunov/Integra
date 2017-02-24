@@ -48,16 +48,45 @@ namespace Integra {
 
 	public:
 
-		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, List<Object^>^ composeAttr, bool writeSource)
+		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, List<Object^>^ composeAttrs, bool writeSource)
 		{
 			_odbc = odbc;
 			_name = name;
 			_recAttribute = recAttribute;
 			_writeSource = writeSource;
 			_composeAttributes = gcnew List<ComposeAttribute ^>();
+			bool firstComposeAttr = true;
+			for each (Object^ o in composeAttrs)
+			{
+				Attribute^ attr;
+				try
+				{
+					attr = (Attribute^)o;
+					if (firstComposeAttr)
+					{
+						AddFirstComposeAttr(attr);
+					}
+					else
+					{
+						AddNextComposeAttr(attr);
+					}
+				}
+				catch (InvalidCastException^ e)
+				{
+					if (firstComposeAttr)
+					{
+						AddFirstComposeAttr((String^)o);
+					}
+					else
+					{
+						AddNextComposeAttr((String^)o);
+					}
+				}
+				firstComposeAttr = false;
+			}
 		}
 
-		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, bool writeSource, int iFirstSymbol, int nCol)
+		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, bool writeSource, Attribute^ selectAttribute, int iFirstSymbol, int nCol)
 		{
 			_odbc = odbc;
 			_name = name;
@@ -65,9 +94,11 @@ namespace Integra {
 			_writeSource = writeSource;
 			_iFirstSymbol = iFirstSymbol;
 			_nCol = nCol;
+			_selectType = 0;
+			_selectAttribute = selectAttribute;
 		}
 
-		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, bool writeSource, String^ splitSymbols, int selectPart)
+		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, bool writeSource, Attribute^ selectAttribute, String^ splitSymbols, int selectPart)
 		{
 			_odbc = odbc;
 			_name = name;
@@ -75,6 +106,8 @@ namespace Integra {
 			_writeSource = writeSource;
 			_symbols = splitSymbols;
 			_iSelectPart = selectPart;
+			_selectType = 1;
+			_selectAttribute = selectAttribute;
 		}
 
 		void AddFirstComposeAttr(Attribute^ attribute)
@@ -92,34 +125,17 @@ namespace Integra {
 		void AddNextComposeAttr(Attribute^ attribute)
 		{
 			ComposeAttribute^ composeAttribute = gcnew ComposeAttribute(_odbc, attribute);
-			composeAttribute->AddNextAttribute(attribute);
+			_composeAttributes[_composeAttributes->Count-1]->AddNextAttribute(composeAttribute);
 			_composeAttributes->Add(composeAttribute);
 		}
 
 		void AddNextComposeAttr(String^ value)
 		{
 			ComposeAttribute^ composeAttribute = gcnew ComposeAttribute(_odbc, value);
-			composeAttribute->AddNextAttribute(value);
+			_composeAttributes[_composeAttributes->Count-1]->AddNextAttribute(composeAttribute);
 			_composeAttributes->Add(composeAttribute);
 		}
 
-		void AddSelectParams(Attribute^ selectAttribute, int selectType)
-		{
-			_selectAttribute = selectAttribute;
-			_selectType = selectType;
-		}
-
-		void AddFirstSymbolAndCol(int iFirstSymbol, int nCol)
-		{
-			_iFirstSymbol = iFirstSymbol;
-			_nCol = nCol;
-		}
-
-		void AddSplitParams(String^ symbols, int iSelectPart)
-		{
-			_symbols = symbols;
-			_iSelectPart = iSelectPart;
-		}
 
 		void InsertToDb(int intgrShemaId)
 		{

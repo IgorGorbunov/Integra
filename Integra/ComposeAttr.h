@@ -64,15 +64,11 @@ namespace Integra {
 			_type = 0;
 		}
 
-		void AddNextAttribute(Attribute^ attribute)
+		void AddNextAttribute(ComposeAttribute^ attribute)
 		{
-			_nextAttribute = gcnew ComposeAttribute(_odbc, attribute);
+			_nextAttribute = attribute;
 		}
 
-		void AddNextAttribute(String^ value)
-		{
-			_nextAttribute = gcnew ComposeAttribute(_odbc, value);
-		}
 
 		void InsertToDb()
 		{

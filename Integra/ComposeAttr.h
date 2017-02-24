@@ -29,7 +29,13 @@ namespace Integra {
 				}
 			}
 		}
-
+		property int Id
+		{
+			int get()
+			{
+				return _id;
+			}
+		}
 
 	private:
 		OdbcClass^ _odbc;
@@ -66,6 +72,29 @@ namespace Integra {
 		void AddNextAttribute(String^ value)
 		{
 			_nextAttribute = gcnew ComposeAttribute(_odbc, value);
+		}
+
+		void InsertToDb()
+		{
+			String^ columns = "ID,ATTR_ID,NEXT_ID,COMPOSE_VAL,CREATE_USER,CREATE_DATE";
+			String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
+			String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
+
+			String^ sVal = OdbcClass::GetSqlString(_stringValue);
+			_id = _odbc->GetLastFreeId(_odbc->schema + "COMPOSE_ATTRS");
+			String^ nextId;
+			if (_nextAttribute == nullptr)
+			{
+				nextId = "NULL";
+			}
+			else
+			{
+				nextId = _nextAttribute->_id + "";
+			}
+
+			String^ sQuery = String::Format("insert into {0}COMPOSE_ATTRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7})",
+				_odbc->schema, columns, _id, _attribute->Id, nextId, sVal, sqlUser, sqlDate);
+			_odbc->ExecuteNonQuery(sQuery);
 		}
 
 	protected:

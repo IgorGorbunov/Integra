@@ -28,7 +28,10 @@ namespace Integra {
 		List<Attribute^>^ _recAttrs;
 		List<Attribute^>^ _selectAttrs;
 
-		
+		bool _writeSource;
+		int _complexType;
+
+		int _selectType;
 
 
 	private: System::Windows::Forms::TabControl^  tabControl1;
@@ -43,11 +46,14 @@ namespace Integra {
 	private: System::Windows::Forms::ComboBox^  cbSelectPart;
 
 	private: System::Windows::Forms::Label^  label5;
-	private: System::Windows::Forms::TextBox^  textBox3;
-	private: System::Windows::Forms::Panel^  pFirstSymbol;
+	private: System::Windows::Forms::TextBox^  tbSplitSympols;
 
-	private: System::Windows::Forms::NumericUpDown^  numericUpDown2;
-	private: System::Windows::Forms::NumericUpDown^  numericUpDown1;
+	private: System::Windows::Forms::Panel^  pFirstSymbol;
+	private: System::Windows::Forms::NumericUpDown^  nudNCol;
+
+
+	private: System::Windows::Forms::NumericUpDown^  nudFirstSymbol;
+
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Panel^  panel1;
@@ -67,21 +73,24 @@ namespace Integra {
 	private: System::Windows::Forms::RadioButton^  radioButton4;
 	private: System::Windows::Forms::RadioButton^  radioButton3;
 	private: System::Windows::Forms::Label^  label8;
-	private: System::Windows::Forms::DataGridViewComboBoxColumn^  DataTypeColumn;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  _ValueColumn;
 	private: System::Windows::Forms::ComboBox^  cbRecAttr;
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::ComboBox^  cbSelectAttr;
 	private: System::Windows::Forms::Button^  bOk;
 	private: System::Windows::Forms::Button^  bCancel;
+	private: System::Windows::Forms::DataGridViewComboBoxColumn^  _DataTypeColumn;
 			 System::ComponentModel::Container ^components;
 
 
 	public:
-		AddComplexAttrForm(List<Attribute^>^ recAttrs, List<Attribute^>^ selectAttrs, OdbcClass^ odbc)
+		AddComplexAttrForm(List<Attribute^>^ recAttrs, List<Attribute^>^ selectAttrs, OdbcClass^ odbc, bool writeSource)
 		{
 			InitializeComponent();
 			_odbc = odbc;
+			_selectType = 0;
+
+			_writeSource = writeSource;
 			_recAttrs = recAttrs;
 			_selectAttrs = selectAttrs;
 			SetRecAttr();
@@ -115,7 +124,7 @@ namespace Integra {
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->dgvCompose = (gcnew System::Windows::Forms::DataGridView());
-			this->DataTypeColumn = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
+			this->_DataTypeColumn = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
 			this->_ValueColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
 			this->radioButton4 = (gcnew System::Windows::Forms::RadioButton());
@@ -125,10 +134,10 @@ namespace Integra {
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->cbSelectPart = (gcnew System::Windows::Forms::ComboBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->tbSplitSympols = (gcnew System::Windows::Forms::TextBox());
 			this->pFirstSymbol = (gcnew System::Windows::Forms::Panel());
-			this->numericUpDown2 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown1 = (gcnew System::Windows::Forms::NumericUpDown());
+			this->nudNCol = (gcnew System::Windows::Forms::NumericUpDown());
+			this->nudFirstSymbol = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
@@ -150,8 +159,8 @@ namespace Integra {
 			this->tabPage2->SuspendLayout();
 			this->pSplitter->SuspendLayout();
 			this->pFirstSymbol->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown2))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->nudNCol))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->nudFirstSymbol))->BeginInit();
 			this->panel1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
 			this->panel2->SuspendLayout();
@@ -208,6 +217,7 @@ namespace Integra {
 			this->tabControl1->SelectedIndex = 0;
 			this->tabControl1->Size = System::Drawing::Size(541, 267);
 			this->tabControl1->TabIndex = 6;
+			this->tabControl1->SelectedIndexChanged += gcnew System::EventHandler(this, &AddComplexAttrForm::tabControl1_SelectedIndexChanged);
 			// 
 			// tabPage1
 			// 
@@ -234,7 +244,7 @@ namespace Integra {
 			// dgvCompose
 			// 
 			this->dgvCompose->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgvCompose->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->DataTypeColumn, 
+			this->dgvCompose->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->_DataTypeColumn, 
 				this->_ValueColumn});
 			this->dgvCompose->Location = System::Drawing::Point(18, 23);
 			this->dgvCompose->Name = L"dgvCompose";
@@ -243,11 +253,11 @@ namespace Integra {
 			// 
 			// _DataTypeColumn
 			// 
-			this->DataTypeColumn->HeaderText = L"Вид данных";
-			this->DataTypeColumn->Name = L"_DataTypeColumn";
-			this->DataTypeColumn->Resizable = System::Windows::Forms::DataGridViewTriState::True;
-			this->DataTypeColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::Automatic;
-			this->DataTypeColumn->Width = 200;
+			this->_DataTypeColumn->HeaderText = L"Вид данных";
+			this->_DataTypeColumn->Name = L"_DataTypeColumn";
+			this->_DataTypeColumn->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+			this->_DataTypeColumn->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::Automatic;
+			this->_DataTypeColumn->Width = 200;
 			// 
 			// _ValueColumn
 			// 
@@ -306,7 +316,7 @@ namespace Integra {
 			this->pSplitter->Controls->Add(this->label6);
 			this->pSplitter->Controls->Add(this->cbSelectPart);
 			this->pSplitter->Controls->Add(this->label5);
-			this->pSplitter->Controls->Add(this->textBox3);
+			this->pSplitter->Controls->Add(this->tbSplitSympols);
 			this->pSplitter->Dock = System::Windows::Forms::DockStyle::Top;
 			this->pSplitter->Location = System::Drawing::Point(3, 231);
 			this->pSplitter->Name = L"pSplitter";
@@ -340,17 +350,17 @@ namespace Integra {
 			this->label5->TabIndex = 1;
 			this->label5->Text = L"Символы разделения:";
 			// 
-			// textBox3
+			// tbSplitSympols
 			// 
-			this->textBox3->Location = System::Drawing::Point(19, 34);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(120, 20);
-			this->textBox3->TabIndex = 0;
+			this->tbSplitSympols->Location = System::Drawing::Point(19, 34);
+			this->tbSplitSympols->Name = L"tbSplitSympols";
+			this->tbSplitSympols->Size = System::Drawing::Size(120, 20);
+			this->tbSplitSympols->TabIndex = 0;
 			// 
 			// pFirstSymbol
 			// 
-			this->pFirstSymbol->Controls->Add(this->numericUpDown2);
-			this->pFirstSymbol->Controls->Add(this->numericUpDown1);
+			this->pFirstSymbol->Controls->Add(this->nudNCol);
+			this->pFirstSymbol->Controls->Add(this->nudFirstSymbol);
 			this->pFirstSymbol->Controls->Add(this->label4);
 			this->pFirstSymbol->Controls->Add(this->label1);
 			this->pFirstSymbol->Dock = System::Windows::Forms::DockStyle::Top;
@@ -359,21 +369,23 @@ namespace Integra {
 			this->pFirstSymbol->Size = System::Drawing::Size(527, 76);
 			this->pFirstSymbol->TabIndex = 8;
 			// 
-			// numericUpDown2
+			// nudNCol
 			// 
-			this->numericUpDown2->Location = System::Drawing::Point(172, 34);
-			this->numericUpDown2->Name = L"numericUpDown2";
-			this->numericUpDown2->Size = System::Drawing::Size(120, 20);
-			this->numericUpDown2->TabIndex = 5;
-			this->numericUpDown2->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) {2, 0, 0, 0});
+			this->nudNCol->Location = System::Drawing::Point(172, 34);
+			this->nudNCol->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) {1, 0, 0, 0});
+			this->nudNCol->Name = L"nudNCol";
+			this->nudNCol->Size = System::Drawing::Size(120, 20);
+			this->nudNCol->TabIndex = 5;
+			this->nudNCol->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) {2, 0, 0, 0});
 			// 
-			// numericUpDown1
+			// nudFirstSymbol
 			// 
-			this->numericUpDown1->Location = System::Drawing::Point(19, 34);
-			this->numericUpDown1->Name = L"numericUpDown1";
-			this->numericUpDown1->Size = System::Drawing::Size(120, 20);
-			this->numericUpDown1->TabIndex = 4;
-			this->numericUpDown1->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) {1, 0, 0, 0});
+			this->nudFirstSymbol->Location = System::Drawing::Point(19, 34);
+			this->nudFirstSymbol->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) {1, 0, 0, 0});
+			this->nudFirstSymbol->Name = L"nudFirstSymbol";
+			this->nudFirstSymbol->Size = System::Drawing::Size(120, 20);
+			this->nudFirstSymbol->TabIndex = 4;
+			this->nudFirstSymbol->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) {1, 0, 0, 0});
 			// 
 			// label4
 			// 
@@ -536,8 +548,8 @@ namespace Integra {
 			this->pSplitter->PerformLayout();
 			this->pFirstSymbol->ResumeLayout(false);
 			this->pFirstSymbol->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown2))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->nudNCol))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->nudFirstSymbol))->EndInit();
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			this->groupBox1->ResumeLayout(false);
@@ -584,17 +596,17 @@ namespace Integra {
 					}
 				}
 
-				DataTypeColumn->Items->Clear();
-				DataTypeColumn->Items->Add("^Символьное значение");
+				_DataTypeColumn->Items->Clear();
+				_DataTypeColumn->Items->Add("^Символьное значение");
 				for each (Attribute^ attr in _selectAttrs)
 				{
 					if (String::IsNullOrEmpty(attr->Name))
 					{
-						DataTypeColumn->Items->Add(attr->FullCode);
+						_DataTypeColumn->Items->Add(attr->FullCode);
 					}
 					else
 					{
-						DataTypeColumn->Items->Add(attr->Name);
+						_DataTypeColumn->Items->Add(attr->Name);
 					}
 				}
 
@@ -611,9 +623,38 @@ namespace Integra {
 				cbSelectPart->Items->Add("10-ая часть");
 			}
 
-			void SetDgv()
-			{
 
+			Attribute^ GetAttr(String^ fullCode, List<Attribute^>^ attrs)
+			{
+				for each (Attribute^ attr in attrs)
+				{
+					if (attr->FullCode == fullCode)
+					{
+						return attr;
+					}
+				}
+				return nullptr;
+			}
+
+			List<Object^>^ SetComposeAttrs()
+			{
+				List<Object^>^ list = gcnew List<Object ^>();
+				for (int i = 0; i < dgvCompose->RowCount; i++)
+				{
+					if (dgvCompose[0, i]->Value != nullptr)
+					{
+						if (dgvCompose[0, i]->Value->ToString() == "^Символьное значение")
+						{
+							list->Add(dgvCompose[1, i]->Value);
+						}
+						else
+						{
+							Attribute^ attr = GetAttr(dgvCompose[0, i]->Value->ToString(), _selectAttrs);
+							list->Add(attr);
+						}
+					}
+				}
+				return list;
 			}
 
 	private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
@@ -623,17 +664,48 @@ namespace Integra {
 			 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 complexAttr = gcnew ComplexAttribute(_odbc, nullptr, tbName->Text->Trim());
+			 Attribute^ recAttr = GetAttr(cbRecAttr->Text, _recAttrs);
+			 String^ name = tbName->Text->Trim();
+			 if (_complexType == 0)
+			 {
+				 List<Object^>^ composeList = SetComposeAttrs();
+
+				 complexAttr = gcnew ComplexAttribute(_odbc, recAttr, name, composeList, _writeSource);
+			 }
+			 else
+			 {
+				 if (_selectType == 0)
+				 {
+					 complexAttr = gcnew ComplexAttribute(_odbc, recAttr, name, _writeSource, (int)nudFirstSymbol->Value, (int)nudNCol->Value);
+				 }
+				 else
+				 {
+					 if (String::IsNullOrEmpty(tbSplitSympols->Text))
+					 {
+						 MessageBox::Show("Введите символы разделения!");
+						 return;
+					 }
+					 else if (cbSelectPart->SelectedItem == nullptr)
+					 {
+						 MessageBox::Show("Выберите часть!");
+						 return;
+					 }
+					 complexAttr = gcnew ComplexAttribute(_odbc, recAttr, name, _writeSource, tbSplitSympols->Text, cbSelectPart->SelectedIndex);
+				 }
+			 }
+			 
 			 Close();
 		 }
 private: System::Void cbAttr_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			
 
 		 }
 private: System::Void rbFirstSymbol_CheckedChanged(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 if (rbFirstSymbol->Checked == true)
 			 {
+				  _selectType = 0;
 				 pFirstSymbol->Visible = true;
 				 pSplitter->Visible = false;
 			 }
@@ -642,9 +714,14 @@ private: System::Void rbSplitter_CheckedChanged(System::Object^  sender, System:
 		 {
 			 if (rbSplitter->Checked == true)
 			 {
+				 _selectType = 1;
 				 pFirstSymbol->Visible = false;
 				 pSplitter->Visible = true;
 			 }
+		 }
+private: System::Void tabControl1_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 _complexType = tabControl1->SelectedIndex;
 		 }
 };
 }

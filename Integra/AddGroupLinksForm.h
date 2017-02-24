@@ -21,7 +21,8 @@ namespace Integra {
 	public ref class AddGroupLinksForm : public System::Windows::Forms::Form
 	{
 	public:
-		Dictionary<Attribute^,Attribute^>^ attrPairs;
+		Dictionary<Attribute^,Attribute^>^ AttrPairs;
+		List<ComplexAttribute^>^ ComplexAttrs;
 
 	private:
 		OdbcClass^ _odbc;
@@ -35,7 +36,7 @@ namespace Integra {
 		List<Attribute^>^ _sourceAttrsFree;
 		List<Attribute^>^ _targetAttrsFree;
 
-		List<ComplexAttribute^>^ _complexAttrs;
+		
 
 		List<IntegrationGroupPair^>^ _integrationGroups;
 		Object^ _prevSelectGroupItem;
@@ -63,13 +64,13 @@ namespace Integra {
 
 
 	public:
-		AddGroupLinksForm(BookSettings^ sourceBook, BookSettings^ targetBook, int type, OdbcClass^ odbc)
+		AddGroupLinksForm(Dictionary<Attribute^,Attribute^>^ attrPairs, List<ComplexAttribute^>^ complexAttrs, BookSettings^ sourceBook, BookSettings^ targetBook, int type, OdbcClass^ odbc)
 		{
 			InitializeComponent();
 			_odbc = odbc;
 			_typeDir = type;
 
-			_complexAttrs = gcnew List<ComplexAttribute ^>();
+			ComplexAttrs = gcnew List<ComplexAttribute ^>();
 			_sourceBook = sourceBook;
 			_targetBook = targetBook;
 			if (_sourceBook->HasGroup && _targetBook->HasGroup)
@@ -522,7 +523,7 @@ namespace Integra {
 
 		bool ContainsInComplex(String^ name)
 		{
-			for each (ComplexAttribute^ attr in _complexAttrs)
+			for each (ComplexAttribute^ attr in ComplexAttrs)
 			{
 				if (attr->Name == name)
 				{
@@ -810,12 +811,11 @@ namespace Integra {
 		 }
 	private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 attrPairs = nullptr;
 			 Close();
 		 }
 	private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 attrPairs = gcnew Dictionary<Attribute ^, Attribute ^>();
+			 AttrPairs = gcnew Dictionary<Attribute ^, Attribute ^>();
 			 for (int i = 0; i < dgv->Rows->Count; i++)
 			 {
 				 Object^ o1 = dgv[0, i]->Value;
@@ -824,7 +824,7 @@ namespace Integra {
 				 {
 					 Attribute^ aS = GetAttr(_sourceAttrs, o1->ToString());
 					 Attribute^ aT = GetAttr(_targetAttrs, o2->ToString());
-					 attrPairs->Add(aS, aT);
+					 AttrPairs->Add(aS, aT);
 				 }
 			 }
 			 
@@ -910,15 +910,34 @@ private: System::Void dgv_CellBeginEdit(System::Object^  sender, System::Windows
 		 }
 private: System::Void bAddComplexAttr_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 if (dgv->SelectedCells == nullptr)
+			 {
+				 return;
+			 }
+			 if (dgv->SelectedCells->Count <= 0)
+			 {
+				 return;
+			 }
+			 if (
+				 dgv->SelectedCells[0] == nullptr)
+			 {
+				 return;
+			 }
+			 if (
+				 dgv->SelectedCells[0]->RowIndex < 0)
+			 {
+				 return;
+			 }
+
 			 AddComplexAttrForm^ complexAttrForm;
 			 int iCol = dgv->SelectedCells[0]->ColumnIndex;
 			 if (iCol < 4)
 			 {
-				 complexAttrForm = gcnew AddComplexAttrForm(_sourceAttrs, _targetAttrs, _odbc);
+				 complexAttrForm = gcnew AddComplexAttrForm(_sourceAttrs, _targetAttrs, _odbc, true);
 			 }
 			 else
 			 {
-				 complexAttrForm = gcnew AddComplexAttrForm(_targetAttrs, _sourceAttrs, _odbc);
+				 complexAttrForm = gcnew AddComplexAttrForm(_targetAttrs, _sourceAttrs, _odbc, false);
 			 }
 			 
 			 complexAttrForm->ShowDialog();
@@ -938,7 +957,7 @@ private: System::Void bAddComplexAttr_Click(System::Object^  sender, System::Eve
 				 int r = dgv->RowCount - 2;
 				 dgv[0, r]->ReadOnly = true;
 				 dgv[4, r]->ReadOnly = true;
-				 _complexAttrs->Add(complexAttrForm->complexAttr);
+				 ComplexAttrs->Add(complexAttrForm->complexAttr);
 			 }
 
 		 }

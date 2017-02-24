@@ -21,7 +21,9 @@ namespace Integra {
 		Settings^ _settings;
 		array<String^, 2>^ _books;
 		OdbcClass^ _odbc;
+
 		Dictionary<Attribute^, Attribute^>^ _attrPairs;
+		List<ComplexAttribute^>^ _complexAttrs;
 
 		BookSettings^ _sourceBook;
 
@@ -388,7 +390,7 @@ private: System::Void bSave_Click(System::Object^  sender, System::EventArgs^  e
 			 }
 			 int intgrType = cbIntgr->SelectedIndex;
 			 String^ name = tbName->Text->Trim();
-			 IntegrationSettings^ intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType, _attrPairs); 
+			 IntegrationSettings^ intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType, _attrPairs, _complexAttrs); 
 
 			 Close();
 		 }
@@ -404,12 +406,12 @@ private: System::Void bLinks_Click(System::Object^  sender, System::EventArgs^  
 			 String^ oT = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
 			 _sourceBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oS)), _odbc);
 			 _targetBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oT)), _odbc);
-			 AddGroupLinksForm^ form = gcnew AddGroupLinksForm(_sourceBook, _targetBook, cbIntgr->SelectedIndex, _odbc);
+			 AddGroupLinksForm^ form = gcnew AddGroupLinksForm(_attrPairs, _complexAttrs, _sourceBook, _targetBook, cbIntgr->SelectedIndex, _odbc);
 			 form->ShowDialog();
-			 if (form->attrPairs != nullptr)
-			 {
-				 _attrPairs = form->attrPairs;
-			 }
+			 _attrPairs = form->AttrPairs;
+			 _complexAttrs = form->ComplexAttrs;
+
+
 		 }
 private: System::Void AddEditSchemaForm2_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {

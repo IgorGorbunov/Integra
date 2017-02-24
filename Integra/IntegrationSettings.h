@@ -3,6 +3,7 @@
 #include "ODBCclass.h"
 #include "Attribute.h"
 #include "BookSettings.h"
+#include "ComplexAttribute.h"
 
 namespace Integra {
 
@@ -136,6 +137,7 @@ namespace Integra {
 		Attribute^ _targetAttributeEquil;
 		
 		Dictionary<Attribute^, Attribute^>^ _attributePairs;
+		List<ComplexAttribute^>^ _complexAttrs;
 
 		Dictionary<String^, String^>^ _fields;
 
@@ -147,16 +149,22 @@ namespace Integra {
 			Set(_id);
 		}
 
-		IntegrationSettings(OdbcClass^ odbc, String^ name, BookSettings^ sourceBook, BookSettings^ targetBook, int type, Dictionary<Attribute^, Attribute^>^ attrPairs)
+		IntegrationSettings(OdbcClass^ odbc, String^ name, BookSettings^ sourceBook, BookSettings^ targetBook, int type, Dictionary<Attribute^, Attribute^>^ attrPairs, List<ComplexAttribute^>^ complexAttrs)
 		{
 			_odbc = odbc;
 			_name = name;
 			_sourceBook = sourceBook;
 			_targetBook = targetBook;
+
 			_attributePairs = attrPairs;
+			_complexAttrs = complexAttrs;
+
 			_intType = type;
 			CreateIntgrSchema();
 			CreateAttrPairs();
+			CreateComplexAttrs();
+			
+			
 		}
 
 		
@@ -242,6 +250,14 @@ namespace Integra {
 				_odbc->ExecuteNonQuery(squery);
 			}
 			
+		}
+
+		void CreateComplexAttrs()
+		{
+			for each (ComplexAttribute^ cAttr in _complexAttrs)
+			{
+				cAttr->InsertToDb(_id);
+			}
 		}
 
 		void SetAttrPairs()

@@ -7,6 +7,7 @@ namespace Integra {
 	using namespace System::Collections::Generic;
 	using namespace System::IO;
 	using namespace System::Text;
+	using namespace System::Threading;
 
 	/// <summary>
 	/// Класс для р
@@ -179,6 +180,17 @@ namespace Integra {
 			}
 
 			return ' ';
+		}
+
+		static double GetDouble(String^ s)
+		{
+			if (Thread::CurrentThread->CurrentCulture->NumberFormat->NumberDecimalSeparator == ",")
+			{
+				s = s->Replace(',', '.');
+			}
+			double d = double::Parse(s->Trim());
+			d = Math::Round(d, 8);
+			return d;
 		}
 	};
 }

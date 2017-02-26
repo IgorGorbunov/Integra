@@ -4,6 +4,7 @@
 #include "Attribute.h"
 #include "BookSettings.h"
 #include "ComplexAttribute.h"
+#include "AttributePair.h"
 
 namespace Integra {
 
@@ -59,27 +60,33 @@ namespace Integra {
 			}
 		}
 
-		property List<Attribute^>^ SourceAttributes
+		property List<Attribute^>^ SimpleSourceAttributes
 		{
 			List<Attribute^>^ get()
 			{
 				List<Attribute^>^ list = gcnew List<Attribute ^>();
-				for each(KeyValuePair<Attribute^, Attribute^>^ pair in AttributePairs)
+				for each(AttributePair^ attrPair in AttributePairs)
 				{
-					list->Add(pair->Key);
+					if (attrPair->SimpleSourceAttribute != nullptr)
+					{
+						list->Add(attrPair->SimpleSourceAttribute);
+					}
 				}
 				return	list;
 			}
 		}
 
-		property List<Attribute^>^ TargetAttributes
+		property List<Attribute^>^ SimpleTargetAttributes
 		{
 			List<Attribute^>^ get()
 			{
 				List<Attribute^>^ list = gcnew List<Attribute ^>();
-				for each(KeyValuePair<Attribute^, Attribute^>^ pair in AttributePairs)
+				for each(AttributePair^ attrPair in AttributePairs)
 				{
-					list->Add(pair->Value);
+					if (attrPair->SimpleTargetAttribute != nullptr)
+					{
+						list->Add(attrPair->SimpleTargetAttribute);
+					}
 				}
 				return	list;
 			}
@@ -98,31 +105,31 @@ namespace Integra {
 				return _targetAttributeEquil;
 			}
 		}
-		property Dictionary<Attribute^, Attribute^>^ AttributePairs
+		property List<AttributePair^>^ AttributePairs
 		{
-			Dictionary<Attribute^, Attribute^>^ get()
+			List<AttributePair^>^ get()
 			{
-				if (_attributePairs == nullptr || _attributePairs->Count == 0)
+				if (_attributePairs == nullptr || _attributePairs->Count <= 0)
 				{
-					SetAttrPairs();
+					_attributePairs = AttributePair::GetPairs(Id, _odbc);
 				}
 				
 				return _attributePairs;
 			}
 		}
-		property List<String^>^ AttributePairFullCodes
+		/*property List<String^>^ AttributePairFullCodes
 		{
-			List<String^>^ get()
-			{
-				List<String^>^ list = gcnew List<String ^>();
-				for each (KeyValuePair<Attribute^, Attribute^>^ pair in AttributePairs)
-				{
-					list->Add(pair->Key->FullCode);
-					list->Add(pair->Value->FullCode);
-				}
-				return list;
-			}
+		List<String^>^ get()
+		{
+		List<String^>^ list = gcnew List<String ^>();
+		for each (KeyValuePair<Attribute^, Attribute^>^ pair in AttributePairs)
+		{
+		list->Add(pair->Key->FullCode);
+		list->Add(pair->Value->FullCode);
 		}
+		return list;
+		}
+		}*/
 
 	private:
 		OdbcClass^ _odbc;
@@ -136,7 +143,8 @@ namespace Integra {
 		Attribute^ _sourceAttributeEquil;
 		Attribute^ _targetAttributeEquil;
 		
-		Dictionary<Attribute^, Attribute^>^ _attributePairs;
+		List<AttributePair^>^ _attributePairs;
+		Dictionary<Attribute^, Attribute^>^ _attributeSimplePairs;
 		List<ComplexAttribute^>^ _complexAttrs;
 
 		Dictionary<String^, String^>^ _fields;
@@ -149,14 +157,14 @@ namespace Integra {
 			Set(_id);
 		}
 
-		IntegrationSettings(OdbcClass^ odbc, String^ name, BookSettings^ sourceBook, BookSettings^ targetBook, int type, Dictionary<Attribute^, Attribute^>^ attrPairs, List<ComplexAttribute^>^ complexAttrs)
+		IntegrationSettings(OdbcClass^ odbc, String^ name, BookSettings^ sourceBook, BookSettings^ targetBook, int type, Dictionary<Attribute^, Attribute^>^ attrSimplePairs, List<ComplexAttribute^>^ complexAttrs)
 		{
 			_odbc = odbc;
 			_name = name;
 			_sourceBook = sourceBook;
 			_targetBook = targetBook;
 
-			_attributePairs = attrPairs;
+			_attributeSimplePairs = attrSimplePairs;
 			_complexAttrs = complexAttrs;
 
 			_intType = type;
@@ -237,7 +245,7 @@ namespace Integra {
 		void CreateAttrPairs()
 		{
 			String^ columns = "ID,ID_SOURCE_ATTRIBUTE,ID_TARGET_ATTRIBUTE,ID_PARAMETRS,CREATE_USER,CREATE_DATE";
-			for each (KeyValuePair<Attribute^, Attribute^>^ pair in AttributePairs)
+			for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attributeSimplePairs)
 			{
 				int idPair = _odbc->GetLastFreeId(_odbc->schema + "ATTRIBUTE_PAIRS");
 				int idS = pair->Key->Id;
@@ -262,14 +270,14 @@ namespace Integra {
 
 		void SetAttrPairs()
 		{
-			_attributePairs = gcnew Dictionary<Attribute^, Attribute^>();
+			/*_attributePairs = gcnew Dictionary<Attribute^, Attribute^>();
 			List<Object^>^ parametrs  = _odbc->ExecuteQuery("select AP.ID_SOURCE_ATTRIBUTE, AP.ID_TARGET_ATTRIBUTE from " + _odbc->schema + "ATTRIBUTE_PAIRS AP where AP.ID_PARAMETRS = " + _id);
 			for (int i = 0; i < parametrs->Count / 2; i++)
 			{
 				Attribute^ sourceAttr = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[i * 2]), _odbc);
 				Attribute^ targetAttr = gcnew Attribute(Decimal::ToInt32((Decimal)parametrs[i * 2 + 1]), _odbc);
 				_attributePairs->Add(sourceAttr, targetAttr);
-			}
+			}*/
 		}
 	};
 }

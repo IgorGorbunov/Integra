@@ -2,6 +2,7 @@
 
 #include "Attribute.h"
 #include "Position.h"
+#include "AttributePair.h"
 
 namespace Integra {
 
@@ -20,6 +21,10 @@ namespace Integra {
 	public:
 		List<array<Object^, 2>^>^ Differences;
 		List<array<Object^>^>^ Equals;
+
+		List<AttributePair^>^ EqualsAttrPair;
+		List<AttributePair^>^ DifferencesAttrPair;
+
 		String^ UnicId;
 		String^ AttrFullCodeUnicId;
 		String^ Caption;
@@ -35,6 +40,10 @@ namespace Integra {
 			TPos = tPos;
 			Differences = gcnew List<array<Object ^, 2> ^>();
 			Equals = gcnew List<array<Object ^> ^>();
+
+			EqualsAttrPair = gcnew List<AttributePair ^>();
+			DifferencesAttrPair = gcnew List<AttributePair ^>();
+
 		}
 
 
@@ -68,6 +77,11 @@ namespace Integra {
 			Differences->Add(arr);
 		}
 
+		void AddDifferenceAttr(AttributePair^ attributePair) 
+		{
+			DifferencesAttrPair->Add(attributePair);
+		}
+
 		void AddEqualAttr(Attribute^ sourceAttribute, Attribute^ targetAttribute, String^ value) 
 		{
 			array<Object^>^ arr = gcnew array<Object ^>(3);
@@ -76,6 +90,12 @@ namespace Integra {
 			arr[2] = value;
 			Equals->Add(arr);
 		}
+
+		void AddEqualAttr(AttributePair^ attributePair) 
+		{
+			EqualsAttrPair->Add(attributePair);
+		}
+
 
 		void AddEqualAttr(String^ sourceAttributeName, String^ targetAttributeName, String^ value) 
 		{

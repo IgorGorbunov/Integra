@@ -33,12 +33,12 @@ namespace Integra {
 			{
 				if (_isSource)
 				{
-					_attributes = _intSettings->SourceAttributes;
+					_attributes = _intSettings->SimpleSourceAttributes;
 					_equivAttr = _intSettings->SourceEquivAttr;
 				} 
 				else
 				{
-					_attributes = _intSettings->TargetAttributes;
+					_attributes = _intSettings->SimpleTargetAttributes;
 					_equivAttr = _intSettings->TargetEquivAttr;
 				}
 			}

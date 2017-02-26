@@ -23,21 +23,38 @@ namespace Integra {
 				return _name;
 			}
 		}
+		property Attribute^ SelectAttribute
+		{
+			Attribute^ get()
+			{
+				if (_type == 1)
+				{
+					if (_selectAttribute == nullptr)
+					{
+						_selectAttribute = gcnew Attribute(_selectAttributeId, _odbc);
+					}
+					return _selectAttribute;
+				}
+				return nullptr;
+			}
 
+		}
 
 	private:
 		OdbcClass^ _odbc;
 
 		int _id;
 		Attribute^ _recAttribute;
-		ComposeAttribute^ _composeAttribute;
+		ComposeAttribute^ _firstComposeAttribute;
+		List<ComposeAttribute^>^ _composeAttributes;
+		int _firstComposeAttrId;
+
 		String^ _name;
 		//0 - композиция, 1 - выборка
 		int _type;
 		bool _writeSource;
 
-		List<ComposeAttribute^>^ _composeAttributes;
-		int _firstComposeAttrId;
+		
 
 		Attribute^ _selectAttribute;
 		int _selectAttributeId;
@@ -75,7 +92,7 @@ namespace Integra {
 						AddNextComposeAttr(attr);
 					}
 				}
-				catch (InvalidCastException^ e)
+				catch (InvalidCastException^)
 				{
 					if (firstComposeAttr)
 					{
@@ -154,14 +171,14 @@ namespace Integra {
 
 		void AddFirstComposeAttr(Attribute^ attribute)
 		{
-			_composeAttribute = gcnew ComposeAttribute(_odbc, attribute);
-			_composeAttributes->Add(_composeAttribute);
+			_firstComposeAttribute = gcnew ComposeAttribute(_odbc, attribute);
+			_composeAttributes->Add(_firstComposeAttribute);
 		}
 
 		void AddFirstComposeAttr(String^ value)
 		{
-			_composeAttribute = gcnew ComposeAttribute(_odbc, value);
-			_composeAttributes->Add(_composeAttribute);
+			_firstComposeAttribute = gcnew ComposeAttribute(_odbc, value);
+			_composeAttributes->Add(_firstComposeAttribute);
 		}
 
 		void AddNextComposeAttr(Attribute^ attribute)
@@ -266,6 +283,58 @@ namespace Integra {
 			}
 		}
 
+		String^ GetValue(Dictionary<Attribute^, String^>^ attrValues)
+		{
+			if (_type == 0)
+			{
+				if (_composeAttributes == nullptr || _composeAttributes->Count <= 0)
+				{
+					SetComposeAttrs();
+				}
+				return GetComposeValue(attrValues);
+			}
+			else
+			{
+				if (_selectAttribute == nullptr)
+				{
+					SetSelectAttr();
+				}
+				if (_selectType == 0)
+				{
+					return GetNsymbolValue(attrValues);
+				}
+				else
+				{
+					return GetSplitValue(attrValues);
+				}
+			}
+			return String::Empty;
+		}
+
+		List<Attribute^>^ GetParticipateAttributes()
+		{
+			List<Attribute^>^ list = gcnew List<Attribute ^>();
+			if (_type == 0)
+			{
+				if (_composeAttributes == nullptr || _composeAttributes->Count <= 0)
+				{
+					SetComposeAttrs();
+					for each (ComposeAttribute^ composeAttr in _composeAttributes)
+					{
+						if (composeAttr->Attribut != nullptr)
+						{
+							list->Add(composeAttr->Attribut);
+						}
+					}
+				}
+			}
+			else
+			{
+				list->Add(SelectAttribute);
+			}
+			return list;
+		}
+
 	protected:
 		/// <summary>
 		/// Освободить все используемые ресурсы.
@@ -275,6 +344,89 @@ namespace Integra {
 
 		}
 
+		private:
+
+			void SetSelectAttr()
+			{
+				_selectAttribute = gcnew Attribute(_selectAttributeId, _odbc);
+			}
+
+			String^ GetComposeValue(Dictionary<Attribute^, String^>^ attrValues)
+			{
+				String^ composeValue = String::Empty;
+				for each (ComposeAttribute^ compAttr in _composeAttributes)
+				{
+					if (compAttr->HasStringValue)
+					{
+						composeValue += compAttr->StringValue;
+					}
+					else
+					{
+						composeValue += attrValues[compAttr->Attribut];
+					}
+				}
+				return composeValue;
+			}
+
+			String^ GetSplitValue(Dictionary<Attribute^, String^>^ attrValues)
+			{
+				String^ value = attrValues[_selectAttribute];
+				if (String::IsNullOrEmpty(value))
+				{
+					return value;
+				}
+				
+				array<String^, 1>^ arrSymbols = gcnew array<String^, 1>(_symbols->Length);
+				for (int i = 0; i < _symbols->Length; i++)
+				{
+					arrSymbols[i] = _symbols->Substring(i, 1);
+				}
+
+				array<String^, 1>^ splitArray = value->Split(arrSymbols, StringSplitOptions::RemoveEmptyEntries);
+
+				if (_iSelectPart > splitArray->Length - 1)
+				{
+					return String::Empty;
+				}
+				return splitArray[_iSelectPart];
+			}
+
+			String^ GetNsymbolValue(Dictionary<Attribute^, String^>^ attrValues)
+			{
+				String^ value = attrValues[_selectAttribute];
+				if (String::IsNullOrEmpty(value))
+				{
+					return value;
+				}
+
+				// для отсчета с нуля
+				int iSym = _iFirstSymbol - 1;
+				if (iSym > value->Length - 1 || iSym + _nCol > value->Length)
+				{
+					return String::Empty;
+				}
+				return value->Substring(iSym, _nCol);
+			}
+			
+
+			void SetComposeAttrs()
+			{
+				_firstComposeAttribute = gcnew ComposeAttribute(_odbc, _firstComposeAttrId);
+
+				ComposeAttribute^ nextComposeAttr;
+				if (_firstComposeAttribute != nullptr)
+				{
+					_composeAttributes = gcnew List<ComposeAttribute ^>();
+					_composeAttributes->Add(_firstComposeAttribute);
+
+					nextComposeAttr = _firstComposeAttribute->NextAttribute;
+					while (nextComposeAttr != nullptr)
+					{
+						_composeAttributes->Add(nextComposeAttr);
+						nextComposeAttr = nextComposeAttr->NextAttribute;
+					}
+				}
+			}
 
 	};
 }

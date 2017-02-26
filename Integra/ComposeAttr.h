@@ -36,6 +36,31 @@ namespace Integra {
 				return _id;
 			}
 		}
+		property Attribute^ Attribut
+		{
+			Attribute^ get()
+			{
+				return _attribute;
+			}
+		}
+		property bool HasStringValue
+		{
+			bool get()
+			{
+				if (_type == 1)
+				{
+					return true;
+				}
+				return false;
+			}
+		}
+		property String^ StringValue
+		{
+			String^ get()
+			{
+				return _stringValue;
+			}
+		}
 
 	private:
 		OdbcClass^ _odbc;
@@ -64,6 +89,40 @@ namespace Integra {
 			_type = 0;
 		}
 
+		ComposeAttribute(OdbcClass^ odbc, int id)
+		{
+			_odbc = odbc;
+			_type = 1;
+			_id = id;
+			String^ squery = "select IAA.ID, IAA.NAME, IAA.SCHEMA_NAME, IAA.TABLE_NAME, IAA.ATTR_NAME, IAA.ID_INTGR_BOOK, IAA.DATA_TYPE, IAA.MAX_LENGTH, CAA.NEXT_ID, CAA.COMPOSE_VAL from {0}COMPOSE_ATTRS CAA, {0}INTEGRATION_ATTRIBUTES IAA where CAA.ID = {1} and CAA.ATTR_ID = IAA.ID";
+			squery = String::Format(squery, _odbc->schema, id);
+
+			List<Object^>^ resList = _odbc->ExecuteQuery(squery);
+			for (int i = 0; i < resList->Count; i+=10)
+			{
+				int attrId = _odbc->GetResInt(resList[i]);
+				if (attrId != -1)
+				{
+					_type = 0;
+					String^ attrName = _odbc->GetResString(resList[i+1]);
+					String^ schemaName = _odbc->GetResString(resList[i+2]);
+					String^ tableName = _odbc->GetResString(resList[i+3]);
+					String^ attrCode = _odbc->GetResString(resList[i+4]);
+					int idIntgrBook = _odbc->GetResInt(resList[i+5]);
+					String^ attrDataType = _odbc->GetResString(resList[i+6]);
+					String^ attrMaxLength = _odbc->GetResString(resList[i+7]);
+					_attribute = gcnew Attribute(attrId, attrName, schemaName, tableName, attrCode, idIntgrBook, attrDataType, attrMaxLength, _odbc);
+				}
+
+				int nextId = _odbc->GetResInt(resList[i+8]);
+				_stringValue = _odbc->GetResString(resList[i+9]);
+				if (nextId != -1)
+				{
+					_nextAttribute = gcnew ComposeAttribute(_odbc, nextId);
+				}
+			}
+		}
+
 		void AddNextAttribute(ComposeAttribute^ attribute)
 		{
 			_nextAttribute = attribute;
@@ -81,7 +140,7 @@ namespace Integra {
 			String^ nextId;
 			if (_nextAttribute == nullptr)
 			{
-				nextId = "NULL";
+				nextId = "-1";
 			}
 			else
 			{

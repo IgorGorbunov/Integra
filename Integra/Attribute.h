@@ -104,6 +104,7 @@ namespace Integra {
 		}
 		property String^ DataType
 		{
+			//todo
 			String^ get()
 			{
 				return _dataType;
@@ -167,7 +168,7 @@ namespace Integra {
 
 	public:
 
-		 virtual bool Equals(Object^ obj) override 
+		virtual bool Equals(Object^ obj) override 
 		 {
 			 if (obj == nullptr || GetType() != obj->GetType()) 
 				 return false;

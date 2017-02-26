@@ -46,7 +46,7 @@ namespace Integra {
 
 		IntegrationSettings^ _settings;
 		OdbcClass^ _odbc;
-		Dictionary<Attribute^, Attribute^>^ _attrPairs;
+		List<AttributePair^>^ _attrPairs;
 		List<Attribute^>^ _sourceAttrs;
 		List<Attribute^>^ _targetAttrs;
 		
@@ -310,14 +310,27 @@ namespace Integra {
 			_intgrResults->StopIntegration();
 		}
 
+		void AddPosToSource2(Position^ p)
+		{
+			/*Dictionary<Attribute^, String^>^ newAttrsAndVals = gcnew Dictionary<Attribute ^, String ^>();
+			for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrPairs)
+			{
+			if (p->AttributesAndValues->ContainsKey(pair->Value))
+			{
+			newAttrsAndVals->Add(pair->Key, p->AttributesAndValues[pair->Value]);
+			}
+			}
+			_sourceBook->AddPosition(newAttrsAndVals, p->UnicId, _intgrResults, 0);*/
+		}
+
 		void AddPosToSource(Position^ p)
 		{
 			Dictionary<Attribute^, String^>^ newAttrsAndVals = gcnew Dictionary<Attribute ^, String ^>();
-			for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrPairs)
+			for each (AttributePair^ attrPair in _attrPairs)
 			{
-				if (p->AttributesAndValues->ContainsKey(pair->Value))
+				if (attrPair->SimpleSourceAttribute != nullptr)
 				{
-					newAttrsAndVals->Add(pair->Key, p->AttributesAndValues[pair->Value]);
+					newAttrsAndVals->Add(attrPair->SimpleSourceAttribute, attrPair->TargetValue);
 				}
 			}
 			_sourceBook->AddPosition(newAttrsAndVals, p->UnicId, _intgrResults, 0);
@@ -326,15 +339,27 @@ namespace Integra {
 		void AddPosToTarget(Position^ p)
 		{
 			Dictionary<Attribute^, String^>^ newAttrsAndVals = gcnew Dictionary<Attribute ^, String ^>();
-			for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrPairs)
+			for each (AttributePair^ attrPair in _attrPairs)
 			{
-				if (p->AttributesAndValues->ContainsKey(pair->Key))
+				if (attrPair->SimpleTargetAttribute != nullptr)
 				{
-					newAttrsAndVals->Add(pair->Value, p->AttributesAndValues[pair->Key]);
+					newAttrsAndVals->Add(attrPair->SimpleTargetAttribute, attrPair->SourceValue);
 				}
 			}
 			_targetBook->AddPosition(newAttrsAndVals, p->UnicId, _intgrResults, 1);
+		}
 
+		void AddPosToTarget2(Position^ p)
+		{
+			/*Dictionary<Attribute^, String^>^ newAttrsAndVals = gcnew Dictionary<Attribute ^, String ^>();
+			for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrPairs)
+			{
+			if (p->AttributesAndValues->ContainsKey(pair->Key))
+			{
+			newAttrsAndVals->Add(pair->Value, p->AttributesAndValues[pair->Key]);
+			}
+			}
+			_targetBook->AddPosition(newAttrsAndVals, p->UnicId, _intgrResults, 1);*/
 		}
 
 		void UpdatePosToTarget(Position^ currentPos, Dictionary<Attribute^, String^>^ newAttrVals)
@@ -556,6 +581,25 @@ namespace Integra {
 		{
 			bool equal = true;
 			diffPos = gcnew DifferencePosition(sourcePos->UnicId, sourcePos,  targetPos);
+			for (int i = 0; i < _attrPairs->Count; i++)
+			{
+				if (_attrPairs[i]->CheckEqual(sourcePos->AttributesAndValues, targetPos->AttributesAndValues))
+				{
+					diffPos->AddEqualAttr(_attrPairs[i]);
+				}
+				else
+				{
+					equal = false;
+					diffPos->AddDifferenceAttr(_attrPairs[i]);
+				}
+			}
+			return equal;
+		}
+
+		bool AttrsIsFullyEqual2(Position^ sourcePos, Position^ targetPos, DifferencePosition^% diffPos)
+		{
+			/*bool equal = true;
+			diffPos = gcnew DifferencePosition(sourcePos->UnicId, sourcePos,  targetPos);
 			for each (KeyValuePair<Attribute^, String^>^ pair in sourcePos->AttributesAndValues)
 			{
 				Attribute^ sAttr = pair->Key;
@@ -590,7 +634,8 @@ namespace Integra {
 					}
 				}
 			}
-			return equal;
+			return equal;*/
+			return false;
 		}
 
 		bool IsBothDouble(String^ sVal1, String^ sVal2)

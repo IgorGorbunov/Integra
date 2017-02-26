@@ -3,6 +3,7 @@
 #include "ODBCclass.h"
 #include "Attribute.h"
 #include "ComplexAttribute.h"
+#include "StringFunctions.h"
 
 namespace Integra {
 
@@ -17,7 +18,34 @@ namespace Integra {
 	public ref class AttributePair 
 	{
 	public:
-
+		property String^ SourceValue
+		{
+			String^ get()
+			{
+				return _sVal;
+			}
+		}
+		property String^ TargetValue
+		{
+			String^ get()
+			{
+				return _tVal;
+			}
+		}
+		property Attribute^ SimpleSourceAttribute
+		{
+			Attribute^ get()
+			{
+				return _attr1;
+			}
+		}
+		property Attribute^ SimpleTargetAttribute
+		{
+			Attribute^ get()
+			{
+				return _attr2;
+			}
+		}
 
 	private:
 		OdbcClass^ _odbc;
@@ -28,19 +56,12 @@ namespace Integra {
 		ComplexAttribute^ _cAttr1;
 		ComplexAttribute^ _cAttr2;
 
+		String^ _sVal;
+		String^ _tVal;
+
 	public:
 
-		AttributePair(OdbcClass^ odbc, int id, Attribute^ attr1, Attribute^ attr2, ComplexAttribute^ cAttr1, ComplexAttribute^ cAttr2)
-		{
-			_odbc = odbc;
-			_id = id;
-			_attr1 = attr1;
-			_attr2 = attr2;
-			_cAttr1 = cAttr1;
-			_cAttr2 = cAttr2;
-		}
-
-		static List<AttributePair^>^ GetLinks(int integrationSchemaId, OdbcClass^ odbc)
+		static List<AttributePair^>^ GetPairs(int integrationSchemaId, OdbcClass^ odbc)
 		{
 			List<AttributePair^>^ list;
 			String^ squery = "select APP.ID, " +
@@ -92,11 +113,11 @@ namespace Integra {
 				for (int i = 0; i < resList->Count; i+=37)
 				{
 					int parametrsId = odbc->GetResInt(resList[i+0]);
-					Attribute^ attr1;
-					Attribute^ attr2;
-					ComplexAttribute^ cAttr1;
-					ComplexAttribute^ cAttr2;
-					
+					Attribute^ attr1 = nullptr;
+					Attribute^ attr2 = nullptr;
+					ComplexAttribute^ cAttr1 = nullptr;
+					ComplexAttribute^ cAttr2 = nullptr;
+
 					int attrId1 = odbc->GetResInt(resList[i+1]);
 					if (attrId1 != -1)
 					{
@@ -168,7 +189,7 @@ namespace Integra {
 									cAttr1 = gcnew ComplexAttribute(odbc, attr1, attrName, true, selectAttrId, splitSymbols, usePart);
 								}
 							}
-							
+
 						}
 					}
 
@@ -229,6 +250,38 @@ namespace Integra {
 
 			return list;
 		}
+
+
+		AttributePair(OdbcClass^ odbc, int id, Attribute^ attr1, Attribute^ attr2, ComplexAttribute^ cAttr1, ComplexAttribute^ cAttr2)
+		{
+			_odbc = odbc;
+			_id = id;
+			_attr1 = attr1;
+			_attr2 = attr2;
+			_cAttr1 = cAttr1;
+			_cAttr2 = cAttr2;
+		}
+
+		bool CheckEqual(Dictionary<Attribute^, String^>^ sourceAttrs, Dictionary<Attribute^, String^>^ targetAttrs)
+		{
+			if (_attr1 != nullptr && _attr2 != nullptr)
+			{
+				return IsEqual(sourceAttrs[_attr1], _attr1->DataType, targetAttrs[_attr2], _attr2->DataType);
+			}
+			else if (_attr1 != nullptr && _cAttr2 != nullptr)
+			{
+				String^ complexVal = _cAttr2->GetValue(targetAttrs);
+				return IsEqual(sourceAttrs[_attr1], _attr1->DataType, complexVal, "ÑÒĞÎÊÀ");
+			}
+			else if (_cAttr1 != nullptr && _attr2 != nullptr)
+			{
+				String^ complexVal = _cAttr1->GetValue(sourceAttrs);
+				return IsEqual(complexVal, "ÑÒĞÎÊÀ", targetAttrs[_attr2], _attr2->DataType);
+			}
+			return false;
+		}
+
+
 	protected:
 		/// <summary>
 		/// Îñâîáîäèòü âñå èñïîëüçóåìûå ğåñóğñû.
@@ -237,6 +290,104 @@ namespace Integra {
 		{
 
 		}
+
+		private:
+
+
+			bool IsEqual(String^ sourceVal, String^ sDataType, String^ targetVal, String^ tDataType)
+			{
+				_sVal = sourceVal->Trim();
+				_tVal = targetVal->Trim();
+
+				if (sDataType == tDataType && sDataType == "ÑÒĞÎÊÀ")
+				{
+					if (_sVal == _tVal)
+					{
+						return true;
+					}
+					return false;
+				}
+				else if (sDataType == tDataType && sDataType == "ÖÅËÎÅ ×ÈÑËÎ")
+				{
+					int si = int::Parse(_sVal);
+					int ti = int::Parse(_tVal);
+					if (si == ti)
+					{
+						return true;
+					}
+					return false;
+				}
+				else if (sDataType == tDataType && sDataType == "×ÈÑËÎ Ñ ÏËÀÂÀŞÙÅÉ ÒÎ×ÊÎÉ")
+				{
+					double si = StringFunctions::GetDouble(_sVal);
+					double ti = StringFunctions::GetDouble(_tVal);
+					if (si == ti)
+					{
+						return true;
+					}
+					return false;
+				}
+				else if ((sDataType == "ÑÒĞÎÊÀ" && tDataType == "ÖÅËÎÅ ×ÈÑËÎ") ||
+					(sDataType == "ÖÅËÎÅ ×ÈÑËÎ" && tDataType == "ÑÒĞÎÊÀ") )
+				{
+					if (_sVal == _tVal)
+					{
+						return true;
+					}
+					return false;
+				}
+				else if ((sDataType == "ÑÒĞÎÊÀ" && tDataType == "×ÈÑËÎ Ñ ÏËÀÂÀŞÙÅÉ ÒÎ×ÊÎÉ") ||
+					(sDataType == "×ÈÑËÎ Ñ ÏËÀÂÀŞÙÅÉ ÒÎ×ÊÎÉ" && tDataType == "ÑÒĞÎÊÀ") )
+				{
+					double si = StringFunctions::GetDouble(_sVal);
+					double ti = StringFunctions::GetDouble(_tVal);
+					if (si == ti)
+					{
+						return true;
+					}
+					return false;
+				}
+				else if ((sDataType == "ÖÅËÎÅ ×ÈÑËÎ" && tDataType == "×ÈÑËÎ Ñ ÏËÀÂÀŞÙÅÉ ÒÎ×ÊÎÉ") ||
+					(sDataType == "×ÈÑËÎ Ñ ÏËÀÂÀŞÙÅÉ ÒÎ×ÊÎÉ" && tDataType == "ÖÅËÎÅ ×ÈÑËÎ") )
+				{
+					double si = StringFunctions::GetDouble(_sVal);
+					double ti = StringFunctions::GetDouble(_tVal);
+					if (si == ti)
+					{
+						return true;
+					}
+					return false;
+				}
+				return false;
+			}
+
+			List<Attribute^>^ GetParticipateSourceAttributes()
+			{
+				List<Attribute^>^ list = gcnew List<Attribute ^>();
+				if (_attr1 == nullptr)
+				{
+					list->AddRange(_cAttr1->GetParticipateAttributes());
+				}
+				else
+				{
+					list->Add(_attr1);
+				}
+				return list;
+			}
+
+			List<Attribute^>^ GetParticipateTargetAttributes()
+			{
+				List<Attribute^>^ list = gcnew List<Attribute ^>();
+				if (_attr2 == nullptr)
+				{
+					list->AddRange(_cAttr2->GetParticipateAttributes());
+				}
+				else
+				{
+					list->Add(_attr2);
+				}
+				return list;
+			}
 
 
 	};

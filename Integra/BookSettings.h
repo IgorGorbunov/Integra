@@ -310,7 +310,16 @@ namespace Integra {
 			_serviceName = parametrs[7]->ToString();
 			_sid = parametrs[8]->ToString();
 			_driver = parametrs[9]->ToString();
-			_isSemantic = (bool) Decimal::ToInt32((Decimal)parametrs[10]);
+			int isSemantic = Decimal::ToInt32((Decimal)parametrs[10]);
+			if (isSemantic == 1)
+			{
+				_isSemantic = true;
+			}
+			else
+			{
+				_isSemantic = false;
+			}
+
 			_groupId = OdbcClass::GetResInt(parametrs[11]);
 			_attrIdId = OdbcClass::GetResInt(parametrs[12]);
 			_attrTitleId = OdbcClass::GetResInt(parametrs[13]);

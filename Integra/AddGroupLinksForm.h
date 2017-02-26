@@ -594,12 +594,12 @@ namespace Integra {
 
 		void SaveCurrentDgv()
 		{
-			for (int i = 0; i < _integrationGroups->Count; i++)
+			for (int ig = 0; ig < _integrationGroups->Count; ig++)
 			{
-				if (_integrationGroups[i]->FullName == _prevSelectGroupItem->ToString())
+				if (_integrationGroups[ig]->FullName == _prevSelectGroupItem->ToString())
 				{
-					_integrationGroups[i]->SourceNamesDataSource = gcnew List<String ^>(_currentSourceList->Keys);
-					_integrationGroups[i]->TargetNamesDataSource = gcnew List<String ^>(_currentTargetList->Keys);
+					_integrationGroups[ig]->SourceNamesDataSource = gcnew List<String ^>(_currentSourceList->Keys);
+					_integrationGroups[ig]->TargetNamesDataSource = gcnew List<String ^>(_currentTargetList->Keys);
 
 					List<array<String^>^>^ attrDataList = gcnew List<array<String ^> ^>();
 					for (int i = 0; i < dgv->RowCount; i++)
@@ -620,7 +620,7 @@ namespace Integra {
 							attrDataList->Add(row);
 						}
 					}
-					_integrationGroups[i]->AttributesDataDgv = attrDataList;
+					_integrationGroups[ig]->AttributesDataDgv = attrDataList;
 					break;
 				}
 			}

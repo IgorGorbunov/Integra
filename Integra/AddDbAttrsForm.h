@@ -40,6 +40,8 @@ namespace Integra {
 		Attribute^ GroupNameCol;
 		Dictionary<Attribute^,Attribute^>^ GroupAttrs;
 
+		List<PosGroupParam^>^ PosParamAttrs;
+
 	private:
 		List<String^>^ _fieldNames;
 		OdbcClass^ _odbc;
@@ -884,9 +886,6 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 				 DateCol = nullptr;
 			 }
 			 
-
-			 RoughCol = nullptr;
-			 RoughSymbols = nullptr;
 			 if (cbRoughAttr->SelectedItem != nullptr)
 			 {
 				 RoughCol = GetAttribute(cbRoughAttr->SelectedItem->ToString());
@@ -894,6 +893,19 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 			 if (!String::IsNullOrEmpty(tbRoughSymbols->Text->Trim()))
 			 {
 				 RoughSymbols = tbRoughSymbols->Text->Trim();
+
+				String^ newS = String::Empty;
+				for each (Char c in RoughSymbols)
+				{
+					String^ str = c + "";
+
+					if (!newS->Contains(str))
+					{
+						newS += str;
+					}
+				}
+				RoughSymbols = newS;
+				 
 			 }
 			 Close();
 		 }
@@ -998,6 +1010,7 @@ private: System::Void bPosGroupParams_Click(System::Object^  sender, System::Eve
 		 {
 			 PosGroupParamsForm^ form = gcnew PosGroupParamsForm(0, _allAttrs);
 			 form->ShowDialog();
+			 PosParamAttrs = form->PosParamAttrs;
 		 }
 private: System::Void cbDateAttr_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {

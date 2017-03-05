@@ -49,9 +49,7 @@ namespace Integra {
 		}
 
 
-
 	private: System::Windows::Forms::Label^  label1;
-	protected: 
 	private: System::Windows::Forms::ComboBox^  cbBook;
 	private: System::Windows::Forms::Button^  bAddAttrs;
 	private: System::Windows::Forms::GroupBox^  groupBox1;
@@ -59,13 +57,10 @@ namespace Integra {
 	private: System::Windows::Forms::ComboBox^  cbConnType;
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::TextBox^  tbDb;
-
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::TextBox^  tbPass;
-
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::TextBox^  tbLogin;
-
 	private: System::Windows::Forms::ComboBox^  cbSystem;
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Button^  bOk;
@@ -339,12 +334,15 @@ namespace Integra {
 
 			Attribute^ _roughCol;
 			String^ _roughSymbols;
+
 			int _intgrBookId;
 
 			String^ _groupSchtab;
 			Attribute^ _groupIdCol;
 			Attribute^ _groupNameCol;
 			Dictionary<Attribute^,Attribute^>^ _groupAttrs;
+
+			List<PosGroupParam^>^ _posParamAttrs;
 
 			Dictionary<int, String^>^ _users;
 
@@ -385,8 +383,8 @@ namespace Integra {
 				List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
 				List<Object^>^ idSystem = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATED_SYSTEMS where NAME = \'" + cbSystem->Text + "\'");
 
-				String^ sqlIdBook = idBook[0]->ToString();
-				String^ sqlIdSystem = idSystem[0]->ToString();
+				String^ sqlIdBook = OdbcClass::GetResInt(idBook[0]->ToString()) + "";
+				String^ sqlIdSystem = OdbcClass::GetResInt(idSystem[0]->ToString()) + "";
 				String^ sqlLogin = "NULL";
 				String^ sqlPassword = "NULL";
 				String^ sqlDriver = "NULL";
@@ -425,7 +423,7 @@ namespace Integra {
 				List<Object^>^ query = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "integration_attributes where full_code = \'" + col->FullTable + "\' and attr_name = \'" + col->Code + "\' and ID_INTGR_BOOK = " + intgrId);
 				if (query != nullptr && query->Count > 0)
 				{
-					return Decimal::ToInt32((Decimal)query[0]);
+					return OdbcClass::GetResInt(query[0]);
 				}
 				else
 				{
@@ -533,7 +531,8 @@ namespace Integra {
 			{
 				if (!String::IsNullOrEmpty(symbols))
 				{
-					String^ squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ROUGH_SYMBOLS = '" + symbols + "' where ID = " + intgrId;
+					String^ squery = String::Format("update {0}INTEGRATION_BOOK set ROUGH_SYMBOLS = {1} where ID = {2}",
+						 _odbc->schema, OdbcClass::GetSqlString(symbols), intgrId);
 					_odbc->ExecuteNonQuery(squery);
 				}
 			}
@@ -557,6 +556,16 @@ namespace Integra {
 				}
 			}
 
+			void WritePosAttrs()
+			{
+				for each (PosGroupParam^ posParams in _posParamAttrs)
+				{
+					int attr1Id = GetAttr(posParams->Attribute1->FullCode)->Id;
+					int attr2Id = GetAttr(posParams->Attribute2->FullCode)->Id;
+					posParams->InsertToDb(_odbc, _intgrBookId, attr1Id, attr2Id);
+				}
+			}
+
 			void WriteGroup(int intgrId)
 			{
 				int idId = WriteSingleAttr(_groupIdCol, intgrId);
@@ -577,7 +586,6 @@ namespace Integra {
 					int idTitleAttr = WriteSingleAttr(pair->Key, intgrId);
 					int idNameAttr = WriteSingleAttr(pair->Value, intgrId);
 					columns = "ID,ID_TITLE,ID_NAME,ID_GROUP_PARAMS,CREATE_USER,CREATE_DATE";
-					//todo add user and data to table
 					squery = String::Format("insert into {0}GROUP_ATTRIBUTE_PAIRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7})",
 						_odbc->schema, columns, idAttrPair, idTitleAttr, idNameAttr, idGroupParams, user, sDate);
 					_odbc->ExecuteNonQuery(squery);
@@ -622,6 +630,10 @@ namespace Integra {
 				if (!String::IsNullOrEmpty(_groupSchtab))
 				{
 					WriteGroup(_intgrBookId);
+				}
+				if (_posParamAttrs != nullptr && _posParamAttrs->Count > 0)
+				{
+					WritePosAttrs();
 				}
 				WriteUserAccess();
 			}
@@ -801,10 +813,11 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 					 _idCol = addAttrForm->IdCol;
 					 _titleCol = addAttrForm->TitleCol;
 					 _dateCol = addAttrForm->DateCol;
-					 _roughCol = addAttrForm->RoughCol;
-					 _roughSymbols = addAttrForm->RoughSymbols;
 					 _dbAttrs = addAttrForm->Attributes;
 
+					 _roughCol = addAttrForm->RoughCol;
+					 _roughSymbols = addAttrForm->RoughSymbols;
+					 
 					 _dbFilters = addAttrForm->DbFilters;
 					 _dbLinks = addAttrForm->DbLinks;
 
@@ -816,6 +829,7 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 						 _groupAttrs = addAttrForm->GroupAttrs;
 					 }
 					 
+					 _posParamAttrs = addAttrForm->PosParamAttrs;
 					 
 				 }
 				 

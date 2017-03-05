@@ -65,7 +65,7 @@ namespace Integra {
 				String^ sId = o->ToString();
 				int number;
 				bool result = Int32::TryParse(sId, number);
-				Position^ pos = gcnew DbPosition(sId, _equivAttr, _attributes, _odbc);
+				Position^ pos = gcnew DbPosition(sId, _equivAttr, _attributes, _odbc, BookSetting);
 				list->Add(pos);
 			}
 
@@ -103,7 +103,7 @@ namespace Integra {
 			for (int i = 0; i < table->Count; i+=attrs->Count)
 			{
 				List<Object^>^ attrValues = table->GetRange(i, attrs->Count);
-				Position^ pos = gcnew DbPosition(attrValues, attrs, iId, iTitle);
+				Position^ pos = gcnew DbPosition(attrValues, attrs, iId, iTitle, BookSetting);
 				poses->Add(pos);
 			}
 
@@ -144,15 +144,7 @@ namespace Integra {
 		virtual Object^ GetGroupAttrValue(Attribute^ attribute, String^ idGroup) override
 		{
 			Attribute^ groupIdAttr = BookSetting->AttrGroupId;
-			String^ sIdGroup;
-			if (groupIdAttr->IsString)
-			{
-				sIdGroup = OdbcClass::GetSqlString(idGroup);
-			}
-			else
-			{
-				sIdGroup = idGroup;
-			}
+			String^ sIdGroup = BookSetting->Odbc->GetSqlValue(groupIdAttr->DataType, idGroup);
 
 			String^ squery = String::Format("select {0} from {1} where {2} = {3}", attribute->FullCode, attribute->FullTable, groupIdAttr->FullCode, sIdGroup);
 			List<Object^>^ list2 = BookSetting->Odbc->ExecuteQuery(squery);
@@ -215,7 +207,7 @@ namespace Integra {
 						dic->Add(_attributes[j], query[i+j]->ToString());
 					}
 					String^ sId = query[i+iId]->ToString();
-					Position^ pos = gcnew DbPosition(sId, attrId, _attributes, dic);
+					Position^ pos = gcnew DbPosition(sId, attrId, _attributes, dic, BookSetting);
 					list->Add(pos);
 					worker->ReportProgress(i/nAttr, nullptr);
 
@@ -279,7 +271,7 @@ namespace Integra {
 						dic->Add(_attributes[j], query[i+j]->ToString());
 					}
 					String^ sId = query[i+iId]->ToString();
-					Position^ pos = gcnew DbPosition(sId, attrId, _attributes, dic);
+					Position^ pos = gcnew DbPosition(sId, attrId, _attributes, dic, BookSetting);
 					list->Add(pos);
 				}
 
@@ -287,7 +279,7 @@ namespace Integra {
 			return list;
 		}
 
-		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, IntegrationResult^ result, int isTarget) override
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, Object^ titleVal, IntegrationResult^ result, int isTarget) override
 		{
 			List<String^>^ queres = gcnew List<String ^>();
 			if (BookSetting->DbLinks != nullptr && BookSetting->DbLinks->Count > 0)
@@ -352,7 +344,7 @@ namespace Integra {
 				{
 					throw e;
 				}
-				Editting^ newEdit = gcnew Editting(_odbc, result, 0, isTarget, idVal->ToString());
+				Editting^ newEdit = gcnew Editting(_odbc, result, 0, isTarget, idVal->ToString(), titleVal->ToString());
 				newEdit->WriteNewPos();
 			}
 
@@ -425,6 +417,11 @@ namespace Integra {
 			
 		}
 
+		virtual Object^ GetSemObject(String^ location) override
+		{
+			return nullptr;
+		}
+
 		private:
 
 			List<String^>^ AddPositonsOnLink(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal)
@@ -447,26 +444,30 @@ namespace Integra {
 				for each (Attribute^ attr in tableAttrs)
 				{
 					List<String^>^ valueList = gcnew List<String ^>();
-					List<String^>^ titleList = gcnew List<String ^>();
+					List<Attribute^>^ titleList = gcnew List<Attribute ^>();
 
 					String^ query = String::Format("insert into {0} (", attr->FullTable);
 					for each (KeyValuePair<Attribute^, String^>^ pairAttrNewVal in attrsAndNewVals)
 					{
 						if (pairAttrNewVal->Key->FullTable == attr->FullTable)
 						{
-							titleList->Add(pairAttrNewVal->Key->Code);
+							titleList->Add(pairAttrNewVal->Key);
 							valueList->Add(BookSetting->Odbc->GetSqlValue(pairAttrNewVal->Key->DataType, pairAttrNewVal->Value));
 						}
 					}
+					if	(titleList->Count <= 0)
+					{
+						continue;
+					}
 
 					bool isSetAttrId = false;
-					for each (String^ title in titleList)
+					for each (Attribute^ title in titleList)
 					{
-						if (title == attr->Code)
+						if (title->Code == attr->Code)
 						{
 							isSetAttrId = true;
 						}
-						query += String::Format("{0},", title);
+						query += String::Format("{0},", title->Code);
 					}
 					if (!isSetAttrId)
 					{
@@ -475,9 +476,9 @@ namespace Integra {
 
 					query = query->Substring(0, query->Length - 1);
 					query += ") values (";
-					for each (String^ val in valueList)
+					for (int i = 0; i < valueList->Count; i++)
 					{
-						query += String::Format("{0},", val);
+						query += String::Format("{0},", valueList[i]);
 					}
 					if (!isSetAttrId)
 					{

@@ -179,9 +179,13 @@ namespace Integra {
 		 {
 			 String^ driver;
 			 String^ login;
+
+			 
 			 if (String::IsNullOrEmpty(tbPass->Text->Trim()))
 			 {
+				 //release
 				driver = _driver;
+				 //MessageBox::Show("¬ведите пароль!");return;
 			 }
 			 else
 			 {

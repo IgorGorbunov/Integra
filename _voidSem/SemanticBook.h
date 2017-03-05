@@ -94,12 +94,12 @@ namespace Integra {
 			return nullptr;
 		}
 
-		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters) override
+		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters, List<Object^>^ links) override
 		{
 			return nullptr;
 		}
 
-		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals) override
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, IntegrationResult^ result, int isTarget) override
 		{
 
 		}

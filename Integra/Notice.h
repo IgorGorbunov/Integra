@@ -151,7 +151,7 @@ namespace Integra {
 		{
 			String^ squery = "select NN.ID, NN.CREATE_DATE, NN.SOGLAS, NN.REASON, NN.CREATE_USER, IPP.INT_NAME, BB.NAME, ISS.NAME " +
 				"from {0}NOTICES NN, {0}INTEGRATION_RESULTS IRR, {0}INTEGRATION_PARAMS IPP, {0}INTEGRATION_BOOK IBB, {0}BOOKS BB, {0}INTEGRATED_SYSTEMS ISS " +
-			    "where NN.ID_INTGR = IRR.ID and IPP.ID = IRR.ID_INTGR and IBB.ID = NN.ID_INTGR_BOOK and BB.ID = IBB.ID_BOOK and IBB.ID_SYSTEM = ISS.ID";
+			    "where NN.ID_INTGR = IRR.ID and IPP.ID = IRR.ID_INTGR and IBB.ID = NN.ID_INTGR and BB.ID = IBB.ID_BOOK and IBB.ID_SYSTEM = ISS.ID";
 			squery = String::Format(squery, odbc->schema);
 
 			List<Object^>^ resList = odbc->ExecuteQuery(squery);

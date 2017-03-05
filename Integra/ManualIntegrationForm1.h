@@ -65,6 +65,7 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column6;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
+	private: System::Windows::Forms::Button^  button1;
 
 
 	private:
@@ -102,6 +103,7 @@ namespace Integra {
 			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column6 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column7 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			this->panel5->SuspendLayout();
 			this->panel2->SuspendLayout();
@@ -140,6 +142,7 @@ namespace Integra {
 			// 
 			// panel2
 			// 
+			this->panel2->Controls->Add(this->button1);
 			this->panel2->Controls->Add(this->bStartAccurate);
 			this->panel2->Controls->Add(this->bStartRough);
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Top;
@@ -286,6 +289,15 @@ namespace Integra {
 			this->Column7->Name = L"Column7";
 			this->Column7->ReadOnly = true;
 			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(564, 13);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(316, 23);
+			this->button1->TabIndex = 2;
+			this->button1->Text = L"Запустить интеграцию через EXE файл";
+			this->button1->UseVisualStyleBackColor = true;
+			// 
 			// ManualIntegrationForm1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -334,7 +346,7 @@ private: System::Void ManualIntegrationForm1_Load(System::Object^  sender, Syste
 				row[7] = list[i+7];
 				row[8] = list[i+8];
 				row[9] = list[i+9];
-				int io = Decimal::ToInt32((Decimal)list[i+10]);
+				int io = OdbcClass::GetResInt(list[i+10]);
 				if (io == 0)
 				{
 					row[10] = "Односторонняя";
@@ -362,7 +374,7 @@ private: System::Void bStartAccurate_Click(System::Object^  sender, System::Even
 				 return;
 			 }
 
-			 int paramId = Decimal::ToInt32((Decimal)dataGridView1[0, dataGridView1->SelectedCells[0]->RowIndex]->Value);
+			 int paramId = OdbcClass::GetResInt(dataGridView1[0, dataGridView1->SelectedCells[0]->RowIndex]->Value);
 
 			 IntegrationSettings^ settings = gcnew IntegrationSettings(paramId, _odbc);
 

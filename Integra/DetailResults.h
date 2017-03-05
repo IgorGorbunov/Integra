@@ -2,6 +2,8 @@
 
 #include "ODBCclass.h"
 #include "Position.h"
+#include "SemanticPosition.h"
+
 
 namespace Integra {
 
@@ -28,12 +30,6 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column6;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
-
-
-
-
-
-
 
 
 			 OdbcClass^ _odbc;
@@ -63,17 +59,9 @@ namespace Integra {
 	private: System::Windows::Forms::Panel^  panel2;
 	private: System::Windows::Forms::Panel^  panel3;
 	private: System::Windows::Forms::Button^  bClose;
-
 	private: System::Windows::Forms::Panel^  panel4;
 	private: System::Windows::Forms::Panel^  panel5;
 	private: System::Windows::Forms::DataGridView^  dgv;
-
-
-
-
-
-
-
 
 
 	private:
@@ -85,13 +73,13 @@ namespace Integra {
 		void SetEdittings()
 		{
 			int colCount = 9;
-			String^ squery = String::Format("select IEE.ID, IEE.EDIT_DATE, IEE.EDIT_TYPE, IEE.ID_ATTR, IEE.OLD_VAL, IEE.NEW_VAL, IEE.SYSTEM_N, IEE.ID_POS " + 
+			String^ squery = String::Format("select IEE.ID, IEE.EDIT_DATE, IEE.EDIT_TYPE, IEE.ID_ATTR, IEE.OLD_VAL, IEE.NEW_VAL, IEE.SYSTEM_N, IEE.ID_POS, IEE.CAPTION " + 
 				"from {0}INTEGRATION_EDITINGS IEE "+
 				"where IEE.ID_INTGR = {1}", _odbc->schema, _idIntgr);
 			List<Object^>^ qList = _odbc->ExecuteQuery(squery);
 
 			dgv->Rows->Clear();
-			for (int i = 0; i < qList->Count; i+=8)
+			for (int i = 0; i < qList->Count; i+=9)
 			{
 				array<String^>^ row = gcnew array<String ^>(colCount);
 				int id = OdbcClass::GetResInt(qList[i+0]);
@@ -146,9 +134,18 @@ namespace Integra {
 					row[6] = qList2[2]->ToString();
 					idIntgrBook = OdbcClass::GetResInt(qList2[3]);
 				}
-				Position^ position = gcnew Position(iPos, idIntgrBook, _odbc);
-				row[4] = position->Caption;
-				
+
+				BookSettings^ _intgrBook = gcnew BookSettings(idIntgrBook, _odbc);
+				Position^ position;
+				if	(_intgrBook->IsSemantic)
+				{
+					//position = gcnew SemanticPosition(iPos, nullptr, _intgrBook->AttrId, idIntgrBook);
+				}
+				else
+				{
+					position = gcnew Position(iPos, idIntgrBook, _odbc);
+				}
+				row[4] = qList[i+8]->ToString();
 				row[7] = qList[i+4]->ToString();
 				row[8] = qList[i+5]->ToString();
 				dgv->Rows->Add(row);

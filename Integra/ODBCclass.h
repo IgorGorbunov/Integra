@@ -196,7 +196,20 @@ namespace Integra {
 				}
 				else
 				{
-					return String::Format("'{0}'", s);
+					String^ newS = String::Empty;
+					for each (Char c in s)
+					{
+						//String^ str = c + "";
+						//int ic = int::Parse(str);
+						//str = String::Format("{0}", Convert::ToChar(ic));
+
+						if (c == '\'')
+						{
+							newS += "'";
+						}
+						newS += c;
+					}
+					return String::Format("'{0}'", newS);
 				}
 				return s;
 			}
@@ -209,7 +222,9 @@ namespace Integra {
 				}
 				if (attrDataType == "ÖÅËÎÅ ×ÈÑËÎ")
 				{
-					return s;
+					//release
+					return GetSqlDouble(s);
+					//return GetSqlInt(s);
 				}
 				if (attrDataType == "ÄÀÒÀ")
 				{
@@ -217,7 +232,7 @@ namespace Integra {
 				}
 				if (attrDataType == "×ÈÑËÎ Ñ ÏËÀÂÀŞÙÅÉ ÒÎ×ÊÎÉ")
 				{
-					return s;
+					return GetSqlDouble(s);
 				}
 				if (attrDataType == "ËÎÃÈ×ÅÑÊÈÉ")
 				{
@@ -227,6 +242,24 @@ namespace Integra {
 				return s;
 			}
 
+			String^ GetSqlInt(String^ s)
+			{
+				if	(String::IsNullOrEmpty(s))
+				{
+					return "NULL";
+				}
+				return s;
+			}
+
+			String^ GetSqlDouble(String^ s)
+			{
+				if	(String::IsNullOrEmpty(s))
+				{
+					return "NULL";
+				}
+				s = s->Replace(',', '.');
+				return s;
+			}
 
 			String^ GetSqlDate(DateTime^ dateTime)
 			{
@@ -264,7 +297,7 @@ namespace Integra {
 
 			List<Object^>^ GetTableInfo7(String^ schema, String^ tableName)
 			{
-				if (schema == "áåç ñõåìû")
+				if (schema == "áåç ñõåìû" || String::IsNullOrEmpty(schema))
 				{
 					OdbcCommand^ command = gcnew OdbcCommand("SELECT TOP 1 * FROM " + tableName);
 					OdbcDataReader^ reader;

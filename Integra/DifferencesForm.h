@@ -302,13 +302,15 @@ namespace Integra {
 		}
 #pragma endregion
 
-		void SetNewAttrVals(bool toSource)
+		bool SetNewAttrVals(bool toSource)
 		{
+			bool success = true;
 			Dictionary<Attribute^, String^>^ newAttrVals = gcnew Dictionary<Attribute ^, String ^>();
 			for (int i = 0; i < dgvDifferent->Rows->Count; i++)
 			{
-				Object^ boolVal = dgvDifferent[4, i]->Value;
-				bool fromSource =  (bool)boolVal;
+				bool fromSource = (bool)dgvDifferent[4, i]->Value;
+				bool fromTarget = (bool)dgvDifferent[6, i]->Value;
+
 				String^ value;
 				Attribute^ attr;
 				if (fromSource)
@@ -316,54 +318,151 @@ namespace Integra {
 					//значение источника
 					value = dgvDifferent[5, i]->Value->ToString();
 				}
-				else
+				else if (fromTarget)
 				{
 					//значение получателя
 					value = dgvDifferent[7, i]->Value->ToString();
 				}
+				else
+				{
+					//реквизит не интегрируется
+					continue;
+				}
+
 				if (toSource)
 				{
-					array<Object^, 2>^ arr = _pos->Differences[i];
-					// атрибут источника
-					attr = (Attribute^) arr[0,0];
+					//array<Object^, 2>^ arr = _pos->Differences[i];
+					//// атрибут источника
+					//attr = (Attribute^) arr[0,0];
+					AttributePair^ attrPair = _pos->DifferencesAttrPair[i];
+					if (attrPair->SimpleSourceAttribute == nullptr)
+					{
+						success = false;
+						MessageBox::Show("Нельзя внести значение комплексного атрибута " + attrPair->SourceComplexName + " в справочник источник!");
+						return success;
+					}
+					attr = attrPair->SimpleSourceAttribute;
 				}
 				else
 				{
-					array<Object^, 2>^ arr = _pos->Differences[i];
-					// атрибут получателя
-					attr = (Attribute^) arr[1,0];
+					//array<Object^, 2>^ arr = _pos->Differences[i];
+					//// атрибут получателя
+					//attr = (Attribute^) arr[1,0];
+					AttributePair^ attrPair = _pos->DifferencesAttrPair[i];
+					if (attrPair->SimpleTargetAttribute == nullptr)
+					{
+						success = false;
+						MessageBox::Show("Нельзя внести значение комплексного атрибута " + attrPair->TargetComplexName + " в справочник получатель!");
+						return success;
+					}
+					attr = attrPair->SimpleTargetAttribute;
+
 				}
 				newAttrVals->Add(attr, value);
 			}
+			if (newAttrVals->Count <= 0)
+			{
+				MessageBox::Show("Не выбран ни один реквизит для интеграции!");
+				return false;
+			}
 			NewAttrNames = newAttrVals;
+			return success;
+		}
+
+		void SetDgvs1()
+		{
+			for each(array<Object^>^ arr in _pos->Equals)
+			{
+				array<String^>^ arrS = gcnew array<String ^>(5);
+				arrS[0] = ((Attribute^)arr[0])->Name;
+				arrS[1] = ((Attribute^)arr[0])->FullCode;
+				arrS[2] = ((Attribute^)arr[1])->Name;
+				arrS[3] = ((Attribute^)arr[1])->FullCode;
+				arrS[4] = arr[2]->ToString();
+				dgvEqual->Rows->Add(arrS);
+			}
+
+			for each(array<Object^, 2>^ arr in _pos->Differences)
+			{
+				array<Object^>^ arrS = gcnew array<Object ^>(8);
+				arrS[0] = ((Attribute^)arr[0, 0])->Name;
+				arrS[1] = ((Attribute^)arr[0, 0])->FullCode;
+				arrS[2] = ((Attribute^)arr[1, 0])->Name;
+				arrS[3] = ((Attribute^)arr[1, 0])->FullCode;
+				arrS[4] = true;
+				arrS[5] = arr[0, 1]->ToString();
+				arrS[6] = false;
+				arrS[7] = arr[1, 1]->ToString();
+				dgvDifferent->Rows->Add(arrS);
+			}
+		}
+
+		void SetDgvs()
+		{
+			for each(AttributePair^ attrPair in _pos->EqualsAttrPair)
+			{
+				array<String^>^ arrS = gcnew array<String ^>(5);
+				if (attrPair->SimpleSourceAttribute != nullptr)
+				{
+					arrS[0] = attrPair->SimpleSourceAttribute->Name;
+					arrS[1] = attrPair->SimpleSourceAttribute->FullCode;
+				}
+				else
+				{
+					arrS[0] = attrPair->SourceComplexName;
+					arrS[1] = attrPair->SourceComplexType;
+				}
+
+				if (attrPair->SimpleTargetAttribute != nullptr)
+				{
+					arrS[2] = attrPair->SimpleTargetAttribute->Name;
+					arrS[3] = attrPair->SimpleTargetAttribute->FullCode;
+				}
+				else
+				{
+					arrS[2] = attrPair->TargetComplexName;
+					arrS[3] = attrPair->TargetComplexType;
+				}
+				arrS[4] = attrPair->SourceValue;
+				dgvEqual->Rows->Add(arrS);
+			}
+
+			List<AttributePair^>^ attrPairs = _pos->DifferencesAttrPair;
+			for (int i = 0; i < attrPairs->Count; i++)
+			{
+				array<Object^>^ arrS = gcnew array<Object ^>(9);
+				if (attrPairs[i]->SimpleSourceAttribute != nullptr)
+				{
+					arrS[0] = attrPairs[i]->SimpleSourceAttribute->Name;
+					arrS[1] = attrPairs[i]->SimpleSourceAttribute->FullCode;
+				}
+				else
+				{
+					arrS[0] = attrPairs[i]->SourceComplexName;
+					arrS[1] = attrPairs[i]->SourceComplexType;
+				}
+
+				if (attrPairs[i]->SimpleTargetAttribute != nullptr)
+				{
+					arrS[2] = attrPairs[i]->SimpleTargetAttribute->Name;
+					arrS[3] = attrPairs[i]->SimpleTargetAttribute->FullCode;
+				}
+				else
+				{
+					arrS[2] = attrPairs[i]->TargetComplexName;
+					arrS[3] = attrPairs[i]->TargetComplexType;
+				}
+				arrS[4] = true;
+				arrS[5] = attrPairs[i]->SourceValue;
+				arrS[6] = false;
+				arrS[7] = attrPairs[i]->TargetValue;
+				dgvDifferent->Rows->Add(arrS);
+			}
 		}
 
 	private: System::Void DifferencesForm_Load(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				 for each(array<Object^>^ arr in _pos->Equals)
-				 {
-					 array<String^>^ arrS = gcnew array<String ^>(5);
-					 arrS[0] = ((Attribute^)arr[0])->Name;
-					 arrS[1] = ((Attribute^)arr[0])->FullCode;
-					 arrS[2] = ((Attribute^)arr[1])->Name;
-					 arrS[3] = ((Attribute^)arr[1])->FullCode;
-					 arrS[4] = arr[2]->ToString();
-					 dgvEqual->Rows->Add(arrS);
-				 }
-
-				 for each(array<Object^, 2>^ arr in _pos->Differences)
-				 {
-					 array<Object^>^ arrS = gcnew array<Object ^>(8);
-					 arrS[0] = ((Attribute^)arr[0, 0])->Name;
-					 arrS[1] = ((Attribute^)arr[0, 0])->FullCode;
-					 arrS[2] = ((Attribute^)arr[1, 0])->Name;
-					 arrS[3] = ((Attribute^)arr[1, 0])->FullCode;
-					 arrS[4] = true;
-					 arrS[5] = arr[0, 1]->ToString();
-					 arrS[6] = false;
-					 arrS[7] = arr[1, 1]->ToString();
-					 dgvDifferent->Rows->Add(arrS);
-				 }
+				 SetDgvs();
 			 }
 private: System::Void bClose_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -383,22 +482,30 @@ private: System::Void dgvDifferent_CellValueChanged(System::Object^  sender, Sys
 				 bool value = (bool)dgvDifferent[e->ColumnIndex, e->RowIndex]->Value;
 				 if (e->ColumnIndex == 4)
 				 {
-					 dgvDifferent[6, e->RowIndex]->Value = !value;
+					 bool bVal = (bool) dgvDifferent[4, e->RowIndex]->Value;
+					 if (bVal == true)
+					 {
+						 dgvDifferent[6, e->RowIndex]->Value = !value;
+					 }
 				 }
 				 else
 				 {
-					 dgvDifferent[4, e->RowIndex]->Value = !value;
+					 bool bVal = (bool) dgvDifferent[6, e->RowIndex]->Value;
+					 if (bVal == true)
+					 {
+						 dgvDifferent[4, e->RowIndex]->Value = !value;
+					 }
 				 }
 				 for (int i = 0; i < dgvDifferent->Rows->Count; i++)
 				 {
-					 Object^ cell1 = dgvDifferent[4, i]->Value;
+					 /*Object^ cell1 = dgvDifferent[4, i]->Value;
 					 Object^ cell2 = dgvDifferent[6, i]->Value;
 					 if ((cell1 == nullptr || (bool)(cell1) == false) && 
 						 (cell2 == nullptr || (bool)(cell2) == false))
 					 {
 						 isTwoFalse = true;
 						 break;
-					 }
+					 }*/
 				 }
 				 if (isTwoFalse)
 				 {
@@ -412,15 +519,20 @@ private: System::Void dgvDifferent_CellValueChanged(System::Object^  sender, Sys
 		 }
 private: System::Void bIntegInTarget_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 SetNewAttrVals(false);
-			 InTarget = true;
-			 Close();
+			 if (SetNewAttrVals(false))
+			 {
+				 InTarget = true;
+				 Close();
+			 }
 		 }
 private: System::Void bIntegInSource_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 SetNewAttrVals(true);
-			 InTarget = false;
-			 Close();
+			 if (SetNewAttrVals(true))
+			 {
+				 InTarget = false;
+				 Close();
+			 }
+
 		 }
 };
 }

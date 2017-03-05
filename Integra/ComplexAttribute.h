@@ -39,6 +39,27 @@ namespace Integra {
 			}
 
 		}
+		property String^ ComplexType
+		{
+			String^ get()
+			{
+				if (_type == 0)
+				{
+					return "Композиция";
+				}
+				else
+				{
+					if (_selectType == 0)
+					{
+						return "Разделение по кол-ву символов";
+					}
+					else
+					{
+						return "Разделение символам разделения";
+					}
+				}
+			}
+		}
 
 	private:
 		OdbcClass^ _odbc;
@@ -196,7 +217,7 @@ namespace Integra {
 		}
 
 
-		void InsertToDb(int intgrShemaId)
+		void InsertToDb(int intgrShemaId, String^ sGroupId)
 		{
 			if (_type == 0)
 			{
@@ -265,20 +286,20 @@ namespace Integra {
 
 			if (_writeSource)
 			{
-				columns = "ID,ID_SOURCE_ATTRIBUTE,ID_PARAMETRS,CREATE_USER,CREATE_DATE,ID_TARGET_COMPLEX_ATTR";
+				columns = "ID,ID_SOURCE_ATTRIBUTE,ID_PARAMETRS,CREATE_USER,CREATE_DATE,ID_TARGET_COMPLEX_ATTR,ID_GROUP";
 				int idAttrPair = _odbc->GetLastFreeId(_odbc->schema + "ATTRIBUTE_PAIRS");
 
-				sQuery = String::Format("insert into {0}ATTRIBUTE_PAIRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7})",
-					_odbc->schema, columns, idAttrPair, _recAttribute->Id, intgrShemaId, sqlUser, sqlDate, _id);
+				sQuery = String::Format("insert into {0}ATTRIBUTE_PAIRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8})",
+					_odbc->schema, columns, idAttrPair, _recAttribute->Id, intgrShemaId, sqlUser, sqlDate, _id, sGroupId);
 				_odbc->ExecuteNonQuery(sQuery);
 			}
 			else
 			{
-				columns = "ID,ID_TARGET_ATTRIBUTE,ID_PARAMETRS,CREATE_USER,CREATE_DATE,ID_SOURCE_COMPLEX_ATTR";
+				columns = "ID,ID_TARGET_ATTRIBUTE,ID_PARAMETRS,CREATE_USER,CREATE_DATE,ID_SOURCE_COMPLEX_ATTR,ID_GROUP";
 				int idAttrPair = _odbc->GetLastFreeId(_odbc->schema + "ATTRIBUTE_PAIRS");
 
-				sQuery = String::Format("insert into {0}ATTRIBUTE_PAIRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7})",
-					_odbc->schema, columns, idAttrPair, _recAttribute->Id, intgrShemaId, sqlUser, sqlDate, _id);
+				sQuery = String::Format("insert into {0}ATTRIBUTE_PAIRS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8})",
+					_odbc->schema, columns, idAttrPair, _recAttribute->Id, intgrShemaId, sqlUser, sqlDate, _id, sGroupId);
 				_odbc->ExecuteNonQuery(sQuery);
 			}
 		}

@@ -421,8 +421,8 @@ private: System::Void MainForm_FormClosed(System::Object^  sender, System::Windo
 
 private: System::Void MainForm_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 _itegrationSettings = ProgramIntegration::GetIntegrationParams();
-			 SetDgv(_itegrationSettings);
+			 //_itegrationSettings = ProgramIntegration::GetIntegrationParams();
+			 //SetDgv(_itegrationSettings);
 		 }
 private: System::Void dgvIntParams_CellDoubleClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
 		 {
@@ -445,7 +445,7 @@ private: System::Void dgvIntParams_CellDoubleClick(System::Object^  sender, Syst
 		 }
 private: System::Void настройкиПользователейToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 AddEditUserRole^ form = gcnew AddEditUserRole();
+			 AddEditUserRole^ form = gcnew AddEditUserRole(ProgramIntegration::Odbc);
 			 form->ShowDialog();
 		 }
 private: System::Void настройкиСправочниковToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 

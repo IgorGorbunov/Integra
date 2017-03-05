@@ -39,6 +39,7 @@ namespace Integra {
 			{
 				if (String::IsNullOrEmpty(_login))
 				{
+
 					if (_properties != nullptr && _properties->ContainsKey("LOGIN"))
 					{
 						_login = _properties["LOGIN"];

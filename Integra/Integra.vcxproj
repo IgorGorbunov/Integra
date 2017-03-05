@@ -239,6 +239,7 @@
     <ClInclude Include="Results3.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Role.h" />
     <ClInclude Include="RoleStation.h" />
     <ClInclude Include="RoughInterg.h">
       <FileType>CppForm</FileType>

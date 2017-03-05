@@ -165,12 +165,14 @@ namespace Integra {
 				{
 					bool contains = false;
 					Position^ sPos = _sourcePositions[i];
+					sPos->SetEquivAttr(_settings->SourceEquivAttr);
 					int jDel;
 					for (int j = 0; j < _targetPositions->Count; j++)
 					{
 						Position^ tPos = _targetPositions[j];
+						tPos->SetEquivAttr(_settings->TargetEquivAttr);
 						Nmatches++;
-						if (sPos->UnicId == tPos->UnicId)
+						if (sPos->EqualValue == tPos->EqualValue)
 						{
 							contains = true;
 							jDel = j;
@@ -207,17 +209,21 @@ namespace Integra {
 				{
 					bool contains = false;
 					Position^ tPos = _targetPositions[i];
+					tPos->SetEquivAttr(_settings->TargetEquivAttr);
 					int jDel;
 					for (int j = 0; j < _sourcePositions->Count; j++)
 					{
 						Position^ sPos = _sourcePositions[j];
-						if (sPos->UnicId == tPos->UnicId)
+						sPos->SetEquivAttr(_settings->SourceEquivAttr);
+						Nmatches++;
+						if (sPos->EqualValue == tPos->EqualValue)
 						{
 							contains = true;
 							jDel = j;
 							DifferencePosition^ diffPos;
 							if (AttrsIsFullyEqual(sPos, tPos, diffPos))
 							{
+								Nequal++;
 								break;
 							}
 							else
@@ -333,7 +339,7 @@ namespace Integra {
 					newAttrsAndVals->Add(attrPair->SimpleSourceAttribute, attrPair->TargetValue);
 				}
 			}
-			_sourceBook->AddPosition(newAttrsAndVals, p->UnicId, _intgrResults, 0);
+			_sourceBook->AddPosition(newAttrsAndVals, p->EqualValue, p->Caption, _intgrResults, 0);
 		}
 
 		void AddPosToTarget(Position^ p)
@@ -346,7 +352,7 @@ namespace Integra {
 					newAttrsAndVals->Add(attrPair->SimpleTargetAttribute, attrPair->SourceValue);
 				}
 			}
-			_targetBook->AddPosition(newAttrsAndVals, p->UnicId, _intgrResults, 1);
+			_targetBook->AddPosition(newAttrsAndVals, p->EqualValue, p->Caption, _intgrResults, 1);
 		}
 
 		void AddPosToTarget2(Position^ p)
@@ -583,14 +589,17 @@ namespace Integra {
 			diffPos = gcnew DifferencePosition(sourcePos->UnicId, sourcePos,  targetPos);
 			for (int i = 0; i < _attrPairs->Count; i++)
 			{
+				AttributePair^ newAttrPair = nullptr;
 				if (_attrPairs[i]->CheckEqual(sourcePos->AttributesAndValues, targetPos->AttributesAndValues))
 				{
-					diffPos->AddEqualAttr(_attrPairs[i]);
+					newAttrPair = gcnew AttributePair(_attrPairs[i]);
+					diffPos->AddEqualAttr(newAttrPair);
 				}
 				else
 				{
 					equal = false;
-					diffPos->AddDifferenceAttr(_attrPairs[i]);
+					newAttrPair = gcnew AttributePair(_attrPairs[i]);
+					diffPos->AddDifferenceAttr(newAttrPair);
 				}
 			}
 			return equal;

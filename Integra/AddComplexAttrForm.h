@@ -25,6 +25,9 @@ namespace Integra {
 
 	private:
 		OdbcClass^ _odbc;
+
+		bool _isGroup;
+
 		List<Attribute^>^ _recAttrs;
 		List<Attribute^>^ _selectAttrs;
 
@@ -38,33 +41,23 @@ namespace Integra {
 	private: System::Windows::Forms::TabPage^  tabPage1;
 	private: System::Windows::Forms::Label^  label3;
 	private: System::Windows::Forms::DataGridView^  dgvCompose;
-
 	private: System::Windows::Forms::TabPage^  tabPage2;
 	private: System::Windows::Forms::Panel^  pSplitter;
-
 	private: System::Windows::Forms::Label^  label6;
 	private: System::Windows::Forms::ComboBox^  cbSelectPart;
-
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::TextBox^  tbSplitSympols;
-
 	private: System::Windows::Forms::Panel^  pFirstSymbol;
 	private: System::Windows::Forms::NumericUpDown^  nudNCol;
-
-
 	private: System::Windows::Forms::NumericUpDown^  nudFirstSymbol;
-
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::Panel^  panel1;
 	private: System::Windows::Forms::GroupBox^  groupBox1;
 	private: System::Windows::Forms::RadioButton^  rbSplitter;
-
 	private: System::Windows::Forms::RadioButton^  rbFirstSymbol;
-
 	private: System::Windows::Forms::Panel^  panel2;
 	private: System::Windows::Forms::TextBox^  tbName;
-
 	private: System::Windows::Forms::Label^  label7;
 	private: System::Windows::Forms::Panel^  panel3;
 	private: System::Windows::Forms::Panel^  panel4;
@@ -84,10 +77,11 @@ namespace Integra {
 
 
 	public:
-		AddComplexAttrForm(List<Attribute^>^ recAttrs, List<Attribute^>^ selectAttrs, OdbcClass^ odbc, bool writeSource)
+		AddComplexAttrForm(List<Attribute^>^ recAttrs, List<Attribute^>^ selectAttrs, OdbcClass^ odbc, bool writeSource, bool isGroup)
 		{
 			InitializeComponent();
 			_odbc = odbc;
+			_isGroup = isGroup;
 			_selectType = 0;
 
 			_writeSource = writeSource;
@@ -565,50 +559,78 @@ namespace Integra {
 #pragma endregion
 
 		private:
-			void SetRecAttr()
+
+			void SetAttrComboBox(ComboBox^ cb, List<Attribute^>^ attrList)
 			{
-				cbRecAttr->Items->Clear();
-				for each (Attribute^ attr in _recAttrs)
+				cb->Items->Clear();
+				for each (Attribute^ attr in attrList)
 				{
-					if (String::IsNullOrEmpty(attr->Name))
+					if (_isGroup)
 					{
-						cbRecAttr->Items->Add(attr->FullCode);
+						if (String::IsNullOrEmpty(attr->GroupAttrNameValue))
+						{
+							cb->Items->Add(attr->GroupAttrCodeValue);
+						}
+						else
+						{
+							cb->Items->Add(attr->GroupAttrNameValue);
+						}
 					}
 					else
 					{
-						cbRecAttr->Items->Add(attr->Name);
+						if (String::IsNullOrEmpty(attr->Name))
+						{
+							cb->Items->Add(attr->FullCode);
+						}
+						else
+						{
+							cb->Items->Add(attr->Name);
+						}
 					}
 				}
 			}
 
+			void SetAttrDataColumn(DataGridViewComboBoxColumn^ col, List<Attribute^>^ attrList)
+			{
+				col->Items->Clear();
+				col->Items->Add("^Символьное значение");
+				for each (Attribute^ attr in attrList)
+				{
+					if (_isGroup)
+					{
+						if (String::IsNullOrEmpty(attr->GroupAttrNameValue))
+						{
+							col->Items->Add(attr->GroupAttrCodeValue);
+						}
+						else
+						{
+							col->Items->Add(attr->GroupAttrNameValue);
+						}
+					}
+					else
+					{
+						if (String::IsNullOrEmpty(attr->Name))
+						{
+							col->Items->Add(attr->FullCode);
+						}
+						else
+						{
+							col->Items->Add(attr->Name);
+						}
+					}
+				}
+			}
+
+			void SetRecAttr()
+			{
+				SetAttrComboBox(cbRecAttr, _recAttrs);
+			}
+
 			void SetComposeSelectAttrs()
 			{
-				cbSelectAttr->Items->Clear();
-				for each (Attribute^ attr in _selectAttrs)
-				{
-					if (String::IsNullOrEmpty(attr->Name))
-					{
-						cbSelectAttr->Items->Add(attr->FullCode);
-					}
-					else
-					{
-						cbSelectAttr->Items->Add(attr->Name);
-					}
-				}
+				SetAttrComboBox(cbSelectAttr, _selectAttrs);
 
-				_DataTypeColumn->Items->Clear();
-				_DataTypeColumn->Items->Add("^Символьное значение");
-				for each (Attribute^ attr in _selectAttrs)
-				{
-					if (String::IsNullOrEmpty(attr->Name))
-					{
-						_DataTypeColumn->Items->Add(attr->FullCode);
-					}
-					else
-					{
-						_DataTypeColumn->Items->Add(attr->Name);
-					}
-				}
+				SetAttrDataColumn(_DataTypeColumn, _selectAttrs);
 
 				cbSelectPart->Items->Clear();
 				cbSelectPart->Items->Add("1-ая часть");
@@ -628,10 +650,21 @@ namespace Integra {
 			{
 				for each (Attribute^ attr in attrs)
 				{
-					if (attr->FullCode == fullCode)
+					if (_isGroup)
 					{
-						return attr;
+						if (attr->GroupAttrCodeValue == fullCode || attr->GroupAttrNameValue == fullCode)
+						{
+							return attr;
+						}
 					}
+					else
+					{
+						if (attr->FullCode == fullCode || attr->Name == fullCode)
+						{
+							return attr;
+						}
+					}
+					
 				}
 				return nullptr;
 			}

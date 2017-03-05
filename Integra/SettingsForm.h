@@ -988,7 +988,7 @@ private: System::Void tpIntegrationSchemas_Enter(System::Object^  sender, System
 			 List<IntegrationSettings^>^ inegrationSettings = gcnew List<IntegrationSettings^>();
 			 for each (Object^ id in integrationIds)
 			 {
-				 IntegrationSettings^ settings = gcnew IntegrationSettings(Decimal::ToInt32((Decimal)id), _odbc);
+				 IntegrationSettings^ settings = gcnew IntegrationSettings(_odbc->GetResInt(id), _odbc);
 				 inegrationSettings->Add(settings);
 			 }
 			 SetShemas(inegrationSettings);
@@ -1005,7 +1005,7 @@ private: System::Void bAddSchema_Click(System::Object^  sender, System::EventArg
 			 List<IntegrationSettings^>^ inegrationSettings = gcnew List<IntegrationSettings^>();
 			 for each (Object^ id in integrationIds)
 			 {
-				 IntegrationSettings^ settings = gcnew IntegrationSettings(Decimal::ToInt32((Decimal)id), _odbc);
+				 IntegrationSettings^ settings = gcnew IntegrationSettings(OdbcClass::GetResInt(id), _odbc);
 				 inegrationSettings->Add(settings);
 			 }
 			 SetShemas(inegrationSettings);

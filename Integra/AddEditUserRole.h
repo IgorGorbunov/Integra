@@ -1,5 +1,8 @@
 #pragma once
 #include "AddNewUser.h"
+#include "ODBCclass.h"
+#include "Role.h"
+#include "User.h"
 
 namespace Integra {
 
@@ -15,13 +18,19 @@ namespace Integra {
 	/// </summary>
 	public ref class AddEditUserRole : public System::Windows::Forms::Form
 	{
+	private:
+		OdbcClass^ _odbc;
+
+		List<Role^>^ _roles;
+		List<User^>^ _users;
+
+		int _selectedRoleI;
+
 	public:
-		AddEditUserRole(void)
+		AddEditUserRole(OdbcClass^ odbc)
 		{
 			InitializeComponent();
-			//
-			//TODO: добавьте код конструктора
-			//
+			_odbc = odbc;
 		}
 
 	protected:
@@ -79,6 +88,7 @@ namespace Integra {
 			this->lbUsers->Name = L"lbUsers";
 			this->lbUsers->Size = System::Drawing::Size(153, 186);
 			this->lbUsers->TabIndex = 0;
+			this->lbUsers->SelectedIndexChanged += gcnew System::EventHandler(this, &AddEditUserRole::lbUsers_SelectedIndexChanged);
 			// 
 			// label1
 			// 
@@ -96,7 +106,7 @@ namespace Integra {
 			this->cbRoles->Name = L"cbRoles";
 			this->cbRoles->Size = System::Drawing::Size(256, 21);
 			this->cbRoles->TabIndex = 2;
-			this->cbRoles->Text = L"Гость";
+			this->cbRoles->SelectedIndexChanged += gcnew System::EventHandler(this, &AddEditUserRole::cbRoles_SelectedIndexChanged);
 			// 
 			// label2
 			// 
@@ -113,16 +123,15 @@ namespace Integra {
 			this->lRoleDescription->Name = L"lRoleDescription";
 			this->lRoleDescription->Size = System::Drawing::Size(259, 135);
 			this->lRoleDescription->TabIndex = 4;
-			this->lRoleDescription->Text = L"Выбранная роль предназначена только для просмотра некоторых данных.";
 			// 
 			// label4
 			// 
 			this->label4->AutoSize = true;
 			this->label4->Location = System::Drawing::Point(218, 72);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(60, 13);
+			this->label4->Size = System::Drawing::Size(87, 13);
 			this->label4->TabIndex = 5;
-			this->label4->Text = L"Описание:";
+			this->label4->Text = L"Описание роли:";
 			// 
 			// bSaveEdit
 			// 
@@ -134,6 +143,7 @@ namespace Integra {
 			this->bSaveEdit->TabIndex = 6;
 			this->bSaveEdit->Text = L"Сохранить изменения";
 			this->bSaveEdit->UseVisualStyleBackColor = false;
+			this->bSaveEdit->Click += gcnew System::EventHandler(this, &AddEditUserRole::bSaveEdit_Click);
 			// 
 			// bAddNewUser
 			// 
@@ -188,19 +198,91 @@ namespace Integra {
 			this->Name = L"AddEditUserRole";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"Редактирование прав пользователей";
+			this->Load += gcnew System::EventHandler(this, &AddEditUserRole::AddEditUserRole_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
+
+
+		void SetRoles()
+		{
+			_roles = Role::GetAllRoles(_odbc);
+			cbRoles->Items->Clear();
+			for each (Role^ r in _roles)
+			{
+				cbRoles->Items->Add(r->RoleName);
+			}
+		}
+
+		void SetUsers()
+		{
+			_users = User::GetAllUsers(_odbc);
+			lbUsers->Items->Clear();
+			for each (User^ u in _users)
+			{
+				lbUsers->Items->Add(u->Code);
+			}
+		}
+
+
 	private: System::Void bClose_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
 				 Close();
 			 }
 private: System::Void bAddNewUser_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 AddNewUser^ form = gcnew AddNewUser();
+			 AddNewUser^ form = gcnew AddNewUser(_odbc);
 			 form->ShowDialog();
+			 SetUsers();
+
+		 }
+private: System::Void AddEditUserRole_Load(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 SetRoles();
+			 SetUsers();
+		 }
+private: System::Void cbRoles_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (cbRoles->SelectedItem != nullptr)
+			 {
+				 lRoleDescription->Text = _roles[cbRoles->SelectedIndex]->RoleDescription;
+				 if (_selectedRoleI != cbRoles->SelectedIndex && lbUsers->SelectedItem != nullptr)
+				 {
+					 bSaveEdit->Enabled = true;
+				 }
+				 else
+				 {
+					 bSaveEdit->Enabled = false;
+				 }
+			 }
+		 }
+private: System::Void lbUsers_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (lbUsers->SelectedItem != nullptr)
+			 {
+				 for each (String^ sRole in cbRoles->Items)
+				 {
+					 if (sRole == _users[lbUsers->SelectedIndex]->RoleName)
+					 {
+						 _selectedRoleI = _users[lbUsers->SelectedIndex]->RoleId - 1;
+						 cbRoles->SelectedIndex = 0;
+						 cbRoles->SelectedIndex = _users[lbUsers->SelectedIndex]->RoleId - 1;
+						 break;
+					 }
+				 }
+			 }
+		 }
+private: System::Void bSaveEdit_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (lbUsers->SelectedItem != nullptr)
+			 {
+				 _users[lbUsers->SelectedIndex]->SetNewRole(cbRoles->SelectedIndex + 1);
+				 SetUsers();
+				 bSaveEdit->Enabled = false;
+				 MessageBox::Show("Роль пользователя изменена!");
+			 }
 		 }
 };
 }

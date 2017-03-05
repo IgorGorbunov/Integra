@@ -25,7 +25,7 @@ namespace Integra {
 	private:
 		OdbcClass^ _odbc;
 		bool _attrsColFilled;
-		List<Object^>^ _fieldList;
+		List<Attribute^>^ _fieldList;
 		bool _init;
 
 		String^ _schema;
@@ -319,9 +319,9 @@ namespace Integra {
 			void SetComboBox(ComboBox^ cb)
 			{
 				cb->Items->Clear();
-				for each (String^ s in _fieldList)
+				for each (Attribute^ s in _fieldList)
 				{
-					cb->Items->Add(s);
+					cb->Items->Add(s->FullCode);
 				}
 				cb->SelectedItem = nullptr;
 			}
@@ -389,7 +389,33 @@ private: System::Void cbTable_SelectedIndexChanged(System::Object^  sender, Syst
 			 {
 				 return;
 			 }
-			 _fieldList = _odbc->GetTableCols("", cbTable->SelectedItem->ToString());
+
+			 Schtab = GetSchtab();
+
+			 List<Object^>^ cols = _odbc->GetTableInfo7("", cbTable->SelectedItem->ToString());
+			 for (int i = 0; i < cols->Count; i+=7)
+			 {
+				 String^ code = OdbcClass::GetResString(cols[i+0]);
+				 String^ name = OdbcClass::GetResString(cols[i+1]);
+				 String^ dataType = OdbcClass::GetResString(cols[i+2]);
+				 int dataLength = _odbc->GetResInt(cols[i+3]);
+				 int dataPrescision = _odbc->GetResInt(cols[i+4]);
+				 int dataScale = _odbc->GetResInt(cols[i+5]);
+				 String^ sIsNull = _odbc->GetResString(cols[i+6]);
+				 if (dataPrescision > 0)
+				 {
+					 dataLength = dataPrescision;
+				 }
+				 bool isNull = false;
+				 if (sIsNull == "Y" || sIsNull == "1")
+				 {
+					 isNull = true;
+				 }
+				 Attribute^ attr = gcnew Attribute(_schema, _table, code, name, isNull);
+				 attr->SetDataType(dataType, dataLength, dataScale);
+			 }
+
+
 			 SetComboBox(cbId);
 			 SetComboBox(cbName);
 			 Column1->DataSource = _fieldList;

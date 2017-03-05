@@ -23,7 +23,11 @@ namespace Integra {
 		OdbcClass^ _odbc;
 
 		Dictionary<Attribute^, Attribute^>^ _attrPairs;
+		Dictionary<Attribute^, Attribute^>^ _attrEquivs;
 		List<ComplexAttribute^>^ _complexAttrs;
+
+		bool _isGroup;
+		List<IntegrationGroupPair^>^ _groupPairs;
 
 		BookSettings^ _sourceBook;
 
@@ -373,6 +377,23 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bSave_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 if (_isGroup)
+			 {
+				 if (_groupPairs == nullptr || _groupPairs->Count <= 0)
+				 {
+					 MessageBox::Show("Не заданы связи между реквизитами!");
+					 return;
+				 }
+			 }
+			 else
+			 {
+				 if (_attrPairs == nullptr)
+				 {
+					 MessageBox::Show("Не заданы связи между реквизитами!");
+					 return;
+				 }
+			 }
+
 			 if (String::IsNullOrEmpty(tbName->Text))
 			 {
 				 MessageBox::Show("Не задано наименование схемы интеграции!");
@@ -383,14 +404,19 @@ private: System::Void bSave_Click(System::Object^  sender, System::EventArgs^  e
 				 MessageBox::Show("Не задан тип интеграции!");
 				 return;
 			 }
-			 else if (_attrPairs == nullptr)
-			 {
-				 MessageBox::Show("Не заданы связи между реквизитами!");
-				 return;
-			 }
+
 			 int intgrType = cbIntgr->SelectedIndex;
 			 String^ name = tbName->Text->Trim();
-			 IntegrationSettings^ intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType, _attrPairs, _complexAttrs); 
+			 IntegrationSettings^ intSettings;
+			 if (_isGroup)
+			 {
+				 intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType,_groupPairs); 
+			 }
+			 else
+			 {
+				 intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType, _attrPairs, _attrEquivs, _complexAttrs); 
+			 }
+			 
 
 			 Close();
 		 }
@@ -404,13 +430,22 @@ private: System::Void bLinks_Click(System::Object^  sender, System::EventArgs^  
 
 			 String^ oS = dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
 			 String^ oT = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
-			 _sourceBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oS)), _odbc);
-			 _targetBook = gcnew BookSettings(Decimal::ToInt32(Decimal::Parse(oT)), _odbc);
+			 _sourceBook = gcnew BookSettings(OdbcClass::GetResInt(oS), _odbc);
+			 _targetBook = gcnew BookSettings(OdbcClass::GetResInt(oT), _odbc);
 			 AddGroupLinksForm^ form = gcnew AddGroupLinksForm(_attrPairs, _complexAttrs, _sourceBook, _targetBook, cbIntgr->SelectedIndex, _odbc);
 			 form->ShowDialog();
-			 _attrPairs = form->AttrPairs;
-			 _complexAttrs = form->ComplexAttrs;
-
+			 if (form->IsGroup)
+			 {
+				 _groupPairs = form->IntegrationGroups;
+				 _isGroup = true;
+			 }
+			 else
+			 {
+				 _attrPairs = form->AttrPairs;
+				 _complexAttrs = form->ComplexAttrs;
+				 _attrEquivs = form->AttrEquivs;
+				 _isGroup = false;
+			 }
 
 		 }
 private: System::Void AddEditSchemaForm2_Load(System::Object^  sender, System::EventArgs^  e) 

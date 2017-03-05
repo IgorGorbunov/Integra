@@ -51,14 +51,6 @@ namespace Integra {
 	private: System::Windows::Forms::ComboBox^  comboBox2;
 	private: System::Windows::Forms::ComboBox^  comboBox1;
 	private: System::Windows::Forms::Button^  bClose;
-
-
-
-
-
-
-
-
 	private: System::Windows::Forms::Panel^  panel1;
 	private: System::Windows::Forms::Panel^  panel2;
 	private: System::Windows::Forms::Panel^  panel3;

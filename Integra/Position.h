@@ -45,40 +45,47 @@ namespace Integra {
 				_attrId = attr;
 			}
 		}
+		property String^ EqualValue
+		{
+			String^ get()
+			{
+				return _eqValue;
+			}
+		}
+
 
 		String^ Caption;
 
 	protected:
+		BookSettings^ _intgrBook;
+
 		Dictionary<Attribute^, String^>^ _attributes;
-		String^ _unicId;
-		
+
 		Attribute^ _attrId;
+		String^ _unicId;
+
+		Attribute^ _attrEq;
+		String^ _eqValue;
+		
 		String^ _attrIdCode;
+
+		Object^ _id;
 
 	private:
 		OdbcClass^ _odbc;
-		BookSettings^ _intgrBook;
-
+		
 	public:
 		Position(Object^ id, int idIntgrBook, OdbcClass^ odbc) 
 		{
 			//todo
+			_id = id;
 			_odbc = odbc;
 			_intgrBook = gcnew BookSettings(idIntgrBook, odbc);
 			_attrId = _intgrBook->AttrId;
-			Attribute^ attrCaption = _intgrBook->AttrCaption;
-			String^ condition;
-			if (attrCaption->DataType == "岩形世")
-			{
-				condition = String::Format("where ATABLE.{0} = '{1}'", AttrId->Code, id);
-			}
-			else
-			{
-				condition = String::Format("where ATABLE.{0} = {1}", AttrId->Code, id);
-			}
-			Object^ oCaption = attrCaption->GetValue(condition, true, _intgrBook->Odbc);
-			Caption = oCaption->ToString();
+			
+			SetCaption();
 		}
+
 
 		Position() 
 		{
@@ -97,6 +104,11 @@ namespace Integra {
 			}
 		}
 
+		virtual void SetEquivAttr(Attribute^ equivAttr)
+		{
+
+		}
+
 
 	protected:
 		/// <summary>
@@ -107,6 +119,37 @@ namespace Integra {
 
 		}
 
+	private:
+		void SetCaption()
+		{
+			if (_intgrBook->IsSemantic)
+			{
+				
+			}
+			else
+			{
+				Attribute^ attrCaption = _intgrBook->AttrCaption;
+				String^ condition;
+				if (attrCaption->DataType == "岩形世")
+				{
+					condition = String::Format("where ATABLE.{0} = '{1}'", AttrId->Code, _id);
+				}
+				else
+				{
+					condition = String::Format("where ATABLE.{0} = {1}", AttrId->Code, _id);
+				}
+				Object^ oCaption = attrCaption->GetValue(condition, true, _intgrBook->Odbc);
+				if (oCaption == nullptr)
+				{
+					Caption = String::Empty;
+				}
+				else
+				{
+					Caption = oCaption->ToString();
+				}
+				
+			}
+		}
 
 	};
 }

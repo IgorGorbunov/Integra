@@ -132,6 +132,7 @@ namespace Integra {
 				return _attrId;
 			}
 		}
+
 		property Attribute^ AttrCaption
 		{
 			Attribute^ get()
@@ -301,8 +302,8 @@ namespace Integra {
 		Void Set(int id)
 		{
 			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE, NAME from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
-			SetSystem(Decimal::ToInt32((Decimal)parametrs[0]));
-			SetBook(Decimal::ToInt32((Decimal)parametrs[1]));
+			SetSystem(OdbcClass::GetResInt(parametrs[0]));
+			SetBook(OdbcClass::GetResInt(parametrs[1]));
 			SetLogPass(parametrs[2]->ToString(), parametrs[3]->ToString());
 			_tnsDatabase = parametrs[4]->ToString();
 			_host = parametrs[5]->ToString();
@@ -310,7 +311,7 @@ namespace Integra {
 			_serviceName = parametrs[7]->ToString();
 			_sid = parametrs[8]->ToString();
 			_driver = parametrs[9]->ToString();
-			int isSemantic = Decimal::ToInt32((Decimal)parametrs[10]);
+			int isSemantic = OdbcClass::GetResInt(parametrs[10]);
 			if (isSemantic == 1)
 			{
 				_isSemantic = true;

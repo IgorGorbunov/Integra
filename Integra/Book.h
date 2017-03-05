@@ -22,12 +22,15 @@ namespace Integra {
 		IntegrationSettings^ _intSettings;
 		OdbcClass^ _odbc;
 
+		Attribute^ _attrId;
+
 	public:
 		Book(BookSettings^ bookSettings, IntegrationSettings^ intSettings, OdbcClass^ odbc) 
 		{
 			_odbc = odbc;
 			BookSetting = bookSettings;
 			_intSettings = intSettings;
+			_attrId = BookSetting->AttrId;
 		}
 
 
@@ -51,9 +54,12 @@ namespace Integra {
 		virtual List<Position^>^ GetAllPositions2(System::ComponentModel::BackgroundWorker^ worker, System::ComponentModel::DoWorkEventArgs ^ e) abstract;
 		virtual List<Position^>^ GetAllPositions22(int% n) abstract;
 
-		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, IntegrationResult^ result, int isTarget) abstract;
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, Object^ titleVal, IntegrationResult^ result, int isTarget) abstract;
 		virtual void UpdatePosition(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals) abstract;
 		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) abstract;
+
+
+		virtual Object^ GetSemObject(String^ location) abstract;
 
 	protected:
 

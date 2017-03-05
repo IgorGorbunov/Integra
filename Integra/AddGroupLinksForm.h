@@ -22,7 +22,12 @@ namespace Integra {
 	{
 	public:
 		Dictionary<Attribute^,Attribute^>^ AttrPairs;
+		Dictionary<Attribute^,Attribute^>^ AttrEquivs;
 		List<ComplexAttribute^>^ ComplexAttrs;
+
+		List<IntegrationGroupPair^>^ IntegrationGroups;
+
+		bool IsGroup;
 
 	private:
 		OdbcClass^ _odbc;
@@ -36,13 +41,14 @@ namespace Integra {
 		List<Attribute^>^ _sourceAttrsFree;
 		List<Attribute^>^ _targetAttrsFree;
 
-		
 
-		List<IntegrationGroupPair^>^ _integrationGroups;
 		Object^ _prevSelectGroupItem;
 
 		Dictionary<String^, String^>^ _currentSourceList;
 		Dictionary<String^, String^>^ _currentTargetList;
+
+		List<Attribute^>^ _sourceGroupingAttrs;
+		List<Attribute^>^ _targetGroupingAttrs;
 
 
 		bool _sAttrIsSet, _tAttrIsSet;
@@ -52,6 +58,7 @@ namespace Integra {
 	private: System::Windows::Forms::Panel^  panel3;
 	private: System::Windows::Forms::Panel^  panel5;
 	private: System::Windows::Forms::Button^  bDelComplexAttr;
+	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewComboBoxColumn^  ColumnSourceNamee;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  ColumnSourceCode;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
@@ -75,10 +82,12 @@ namespace Integra {
 			_targetBook = targetBook;
 			if (_sourceBook->HasGroup && _targetBook->HasGroup)
 			{
-				_integrationGroups = gcnew List<IntegrationGroupPair ^>();
+				IntegrationGroups = gcnew List<IntegrationGroupPair ^>();
+				IsGroup = true;
 			}
 			else
 			{
+				IsGroup = false;
 				pGroup->Visible = false;
 				SetDgvSources();
 			}
@@ -127,6 +136,7 @@ namespace Integra {
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->dgv = (gcnew System::Windows::Forms::DataGridView());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
 			this->ColumnSourceNamee = (gcnew System::Windows::Forms::DataGridViewComboBoxColumn());
 			this->ColumnSourceCode = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
@@ -219,7 +229,7 @@ namespace Integra {
 			this->dgv->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			this->dgv->BackgroundColor = System::Drawing::SystemColors::Window;
 			this->dgv->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dgv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {this->ColumnSourceNamee, 
+			this->dgv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(9) {this->Column1, this->ColumnSourceNamee, 
 				this->ColumnSourceCode, this->Column5, this->Column7, this->ColumnTargetNamee, this->ColumnTargetCode, this->Column6, this->Column8});
 			this->dgv->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->dgv->Location = System::Drawing::Point(13, 13);
@@ -231,48 +241,64 @@ namespace Integra {
 			this->dgv->CellValueChanged += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AddGroupLinksForm::dgv_CellValueChanged);
 			this->dgv->CurrentCellDirtyStateChanged += gcnew System::EventHandler(this, &AddGroupLinksForm::dgv_CurrentCellDirtyStateChanged);
 			// 
+			// Column1
+			// 
+			this->Column1->FillWeight = 91.37056F;
+			this->Column1->HeaderText = L"Идентичность";
+			this->Column1->Name = L"Column1";
+			this->Column1->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+			this->Column1->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::Automatic;
+			// 
 			// ColumnSourceNamee
 			// 
+			this->ColumnSourceNamee->FillWeight = 101.0787F;
 			this->ColumnSourceNamee->HeaderText = L"Наименование реквизита системы-источника";
 			this->ColumnSourceNamee->Name = L"ColumnSourceNamee";
 			// 
 			// ColumnSourceCode
 			// 
+			this->ColumnSourceCode->FillWeight = 101.0787F;
 			this->ColumnSourceCode->HeaderText = L"Обозначение реквизита системы-источника";
 			this->ColumnSourceCode->Name = L"ColumnSourceCode";
 			this->ColumnSourceCode->ReadOnly = true;
 			// 
 			// Column5
 			// 
+			this->Column5->FillWeight = 101.0787F;
 			this->Column5->HeaderText = L"Тип данных";
 			this->Column5->Name = L"Column5";
 			this->Column5->ReadOnly = true;
 			// 
 			// Column7
 			// 
+			this->Column7->FillWeight = 101.0787F;
 			this->Column7->HeaderText = L"Размер";
 			this->Column7->Name = L"Column7";
 			this->Column7->ReadOnly = true;
 			// 
 			// ColumnTargetNamee
 			// 
+			this->ColumnTargetNamee->FillWeight = 101.0787F;
 			this->ColumnTargetNamee->HeaderText = L"Наименование реквизита системы-получателя";
 			this->ColumnTargetNamee->Name = L"ColumnTargetNamee";
 			// 
 			// ColumnTargetCode
 			// 
+			this->ColumnTargetCode->FillWeight = 101.0787F;
 			this->ColumnTargetCode->HeaderText = L"Обозначение реквизита системы-получателя";
 			this->ColumnTargetCode->Name = L"ColumnTargetCode";
 			this->ColumnTargetCode->ReadOnly = true;
 			// 
 			// Column6
 			// 
+			this->Column6->FillWeight = 101.0787F;
 			this->Column6->HeaderText = L"Тип данных";
 			this->Column6->Name = L"Column6";
 			this->Column6->ReadOnly = true;
 			// 
 			// Column8
 			// 
+			this->Column8->FillWeight = 101.0787F;
 			this->Column8->HeaderText = L"Размер";
 			this->Column8->Name = L"Column8";
 			this->Column8->ReadOnly = true;
@@ -535,7 +561,7 @@ namespace Integra {
 
 		bool IntegrationGroupsContains(String^ groupFullname)
 		{
-			for each (IntegrationGroupPair^ integrationGroup in _integrationGroups)
+			for each (IntegrationGroupPair^ integrationGroup in IntegrationGroups)
 			{
 				if (integrationGroup->FullName == groupFullname)
 				{
@@ -550,13 +576,22 @@ namespace Integra {
 			Dictionary<Attribute^, Attribute^>^ sourceAttrs = _sourceBook->GetGroupAttrs();
 			Book^ sourceBook = gcnew DbBook(_sourceBook, nullptr, true, _odbc);
 			Dictionary<String^, String^>^ sourceList = gcnew Dictionary<String^, String^>();
+			_sourceGroupingAttrs = gcnew List<Attribute ^>();
 			for each (KeyValuePair<Attribute^, Attribute^>^ pair in sourceAttrs)
 			{
 				Attribute^ nameAttr = pair->Value;
 				String^ valueName = sourceBook->GetGroupAttrValue(nameAttr, integrationGroup->SourceGroupId)->ToString();
 				Attribute^ codeAttr = pair->Key;
 				String^ valueCode = sourceBook->GetGroupAttrValue(codeAttr, integrationGroup->SourceGroupId)->ToString();
-				sourceList->Add(valueName, valueCode);
+				
+				if (!String::IsNullOrEmpty(valueName))
+				{
+					sourceList->Add(valueName, valueCode);
+					codeAttr->GroupAttrCodeValue = valueCode;
+					codeAttr->GroupAttrNameValue = valueName;
+					_sourceGroupingAttrs->Add(codeAttr);
+				}
+				
 			}
 			_currentSourceList = sourceList;
 			List<String^>^ list1 = gcnew List<String ^>(_currentSourceList->Keys);
@@ -566,13 +601,22 @@ namespace Integra {
 			Dictionary<Attribute^, Attribute^>^ targetAttrs = _targetBook->GetGroupAttrs();
 			Book^ targetBook = gcnew DbBook(_targetBook, nullptr, false, _odbc);
 			Dictionary<String^, String^>^ targetList = gcnew Dictionary<String^, String^>();
+			_targetGroupingAttrs = gcnew List<Attribute ^>();
 			for each (KeyValuePair<Attribute^, Attribute^>^ pair in targetAttrs)
 			{
 				Attribute^ nameAttr = pair->Value;
 				String^ valueName = targetBook->GetGroupAttrValue(nameAttr, integrationGroup->TargetGroupId)->ToString();
 				Attribute^ codeAttr = pair->Key;
 				String^ valueCode = targetBook->GetGroupAttrValue(codeAttr, integrationGroup->TargetGroupId)->ToString();
-				targetList->Add(valueName, valueCode);
+				
+				if (!String::IsNullOrEmpty(valueName))
+				{
+					targetList->Add(valueName, valueCode);
+					codeAttr->GroupAttrCodeValue = valueCode;
+					codeAttr->GroupAttrNameValue = valueName;
+					_targetGroupingAttrs->Add(codeAttr);
+				}
+
 			}
 			_currentTargetList = targetList;
 			List<String^>^ list2 = gcnew List<String ^>(_currentTargetList->Keys);
@@ -582,7 +626,7 @@ namespace Integra {
 
 		IntegrationGroupPair^ GetIntegrationGroupPair(String^ fullCode)
 		{
-			for each (IntegrationGroupPair^ integrationGroup in _integrationGroups)
+			for each (IntegrationGroupPair^ integrationGroup in IntegrationGroups)
 			{
 				if (integrationGroup->FullName == fullCode)
 				{
@@ -594,33 +638,38 @@ namespace Integra {
 
 		void SaveCurrentDgv()
 		{
-			for (int ig = 0; ig < _integrationGroups->Count; ig++)
+			for (int ig = 0; ig < IntegrationGroups->Count; ig++)
 			{
-				if (_integrationGroups[ig]->FullName == _prevSelectGroupItem->ToString())
+				if (IntegrationGroups[ig]->FullName == _prevSelectGroupItem->ToString())
 				{
-					_integrationGroups[ig]->SourceNamesDataSource = gcnew List<String ^>(_currentSourceList->Keys);
-					_integrationGroups[ig]->TargetNamesDataSource = gcnew List<String ^>(_currentTargetList->Keys);
+					IntegrationGroups[ig]->SourceNamesDataSource = gcnew List<String ^>(_currentSourceList->Keys);
+					IntegrationGroups[ig]->TargetNamesDataSource = gcnew List<String ^>(_currentTargetList->Keys);
 
-					List<array<String^>^>^ attrDataList = gcnew List<array<String ^> ^>();
+					List<array<Object^>^>^ attrDataList = gcnew List<array<Object ^> ^>();
 					for (int i = 0; i < dgv->RowCount; i++)
 					{
-						bool allOk = true;
-						array<String^>^ row = gcnew array<String ^>(8);
-						for (int j = 0; j < 8; j++)
+						if (dgv[1,i]->Value == nullptr && dgv[5,i]->Value == nullptr)
 						{
-							if (dgv[j,i]->Value == nullptr || String::IsNullOrEmpty(dgv[j,i]->Value->ToString()))
-							{
-								allOk = false;
-								break;
-							}
-							row[j] = dgv[j,i]->Value->ToString();
+							break;
+						}
+
+						bool allOk = true;
+						array<Object^>^ row = gcnew array<Object ^>(9);
+						for (int j = 0; j < 9; j++)
+						{
+							row[j] = dgv[j,i]->Value;
 						}
 						if (allOk)
 						{
 							attrDataList->Add(row);
 						}
 					}
-					_integrationGroups[ig]->AttributesDataDgv = attrDataList;
+					IntegrationGroups[ig]->AttributesDataDgv = attrDataList;
+					IntegrationGroups[ig]->ComplexAttrs = ComplexAttrs;
+					IntegrationGroups[ig]->SourceGroupingAttrs = _sourceGroupingAttrs;
+					IntegrationGroups[ig]->TargetGroupingAttrs = _targetGroupingAttrs;
+
+					ComplexAttrs->Clear();
 					break;
 				}
 			}
@@ -631,11 +680,23 @@ namespace Integra {
 			ColumnSourceNamee->DataSource = integrationGroup->SourceNamesDataSource;
 			ColumnTargetNamee->DataSource = integrationGroup->TargetNamesDataSource;
 			
-			List<array<String^>^>^ attrDataList = integrationGroup->AttributesDataDgv;
-			for each (array<String^>^ row in attrDataList)
+			List<array<Object^>^>^ attrDataList = integrationGroup->AttributesDataDgv;
+			for each (array<Object^>^ row in attrDataList)
 			{
 				dgv->Rows->Add(row);
 			}
+			ComplexAttrs = integrationGroup->ComplexAttrs;
+			for each (ComplexAttribute^ cAttr in ComplexAttrs)
+			{
+				array<Object^>^ row = gcnew array<Object ^>(9);
+				row[0] = false;
+				row[2] = cAttr->Name;
+				row[6] = cAttr->Name;
+
+				dgv->Rows->Add(row);
+			}
+			_sourceGroupingAttrs = integrationGroup->SourceGroupingAttrs;
+			_targetGroupingAttrs = integrationGroup->TargetGroupingAttrs;
 		}
 
 		void CheckAttrDataLinks(String^ dataTypeSource, String^ dataTypeTarget)
@@ -696,6 +757,52 @@ namespace Integra {
 			}
 		}
 
+		void SetPossAttrs()
+		{
+			 AttrPairs = gcnew Dictionary<Attribute ^, Attribute ^>();
+			 AttrEquivs = gcnew Dictionary<Attribute ^, Attribute ^>();
+
+			 for (int i = 0; i < dgv->Rows->Count; i++)
+			 {
+				 Object^ o1 = dgv[1, i]->Value;
+				 Object^ o2 = dgv[5, i]->Value;
+				 if (o1 != nullptr  &&  o2 != nullptr)
+				 {
+					 Attribute^ aS = GetAttr(_sourceAttrs, o1->ToString());
+					 Attribute^ aT = GetAttr(_targetAttrs, o2->ToString());
+
+					 bool equiv = (bool)dgv[0, i]->Value;
+					 if	(equiv)
+					 {
+						 AttrEquivs->Add(aS, aT);
+					 }
+					 else
+					 {
+						 AttrPairs->Add(aS, aT);
+					 }
+				 }
+			 }
+		}
+
+		AddComplexAttrForm^ SetNewComplexAttr(int columnIndex)
+		{
+			if (IsGroup)
+			{
+				_sourceAttrs = _sourceGroupingAttrs;
+				_targetAttrs = _targetGroupingAttrs;
+			}
+
+			AddComplexAttrForm^ complexAttrForm;
+			if (columnIndex < 5)
+			{
+				complexAttrForm = gcnew AddComplexAttrForm(_sourceAttrs, _targetAttrs, _odbc, true, IsGroup);
+			}
+			else
+			{
+				complexAttrForm = gcnew AddComplexAttrForm(_targetAttrs, _sourceAttrs, _odbc, false, IsGroup);
+			}
+			return complexAttrForm;
+		}
 
 	private: System::Void bAddGroup_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
@@ -705,7 +812,7 @@ namespace Integra {
 				 if (integrationGroup != nullptr)
 				 {
 					 lbGroups->Items->Add(integrationGroup->FullName);
-					 _integrationGroups->Add(integrationGroup);
+					 IntegrationGroups->Add(integrationGroup);
 				 }
 			 }
 	private: System::Void dgv_CellValueChanged(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) 
@@ -720,40 +827,40 @@ namespace Integra {
 				return;
 			 }
 
-			 if (e->ColumnIndex == 0)
+			 if (e->ColumnIndex == 1)
 			 {
 				 _sAttrIsSet = false;
 				 if (_sourceBook->HasGroup)
 				 {
-					 String^ nameAttr = dgv[0, e->RowIndex]->Value->ToString();
+					 String^ nameAttr = dgv[1, e->RowIndex]->Value->ToString();
 					 if (_currentSourceList->ContainsKey(nameAttr))
 					 {
-						 dgv[1, e->RowIndex]->Value = _currentSourceList[nameAttr];
+						 dgv[2, e->RowIndex]->Value = _currentSourceList[nameAttr];
 						 //todo add from pos?
-						 dgv[2, e->RowIndex]->Value = "СТРОКА";
-						 dgv[3, e->RowIndex]->Value = 8;
+						 dgv[3, e->RowIndex]->Value = "СТРОКА";
+						 dgv[4, e->RowIndex]->Value = 8;
 					 }
 					 else
 					 {
-						 dgv[1, e->RowIndex]->Value = nullptr;
 						 dgv[2, e->RowIndex]->Value = nullptr;
 						 dgv[3, e->RowIndex]->Value = nullptr;
+						 dgv[4, e->RowIndex]->Value = nullptr;
 					 }
 				 }
 				 else
 				 {
 					String^ cell = dgv[e->ColumnIndex, e->RowIndex]->Value->ToString();
 					 Attribute^ attr = GetAttr(_sourceAttrs, cell);
-					 dgv[1, e->RowIndex]->Value = attr->FullCode;
-					 dgv[2, e->RowIndex]->Value = attr->DataType;
-					 dgv[3, e->RowIndex]->Value = attr->MaxLength;
+					 dgv[2, e->RowIndex]->Value = attr->FullCode;
+					 dgv[3, e->RowIndex]->Value = attr->DataType;
+					 dgv[4, e->RowIndex]->Value = attr->MaxLength;
 					 _sourceAttrsFree->Clear();
 					 _sourceAttrsFree->AddRange(_sourceAttrs);
-					 RemoveOnColumn(0, _sourceAttrsFree);
+					 RemoveOnColumn(1, _sourceAttrsFree);
 				 }
 				 _sAttrIsSet = true;
 			 }
-			 if (e->ColumnIndex == 4)
+			 if (e->ColumnIndex == 5)
 			 {
 				 //DataGridViewComboBoxCell^ cb = (DataGridViewComboBoxCell^)dgv->Rows[e->RowIndex]->Cells[e->ColumnIndex];
 				 //if (cb->Value != nullptr)
@@ -764,19 +871,19 @@ namespace Integra {
 				 _tAttrIsSet = false;
 				 if (_targetBook->HasGroup)
 				 {
-					 String^ nameAttr = dgv[4, e->RowIndex]->Value->ToString();
+					 String^ nameAttr = dgv[5, e->RowIndex]->Value->ToString();
 					 if (_currentTargetList->ContainsKey(nameAttr))
 					 {
-						 dgv[5, e->RowIndex]->Value = _currentTargetList[nameAttr];
+						 dgv[6, e->RowIndex]->Value = _currentTargetList[nameAttr];
 						 //todo add from pos?
-						 dgv[6, e->RowIndex]->Value = "СТРОКА";
-						 dgv[7, e->RowIndex]->Value = 8;
+						 dgv[7, e->RowIndex]->Value = "СТРОКА";
+						 dgv[8, e->RowIndex]->Value = 8;
 					 }
 					 else
 					 {
-						 dgv[5, e->RowIndex]->Value = nullptr;
 						 dgv[6, e->RowIndex]->Value = nullptr;
 						 dgv[7, e->RowIndex]->Value = nullptr;
+						 dgv[8, e->RowIndex]->Value = nullptr;
 					 }
 				 }
 				 else
@@ -784,20 +891,20 @@ namespace Integra {
 					String^ cell = dgv[e->ColumnIndex, e->RowIndex]->Value->ToString();
 
 					 Attribute^ attr = GetAttr(_targetAttrs, cell);
-					 dgv[5, e->RowIndex]->Value = attr->FullCode;
-					 dgv[6, e->RowIndex]->Value = attr->DataType;
-					 dgv[7, e->RowIndex]->Value = attr->MaxLength;
+					 dgv[6, e->RowIndex]->Value = attr->FullCode;
+					 dgv[7, e->RowIndex]->Value = attr->DataType;
+					 dgv[8, e->RowIndex]->Value = attr->MaxLength;
 					 _targetAttrsFree->Clear();
 					 _targetAttrsFree->AddRange(_targetAttrs);
-					 RemoveOnColumn(4, _targetAttrsFree);
+					 RemoveOnColumn(5, _targetAttrsFree);
 				 }
 				 _tAttrIsSet = true;
 			 }
 
-			 Object^ sourceAttrData = dgv[2, e->RowIndex]->Value;
-			 Object^ sourceAttrLen = dgv[3, e->RowIndex]->Value;
-			 Object^ targetAttrData = dgv[6, e->RowIndex]->Value;
-			 Object^ targetAttrLen = dgv[7, e->RowIndex]->Value;
+			 Object^ sourceAttrData = dgv[3, e->RowIndex]->Value;
+			 Object^ sourceAttrLen = dgv[4, e->RowIndex]->Value;
+			 Object^ targetAttrData = dgv[7, e->RowIndex]->Value;
+			 Object^ targetAttrLen = dgv[8, e->RowIndex]->Value;
 
 			 if (_sAttrIsSet && _tAttrIsSet)
 			 {
@@ -815,18 +922,18 @@ namespace Integra {
 		 }
 	private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 AttrPairs = gcnew Dictionary<Attribute ^, Attribute ^>();
-			 for (int i = 0; i < dgv->Rows->Count; i++)
+			 if (IsGroup)
 			 {
-				 Object^ o1 = dgv[0, i]->Value;
-				 Object^ o2 = dgv[4, i]->Value;
-				 if (o1 != nullptr  &&  o2 != nullptr)
+				 if (_prevSelectGroupItem != nullptr && !String::IsNullOrEmpty(_prevSelectGroupItem->ToString()))
 				 {
-					 Attribute^ aS = GetAttr(_sourceAttrs, o1->ToString());
-					 Attribute^ aT = GetAttr(_targetAttrs, o2->ToString());
-					 AttrPairs->Add(aS, aT);
+					 SaveCurrentDgv();
 				 }
 			 }
+			 else
+			 {
+				 SetPossAttrs();
+			 }
+			 
 			 
 			 Close();
 		 }
@@ -847,7 +954,7 @@ private: System::Void dgv_CellBeginEdit(System::Object^  sender, System::Windows
 			 }
 
 
-			 if (e->ColumnIndex == 0)
+			 if (e->ColumnIndex == 1)
 			 {
 				 if (_sourceBook->HasGroup)
 				 {
@@ -884,7 +991,7 @@ private: System::Void dgv_CellBeginEdit(System::Object^  sender, System::Windows
 				 }
 				 
 			 }
-			 if (e->ColumnIndex == 4)
+			 if (e->ColumnIndex == 5)
 			 {
 				 if (_sourceBook->HasGroup)
 				 {
@@ -929,34 +1036,26 @@ private: System::Void bAddComplexAttr_Click(System::Object^  sender, System::Eve
 				 return;
 			 }
 
-			 AddComplexAttrForm^ complexAttrForm;
-			 int iCol = dgv->SelectedCells[0]->ColumnIndex;
-			 if (iCol < 4)
-			 {
-				 complexAttrForm = gcnew AddComplexAttrForm(_sourceAttrs, _targetAttrs, _odbc, true);
-			 }
-			 else
-			 {
-				 complexAttrForm = gcnew AddComplexAttrForm(_targetAttrs, _sourceAttrs, _odbc, false);
-			 }
-			 
+			 AddComplexAttrForm^ complexAttrForm = SetNewComplexAttr(dgv->SelectedCells[0]->ColumnIndex);
 			 complexAttrForm->ShowDialog();
+
 			 if (complexAttrForm->complexAttr != nullptr)
 			 {
-				 array<Object^>^ row = gcnew array<Object ^>(8);
-				 row[0] = nullptr;
-				 row[1] = complexAttrForm->complexAttr->Name;
-				 row[2] = "";
+				 array<Object^>^ row = gcnew array<Object ^>(9);
+				 row[0] = false;
+				 row[1] = nullptr;
+				 row[2] = complexAttrForm->complexAttr->Name;
 				 row[3] = "";
-				 row[4] = nullptr;
-				 row[5] = complexAttrForm->complexAttr->Name;
-				 row[6] = "";
+				 row[4] = "";
+				 row[5] = nullptr;
+				 row[6] = complexAttrForm->complexAttr->Name;
 				 row[7] = "";
+				 row[8] = "";
 				 dgv->Rows->Add(row);
 
 				 int r = dgv->RowCount - 2;
-				 dgv[0, r]->ReadOnly = true;
-				 dgv[4, r]->ReadOnly = true;
+				 dgv[1, r]->ReadOnly = true;
+				 dgv[5, r]->ReadOnly = true;
 				 ComplexAttrs->Add(complexAttrForm->complexAttr);
 			 }
 
@@ -964,11 +1063,19 @@ private: System::Void bAddComplexAttr_Click(System::Object^  sender, System::Eve
 private: System::Void bDelComplexAttr_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 int iRow = dgv->SelectedCells[0]->RowIndex;
-			 Object^ cell = dgv->Rows[iRow]->Cells[1]->Value;
+			 Object^ cell = dgv->Rows[iRow]->Cells[2]->Value;
 			 if (cell != nullptr && 
 				 !String::IsNullOrEmpty(cell->ToString()) && 
 				 ContainsInComplex(cell->ToString()))
 			 {
+				 for each (ComplexAttribute^ attr in ComplexAttrs)
+					{
+						if (attr->Name == cell->ToString())
+						{
+							ComplexAttrs->Remove(attr);
+							break;
+						}
+					}
 				 dgv->Rows->RemoveAt(iRow);
 			 }
 		 }

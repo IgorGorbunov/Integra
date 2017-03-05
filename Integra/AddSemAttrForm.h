@@ -411,7 +411,7 @@ namespace Integra {
 
 					array<Object^>^ attrRow = gcnew array<Object^>(5);
 					attrRow[0] = arr->UseChecked;
-					attrRow[1] = arr->FullCode;
+					attrRow[1] = arr->Code;
 					attrRow[2] = arr->Name;
 					attrRow[3] = arr->DataType;
 					attrRow[4] = arr->MaxLength;
@@ -438,7 +438,7 @@ namespace Integra {
 				int nRows = dgvFields->Rows->Count;
 				for (int i =0; i < nRows; i++)
 				{
-					array<Object^>^ arr = gcnew array<Object ^>(5);
+					/*array<Object^>^ arr = gcnew array<Object ^>(5);
 					if (((bool)dgvFields[0, i]->Value) == true)
 					{
 						arr[0] = true;
@@ -450,12 +450,12 @@ namespace Integra {
 					arr[1] = dgvFields[1, i]->Value;
 					arr[2] = dgvFields[2, i]->Value;
 					arr[3] = dgvFields[3, i]->Value;
-					arr[4] = dgvFields[4, i]->Value;
+					arr[4] = dgvFields[4, i]->Value;*/
 
 					//List<String^>^ fullTable = GetFullNodeCode(tvBooks->SelectedNode);
-					array<String^>^ fullCodeFromAttr = dgvFields[1, i]->Value->ToString()->Split('.');
+					String^ codeAttr = dgvFields[1, i]->Value->ToString();
 
-					Attribute^ attr = gcnew Attribute(fullCodeFromAttr[0] + "." + fullCodeFromAttr[1], fullCodeFromAttr[2], dgvFields[2, i]->Value->ToString());
+					Attribute^ attr = gcnew Attribute(fullCode->Substring(0, fullCode->Length - 1), codeAttr, dgvFields[2, i]->Value->ToString());
 					attr->UseChecked = (bool)dgvFields[0, i]->Value;
 					attr->DataType = dgvFields[3, i]->Value->ToString();
 					attr->MaxLength = dgvFields[4, i]->Value->ToString();

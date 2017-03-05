@@ -30,8 +30,9 @@ namespace Integra {
 			SetAttrs(_attributeList);
 		}*/
 
-		DbPosition(String^ id, Attribute^ attrId, List<Attribute^>^ attributeList, OdbcClass^ odbc) 
+		DbPosition(String^ id, Attribute^ attrId, List<Attribute^>^ attributeList, OdbcClass^ odbc, BookSettings^ intgrBook) 
 		{
+			_intgrBook = intgrBook;
 			_odbc = odbc;
 			_unicId = id;
 			AttrId = attrId;
@@ -47,16 +48,19 @@ namespace Integra {
 			_attributes = attributes;
 		}*/
 
-		DbPosition(String^ id, Attribute^ attrId, List<Attribute^>^ attributeList, Dictionary<Attribute^, String^>^ attributes) 
+		DbPosition(String^ id, Attribute^ attrId, List<Attribute^>^ attributeList, Dictionary<Attribute^, String^>^ attributes, BookSettings^ intgrBook) 
 		{
+			_intgrBook = intgrBook;
 			_unicId = id;
 			AttrId = attrId;
 			_attributeList = attributeList;
 			_attributes = attributes;
+			
 		}
 
-		DbPosition(List<Object^>^ attrs, List<Attribute^>^ attrNames, int iId, int iTitle) 
+		DbPosition(List<Object^>^ attrs, List<Attribute^>^ attrNames, int iId, int iTitle, BookSettings^ intgrBook) 
 		{
+			_intgrBook = intgrBook;
 			_unicId = attrs[iId]->ToString();
 			AttrId = attrNames[iId];
 			Caption = attrs[iTitle]->ToString();
@@ -67,6 +71,16 @@ namespace Integra {
 			{
 				_attributes->Add(attrNames[i], attrs[i]->ToString());
 			}
+		}
+
+		virtual void SetEquivAttr(Attribute^ equivAttr) override
+		{
+			_attrEq = equivAttr;
+			String^ sqlId = _odbc->GetSqlValue(_attrEq->DataType, _unicId);
+			String^ condition = String::Format("where ATABLE.{0} = {1}", AttrId->Code, sqlId);
+
+			Object^ equiv = _attrEq->GetValue(condition, true, _intgrBook->Odbc);
+			_eqValue = equiv->ToString()->Trim();
 		}
 
 

@@ -21,6 +21,7 @@ namespace Integra {
 	{
 	public:
 		ISCCore^ Core;
+		static ISCCore^ StaticCore;
 
 	private:
 		Logger^ Log;
@@ -58,6 +59,11 @@ namespace Integra {
 					 throw ex;
 				 }
 			 }
+		}
+
+		static ISCObject^ GetObject(String^ location)
+		{
+			return StaticCore->ObjectList()->ObjectByLocation(location);
 		}
 
 		List<String^>^ GetAllFolderBooks()
@@ -134,20 +140,27 @@ namespace Integra {
 				i++;
 			}
 
+			String^ fullCodeS = "";
+			for (int k = 0; k < fullCode->Count; k++)
+			{
+				fullCodeS += fullCode[k] + ".";
+			}
+			fullCodeS = fullCodeS->Substring(0, fullCodeS->Length-1);
+
 			List<Attribute^>^ attrs = gcnew List<Attribute^>();
 			int n = clas->CountAttrClasses;
 			for (int j = 0; j < n; j++)
 			{
 				ISCClassAttribute^ attr = clas->AttrClassByIndex(j);
 
-				Attribute^ attribute = gcnew Attribute("", attr->NameAttr, attr->NameScreen);
+				Attribute^ attribute = gcnew Attribute(fullCodeS, attr->NameAttr, attr->NameScreen);
 				attribute->UseChecked = false;
 				attribute->DataType = GetTypeName(attr->DataType);
 				attribute->MaxLength = attr->SizeAttr + "";
 				attrs->Add(attribute);
 			}
 
-			Attribute^ attribute = gcnew Attribute("", "^GUID", "Глобальный идентификатор");
+			Attribute^ attribute = gcnew Attribute(fullCodeS, "^GUID", "Глобальный идентификатор");
 			attribute->UseChecked = false;
 			attribute->DataType = "Строка";
 			attribute->MaxLength = "22";

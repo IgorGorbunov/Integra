@@ -17,10 +17,13 @@ namespace Integra {
 	/// </summary>
 	public ref class PosGroupParamsForm : public System::Windows::Forms::Form
 	{
+	public:
+		List<PosGroupParam^>^ PosParamAttrs;
+
 	private:
 		int _addEditType;
 		Dictionary<String^, List<Attribute^>^>^ _allAttrs;
-		PosGroupParam^ paramAttrs;
+		
 
 	public:
 		PosGroupParamsForm(int addEditType, Dictionary<String^, List<Attribute^>^>^ allAttrs)
@@ -233,7 +236,7 @@ namespace Integra {
 			 {
 				 if (_addEditType == 0)
 				 {
-					 paramAttrs = nullptr;
+					 PosParamAttrs = nullptr;
 					 Close();
 				 }
 				 else
@@ -243,18 +246,17 @@ namespace Integra {
 			 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 Dictionary<Attribute^, Attribute^>^ attrDict = gcnew Dictionary<Attribute ^, Attribute ^>();
+			 List<PosGroupParam^>^ PosParamAttrs = gcnew List<PosGroupParam^>();
 			 for (int i = 0; i < dataGridView1->RowCount; i++)
 			 {
 				 if (dataGridView1[0,i]->Value != nullptr && dataGridView1[1,i]->Value != nullptr)
 				 {
 					 String^ fullCode1 = dataGridView1[0,i]->Value->ToString();
 					 String^ fullCode2 = dataGridView1[1,i]->Value->ToString();
-					 attrDict->Add(GetAttr(fullCode1), GetAttr(fullCode2));
+					 PosGroupParam^ posParam = gcnew PosGroupParam(GetAttr(fullCode1), GetAttr(fullCode2));
+					 PosParamAttrs->Add(posParam);
 				 }
-				 
 			 }
-			 paramAttrs = gcnew PosGroupParam(attrDict);
 			 Close();
 		 }
 };

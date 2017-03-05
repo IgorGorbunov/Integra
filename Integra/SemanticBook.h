@@ -99,7 +99,7 @@ namespace Integra {
 			return nullptr;
 		}
 
-		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, IntegrationResult^ result, int isTarget) override
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, Object^ titleVal, IntegrationResult^ result, int isTarget) override
 		{
 
 		}
@@ -112,6 +112,11 @@ namespace Integra {
 		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) override
 		{
 
+		}
+
+		virtual Object^ GetSemObject(String^ location) override
+		{
+			return nullptr;
 		}
 
 	private:

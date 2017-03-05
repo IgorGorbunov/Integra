@@ -26,6 +26,7 @@ namespace Integra {
 		// 0 - add, 1 - edit, 2 - delete
 		int _type;
 		Object^ _idPos;
+		Object^ _titlePos;
 		// 0 - source, 1 - target
 		int _nSystem;
 		DateTime^ _editDate;
@@ -42,13 +43,14 @@ namespace Integra {
 
 	public:
 
-		Editting(OdbcClass^ odbc, IntegrationResult^ result, int type, int nSystem, Object^ idPos)
+		Editting(OdbcClass^ odbc, IntegrationResult^ result, int type, int nSystem, Object^ idPos, Object^ titlePos)
 		{
 			_odbc = odbc;
 			_result = result;
 			_type = type;
 			_nSystem = nSystem;
 			_idPos = idPos;
+			_titlePos = titlePos;
 		}
 
 		Editting(OdbcClass^ odbc, IntegrationResult^ result, int type, int nSystem, Object^ idPos, Attribute^ attr, Object^ oldVal, Object^ newVal)
@@ -75,16 +77,17 @@ namespace Integra {
 			_updateDate = nullptr;
 
 
-			String^ columns = "ID,ID_INTGR,EDIT_DATE,ID_ATTR,OLD_VAL,NEW_VAL,ID_POS,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE,EDIT_TYPE,SYSTEM_N";
+			String^ columns = "ID,ID_INTGR,EDIT_DATE,ID_ATTR,OLD_VAL,NEW_VAL,ID_POS,CREATE_USER,CREATE_DATE,UPDATE_USER,UPDATE_DATE,EDIT_TYPE,SYSTEM_N,CAPTION";
 			_id = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATION_EDITINGS");
 			int idInteg = _result->Id;
 			String^ editDate = _odbc->GetSqlDate(_editDate);
 			String^ login = _odbc->GetSqlString(_createUser);
 			String^ createDate = _odbc->GetSqlDate(_createDate);
 			String^ sIdPos = _odbc->GetSqlString(_idPos->ToString());
+			String^ sTitlePos = _odbc->GetSqlString(_titlePos->ToString());
 
-			String^ squery = String::Format("insert into {0}INTEGRATION_EDITINGS ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14})",
-				_odbc->schema, columns, _id, idInteg, editDate, "NULL", "NULL", "NULL", sIdPos, login, createDate, "NULL", "NULL", _type, _nSystem);
+			String^ squery = String::Format("insert into {0}INTEGRATION_EDITINGS ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15})",
+				_odbc->schema, columns, _id, idInteg, editDate, "NULL", "NULL", "NULL", sIdPos, login, createDate, "NULL", "NULL", _type, _nSystem, sTitlePos);
 			_odbc->ExecuteNonQuery(squery);
 		}
 

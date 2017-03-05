@@ -127,7 +127,7 @@ namespace Integra {
 			else
 			{
 				_targetBook = gcnew DbBook(_targetSettingsBook, nullptr, false, _odbc);
-				Dictionary<String^, String^>^ grNames = _sourceBook->GetAllGroupNames();
+				Dictionary<String^, String^>^ grNames = _targetBook->GetAllGroupNames();
 				dgvTarget->Rows->Clear();
 				for each (KeyValuePair<String^, String^>^ s in grNames)
 				{

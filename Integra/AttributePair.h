@@ -46,6 +46,87 @@ namespace Integra {
 				return _attr2;
 			}
 		}
+		property String^ SourceComplexName
+		{
+			String^ get()
+			{
+				if (_cAttr1 == nullptr)
+				{
+					return nullptr;
+				}
+				return _cAttr1->Name;
+			}
+		}
+		property String^ TargetComplexName
+		{
+			String^ get()
+			{
+				if (_cAttr2 == nullptr)
+				{
+					return nullptr;
+				}
+				return _cAttr2->Name;
+			}
+		}
+		property String^ SourceComplexType
+		{
+			String^ get()
+			{
+				if (_cAttr1 == nullptr)
+				{
+					return nullptr;
+				}
+				return _cAttr1->ComplexType;
+			}
+		}
+		property String^ TargetComplexType
+		{
+			String^ get()
+			{
+				if (_cAttr2 == nullptr)
+				{
+					return nullptr;
+				}
+				return _cAttr2->ComplexType;
+			}
+		}
+
+		property OdbcClass^ Odbc
+		{
+			OdbcClass^ get()
+			{
+				return _odbc;
+			}
+		}
+		property int Id
+		{
+			int get()
+			{
+				return _id;
+			}
+		}
+		property ComplexAttribute^ ComplexAttribute1
+		{
+			ComplexAttribute^ get()
+			{
+				return _cAttr1;
+			}
+		}
+		property ComplexAttribute^ ComplexAttribute2
+		{
+			ComplexAttribute^ get()
+			{
+				return _cAttr2;
+			}
+		}
+		property bool IsEquiv
+		{
+			bool get()
+			{
+				return _isEquiv;
+			}
+		}
+
 
 	private:
 		OdbcClass^ _odbc;
@@ -55,6 +136,7 @@ namespace Integra {
 		Attribute^ _attr2;
 		ComplexAttribute^ _cAttr1;
 		ComplexAttribute^ _cAttr2;
+		bool _isEquiv;
 
 		String^ _sVal;
 		String^ _tVal;
@@ -100,7 +182,8 @@ namespace Integra {
 				"(select CAA17.SYMBOL_COUNT from {0}COMPLEX_ATTRS CAA17 where CAA17.ID = APP.ID_TARGET_COMPLEX_ATTR), " +
 				"(select CAA18.SPLIT_SYMBOLS from {0}COMPLEX_ATTRS CAA18 where CAA18.ID = APP.ID_TARGET_COMPLEX_ATTR), " +
 				"(select CAA19.USE_PART from {0}COMPLEX_ATTRS CAA19 where CAA19.ID = APP.ID_TARGET_COMPLEX_ATTR), " +
-				"(select CAA20.SELECT_ATTR_ID from {0}COMPLEX_ATTRS CAA20 where CAA20.ID = APP.ID_TARGET_COMPLEX_ATTR) " +
+				"(select CAA20.SELECT_ATTR_ID from {0}COMPLEX_ATTRS CAA20 where CAA20.ID = APP.ID_TARGET_COMPLEX_ATTR), " +
+				"APP.IS_EQUIV " +
 				"from {0}ATTRIBUTE_PAIRS APP where APP.ID_PARAMETRS = {1}";
 
 
@@ -110,9 +193,9 @@ namespace Integra {
 			if (resList != nullptr && resList->Count > 0)
 			{
 				list = gcnew List<AttributePair ^>();
-				for (int i = 0; i < resList->Count; i+=37)
+				for (int i = 0; i < resList->Count; i+=38)
 				{
-					int parametrsId = odbc->GetResInt(resList[i+0]);
+					int pairId = odbc->GetResInt(resList[i+0]);
 					Attribute^ attr1 = nullptr;
 					Attribute^ attr2 = nullptr;
 					ComplexAttribute^ cAttr1 = nullptr;
@@ -243,7 +326,18 @@ namespace Integra {
 
 						}
 					}
-					AttributePair^ attrPair = gcnew AttributePair(odbc, parametrsId, attr1, attr2, cAttr1, cAttr2);
+					int iIsEquiv = odbc->GetResInt(resList[i+37]);
+					bool isEquiv;
+					if (iIsEquiv == 1)
+					{
+						isEquiv = true;
+					}
+					else
+					{
+						isEquiv = false;
+					}
+
+					AttributePair^ attrPair = gcnew AttributePair(odbc, pairId, attr1, attr2, cAttr1, cAttr2, isEquiv);
 					list->Add(attrPair);
 				}
 			}
@@ -252,7 +346,7 @@ namespace Integra {
 		}
 
 
-		AttributePair(OdbcClass^ odbc, int id, Attribute^ attr1, Attribute^ attr2, ComplexAttribute^ cAttr1, ComplexAttribute^ cAttr2)
+		AttributePair(OdbcClass^ odbc, int id, Attribute^ attr1, Attribute^ attr2, ComplexAttribute^ cAttr1, ComplexAttribute^ cAttr2, bool isEquiv)
 		{
 			_odbc = odbc;
 			_id = id;
@@ -260,7 +354,23 @@ namespace Integra {
 			_attr2 = attr2;
 			_cAttr1 = cAttr1;
 			_cAttr2 = cAttr2;
+			_isEquiv = isEquiv;
 		}
+
+		AttributePair(AttributePair^ attrPair)
+		{
+			_odbc = attrPair->Odbc;
+			_id = attrPair->Id;
+			_attr1 = attrPair->SimpleSourceAttribute;
+			_attr2 = attrPair->SimpleTargetAttribute;
+			_cAttr1 = attrPair->ComplexAttribute1;
+			_cAttr2 = attrPair->ComplexAttribute2;
+			_isEquiv = attrPair->IsEquiv;
+
+			_sVal = attrPair->SourceValue;
+			_tVal = attrPair->TargetValue;
+		}
+
 
 		bool CheckEqual(Dictionary<Attribute^, String^>^ sourceAttrs, Dictionary<Attribute^, String^>^ targetAttrs)
 		{

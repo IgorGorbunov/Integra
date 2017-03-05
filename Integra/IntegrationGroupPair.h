@@ -15,6 +15,13 @@ namespace Integra {
 	public ref class IntegrationGroupPair 
 	{
 	public:
+		property int Id
+		{
+			int get()
+			{
+				return _id;
+			}
+		}	
 		property String^ Name
 		{
 			String^ get()
@@ -22,6 +29,7 @@ namespace Integra {
 				return _name;
 			}
 		}
+
 		property String^ SourceGroupId
 		{
 			String^ get()
@@ -81,20 +89,77 @@ namespace Integra {
 				_targetNamesDataSource = value;
 			}
 		}
-		property List<array<String^>^>^ AttributesDataDgv
+		property List<array<Object^>^>^ AttributesDataDgv
 		{
-			List<array<String^>^>^ get()
+			List<array<Object^>^>^ get()
 			{
 				return _dgvAttrs;
 			}
-			void set(List<array<String^>^>^ value)
+			void set(List<array<Object^>^>^ value)
 			{
 				_dgvAttrs = value;
+			}
+		}
+		property List<Attribute^>^ SourceGroupingAttrs
+		{
+			List<Attribute^>^ get()
+			{
+				return _sourceGroupingAttrs;
+			}
+			void set(List<Attribute^>^ sourceGroupingAttrs)
+			{
+				_sourceGroupingAttrs = sourceGroupingAttrs;
+			}
+		}
+		property List<Attribute^>^ TargetGroupingAttrs
+		{
+			List<Attribute^>^ get()
+			{
+				return _targetGroupingAttrs;
+			}
+			void set(List<Attribute^>^ targetGroupingAttrs)
+			{
+				_targetGroupingAttrs = targetGroupingAttrs;
+			}
+		}
+		property List<ComplexAttribute^>^ ComplexAttrs
+		{
+			List<ComplexAttribute^>^ get()
+			{
+				return _complexAttrs;
+			}
+			void set(List<ComplexAttribute^>^ complexAttrs)
+			{
+				_complexAttrs = gcnew List<ComplexAttribute ^>(complexAttrs);
+			}
+		}
+
+		property Dictionary<Attribute^, Attribute^>^ SimpleAttrs
+		{
+			Dictionary<Attribute^, Attribute^>^ get()
+			{
+				if (!_attrsIsSet)
+				{
+					SetAttrs();
+				}
+				return _simpleAttrs;
+			}
+		}
+		property Dictionary<Attribute^, Attribute^>^ EquivAttrs
+		{
+			Dictionary<Attribute^, Attribute^>^ get()
+			{
+				if (!_attrsIsSet)
+				{
+					SetAttrs();
+				}
+				return _equivAttrs;
 			}
 		}
 
 	private:
 		OdbcClass^ _odbc;
+		int _id;
 
 		String^ _name;
 		String^ _sourceGroupId;
@@ -104,7 +169,15 @@ namespace Integra {
 
 		Object^ _sourceNamesDataSource;
 		Object^ _targetNamesDataSource;
-		List<array<String^>^>^ _dgvAttrs;
+		List<array<Object^>^>^ _dgvAttrs;
+		List<ComplexAttribute^>^ _complexAttrs;
+
+		List<Attribute^>^ _sourceGroupingAttrs;
+		List<Attribute^>^ _targetGroupingAttrs;
+
+		bool _attrsIsSet;
+		Dictionary<Attribute^, Attribute^>^ _simpleAttrs;
+		Dictionary<Attribute^, Attribute^>^ _equivAttrs;
 
 	public:
 
@@ -115,8 +188,14 @@ namespace Integra {
 			_sourceGroupName = sourceGroupName;
 			_targetGroupId = targetGroupId;
 			_targetGroupName = targetGroupName;
+			_attrsIsSet = false;
 		}
 
+		void InsertToDb(OdbcClass^ odbc, int intgrParamsId)
+		{
+			_odbc = odbc;
+			InsertGroup(intgrParamsId);
+		}
 
 
 
@@ -129,6 +208,57 @@ namespace Integra {
 
 		}
 
+		private:
+			void InsertGroup(int intgrParamsId)
+			{
+				String^ columns = "ID,ID_INTGR_PARAMS,NAME_GR,CREATE_USER,CREATE_DATE,IDS,IDT";
+				String^ sqlUser = OdbcClass::GetSqlString(_odbc->Login);
+				String^ sqlDate = _odbc->GetSqlDate(DateTime::Now);
 
+				String^ sName = OdbcClass::GetSqlString(Name);
+				String^ sGroupId = OdbcClass::GetSqlString(SourceGroupId);
+				String^ tGroupId = OdbcClass::GetSqlString(TargetGroupId);
+
+				_id = _odbc->GetLastFreeId(_odbc->schema + "DB_GROUPS");
+
+				String^ sQuery = String::Format("insert into {0}DB_GROUPS ({1}) values ({2}, {3}, {4}, {5}, {6}, {7}, {8})",
+					_odbc->schema, columns, _id, intgrParamsId, sName, sqlUser, sqlDate, sGroupId, tGroupId);
+				_odbc->ExecuteNonQuery(sQuery);
+			}
+
+			void SetAttrs()
+			{
+				_simpleAttrs = gcnew Dictionary<Attribute ^, Attribute ^>();
+				_equivAttrs = gcnew Dictionary<Attribute ^, Attribute ^>();
+				for each (array<Object^>^ row in _dgvAttrs)
+				{
+					String^ sourceAttrName = row[1]->ToString();
+					Attribute^ sourceAttr = GetAttr(sourceAttrName, SourceGroupingAttrs);
+					String^ targetAttrName = row[5]->ToString();
+					Attribute^ targetAttr = GetAttr(targetAttrName, TargetGroupingAttrs);
+
+					if (row[0] == nullptr || (bool)row[0] == false)
+					{
+						_simpleAttrs->Add(sourceAttr, targetAttr);
+					}
+					else
+					{
+						_equivAttrs->Add(sourceAttr, targetAttr);
+					}
+				}
+				_attrsIsSet = true;
+			}
+
+			Attribute^ GetAttr(String^ attrName, List<Attribute^>^ attrList)
+			{
+				for each (Attribute^ attr in attrList)
+				{
+					if (attr->GroupAttrCodeValue == attrName || attr->GroupAttrNameValue == attrName)
+					{
+						return attr;
+					}
+				}
+				return nullptr;
+			}
 	};
 }

@@ -184,11 +184,23 @@ namespace Integra {
 
 		static double GetDouble(String^ s)
 		{
-			if (Thread::CurrentThread->CurrentCulture->NumberFormat->NumberDecimalSeparator == ",")
+			if (String::IsNullOrEmpty(s))
 			{
-				s = s->Replace(',', '.');
+				return 0.0;
 			}
-			double d = double::Parse(s->Trim());
+
+			s = s->Replace(',', '.');
+			double d;
+			try
+			{
+				d = double::Parse(s->Trim());
+			}
+			catch (System::FormatException^)
+			{
+				s = s->Replace('.', ',');
+				d = double::Parse(s->Trim());
+			}
+			
 			d = Math::Round(d, 8);
 			return d;
 		}

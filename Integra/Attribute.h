@@ -117,7 +117,7 @@ namespace Integra {
 					_dataType = "ярпнйю";
 				}
 				//release
-				if(value == "жекне вхякн" || value == "INTEGER" || value == "NUMBER" || value == "SYSTEM.DECIMAL")
+				if(value == "жекне вхякн" || value == "INTEGER")
 				{
 					_dataType = "жекне вхякн";
 				}
@@ -147,6 +147,28 @@ namespace Integra {
 			}
 		}
 
+		property String^ GroupAttrCodeValue
+		{
+			String^ get()
+			{
+				return _groupAttrCodeValue;
+			}
+			void set(String^ val)
+			{
+				_groupAttrCodeValue = val;
+			}
+		}
+		property String^ GroupAttrNameValue
+		{
+			String^ get()
+			{
+				return _groupAttrNameValue;
+			}
+			void set(String^ val)
+			{
+				_groupAttrNameValue = val;
+			}
+		}
 
 		bool UseChecked;
 		String^ MaxLength;
@@ -165,6 +187,10 @@ namespace Integra {
 		String^ _dataType;
 		int _idIntgrBook;
 
+		int _doubleLength;
+
+		String^ _groupAttrCodeValue;
+		String^ _groupAttrNameValue;
 
 	public:
 
@@ -222,14 +248,14 @@ namespace Integra {
 				list = gcnew List<Attribute ^>();
 				for (int i = 0; i < resList->Count; i+=8)
 				{
-					int attrId = odbc->GetResInt(resList[i+0]);
+					int attrId = OdbcClass::GetResInt(resList[i+0]);
 					String^ attrName = resList[i+1]->ToString();
 					String^ attrSchemaName = resList[i+2]->ToString();
 					String^ attrTableName = resList[i+3]->ToString();
 					String^ attrCode = resList[i+4]->ToString();
-					int attrIntBookId = odbc->GetResInt(resList[i+5]);
+					int attrIntBookId = OdbcClass::GetResInt(resList[i+5]);
 					String^ attrDataType = resList[i+6]->ToString();
-					int attrMaxLength = odbc->GetResInt(resList[i+7]);
+					int attrMaxLength = OdbcClass::GetResInt(resList[i+7]);
 					Attribute^ attr = gcnew Attribute(attrId, attrName, attrSchemaName, attrTableName, attrCode, attrIntBookId, attrDataType, attrMaxLength + "", odbc);
 					list->Add(attr);
 				}
@@ -238,21 +264,7 @@ namespace Integra {
 			return list;
 		}
 
-		void Init(String^ schema, String^ table, String^ code, String^ name)
-		{
-			_schemaName = schema;
-			_tableName = table;
-			_attrName = code;
-			_name = name;
-			if (String::IsNullOrEmpty(_schemaName))
-			{
-				_fullCode = String::Format("{0}.{1}", _tableName, _attrName);
-			}
-			else
-			{
-				_fullCode = String::Format("{0}.{1}.{2}", _schemaName, _tableName, _attrName);
-			}
-		}
+		
 
 		Attribute(int id, OdbcClass^ odbc)
 		{
@@ -277,6 +289,12 @@ namespace Integra {
 		Attribute(String^ schema, String^ table, String^ code, String^ name)
 		{
 			Init(schema, table, code, name);
+		}
+
+		Attribute(String^ schema, String^ table, String^ code, String^ name, bool isNull)
+		{
+			Init(schema, table, code, name);
+			CanBeNull = isNull;
 		}
 
 		Attribute(String^ fullTable, String^ code, String^ name)
@@ -322,14 +340,117 @@ namespace Integra {
 			_id = id;
 		}
 
+		void Init(String^ schema, String^ table, String^ code, String^ name)
+		{
+			_schemaName = schema;
+			_tableName = table;
+			_attrName = code;
+			_name = name;
+			if (String::IsNullOrEmpty(_schemaName))
+			{
+				_fullCode = String::Format("{0}.{1}", _tableName, _attrName);
+			}
+			else
+			{
+				_fullCode = String::Format("{0}.{1}.{2}", _schemaName, _tableName, _attrName);
+			}
+		}
+
+		void SetDataType(String^ dataType, int maxLength, int doubleLength)
+		{
+			dataType = dataType->ToUpper();
+			if(dataType == "ярпнйю" || dataType == "VARCHAR2" || dataType == "рейяр" || dataType == "STRING" || dataType == "VARCHAR"  || dataType == "CHAR" || dataType == "SYSTEM.STRING")
+			{
+				_dataType = "ярпнйю";
+				MaxLength = maxLength + "";
+				return;
+			}
+			if(dataType == "жекне вхякн" || dataType == "INTEGER" || dataType == "SYSTEM.INT32")
+			{
+				_dataType = "жекне вхякн";
+				if (maxLength == 0)
+				{
+					MaxLength = "9";
+				}
+				else
+				{
+					MaxLength = maxLength + "";
+				}
+				return;
+			}
+			if(dataType == "дюрю" || dataType == "DATE" || dataType == "DATETIME" || dataType == "SYSTEM.DATETIME")
+			{
+				_dataType = "дюрю";
+				if (maxLength == 0)
+				{
+					MaxLength = "7";
+				}
+				else
+				{
+					MaxLength = maxLength + "";
+				}
+				return;
+			}
+			if(dataType == "вхякн я окюбючыеи рнвйни"  || dataType == "DECIMAL"  || dataType == "SYSTEM.DECIMAL")
+			{
+				_dataType = "вхякн я окюбючыеи рнвйни";
+				if (maxLength == 0)
+				{
+					MaxLength = "9";
+					_doubleLength = 3;
+				}
+				else
+				{
+					MaxLength = maxLength + "";
+					_doubleLength = doubleLength;
+				}
+				return;
+			}
+			if(dataType == "кнцхвеяйхи"  || dataType == "BOOL"  || dataType == "BOOLEAN")
+			{
+				_dataType = "кнцхвеяйхи";
+				MaxLength = "";
+				return;
+			}
+
+
+			if(dataType == "NUMBER")
+			{
+				if (doubleLength > 0)
+				{
+					_dataType = "вхякн я окюбючыеи рнвйни";
+					MaxLength = maxLength + "";
+					_doubleLength = doubleLength;
+				}
+				else
+				{
+					_dataType = "жекне вхякн";
+				}
+				return;
+			}
+		}
+
 		Object^ GetValue(String^ condition, bool isDb, OdbcClass^ odbc)
 		{
 			//todo
 			if (isDb)
 			{
-				String^ query = String::Format("select ATABLE.{0} from {1}{2} ATABLE {3}", Code, odbc->schema, Table, condition);
+				String^ query;
+				if (String::IsNullOrEmpty(Schema))
+				{
+					query = String::Format("select ATABLE.{0} from {1}{2} ATABLE {3}", Code, Schema, Table, condition);
+				}
+				else
+				{
+					query = String::Format("select ATABLE.{0} from {1}.{2} ATABLE {3}", Code, Schema, Table, condition);
+				}
+
 				List<Object^>^ qlist = odbc->ExecuteQuery(query);
-				return qlist[0];
+				if (qlist != nullptr && qlist->Count > 0)
+				{
+					return qlist[0];
+				}
+				return nullptr;
 			}
 			else
 			{
@@ -355,7 +476,7 @@ namespace Integra {
 			_schemaName = parametrs[2]->ToString();
 			_tableName = parametrs[3]->ToString();
 			_attrName = parametrs[4]->ToString();
-			_idIntgrBook = Decimal::ToInt32((Decimal)parametrs[5]);
+			_idIntgrBook = OdbcClass::GetResInt(parametrs[5]);
 			_dataType = parametrs[6]->ToString();
 			MaxLength = parametrs[7]->ToString();
 			if (String::IsNullOrEmpty(_schemaName))

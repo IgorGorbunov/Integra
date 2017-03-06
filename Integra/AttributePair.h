@@ -143,7 +143,7 @@ namespace Integra {
 
 	public:
 
-		static List<AttributePair^>^ GetPairs(int integrationSchemaId, OdbcClass^ odbc)
+		static List<AttributePair^>^ GetPairs(int integrationSchemaId, OdbcClass^ odbc, int groupId)
 		{
 			List<AttributePair^>^ list;
 			String^ squery = "select APP.ID, " +
@@ -186,6 +186,10 @@ namespace Integra {
 				"APP.IS_EQUIV " +
 				"from {0}ATTRIBUTE_PAIRS APP where APP.ID_PARAMETRS = {1}";
 
+			if (groupId != -1)
+			{
+				squery += " and APP.ID_GROUP = " + groupId;
+			}
 
 			squery = String::Format(squery, odbc->schema, integrationSchemaId);
 

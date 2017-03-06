@@ -23,6 +23,14 @@ namespace Integra {
 				return _attribute->FullCode;
 			}
 		}
+		property String^ AttributeDataType
+		{
+			String^ get()
+			{
+				return _attribute->DataType;
+			}
+		}
+
 		property String^ Condition
 		{
 			String^ get()

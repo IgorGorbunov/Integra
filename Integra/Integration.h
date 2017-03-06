@@ -70,6 +70,8 @@ namespace Integra {
 		int maxColSource;
 		int maxColTarget;
 
+		List<IntegrationGroupPair^>^ _integGroupPairs;
+
 		IntegrationResult^ _intgrResults;
 
 	public:
@@ -92,7 +94,7 @@ namespace Integra {
 
 
 	public:
-		Void StartIntegrationTable(Form^% form, Label^% lblCount)
+		Void StartExactIntegration(Form^% form, Label^% lblCount)
 		{
 			_intgrResults = gcnew IntegrationResult(_odbc, _settings, 1);
 			_intgrResults->WriteDbStart();
@@ -309,6 +311,88 @@ namespace Integra {
 // 				Position^ p = gcnew DbPosition(sListingPos, attrSourceTitles, iSAttrId, iSAttrTitle);
 // 				TargetNew->Add(p);
 // 			}
+		}
+
+		void StartIntegByOneGroup(IntegrationGroupPair^ integGroup)
+		{
+			int groupId;
+			String^ sGrId;
+			String^ tGrId;
+			if (integGroup == nullptr)
+			{
+				groupId = -1;
+				sGrId = String::Empty;
+				tGrId = String::Empty;
+			}
+			else
+			{
+				groupId = integGroup->Id;
+				sGrId = integGroup->SourceGroupId;
+				tGrId = integGroup->TargetGroupId;
+			}
+
+			_attrPairs = _settings->GetAttributePairs(groupId);
+
+			_bWorker = nullptr;
+			InitializeBackgoundWorkers();
+
+			List<Position^>^ _sourcePositions;
+			List<Position^>^ _targetPositions;
+
+			bool secondIsSemantic = false;
+			if (_settings->SourceBook->IsSemantic && !_settings->TargetBook->IsSemantic)
+			{
+				_bWorker = _backgroundWorker1;
+				_targetBook = GetBook(_settings->TargetBook, false);
+				_targetPositions = _targetBook->GetGroupPositionsTable(_settings->TargetBook->AttrPosGroupId, tGrId, _settings->TargetBook->GroupFullTable,
+					_targetAttrs, _settings->TargetBook->DbFilters, _settings->TargetBook->DbLinks);
+			}
+			if (!_settings->SourceBook->IsSemantic && _settings->TargetBook->IsSemantic)
+			{
+				secondIsSemantic = true;
+				_sourceBook = GetBook(_settings->SourceBook, true);
+				_sourcePositions = _sourceBook->GetGroupPositionsTable(_settings->SourceBook->AttrPosGroupId, sGrId, _settings->SourceBook->GroupFullTable,
+					_sourceAttrs, _settings->SourceBook->DbFilters, _settings->SourceBook->DbLinks);
+				_bWorker = _backgroundWorker2;
+			}
+
+			if	(_bWorker == nullptr)
+			{
+				_sourceBook = GetBook(_settings->SourceBook, true);
+				_targetBook = GetBook(_settings->TargetBook, false);
+				_targetPositions = _targetBook->GetGroupPositionsTable(_settings->TargetBook->AttrPosGroupId, tGrId, _settings->TargetBook->GroupFullTable,
+					_targetAttrs, _settings->TargetBook->DbFilters, _settings->TargetBook->DbLinks);
+				_sourcePositions = _sourceBook->GetGroupPositionsTable(_settings->SourceBook->AttrPosGroupId, sGrId, _settings->SourceBook->GroupFullTable,
+					_sourceAttrs, _settings->SourceBook->DbFilters, _settings->SourceBook->DbLinks);
+			}
+			else
+			{
+				_isBusy = true;
+				_bWorker->RunWorkerAsync();
+			}
+		}
+
+
+		void StartRoughIntegration()
+		{
+			_intgrResults = gcnew IntegrationResult(_odbc, _settings, 2);
+			_intgrResults->WriteDbStart();
+
+			SetAttrLists();
+
+			_integGroupPairs = IntegrationGroupPair::GetGroups(_odbc, _settings->Id);
+
+			if (_integGroupPairs == nullptr || _integGroupPairs->Count <= 0)
+			{
+				StartIntegByOneGroup(nullptr);
+			}
+			else
+			{
+				for each (IntegrationGroupPair^ integGroup in _integGroupPairs)
+				{
+					StartIntegByOneGroup(integGroup);
+				}
+			}
 		}
 
 		void StopIntegration()

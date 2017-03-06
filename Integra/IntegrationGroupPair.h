@@ -181,6 +181,41 @@ namespace Integra {
 
 	public:
 
+		static List<IntegrationGroupPair^>^ GetGroups(OdbcClass^ odbc, int integrationParamId)
+		{
+			List<IntegrationGroupPair^>^ list;
+			String^ squery = "select DG.ID, DG.NAME_GR, DG.IDS, DG.IDT from {0}DB_GROUPS DG where DG.ID_INTGR_PARAMS = {1} order by DG.ID";
+			squery = String::Format(squery, odbc->schema, integrationParamId);
+
+			List<Object^>^ resList = odbc->ExecuteQuery(squery);
+			if (resList != nullptr && resList->Count > 0)
+			{
+				list = gcnew List<IntegrationGroupPair ^>();
+				for (int i = 0; i < resList->Count; i+=4)
+				{
+					int id = odbc->GetResInt(resList[i+0]);
+					String^ name = resList[i+1]->ToString();
+					String^ idS = resList[i+2]->ToString();
+					String^ idT = resList[i+3]->ToString();
+
+					IntegrationGroupPair^ groupPair = gcnew IntegrationGroupPair(id, name, idS, idT);
+					list->Add(groupPair);
+				}
+			}
+
+			return list;
+		}
+
+		IntegrationGroupPair(int id, String^ name, String^ sourceGroupId, String^ targetGroupId)
+		{
+			_id = id;
+			_name = name;
+			_sourceGroupId = sourceGroupId;
+			_targetGroupId = targetGroupId;
+
+			_attrsIsSet = false;
+		}
+
 		IntegrationGroupPair(String^ name, String^ sourceGroupId, String^ sourceGroupName, String^ targetGroupId, String^ targetGroupName)
 		{
 			_name = name;

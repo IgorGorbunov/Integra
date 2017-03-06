@@ -132,7 +132,6 @@ namespace Integra {
 				return _attrId;
 			}
 		}
-
 		property Attribute^ AttrCaption
 		{
 			Attribute^ get()
@@ -144,6 +143,7 @@ namespace Integra {
 				return _attrCaption;
 			}
 		}
+
 		property Attribute^ AttrGroupId
 		{
 			Attribute^ get()
@@ -166,6 +166,28 @@ namespace Integra {
 				return _attrGroupName;
 			}
 		}
+		property Attribute^ AttrPosGroupId
+		{
+			Attribute^ get()
+			{
+				if (_attrPosGroupId == nullptr && _groupId != -1)
+				{
+					_attrPosGroupId = gcnew Attribute(_idAttrPosGroupId, _odbc);
+				}
+				return _attrPosGroupId;
+			}
+		}
+		property String^ GroupFullTable
+		{
+			String^ get()
+			{
+				if (_groupId != -1 && String::IsNullOrEmpty(_groupFullTable))
+				{
+					SetAttrGroup();
+				}
+				return _groupFullTable;
+			}
+		}
 
 		property List<Attribute^>^ Attributes
 		{
@@ -173,7 +195,22 @@ namespace Integra {
 			{
 				if (_attributes == nullptr || _attributes->Count < 0)
 				{
-					_attributes = Attribute::GetAttributes(_odbc, Id);
+					_posAndGroupAttributes = Attribute::GetAttributes(_odbc, Id);
+					if (_groupId != -1)
+					{
+						_attributes = gcnew List<Attribute ^>();
+						for each (Attribute^ attr in _posAndGroupAttributes)
+						{
+							if (attr->FullTable != GroupFullTable)
+							{
+								_attributes->Add(attr);
+							}
+						}
+					}
+					else
+					{
+						_attributes = _posAndGroupAttributes;
+					}
 				}
 				return _attributes;
 			}
@@ -232,6 +269,8 @@ namespace Integra {
 		String^ _attrTitleFullcode;
 
 		List<Attribute^>^ _attributes;
+		List<Attribute^>^ _posAndGroupAttributes;
+
 		bool _dbFiltersIsSet;
 		List<Object^>^ _dbFilters;
 		bool _dbLinksIsSet;
@@ -242,7 +281,9 @@ namespace Integra {
 		Attribute^ _attrGroupId;
 		Attribute^ _attrGroupName;
 
-		
+		int _idAttrPosGroupId;
+		Attribute^ _attrPosGroupId;
+		String^ _groupFullTable;
 
 	public:
 		BookSettings(int parametrsId, OdbcClass^ odbc)
@@ -297,11 +338,10 @@ namespace Integra {
 
 
 
-
 	private:
-		Void Set(int id)
+		void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE, NAME from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE, NAME, ATTR_GROUP from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
 			SetSystem(OdbcClass::GetResInt(parametrs[0]));
 			SetBook(OdbcClass::GetResInt(parametrs[1]));
 			SetLogPass(parametrs[2]->ToString(), parametrs[3]->ToString());
@@ -325,15 +365,16 @@ namespace Integra {
 			_attrIdId = OdbcClass::GetResInt(parametrs[12]);
 			_attrTitleId = OdbcClass::GetResInt(parametrs[13]);
 			_name = parametrs[14]->ToString();
+			_idAttrPosGroupId = OdbcClass::GetResInt(parametrs[15]);
 		}
 
-		Void SetSystem(int id)
+		void SetSystem(int id)
 		{
 			List<Object^>^ parametrs = _odbc->ExecuteQuery("select NAME from " + _odbc->schema + "INTEGRATED_SYSTEMS where ID = " + id);
 			_systemName = parametrs[0]->ToString();
 		}
 
-		Void SetBook(int id)
+		void SetBook(int id)
 		{
 			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID, NAME from " + _odbc->schema + "BOOKS where ID = " + id);
 			BookId = OdbcClass::GetResInt(parametrs[0]);
@@ -356,11 +397,12 @@ namespace Integra {
 
 		void SetAttrGroup()
 		{
-			String^ squery = String::Format("select GPP.ID_ATTR, GPP.NAME_ATTR from {0}INTEGRATION_BOOK IBB, {0}GROUP_PARAMS GPP where IBB.GROUP_ID = GPP.ID and IBB.ID = {1}", _odbc->schema, _id);
+			String^ squery = String::Format("select GPP.ID_ATTR, GPP.NAME_ATTR, GPP.FULL_TABLE from {0}INTEGRATION_BOOK IBB, {0}GROUP_PARAMS GPP where IBB.GROUP_ID = GPP.ID and IBB.ID = {1}", _odbc->schema, _id);
 			List<Object^>^ oList = _odbc->ExecuteQuery(squery);
 
 			int id1 = OdbcClass::GetResInt(oList[0]);
 			int id2 = OdbcClass::GetResInt(oList[1]);
+			_groupFullTable = OdbcClass::GetResString(oList[2]);
 
 			_attrGroupId = gcnew Attribute(id1, _odbc);
 			_attrGroupName = gcnew Attribute(id2, _odbc);
@@ -379,7 +421,7 @@ namespace Integra {
 			_attrTitleFullcode = String::Format("{0}.{1}", list[0], list[1]);
 		}
 
-		Void SetLogPass(String^ login, String^ password)
+		void SetLogPass(String^ login, String^ password)
 		{
 			_login = login;
 			_password = password;

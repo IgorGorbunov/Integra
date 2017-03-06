@@ -81,7 +81,6 @@ namespace Integra {
 				return	_simpleSourceAttributes;
 			}
 		}
-
 		property List<Attribute^>^ SimpleTargetAttributes
 		{
 			List<Attribute^>^ get()
@@ -93,6 +92,7 @@ namespace Integra {
 				return	_simpleTargetAttributes;
 			}
 		}
+
 		property Attribute^ SourceEquivAttr
 		{
 			Attribute^ get()
@@ -127,7 +127,7 @@ namespace Integra {
 			{
 				if (_attributePairs == nullptr || _attributePairs->Count <= 0)
 				{
-					_attributePairs = AttributePair::GetPairs(Id, _odbc);
+					_attributePairs = AttributePair::GetPairs(Id, _odbc, -1);
 				}
 				
 				return _attributePairs;
@@ -213,7 +213,10 @@ namespace Integra {
 			
 		}
 
-		
+		List<AttributePair^>^ GetAttributePairs(int groupId)
+		{
+			return AttributePair::GetPairs(Id, _odbc, groupId);
+		}
 
 	protected:
 		/// <summary>
@@ -355,5 +358,6 @@ namespace Integra {
 			}
 		}
 
+		
 	};
 }

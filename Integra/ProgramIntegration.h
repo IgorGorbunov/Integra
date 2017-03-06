@@ -58,7 +58,7 @@ namespace Integra {
 		static Void StartIntegrationTable(IntegrationSettings^ intSet, System::Windows::Forms::Form^% form, System::Windows::Forms::Label^% lblCount) 
 		{
 			_integration = gcnew Integration(intSet, Odbc);
-			_integration->StartIntegrationTable(form, lblCount);
+			_integration->StartExactIntegration(form, lblCount);
 
 			SourceNew = _integration->SourceNew;
 			TargetNew = _integration->TargetNew;
@@ -68,6 +68,12 @@ namespace Integra {
 			NinTarget = _integration->NinTarget;
 			Nequal = _integration->Nequal;
 			Nmatches = _integration->Nmatches;
+		}
+
+		static Void StartRoughIntegration(IntegrationSettings^ intSet) 
+		{
+			_integration = gcnew Integration(intSet, Odbc);
+			_integration->StartRoughIntegration();
 		}
 
 		static void StopIntegration()

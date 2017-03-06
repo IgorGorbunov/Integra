@@ -25,6 +25,8 @@ namespace Integra {
 
 		List<Attribute^>^ _attributes;
 
+		bool _WHEREisSet;
+
 	public:
 		DbBook(BookSettings^ bookSettings, IntegrationSettings^ intSettings, bool isSource, OdbcClass^ odbc) : Book(bookSettings, intSettings, odbc)
 		{
@@ -74,7 +76,7 @@ namespace Integra {
 
 		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters, List<Object^>^ links) override
 		{
-			String^ globalSquery = GetGlobalSquery(attrs, filters, links);
+			String^ globalSquery = GetGlobalSquery(nullptr, String::Empty, String::Empty, attrs, filters, links);
 
 	
 			int iId = -1, iTitle = -1;
@@ -108,6 +110,43 @@ namespace Integra {
 			}
 
  			return poses;
+		}
+
+		virtual List<Position^>^ GetGroupPositionsTable(Attribute^ groupAttr, String^ dbGroupId, String^ groupFullTable, List<Attribute^>^ attrs, List<Object^>^ filters, List<Object^>^ links) override
+		{
+			String^ globalSquery = GetGlobalSquery(groupAttr, dbGroupId, groupFullTable, attrs, filters, links);
+
+			int iId = -1, iTitle = -1;
+			bool idSet = false;
+			bool titleSet = false;
+			for (int i = 0; i < attrs->Count; i++)
+			{
+				if (!idSet && attrs[i]->FullCode == BookSetting->AttrIdFullcode)
+				{
+					iId = i;
+					idSet = true;
+				}
+				if (!titleSet && attrs[i]->FullCode == BookSetting->AttrTitleFullcode)
+				{
+					iTitle = i;
+					titleSet = true;
+				}
+				if (idSet && titleSet)
+				{
+					break;
+				}
+			}
+
+			List<Object^>^ table = BookSetting->Odbc->ExecuteQuery(globalSquery);
+			List<Position^>^ poses = gcnew List<Position ^>();
+			for (int i = 0; i < table->Count; i+=attrs->Count)
+			{
+				List<Object^>^ attrValues = table->GetRange(i, attrs->Count);
+				Position^ pos = gcnew DbPosition(attrValues, attrs, iId, iTitle, BookSetting);
+				poses->Add(pos);
+			}
+
+			return poses;
 		}
 
 		virtual Dictionary<String^, String^>^ GetAllGroupNames() override
@@ -551,18 +590,27 @@ namespace Integra {
 				return list;
 			}
 
-			String^ GetGlobalSquery(List<Attribute^>^ attrNames, List<Object^>^ filters, List<Object^>^ links)
+			String^ GetGlobalSquery(Attribute^ groupAttr, String^ dbGroupId, String^ groupFullTable, List<Attribute^>^ attrNames, List<Object^>^ filters, List<Object^>^ links)
 			{
 				String^ s = "select ";
+				String^ tableFirstAttr;
 				for each (Attribute^ attr in attrNames)
 				{
-					s += attr->FullCode + ",";
+					if (attr->FullTable != groupFullTable)
+					{
+						s += attr->FullCode + ",";
+						if (String::IsNullOrEmpty(tableFirstAttr))
+						{
+							tableFirstAttr = attr->FullTable;
+						}
+					}
 				}
 				s = s->Substring(0, s->Length - 1);
 
-				s = SetTables(s, attrNames[0]->FullTable, links);
+				_WHEREisSet = false;
+				s = SetTables(s, tableFirstAttr, links);
 				s = SetFiltersAndLinks(s, filters, links);
-
+				s = SetGroup(s, groupAttr, dbGroupId);
 
 				return s;
 			}
@@ -575,6 +623,7 @@ namespace Integra {
 					squery += " where ";
 					squery = SetFilters(squery, filters);
 					hasFilters = true;
+					_WHEREisSet = true;
 				}
 				if (links != nullptr && links->Count > 0)
 				{
@@ -587,6 +636,7 @@ namespace Integra {
 						squery += " where ";
 					}
 					squery = SetLinks(squery, links);
+					_WHEREisSet = true;
 				}
 				return squery;
 			}
@@ -631,11 +681,13 @@ namespace Integra {
 					String^ prevConcatValue = String::Empty;
 					for each (DbFilter^ filter in filters)
 					{
-						String^ line = String::Format("{0} {1} {2} {3} ", prevConcatValue, filter->AttributeFullCode, filter->Condition, filter->ConditionValue);
+						String^ sVal = _odbc->GetSqlValue(filter->AttributeDataType, filter->ConditionValue);
+						String^ line = String::Format("{0} {1} {2} {3} ", prevConcatValue, filter->AttributeFullCode, filter->Condition, sVal);
 						squery += line;
 						prevConcatValue = filter->ConcatinationValue;
 					}
 					squery = String::Format("{0})", squery);
+					_WHEREisSet = true;
 				}
 				return squery;
 			}
@@ -653,9 +705,26 @@ namespace Integra {
 						sAnd = "AND";
 					}
 					squery = String::Format("{0})", squery);
+					_WHEREisSet = true;
 				}
 				return squery;
 			}
 			
+			String^ SetGroup(String^ squery, Attribute^ groupAttr, String^ dbGroupId)
+			{
+				if (groupAttr != nullptr)
+				{
+					if (_WHEREisSet)
+					{
+						squery += " and ";
+					}
+					else
+					{
+						squery += " where ";
+					}
+					squery += String::Format("{0} = {1}", groupAttr->Code, _odbc->GetSqlValue(groupAttr->DataType, dbGroupId));
+				}
+				return squery;
+			}
 	};
 }

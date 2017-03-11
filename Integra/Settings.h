@@ -115,6 +115,23 @@ namespace Integra {
 			return _systemBooks;
 		}
 
+		Dictionary<int, String^>^ GetSystemBooksIdExe()
+		{
+			String^ squery = String::Format("select IBB.ID, IBB.EXE_PATH " +
+				"from INTEGRATION_BOOK IBB order by IBB.ID", _odbc->schema);
+			List<Object^>^ resList = _odbc->ExecuteQuery(squery);
+
+			Dictionary<int, String^>^ resDict = gcnew Dictionary<int, String ^>();
+			for (int i = 0; i < resList->Count; i+=2)
+			{
+				int id = OdbcClass::GetResInt(resList[i+0]);
+				String^ exePath = OdbcClass::GetResString(resList[i+1]);
+				resDict->Add(id, exePath);
+			}
+			
+			return resDict;
+		}
+
 
 	private:
 		Void SetBooks()

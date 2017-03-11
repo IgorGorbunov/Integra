@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ODBCclass.h"
+#include "ComplexAttribute.h"
+
 
 namespace Integra {
 
@@ -100,6 +102,7 @@ namespace Integra {
 				_dgvAttrs = value;
 			}
 		}
+
 		property List<Attribute^>^ SourceGroupingAttrs
 		{
 			List<Attribute^>^ get()
@@ -179,6 +182,8 @@ namespace Integra {
 		Dictionary<Attribute^, Attribute^>^ _simpleAttrs;
 		Dictionary<Attribute^, Attribute^>^ _equivAttrs;
 
+		
+
 	public:
 
 		static List<IntegrationGroupPair^>^ GetGroups(OdbcClass^ odbc, int integrationParamId)
@@ -232,7 +237,7 @@ namespace Integra {
 			InsertGroup(intgrParamsId);
 		}
 
-
+		
 
 	protected:
 		/// <summary>
@@ -295,5 +300,7 @@ namespace Integra {
 				}
 				return nullptr;
 			}
+
+			
 	};
 }

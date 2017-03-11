@@ -22,6 +22,8 @@ namespace Integra {
 		array<String^, 2>^ _books;
 		OdbcClass^ _odbc;
 
+		Dictionary<int, String^>^ _systemBooksIdExe;
+
 		Dictionary<Attribute^, Attribute^>^ _attrPairs;
 		Dictionary<Attribute^, Attribute^>^ _attrEquivs;
 		List<ComplexAttribute^>^ _complexAttrs;
@@ -31,6 +33,16 @@ namespace Integra {
 
 		BookSettings^ _sourceBook;
 
+		
+
+
+
+
+
+
+
+	private: System::Windows::Forms::Label^  label2;
+	private: System::Windows::Forms::TextBox^  tbName;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column2;
@@ -39,8 +51,16 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
-	private: System::Windows::Forms::Label^  label2;
-	private: System::Windows::Forms::TextBox^  tbName;
+
+
+
+
+
+
+
+
+
+
 			 BookSettings^ _targetBook;
 
 	public:
@@ -92,18 +112,10 @@ namespace Integra {
 		{
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->dgvSource = (gcnew System::Windows::Forms::DataGridView());
-			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->cbIntgr = (gcnew System::Windows::Forms::ComboBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->dgvTarget = (gcnew System::Windows::Forms::DataGridView());
-			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->dataGridViewTextBoxColumn2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->dataGridViewTextBoxColumn3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->bSave = (gcnew System::Windows::Forms::Button());
 			this->bLinks = (gcnew System::Windows::Forms::Button());
@@ -112,6 +124,14 @@ namespace Integra {
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->tbName = (gcnew System::Windows::Forms::TextBox());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->dataGridViewTextBoxColumn2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->dataGridViewTextBoxColumn3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvSource))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvTarget))->BeginInit();
 			this->groupBox1->SuspendLayout();
@@ -141,31 +161,6 @@ namespace Integra {
 			this->dgvSource->RowHeadersVisible = false;
 			this->dgvSource->Size = System::Drawing::Size(432, 262);
 			this->dgvSource->TabIndex = 4;
-			// 
-			// Column4
-			// 
-			this->Column4->HeaderText = L"ID";
-			this->Column4->Name = L"Column4";
-			this->Column4->ReadOnly = true;
-			this->Column4->Visible = false;
-			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Наименование";
-			this->Column1->Name = L"Column1";
-			this->Column1->ReadOnly = true;
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Тип справочника";
-			this->Column2->Name = L"Column2";
-			this->Column2->ReadOnly = true;
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Система";
-			this->Column3->Name = L"Column3";
-			this->Column3->ReadOnly = true;
 			// 
 			// label4
 			// 
@@ -209,31 +204,6 @@ namespace Integra {
 			this->dgvTarget->RowHeadersVisible = false;
 			this->dgvTarget->Size = System::Drawing::Size(431, 262);
 			this->dgvTarget->TabIndex = 6;
-			// 
-			// Column5
-			// 
-			this->Column5->HeaderText = L"ID";
-			this->Column5->Name = L"Column5";
-			this->Column5->ReadOnly = true;
-			this->Column5->Visible = false;
-			// 
-			// dataGridViewTextBoxColumn1
-			// 
-			this->dataGridViewTextBoxColumn1->HeaderText = L"Наименование";
-			this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
-			this->dataGridViewTextBoxColumn1->ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn2
-			// 
-			this->dataGridViewTextBoxColumn2->HeaderText = L"Справочник";
-			this->dataGridViewTextBoxColumn2->Name = L"dataGridViewTextBoxColumn2";
-			this->dataGridViewTextBoxColumn2->ReadOnly = true;
-			// 
-			// dataGridViewTextBoxColumn3
-			// 
-			this->dataGridViewTextBoxColumn3->HeaderText = L"Система";
-			this->dataGridViewTextBoxColumn3->Name = L"dataGridViewTextBoxColumn3";
-			this->dataGridViewTextBoxColumn3->ReadOnly = true;
 			// 
 			// bCancel
 			// 
@@ -314,6 +284,56 @@ namespace Integra {
 			this->tbName->Size = System::Drawing::Size(311, 20);
 			this->tbName->TabIndex = 11;
 			// 
+			// Column5
+			// 
+			this->Column5->HeaderText = L"ID";
+			this->Column5->Name = L"Column5";
+			this->Column5->ReadOnly = true;
+			this->Column5->Visible = false;
+			// 
+			// dataGridViewTextBoxColumn1
+			// 
+			this->dataGridViewTextBoxColumn1->HeaderText = L"Наименование";
+			this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
+			this->dataGridViewTextBoxColumn1->ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn2
+			// 
+			this->dataGridViewTextBoxColumn2->HeaderText = L"Тип справочника";
+			this->dataGridViewTextBoxColumn2->Name = L"dataGridViewTextBoxColumn2";
+			this->dataGridViewTextBoxColumn2->ReadOnly = true;
+			// 
+			// dataGridViewTextBoxColumn3
+			// 
+			this->dataGridViewTextBoxColumn3->HeaderText = L"Система";
+			this->dataGridViewTextBoxColumn3->Name = L"dataGridViewTextBoxColumn3";
+			this->dataGridViewTextBoxColumn3->ReadOnly = true;
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"ID";
+			this->Column4->Name = L"Column4";
+			this->Column4->ReadOnly = true;
+			this->Column4->Visible = false;
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Наименование";
+			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Тип справочника";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Система";
+			this->Column3->Name = L"Column3";
+			this->Column3->ReadOnly = true;
+			// 
 			// AddEditSchemaForm2
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -371,6 +391,63 @@ namespace Integra {
 				}
 			}
 
+			bool LinkCheck()
+			{
+				if (cbIntgr->SelectedItem == nullptr)
+				{
+					MessageBox::Show("Не задан тип интеграции!");
+					return false;
+				}
+				if (dgvSource->SelectedCells == nullptr || dgvSource->SelectedCells->Count <= 0)
+				{
+					MessageBox::Show("Не выбран декларированный справочник-источник!");
+					return false;
+				}
+				int idSourceBook = OdbcClass::GetResInt(dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString());
+				bool isSourceExe = false;
+				for each (KeyValuePair<int, String^>^ pair in _systemBooksIdExe)
+				{
+					if (pair->Key == idSourceBook)
+					{
+						if (!String::IsNullOrEmpty(pair->Value))
+						{
+							isSourceExe = true;
+							break;
+						}
+					}
+				}
+				if (isSourceExe)
+				{
+					MessageBox::Show("Справочник на основе стороннего EXE файла не может быть источником!");
+					return false;
+				}
+
+				if (dgvTarget->SelectedCells == nullptr || dgvTarget->SelectedCells->Count <= 0)
+				{
+					MessageBox::Show("Не выбран декларированный справочник-получатель!");
+					return false;
+				}
+				int idTargetBook = OdbcClass::GetResInt(dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString());
+				bool isTargetExe = false;
+				for each (KeyValuePair<int, String^>^ pair in _systemBooksIdExe)
+				{
+					if (pair->Key == idTargetBook)
+					{
+						if (!String::IsNullOrEmpty(pair->Value))
+						{
+							isTargetExe = true;
+							break;
+						}
+					}
+				}
+				if (isTargetExe)
+				{
+					MessageBox::Show("Для передачи данных в справочник на основе стороннего EXE файла задание соответствия реквизитов не требуется!");
+					return false;
+				}
+				return true;
+			}
+
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 Close();
@@ -422,11 +499,11 @@ private: System::Void bSave_Click(System::Object^  sender, System::EventArgs^  e
 		 }
 private: System::Void bLinks_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 if (cbIntgr->SelectedItem == nullptr)
+			 if (!LinkCheck())
 			 {
-				 MessageBox::Show("Не задан тип интеграции!");
 				 return;
 			 }
+
 
 			 String^ oS = dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
 			 String^ oT = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
@@ -451,6 +528,7 @@ private: System::Void bLinks_Click(System::Object^  sender, System::EventArgs^  
 private: System::Void AddEditSchemaForm2_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 array<String^, 2>^ systemBooks = _settings->GetSystemBooks();
+			 _systemBooksIdExe = _settings->GetSystemBooksIdExe();
 			 SetDgv(dgvSource, systemBooks);
 			 SetDgv(dgvTarget, systemBooks);
 			 SetComboBox();

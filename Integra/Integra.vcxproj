@@ -82,6 +82,9 @@
     <Reference Include="Interop.Microsoft.Office.Interop.Excel, Version=1.6.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\Interop.Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
+    <Reference Include="Interop.SemanticCore.1.0">
+      <HintPath>..\_libs\Interop.SemanticCore.1.0.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -121,6 +124,7 @@
     <ClCompile Include="Results2.cpp" />
     <ClCompile Include="Results3.cpp" />
     <ClCompile Include="RoughInterg.cpp" />
+    <ClCompile Include="SearchForm.cpp" />
     <ClCompile Include="SettingsForm.cpp" />
     <ClCompile Include="TableLinksForm.cpp" />
     <ClCompile Include="UserBookAccessForm.cpp" />
@@ -187,6 +191,7 @@
     </ClInclude>
     <ClInclude Include="Editting.h" />
     <ClInclude Include="ExcelClass.h" />
+    <ClInclude Include="GroupingAttr.h" />
     <ClInclude Include="GroupParam.h" />
     <ClInclude Include="IntegrationGroupPair.h" />
     <ClInclude Include="GroupParamsForm.h">
@@ -242,6 +247,9 @@
     <ClInclude Include="Role.h" />
     <ClInclude Include="RoleStation.h" />
     <ClInclude Include="RoughInterg.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="SearchForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Semantic.h" />
@@ -357,6 +365,9 @@
     <EmbeddedResource Include="RoughInterg.resx">
       <DependentUpon>RoughInterg.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SearchForm.resx">
+      <DependentUpon>SearchForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingsForm.resx">
       <DependentUpon>SettingsForm.h</DependentUpon>
     </EmbeddedResource>
@@ -366,16 +377,6 @@
     <EmbeddedResource Include="UserBookAccessForm.resx">
       <DependentUpon>UserBookAccessForm.h</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="SemanticCore.1.0.dll">
-      <Guid>307168c0-39ae-42ad-953f-a09f8a81520f</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>false</Isolated>
-    </COMReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

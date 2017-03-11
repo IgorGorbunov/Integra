@@ -12,6 +12,7 @@
 #include "Results2.h"
 #include "Editting.h"
 #include "Notice.h"
+#include "RoughInterg.h"
 
 
 namespace Integra {
@@ -318,17 +319,20 @@ namespace Integra {
 			int groupId;
 			String^ sGrId;
 			String^ tGrId;
+			bool isGroup;
 			if (integGroup == nullptr)
 			{
 				groupId = -1;
 				sGrId = String::Empty;
 				tGrId = String::Empty;
+				isGroup = false;
 			}
 			else
 			{
 				groupId = integGroup->Id;
 				sGrId = integGroup->SourceGroupId;
 				tGrId = integGroup->TargetGroupId;
+				isGroup = true;
 			}
 
 			_attrPairs = _settings->GetAttributePairs(groupId);
@@ -370,8 +374,91 @@ namespace Integra {
 				_isBusy = true;
 				_bWorker->RunWorkerAsync();
 			}
+
+			Application::DoEvents();
+
+			while (_bWorker != nullptr && _isBusy)
+			{
+				System::Threading::Thread::Sleep(1000);
+			}
+
+
+			if(_sourcePositions == nullptr)
+			{
+				_sourcePositions = _sourceStaicPositions;
+			}
+			NinSource = _sourcePositions->Count;
+			if(_targetPositions == nullptr)
+			{
+				_targetPositions = _targetStaicPositions;
+			}
+			NinTarget = _targetPositions->Count;
+
+			Nequal = 0;
+			Nmatches = 0;
+
+			for (int i = 0; i < _sourcePositions->Count; i++)
+			{
+				bool contains = false;
+				Position^ sPos = _sourcePositions[i];
+
+				List<Position^>^ similarPoses = gcnew List<Position ^>();
+				for (int j = 0; j < _targetPositions->Count; j++)
+				{
+					Position^ tPos = _targetPositions[j];
+					Nmatches++;
+					if (HaveSomeSimilar(sPos, tPos))
+					{
+						similarPoses->Add(tPos);
+					}
+				}
+				if (similarPoses->Count > 0)
+				{
+					RoughInterg^ form = gcnew RoughInterg(_odbc, integGroup, _settings, sPos, similarPoses, isGroup, _targetPositions);
+					form->ShowDialog();
+					sPos = form->Spos;
+
+					if (form->NotFound)
+					{
+						SourceNew->Add(sPos);
+					}
+					else if (form->IsSelect)
+					{
+						DifferencePosition^ diffPos;
+						if (AttrsIsFullyEqual(sPos, form->SelectPosition, diffPos))
+						{
+							
+						}
+						else
+						{
+							Differences->Add(diffPos);
+						}
+					}
+
+				}
+			}
 		}
 
+
+		bool HaveSomeSimilar(Position^ sPos, Position^ tPos)
+		{
+			String^ sRoughAttrValue = sPos->GetValue(_settings->SourceBook->RoughAttr);
+			String^ tRoughAttrValue = tPos->GetValue(_settings->TargetBook->RoughAttr);
+			array<String^, 1>^ arr1 = sRoughAttrValue->Split(_settings->SourceBook->RoughSymbols, System::StringSplitOptions::RemoveEmptyEntries);
+			array<String^, 1>^ arr2 = tRoughAttrValue->Split(_settings->TargetBook->RoughSymbols, System::StringSplitOptions::RemoveEmptyEntries);
+
+			for each (String^ arr1Bit in arr1)
+			{
+				for each (String^ arr2Bit in arr2)
+				{
+					if (arr1Bit->ToUpper()->Trim() == arr2Bit->ToUpper()->Trim())
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 
 		void StartRoughIntegration()
 		{
@@ -381,6 +468,11 @@ namespace Integra {
 			SetAttrLists();
 
 			_integGroupPairs = IntegrationGroupPair::GetGroups(_odbc, _settings->Id);
+
+			Differences = gcnew List<DifferencePosition^>();
+			SourceNew = gcnew List<Position ^>();
+			TargetNew = gcnew List<Position ^>();
+
 
 			if (_integGroupPairs == nullptr || _integGroupPairs->Count <= 0)
 			{
@@ -674,7 +766,8 @@ namespace Integra {
 			for (int i = 0; i < _attrPairs->Count; i++)
 			{
 				AttributePair^ newAttrPair = nullptr;
-				if (_attrPairs[i]->CheckEqual(sourcePos->AttributesAndValues, targetPos->AttributesAndValues))
+				if (_attrPairs[i]->CheckEqual(sourcePos->AttributesAndValues, sourcePos->GroupingAttrs, 
+												targetPos->AttributesAndValues, targetPos->GroupingAttrs))
 				{
 					newAttrPair = gcnew AttributePair(_attrPairs[i]);
 					diffPos->AddEqualAttr(newAttrPair);

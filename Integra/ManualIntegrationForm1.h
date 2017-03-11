@@ -370,7 +370,9 @@ private: System::Void bStartRough_Click(System::Object^  sender, System::EventAr
 			 int paramId = OdbcClass::GetResInt(dataGridView1[0, dataGridView1->SelectedCells[0]->RowIndex]->Value);
 
 			 IntegrationSettings^ settings = gcnew IntegrationSettings(paramId, _odbc);
-			 ProgramIntegration::StartRoughIntegration(settings);
+
+			 Results3^ resForm	= gcnew Results3(settings, 0);
+			 resForm->ShowDialog();
 		 }
 private: System::Void bStartAccurate_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -383,7 +385,7 @@ private: System::Void bStartAccurate_Click(System::Object^  sender, System::Even
 
 			 IntegrationSettings^ settings = gcnew IntegrationSettings(paramId, _odbc);
 
-			 Results3^ resForm	= gcnew Results3(settings);
+			 Results3^ resForm	= gcnew Results3(settings, 1);
 			 resForm->ShowDialog();
 		 }
 };

@@ -77,15 +77,9 @@ namespace Integra {
 		}
 
 	public:
-		virtual Dictionary<String^, String^>^ GetAllGroupNames() override
-		{
-			return nullptr;
-		}
+		
 
-		virtual Object^ GetGroupAttrValue(Attribute^ attribute, String^ idGroup) override
-		{
-			return nullptr;
-		}
+		
 
 		virtual List<Position^>^ GetAllPositions() override
 		{
@@ -96,6 +90,28 @@ namespace Integra {
 		{
 			return nullptr;
 		}
+
+		virtual List<Position^>^ GetGroupPositionsTable(Attribute^ groupAttr, String^ dbGroupId, String^ groupFullTable, List<Attribute^>^ attrs, List<Object^>^ filters, List<Object^>^ links) override
+		{
+
+			return nullptr;
+		}
+
+		virtual Dictionary<String^, String^>^ GetAllGroupNames() override
+		{
+			return nullptr;
+		}
+
+		virtual Object^ GetGroupAttrValue(Attribute^ attribute, String^ idGroup) override
+		{
+			return nullptr;
+		}
+
+		virtual Object^ GetPosAttrValue(Attribute^ attribute, String^ idPos) override
+		{
+			return nullptr;
+		}
+
 
 		virtual List<Position^>^ GetAllPositions2(System::ComponentModel::BackgroundWorker^ worker, System::ComponentModel::DoWorkEventArgs ^ e) override
 		{

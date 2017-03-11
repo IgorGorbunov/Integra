@@ -7,6 +7,7 @@
 #include "AttributePair.h"
 #include "IntegrationGroupPair.h"
 
+
 namespace Integra {
 
 	using namespace System;
@@ -133,19 +134,7 @@ namespace Integra {
 				return _attributePairs;
 			}
 		}
-		/*property List<String^>^ AttributePairFullCodes
-		{
-		List<String^>^ get()
-		{
-		List<String^>^ list = gcnew List<String ^>();
-		for each (KeyValuePair<Attribute^, Attribute^>^ pair in AttributePairs)
-		{
-		list->Add(pair->Key->FullCode);
-		list->Add(pair->Value->FullCode);
-		}
-		return list;
-		}
-		}*/
+
 
 	private:
 		OdbcClass^ _odbc;
@@ -169,7 +158,28 @@ namespace Integra {
 
 		Dictionary<String^, String^>^ _fields;
 
+		
+
 	public:
+
+		static Dictionary<int, String^>^ GetIntSchemas(OdbcClass^ odbc)
+		{
+			String^ squery = String::Format("select ID, INT_NAME from {0}INTEGRATION_PARAMS order by ID", odbc->schema);
+			List<Object^>^ resList = odbc->ExecuteQuery(squery);
+
+			Dictionary<int, String^>^ resDict = gcnew Dictionary<int, String ^>();
+			if (resList != nullptr && resList->Count > 0)
+			{
+				for (int i = 0; i < resList->Count; i+=2)
+				{
+					int id = odbc->GetResInt(resList[i]);
+					String^ name = odbc->GetResString(resList[i+1]);
+					resDict->Add(id, name);
+				}
+			}
+			return resDict;
+		}
+
 		IntegrationSettings(int parametrsId, OdbcClass^ odbc)
 		{
 			_id = parametrsId;
@@ -217,6 +227,9 @@ namespace Integra {
 		{
 			return AttributePair::GetPairs(Id, _odbc, groupId);
 		}
+
+
+		
 
 	protected:
 		/// <summary>

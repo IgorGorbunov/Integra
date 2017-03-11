@@ -2,6 +2,7 @@
 
 #include "Position.h"
 #include "ODBCclass.h"
+#include "PosGroupParams.h"
 
 namespace Integra {
 
@@ -83,6 +84,22 @@ namespace Integra {
 			_eqValue = equiv->ToString()->Trim();
 		}
 
+		virtual Dictionary<Attribute^, String^>^ GetRemakingAttrsAndVals(OdbcClass^ odbc) override
+		{
+			_odbc = odbc;
+			List<PosGroupParam^>^ posGroupParams = PosGroupParam::GetGroupParams(_odbc, _intgrBook->Id);
+			Dictionary<Attribute^, String^>^ newAttrsAndVals = gcnew Dictionary<Attribute ^, String ^>();
+
+			for each (KeyValuePair<Attribute^, String^>^ pair in _attributes)
+			{
+				Attribute^ attr = pair->Key;
+				if (!PosGroupParam::ListContains(attr, posGroupParams))
+				{
+					newAttrsAndVals->Add(attr, pair->Value);
+				}
+			}
+			return newAttrsAndVals;
+		}
 
 	protected:
 		/// <summary>

@@ -22,6 +22,7 @@ namespace Integra {
 	{
 	private:
 		OdbcClass^ _odbc;
+		bool isDllExeBook;
 
 	public:
 		AddEditSystemBookForm(Settings^ settings, OdbcClass^ odbc)
@@ -68,6 +69,10 @@ namespace Integra {
 	private: System::Windows::Forms::Button^  bAddEditUsers;
 	private: System::Windows::Forms::Label^  label6;
 	private: System::Windows::Forms::TextBox^  tbName;
+	private: System::Windows::Forms::Button^  bAddExeFile;
+	private: System::Windows::Forms::TextBox^  tbExePath;
+	private: System::Windows::Forms::Label^  label7;
+	private: System::Windows::Forms::Panel^  pExeFile;
 
 	private:
 		/// <summary>
@@ -86,7 +91,11 @@ namespace Integra {
 			this->cbBook = (gcnew System::Windows::Forms::ComboBox());
 			this->bAddAttrs = (gcnew System::Windows::Forms::Button());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->pExeFile = (gcnew System::Windows::Forms::Panel());
 			this->tbDriver = (gcnew System::Windows::Forms::TextBox());
+			this->bAddExeFile = (gcnew System::Windows::Forms::Button());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->tbExePath = (gcnew System::Windows::Forms::TextBox());
 			this->cbConnType = (gcnew System::Windows::Forms::ComboBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->tbDb = (gcnew System::Windows::Forms::TextBox());
@@ -102,6 +111,7 @@ namespace Integra {
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->tbName = (gcnew System::Windows::Forms::TextBox());
 			this->groupBox1->SuspendLayout();
+			this->pExeFile->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -135,6 +145,7 @@ namespace Integra {
 			// groupBox1
 			// 
 			this->groupBox1->Controls->Add(this->tbDriver);
+			this->groupBox1->Controls->Add(this->pExeFile);
 			this->groupBox1->Controls->Add(this->cbConnType);
 			this->groupBox1->Controls->Add(this->label5);
 			this->groupBox1->Controls->Add(this->tbDb);
@@ -149,19 +160,56 @@ namespace Integra {
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Соединение";
 			// 
+			// pExeFile
+			// 
+			this->pExeFile->Controls->Add(this->bAddExeFile);
+			this->pExeFile->Controls->Add(this->label7);
+			this->pExeFile->Controls->Add(this->tbExePath);
+			this->pExeFile->Location = System::Drawing::Point(13, 62);
+			this->pExeFile->Name = L"pExeFile";
+			this->pExeFile->Size = System::Drawing::Size(177, 131);
+			this->pExeFile->TabIndex = 14;
+			this->pExeFile->Visible = false;
+			// 
 			// tbDriver
 			// 
-			this->tbDriver->Location = System::Drawing::Point(13, 56);
+			this->tbDriver->Location = System::Drawing::Point(13, 59);
 			this->tbDriver->Multiline = true;
 			this->tbDriver->Name = L"tbDriver";
-			this->tbDriver->Size = System::Drawing::Size(177, 129);
+			this->tbDriver->Size = System::Drawing::Size(177, 134);
 			this->tbDriver->TabIndex = 10;
 			this->tbDriver->Visible = false;
+			// 
+			// bAddExeFile
+			// 
+			this->bAddExeFile->Location = System::Drawing::Point(48, 57);
+			this->bAddExeFile->Name = L"bAddExeFile";
+			this->bAddExeFile->Size = System::Drawing::Size(75, 23);
+			this->bAddExeFile->TabIndex = 13;
+			this->bAddExeFile->Text = L"Обзор";
+			this->bAddExeFile->UseVisualStyleBackColor = true;
+			this->bAddExeFile->Click += gcnew System::EventHandler(this, &AddEditSystemBookForm::bAddExeFile_Click);
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Location = System::Drawing::Point(3, 18);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(77, 13);
+			this->label7->TabIndex = 11;
+			this->label7->Text = L"Путь к файлу:";
+			// 
+			// tbExePath
+			// 
+			this->tbExePath->Location = System::Drawing::Point(3, 34);
+			this->tbExePath->Name = L"tbExePath";
+			this->tbExePath->Size = System::Drawing::Size(171, 20);
+			this->tbExePath->TabIndex = 12;
 			// 
 			// cbConnType
 			// 
 			this->cbConnType->FormattingEnabled = true;
-			this->cbConnType->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L" Логин, пароль, база данных", L"Драйвер"});
+			this->cbConnType->Items->AddRange(gcnew cli::array< System::Object^  >(3) {L"Логин, пароль, база данных", L"Драйвер", L"Сторонний DLL/EXE файл"});
 			this->cbConnType->Location = System::Drawing::Point(13, 30);
 			this->cbConnType->Name = L"cbConnType";
 			this->cbConnType->Size = System::Drawing::Size(177, 21);
@@ -311,6 +359,8 @@ namespace Integra {
 			this->Load += gcnew System::EventHandler(this, &AddEditSystemBookForm::AddEditSystemBookForm_Load);
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
+			this->pExeFile->ResumeLayout(false);
+			this->pExeFile->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -377,7 +427,7 @@ namespace Integra {
 
 			Void WriteIntegrBook()
 			{
-				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE,NAME";
+				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE,NAME,EXE_PATH";
 				
 				_intgrBookId = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATION_BOOK");
 				List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
@@ -412,9 +462,11 @@ namespace Integra {
 						sqlDb = OdbcClass::GetSqlString(tbDb->Text->Trim());
 					}
 				}
+				String^ sExePath = OdbcClass::GetSqlString(tbExePath->Text);
+
 				String^ query;
-				query = String::Format("insert into {0}INTEGRATION_BOOK ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12})", 
-					_odbc->schema, columns, _intgrBookId, sqlIdSystem, sqlIdBook, sqlLogin, sqlPassword, sqlDb, sqlDriver, _systemTypeId, sqlUser, sqlDate, sqlName);
+				query = String::Format("insert into {0}INTEGRATION_BOOK ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13})", 
+					_odbc->schema, columns, _intgrBookId, sqlIdSystem, sqlIdBook, sqlLogin, sqlPassword, sqlDb, sqlDriver, _systemTypeId, sqlUser, sqlDate, sqlName,sExePath);
 				_odbc->ExecuteNonQuery(query);
 			}
 
@@ -616,24 +668,28 @@ namespace Integra {
 			Void WriteToDb()
 			{
 				WriteIntegrBook();
-				WriteUseAttrs(_dbAttrs, _intgrBookId);
-				WriteSingleAttrs(_idCol, _titleCol, _dateCol, _roughCol, _intgrBookId);
-				if (_dbFilters != nullptr)
+
+				if (!isDllExeBook)
 				{
-					WriteDbFilters();
-				}
-				if (_dbLinks != nullptr)
-				{
-					WriteDbLinks();
-				}
-				WriteRoughSymbols(_roughSymbols, _intgrBookId);
-				if (!String::IsNullOrEmpty(_groupSchtab))
-				{
-					WriteGroup(_intgrBookId);
-				}
-				if (_posParamAttrs != nullptr && _posParamAttrs->Count > 0)
-				{
-					WritePosAttrs();
+					WriteUseAttrs(_dbAttrs, _intgrBookId);
+					WriteSingleAttrs(_idCol, _titleCol, _dateCol, _roughCol, _intgrBookId);
+					if (_dbFilters != nullptr)
+					{
+						WriteDbFilters();
+					}
+					if (_dbLinks != nullptr)
+					{
+						WriteDbLinks();
+					}
+					WriteRoughSymbols(_roughSymbols, _intgrBookId);
+					if (!String::IsNullOrEmpty(_groupSchtab))
+					{
+						WriteGroup(_intgrBookId);
+					}
+					if (_posParamAttrs != nullptr && _posParamAttrs->Count > 0)
+					{
+						WritePosAttrs();
+					}
 				}
 				WriteUserAccess();
 			}
@@ -669,10 +725,26 @@ private: System::Void cbConnType_SelectedIndexChanged(System::Object^  sender, S
 				 tbPass->Visible = true;
 				 tbDb->Enabled = true;
 				 tbDb->Visible = true;
+
+				 pExeFile->Visible = false;
+				 bAddAttrs->Enabled = true;
+			 }
+			 else if (cbConnType->SelectedIndex == 1)
+			 {
+				 pExeFile->Visible = false;
+				 bAddAttrs->Enabled = true;
+
+				 tbDriver->Visible = true;
+				 tbLogin->Visible = false;
+				 tbPass->Visible = false;
+				 tbDb->Visible = false;
 			 }
 			 else
 			 {
-				 tbDriver->Visible = true;
+				 pExeFile->Visible = true;
+				 bAddAttrs->Enabled = false;
+
+				 tbDriver->Visible = false;
 				 tbLogin->Visible = false;
 				 tbPass->Visible = false;
 				 tbDb->Visible = false;
@@ -684,6 +756,8 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 isDllExeBook = false;
+
 			 if (String::IsNullOrEmpty(tbName->Text))
 			 {
 				 MessageBox::Show("Не задано наименование справочника!");
@@ -699,22 +773,6 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 				 MessageBox::Show("Не задана система!");
 				 return;
 			 }
-			 
-			 else if (_dbAttrs == nullptr || _dbAttrs->Count == 0)
-			 {
-				 MessageBox::Show("Не заданы атрибуты системного справочника!");
-				 return;
-			 }
-			 else if (_idCol == nullptr)
-			 {
-				 MessageBox::Show("Не задан атрибут-идентификатор!");
-				 return;
-			 }
-			 else if (_titleCol == nullptr)
-			 {
-				 MessageBox::Show("Не задан основной атрибут!");
-				 return;
-			 }
 			 else if (_users == nullptr || _users->Count <= 0)
 			 {
 				 MessageBox::Show("Не задан доступ для пользователей!");
@@ -727,8 +785,23 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 					 MessageBox::Show("Не задан драйвер для системы!");
 					 return;
 				 }
+				 else if (_dbAttrs == nullptr || _dbAttrs->Count == 0)
+				 {
+					 MessageBox::Show("Не заданы атрибуты системного справочника!");
+					 return;
+				 }
+				 else if (_idCol == nullptr)
+				 {
+					 MessageBox::Show("Не задан атрибут-идентификатор!");
+					 return;
+				 }
+				 else if (_titleCol == nullptr)
+				 {
+					 MessageBox::Show("Не задан основной атрибут!");
+					 return;
+				 }
 			 }
-			 else
+			 else if (cbConnType->SelectedIndex == 0)
 			 {
 				 if (String::IsNullOrEmpty(tbLogin->Text))
 				 {
@@ -748,6 +821,30 @@ private: System::Void bOk_Click(System::Object^  sender, System::EventArgs^  e)
 						 return;
 					 }
 				 }
+				 else if (_dbAttrs == nullptr || _dbAttrs->Count == 0)
+				 {
+					 MessageBox::Show("Не заданы атрибуты системного справочника!");
+					 return;
+				 }
+				 else if (_idCol == nullptr)
+				 {
+					 MessageBox::Show("Не задан атрибут-идентификатор!");
+					 return;
+				 }
+				 else if (_titleCol == nullptr)
+				 {
+					 MessageBox::Show("Не задан основной атрибут!");
+					 return;
+				 }
+			 }
+			 else
+			 {
+				 if (String::IsNullOrEmpty(tbExePath->Text))
+				 {
+					 MessageBox::Show("Не задан путь к исполняемому файлу!");
+					 return;
+				 }
+				 isDllExeBook = true;
 			 }
 
 			 WriteToDb();
@@ -852,6 +949,22 @@ private: System::Void bAddEditUsers_Click(System::Object^  sender, System::Event
 			 if (form->IsOk)
 			 {
 				 _users = form->Users;
+			 }
+		 }
+
+private: System::Void bAddExeFile_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 OpenFileDialog^ dialog = gcnew OpenFileDialog();
+			 dialog->Title = "Выберите сторонний DLL/EXE файл";
+			 dialog->Filter = "Исполняемые файлы (.dll, .exe)|*.dll;*.exe";
+			 System::Windows::Forms::DialogResult res = dialog->ShowDialog();
+			 if (res == Windows::Forms::DialogResult::Yes || res == Windows::Forms::DialogResult::OK)
+			 {
+				 tbExePath->Text = dialog->FileName;
+			 }
+			 else
+			 {
+				 return;
 			 }
 		 }
 };

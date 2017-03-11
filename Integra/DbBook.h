@@ -190,6 +190,16 @@ namespace Integra {
 			return list2[0];
 		}
 
+		virtual Object^ GetPosAttrValue(Attribute^ attribute, String^ idPos) override
+		{
+			Attribute^ posIdAttr = BookSetting->AttrId;
+			String^ sIdPos = BookSetting->Odbc->GetSqlValue(posIdAttr->DataType, idPos);
+
+			String^ squery = String::Format("select {0} from {1} where {2} = {3}", attribute->FullCode, attribute->FullTable, posIdAttr->FullCode, sIdPos);
+			List<Object^>^ list2 = BookSetting->Odbc->ExecuteQuery(squery);
+			return list2[0];
+		}
+
 		virtual List<Position^>^ GetAllPositions2(System::ComponentModel::BackgroundWorker^ worker, System::ComponentModel::DoWorkEventArgs^ e) override
 		{
 			List<Position^>^ list = gcnew List<Position ^>();

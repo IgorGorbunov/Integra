@@ -117,7 +117,7 @@ namespace Integra {
 					_dataType = "ярпнйю";
 				}
 				//release
-				if(value == "жекне вхякн" || value == "INTEGER")
+				if(value == "жекне вхякн" || value == "INTEGER" || value == "NUMBER")
 				{
 					_dataType = "жекне вхякн";
 				}
@@ -283,6 +283,20 @@ namespace Integra {
 			_idIntgrBook = integrationBookId;
 			_dataType = dataType;
 			MaxLength = maxLength;
+			_odbc = odbc;
+		}
+
+		Attribute(int id, String^ name, String^ schemaName, String^ tableName, String^ attrCode, int integrationBookId, String^ dataType, String^ maxLength, int maxDoubleLength, OdbcClass^ odbc)
+		{
+			_id = id;
+			_name = name;
+			_schemaName = schemaName;
+			_tableName = tableName;
+			_attrName = attrCode;
+			_idIntgrBook = integrationBookId;
+			_dataType = dataType;
+			MaxLength = maxLength;
+			_doubleLength = maxDoubleLength;
 			_odbc = odbc;
 		}
 

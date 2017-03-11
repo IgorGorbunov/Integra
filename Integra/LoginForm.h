@@ -185,7 +185,7 @@ namespace Integra {
 			 {
 				 //release
 				driver = _driver;
-				 //MessageBox::Show("¬ведите пароль!");return;
+				//MessageBox::Show("¬ведите пароль!");return;
 			 }
 			 else
 			 {

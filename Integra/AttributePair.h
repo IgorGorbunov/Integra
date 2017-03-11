@@ -4,6 +4,7 @@
 #include "Attribute.h"
 #include "ComplexAttribute.h"
 #include "StringFunctions.h"
+#include "GroupingAttr.h"
 
 namespace Integra {
 
@@ -376,21 +377,92 @@ namespace Integra {
 		}
 
 
-		bool CheckEqual(Dictionary<Attribute^, String^>^ sourceAttrs, Dictionary<Attribute^, String^>^ targetAttrs)
+		bool CheckEqual(Dictionary<Attribute^, String^>^ sourceAttrs, List<GroupingAttr^>^ sGroups, Dictionary<Attribute^, String^>^ targetAttrs, List<GroupingAttr^>^ tGroups)
 		{
+			//tst
+			for each (KeyValuePair<Attribute^, String^>^ pair in sourceAttrs)
+			{
+				Attribute^ attr = pair->Key;
+				String^ val = pair->Value;
+			}
+
+			for each (KeyValuePair<Attribute^, String^>^ pair in targetAttrs)
+			{
+				Attribute^ attr = pair->Key;
+				String^ val = pair->Value;
+			}
+			//tst
+
 			if (_attr1 != nullptr && _attr2 != nullptr)
 			{
-				return IsEqual(sourceAttrs[_attr1], _attr1->DataType, targetAttrs[_attr2], _attr2->DataType);
+				String^ sourceVal;
+				String^ sType;
+				if (sourceAttrs->ContainsKey(_attr1))
+				{
+					sourceVal = sourceAttrs[_attr1];
+					sType = _attr1->DataType;
+				}
+				else
+				{
+					sourceVal = GroupingAttr::GetValueByGrAttribute(_attr1, sGroups);
+					sType = GroupingAttr::GetDataTypeByGrAttribute(_attr1, sGroups);
+				}
+
+				String^ targetVal;
+				String^ tType;
+				if (targetAttrs->ContainsKey(_attr2))
+				{
+					targetVal = targetAttrs[_attr2];
+					tType = _attr2->DataType;
+				}
+				else
+				{
+					targetVal = GroupingAttr::GetValueByGrAttribute(_attr2, tGroups);
+					tType = GroupingAttr::GetDataTypeByGrAttribute(_attr2, tGroups);
+				}
+
+				if (sourceVal == nullptr && targetVal == nullptr)
+				{
+					return true;
+				}
+
+				return IsEqual(sourceVal, sType, targetVal, tType);
 			}
 			else if (_attr1 != nullptr && _cAttr2 != nullptr)
 			{
-				String^ complexVal = _cAttr2->GetValue(targetAttrs);
-				return IsEqual(sourceAttrs[_attr1], _attr1->DataType, complexVal, "岩形世");
+				String^ sourceVal;
+				String^ sType;
+				if (sourceAttrs->ContainsKey(_attr1))
+				{
+					sourceVal = sourceAttrs[_attr1];
+					sType = _attr1->DataType;
+				}
+				else
+				{
+					sourceVal = GroupingAttr::GetValueByGrAttribute(_attr1, sGroups);
+					sType = GroupingAttr::GetDataTypeByGrAttribute(_attr1, sGroups);
+				}
+
+				String^ complexVal = _cAttr2->GetValue(targetAttrs, tGroups);
+				return IsEqual(sourceVal, sType, complexVal, "岩形世");
 			}
 			else if (_cAttr1 != nullptr && _attr2 != nullptr)
 			{
-				String^ complexVal = _cAttr1->GetValue(sourceAttrs);
-				return IsEqual(complexVal, "岩形世", targetAttrs[_attr2], _attr2->DataType);
+				String^ targetVal;
+				String^ tType;
+				if (targetAttrs->ContainsKey(_attr2))
+				{
+					targetVal = targetAttrs[_attr2];
+					tType = _attr2->DataType;
+				}
+				else
+				{
+					targetVal = GroupingAttr::GetValueByGrAttribute(_attr2, tGroups);
+					tType = GroupingAttr::GetDataTypeByGrAttribute(_attr2, tGroups);
+				}
+
+				String^ complexVal = _cAttr1->GetValue(sourceAttrs, sGroups);
+				return IsEqual(complexVal, "岩形世", targetVal, tType);
 			}
 			return false;
 		}
@@ -410,6 +482,15 @@ namespace Integra {
 
 			bool IsEqual(String^ sourceVal, String^ sDataType, String^ targetVal, String^ tDataType)
 			{
+				if (String::IsNullOrEmpty(sourceVal))
+				{
+					sourceVal = String::Empty;
+				}
+				if (String::IsNullOrEmpty(targetVal))
+				{
+					targetVal = String::Empty;
+				}
+
 				_sVal = sourceVal->Trim();
 				_tVal = targetVal->Trim();
 

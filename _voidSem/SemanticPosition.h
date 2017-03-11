@@ -133,6 +133,11 @@ namespace Integra {
 			return list;
 		}
 
+		virtual Dictionary<Attribute^, String^>^ GetRemakingAttrsAndVals(OdbcClass^ odbc) override
+		{
+			return nullptr;
+		}
+
 	private:
 		Void SetAttrs(List<Attribute^>^ parametrCodes)
 		{

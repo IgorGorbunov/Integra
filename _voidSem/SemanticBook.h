@@ -80,6 +80,11 @@ namespace Integra {
 			return nullptr;
 		}
 
+		virtual Object^ GetPosAttrValue(Attribute^ attribute, String^ idPos) override
+		{
+			return nullptr;
+		}
+
 		virtual List<Position^>^ GetAllPositions() override
 		{
 			return GetMaxLevelPositions();
@@ -98,8 +103,12 @@ namespace Integra {
 		{
 			return nullptr;
 		}
+		virtual List<Position^>^ GetGroupPositionsTable(Attribute^ groupAttr, String^ dbGroupId, String^ groupFullTable, List<Attribute^>^ attrs, List<Object^>^ filters, List<Object^>^ links) override
+		{
+			return nullptr;
+		}
 
-		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, IntegrationResult^ result, int isTarget) override
+		virtual void AddPosition(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal, Object^ titleVal, IntegrationResult^ result, int isTarget) override
 		{
 
 		}
@@ -112,6 +121,11 @@ namespace Integra {
 		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) override
 		{
 
+		}
+
+		virtual Object^ GetSemObject(String^ location) override
+		{
+			return nullptr;
 		}
 
 	private:

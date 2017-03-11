@@ -74,6 +74,15 @@ namespace Integra {
 		{
 			_integration = gcnew Integration(intSet, Odbc);
 			_integration->StartRoughIntegration();
+
+			SourceNew = _integration->SourceNew;
+			TargetNew = _integration->TargetNew;
+			Differences = _integration->Differences;
+
+			NinSource = _integration->NinSource;
+			NinTarget = _integration->NinTarget;
+			Nequal = _integration->Nequal;
+			Nmatches = _integration->Nmatches;
 		}
 
 		static void StopIntegration()

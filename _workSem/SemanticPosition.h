@@ -91,10 +91,10 @@ namespace Integra {
 		SemanticPosition(ISCObject^ object, List<Attribute^>^ attributeList,  Attribute^ attrId, BookSettings^ intgrBook) 
 		{
 			//release
-			if (UnicId == "6p.pcwEPfKTOW7TgthfPaa")
+			/*if (UnicId == "6p.pcwEPfKTOW7TgthfPaa")
 			{
 				MessageBox::Show("test");
-			}
+			}*/
 			_intgrBook = intgrBook;
 			_element = object;
 			_attributeList = attributeList;
@@ -185,6 +185,11 @@ namespace Integra {
 			{
 				_eqValue = attrSem->DataAttr->ToString()->Trim();
 			}
+		}
+
+		virtual Dictionary<Attribute^, String^>^ GetRemakingAttrsAndVals(OdbcClass^ odbc) override
+		{
+			return nullptr;
 		}
 
 	private:

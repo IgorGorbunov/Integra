@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "Attribute.h"
 #include "BookSettings.h"
+#include "GroupingAttr.h"
 
 
 namespace Integra {
@@ -26,6 +27,13 @@ namespace Integra {
 				return _attributes;
 			}
 		}
+		property List<GroupingAttr^>^ GroupingAttrs
+		{
+			List<GroupingAttr^>^ get()
+			{
+				return _groupingAttrs;
+			}
+		}
 
 		property String^ UnicId
 		{
@@ -45,6 +53,18 @@ namespace Integra {
 				_attrId = attr;
 			}
 		}
+		property Attribute^ AttrName
+		{
+			Attribute^ get()
+			{
+				return _attrName;
+			}
+			void set(Attribute^ attr)
+			{
+				_attrName = attr;
+			}
+
+		}
 		property String^ EqualValue
 		{
 			String^ get()
@@ -60,7 +80,9 @@ namespace Integra {
 		BookSettings^ _intgrBook;
 
 		Dictionary<Attribute^, String^>^ _attributes;
+		List<GroupingAttr^>^ _groupingAttrs;
 
+		Attribute^ _attrName;
 		Attribute^ _attrId;
 		String^ _unicId;
 
@@ -109,6 +131,41 @@ namespace Integra {
 
 		}
 
+		virtual Dictionary<Attribute^, String^>^ GetRemakingAttrsAndVals(OdbcClass^ odbc)
+		{
+			return nullptr;
+		}
+
+		void AddGroupingAttr(GroupingAttr^ groupingAttr)
+		{
+			if (_groupingAttrs == nullptr)
+			{
+				_groupingAttrs = gcnew List<GroupingAttr ^>();
+			}
+			_groupingAttrs->Add(groupingAttr);
+		}
+
+		void AddValueToGroupingAttr(Attribute^ titlePosAttr, Attribute^ valuePosAttr, String^ title, String^ value)
+		{
+			for each (GroupingAttr^ groupAttr in _groupingAttrs)
+			{
+				if (title == groupAttr->Title)
+				{
+					groupAttr->AddPosValue(titlePosAttr, valuePosAttr, value);
+					break;
+				}
+			}
+		}
+
+		List<GroupingAttr^>^ GetGroupAttrsCopy()
+		{
+			return gcnew List<GroupingAttr^>(_groupingAttrs);
+		}
+
+		void SetGroupingAttrs(List<GroupingAttr^>^ groupingAttrs)
+		{
+			_groupingAttrs = groupingAttrs;
+		}
 
 	protected:
 		/// <summary>

@@ -138,6 +138,9 @@
     <ClCompile Include="UserBookAccessForm.cpp">
       <Filter>Заголовочные файлы\Views</Filter>
     </ClCompile>
+    <ClCompile Include="SearchForm.cpp">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -353,6 +356,12 @@
     <ClInclude Include="Role.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="SearchForm.h">
+      <Filter>Заголовочные файлы\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupingAttr.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
@@ -452,6 +461,9 @@
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="UserBookAccessForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchForm.resx">
       <Filter>Файлы ресурсов</Filter>
     </EmbeddedResource>
   </ItemGroup>

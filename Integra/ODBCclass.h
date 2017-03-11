@@ -187,7 +187,6 @@ namespace Integra {
 				}
 			}
 
-
 			static String^ GetSqlString(String^ s)
 			{
 				if (String::IsNullOrEmpty(s))
@@ -223,8 +222,8 @@ namespace Integra {
 				if (attrDataType == "жекне вхякн")
 				{
 					//release
-					return GetSqlDouble(s);
-					//return GetSqlInt(s);
+					//return GetSqlDouble(s);
+					return GetSqlInt(s);
 				}
 				if (attrDataType == "дюрю")
 				{

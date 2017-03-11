@@ -2,6 +2,7 @@
 
 #include "ODBCclass.h"
 #include "ComposeAttr.h"
+#include "GroupingAttr.h"
 
 namespace Integra {
 
@@ -304,7 +305,7 @@ namespace Integra {
 			}
 		}
 
-		String^ GetValue(Dictionary<Attribute^, String^>^ attrValues)
+		String^ GetValue(Dictionary<Attribute^, String^>^ attrValues, List<GroupingAttr^>^ groupingAttrs)
 		{
 			if (_type == 0)
 			{
@@ -312,7 +313,7 @@ namespace Integra {
 				{
 					SetComposeAttrs();
 				}
-				return GetComposeValue(attrValues);
+				return GetComposeValue(attrValues, groupingAttrs);
 			}
 			else
 			{
@@ -322,11 +323,11 @@ namespace Integra {
 				}
 				if (_selectType == 0)
 				{
-					return GetNsymbolValue(attrValues);
+					return GetNsymbolValue(attrValues, groupingAttrs);
 				}
 				else
 				{
-					return GetSplitValue(attrValues);
+					return GetSplitValue(attrValues, groupingAttrs);
 				}
 			}
 			return String::Empty;
@@ -372,7 +373,7 @@ namespace Integra {
 				_selectAttribute = gcnew Attribute(_selectAttributeId, _odbc);
 			}
 
-			String^ GetComposeValue(Dictionary<Attribute^, String^>^ attrValues)
+			String^ GetComposeValue(Dictionary<Attribute^, String^>^ attrValues, List<GroupingAttr^>^ groupAttrs)
 			{
 				String^ composeValue = String::Empty;
 				for each (ComposeAttribute^ compAttr in _composeAttributes)
@@ -383,15 +384,31 @@ namespace Integra {
 					}
 					else
 					{
-						composeValue += attrValues[compAttr->Attribut];
+						if (attrValues->ContainsKey(compAttr->Attribut))
+						{
+							composeValue += attrValues[compAttr->Attribut];
+						}
+						else
+						{
+							composeValue += GroupingAttr::GetValueByGrAttribute(compAttr->Attribut, groupAttrs);
+						}
 					}
 				}
 				return composeValue;
 			}
 
-			String^ GetSplitValue(Dictionary<Attribute^, String^>^ attrValues)
+			String^ GetSplitValue(Dictionary<Attribute^, String^>^ attrValues, List<GroupingAttr^>^ groupAttrs)
 			{
-				String^ value = attrValues[_selectAttribute];
+				String^ value;
+				if (attrValues->ContainsKey(_selectAttribute))
+				{
+					value = attrValues[_selectAttribute];
+				}
+				else
+				{
+					value = GroupingAttr::GetValueByGrAttribute(_selectAttribute, groupAttrs);
+				}
+
 				if (String::IsNullOrEmpty(value))
 				{
 					return value;
@@ -412,9 +429,18 @@ namespace Integra {
 				return splitArray[_iSelectPart];
 			}
 
-			String^ GetNsymbolValue(Dictionary<Attribute^, String^>^ attrValues)
+			String^ GetNsymbolValue(Dictionary<Attribute^, String^>^ attrValues, List<GroupingAttr^>^ groupAttrs)
 			{
-				String^ value = attrValues[_selectAttribute];
+				String^ value;
+				if (attrValues->ContainsKey(_selectAttribute))
+				{
+					value = attrValues[_selectAttribute];
+				}
+				else
+				{
+					value = GroupingAttr::GetValueByGrAttribute(_selectAttribute, groupAttrs);
+				}
+
 				if (String::IsNullOrEmpty(value))
 				{
 					return value;

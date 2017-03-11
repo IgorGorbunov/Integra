@@ -48,6 +48,7 @@ namespace Integra {
 	public:
 		virtual Dictionary<String^, String^>^ GetAllGroupNames() abstract;
 		virtual Object^ GetGroupAttrValue(Attribute^ attribute, String^ idGroup) abstract;
+		virtual Object^ GetPosAttrValue(Attribute^ attribute, String^ idPos) abstract;
 
 		virtual List<Position^>^ GetAllPositions() abstract;
 		virtual List<Position^>^ GetAllPositionsTable(List<Attribute^>^ attrs, List<Object^>^ filters, List<Object^>^ links) abstract;

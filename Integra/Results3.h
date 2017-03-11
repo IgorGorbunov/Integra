@@ -37,35 +37,21 @@ namespace Integra {
 		System::ComponentModel::DoWorkEventArgs ^ eWorker;
 
 	private: System::Windows::Forms::GroupBox^  groupBox1;
-
-
-
 	public: System::Windows::Forms::Label^  LblSourceCount;
 	public: System::Windows::Forms::Label^  LblSourceStatus;
-
 	private: System::Windows::Forms::Label^  label7;
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::GroupBox^  groupBox2;
-
-
-
 	public: System::Windows::Forms::Label^  LblTargetCount;
 	public: System::Windows::Forms::Label^  LblTargetStatus;
-
 	private: System::Windows::Forms::Label^  label6;
 	private: System::Windows::Forms::Label^  label5;
 	public: System::Windows::Forms::Button^  bCancel;
-	private: 
-
-
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Label^  label8;
 	private: System::Windows::Forms::Label^  label9;
 	private: System::Windows::Forms::DataGridView^  dataGridView1;
 	private: System::Windows::Forms::DataGridView^  dataGridView2;
-
-	private:
-		int selectId;
 	private: System::Windows::Forms::Button^  bIntegNewSourceToTarget;
 	private: System::Windows::Forms::Button^  bIntegNewTargetToSource;
 	private: System::Windows::Forms::Button^  button4;
@@ -79,12 +65,17 @@ namespace Integra {
 	private: System::Windows::Forms::Label^  label12;
 	public: System::Windows::Forms::Label^  lblNequal;
 	public: System::Windows::Forms::Label^  lblNmatching;
-	public: 
 
-			 IntegrationSettings^ _settings;
+
+	private:
+		int selectId;
+		IntegrationSettings^ _settings;
+		// ingtrType: 0 - rough, 1 - accurate, 2 - exe
+		int _intgrType;
 
 	public:
-		Results3 (IntegrationSettings^ settings)
+		// ingtrType: 0 - rough, 1 - accurate, 2 - exe
+		Results3 (IntegrationSettings^ settings, int ingtrType)
 		{
 			InitializeComponent();
 			_settings = settings;
@@ -98,6 +89,8 @@ namespace Integra {
 				bDeleteFromSource->Enabled = true;
 				bIntegNewTargetToSource->Enabled = true;
 			}
+
+			_intgrType = ingtrType;
 		}
 
 	protected:
@@ -610,9 +603,6 @@ namespace Integra {
 				SetNew(dgvTargetNew, position, iColIdNewT);
 			}
 
-			
-
-
 			void SetNewDiff(DifferencePosition^ pos)
 			{
 				lbDifferences->Items->Add(pos->UnicId);
@@ -713,6 +703,38 @@ namespace Integra {
 				lblNmatching->Visible = true;
 			}
 
+			void StartRough()
+			{
+				Application::DoEvents();
+				ProgramIntegration::StartRoughIntegration(_settings);
+				SetLablesReady();
+
+				_sourceNew = ProgramIntegration::SourceNew;
+				_targetNew = ProgramIntegration::TargetNew;
+				Differences = ProgramIntegration::Differences;
+				SetDgvNew(dgvSourceNew, _sourceNew, iColIdNewS);
+				SetDgvNew(dgvTargetNew, _targetNew, iColIdNewT);
+				SetListDiff();
+			}
+
+			void StartAccurate()
+			{
+				Application::DoEvents();
+				ProgramIntegration::StartIntegrationTable(_settings, this, LblSourceCount);
+				SetLablesReady();
+
+				_sourceNew = ProgramIntegration::SourceNew;
+				_targetNew = ProgramIntegration::TargetNew;
+				Differences = ProgramIntegration::Differences;
+				SetDgvNew(dgvSourceNew, _sourceNew, iColIdNewS);
+				SetDgvNew(dgvTargetNew, _targetNew, iColIdNewT);
+				SetListDiff();
+			}
+
+			void StartExe()
+			{
+
+			}
 
 private: System::Void Results_Load(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -760,16 +782,18 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void Results3_Shown(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 Application::DoEvents();
-			 ProgramIntegration::StartIntegrationTable(_settings, this, LblSourceCount);
-			 SetLablesReady();
-
-			 _sourceNew = ProgramIntegration::SourceNew;
-			 _targetNew = ProgramIntegration::TargetNew;
-			 Differences = ProgramIntegration::Differences;
-			 SetDgvNew(dgvSourceNew, _sourceNew, iColIdNewS);
-			 SetDgvNew(dgvTargetNew, _targetNew, iColIdNewT);
-			 SetListDiff();
+			 if (_intgrType == 0)
+			 {
+				 StartRough();
+			 }
+			 else if (_intgrType == 1)
+			 {
+				 StartAccurate();
+			 }
+			 else if (_intgrType == 2)
+			 {
+				 StartExe();
+			 }
 		 }
 private: System::Void bIntegNewSource_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {

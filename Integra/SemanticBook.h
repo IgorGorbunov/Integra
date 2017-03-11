@@ -80,6 +80,11 @@ namespace Integra {
 			return nullptr;
 		}
 
+		virtual Object^ GetPosAttrValue(Attribute^ attribute, String^ idPos) override
+		{
+			return nullptr;
+		}
+
 		virtual List<Position^>^ GetAllPositions() override
 		{
 			return GetMaxLevelPositions();

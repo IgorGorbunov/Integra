@@ -187,6 +187,16 @@ namespace Integra {
 			Set(_id);
 		}
 
+		IntegrationSettings(OdbcClass^ odbc, String^ name, BookSettings^ sourceBook, BookSettings^ targetBook, int type)
+		{
+			_odbc = odbc;
+			_name = name;
+			_sourceBook = sourceBook;
+			_targetBook = targetBook;
+			_intType = type;
+			CreateIntgrSchema();
+		}
+
 		IntegrationSettings(OdbcClass^ odbc, String^ name, BookSettings^ sourceBook, BookSettings^ targetBook, int type, Dictionary<Attribute^, Attribute^>^ attrSimplePairs, Dictionary<Attribute^, Attribute^>^ attrEquivs, List<ComplexAttribute^>^ complexAttrs)
 		{
 			_odbc = odbc;

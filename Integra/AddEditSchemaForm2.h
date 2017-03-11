@@ -32,13 +32,10 @@ namespace Integra {
 		List<IntegrationGroupPair^>^ _groupPairs;
 
 		BookSettings^ _sourceBook;
+		BookSettings^ _targetBook;
 
-		
-
-
-
-
-
+		bool _isSourceExe;
+		bool _isTargetExe;
 
 
 	private: System::Windows::Forms::Label^  label2;
@@ -51,17 +48,6 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn3;
-
-
-
-
-
-
-
-
-
-
-			 BookSettings^ _targetBook;
 
 	public:
 		AddEditSchemaForm2(Settings^ settings, OdbcClass^ odbc)
@@ -404,19 +390,19 @@ namespace Integra {
 					return false;
 				}
 				int idSourceBook = OdbcClass::GetResInt(dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString());
-				bool isSourceExe = false;
+				_isSourceExe = false;
 				for each (KeyValuePair<int, String^>^ pair in _systemBooksIdExe)
 				{
 					if (pair->Key == idSourceBook)
 					{
 						if (!String::IsNullOrEmpty(pair->Value))
 						{
-							isSourceExe = true;
+							_isSourceExe = true;
 							break;
 						}
 					}
 				}
-				if (isSourceExe)
+				if (_isSourceExe)
 				{
 					MessageBox::Show("Справочник на основе стороннего EXE файла не может быть источником!");
 					return false;
@@ -428,22 +414,79 @@ namespace Integra {
 					return false;
 				}
 				int idTargetBook = OdbcClass::GetResInt(dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString());
-				bool isTargetExe = false;
+				_isTargetExe = false;
 				for each (KeyValuePair<int, String^>^ pair in _systemBooksIdExe)
 				{
 					if (pair->Key == idTargetBook)
 					{
 						if (!String::IsNullOrEmpty(pair->Value))
 						{
-							isTargetExe = true;
+							_isTargetExe = true;
 							break;
 						}
 					}
 				}
-				if (isTargetExe)
+				if (_isTargetExe)
 				{
 					MessageBox::Show("Для передачи данных в справочник на основе стороннего EXE файла задание соответствия реквизитов не требуется!");
 					return false;
+				}
+				return true;
+			}
+
+			bool SaveSchemaCheck()
+			{
+				if (String::IsNullOrEmpty(tbName->Text))
+				{
+					MessageBox::Show("Не задано наименование схемы интеграции!");
+					return false;
+				}
+				else if (cbIntgr->SelectedItem == nullptr)
+				{
+					MessageBox::Show("Не задан тип интеграции!");
+					return false;
+				}
+
+				int idTargetBook = OdbcClass::GetResInt(dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString());
+				_isTargetExe = false;
+				for each (KeyValuePair<int, String^>^ pair in _systemBooksIdExe)
+				{
+					if (pair->Key == idTargetBook)
+					{
+						if (!String::IsNullOrEmpty(pair->Value))
+						{
+							_isTargetExe = true;
+							break;
+						}
+					}
+				}
+				if (_isTargetExe)
+				{
+					int intgrType = cbIntgr->SelectedIndex;
+					if (intgrType == 1)
+					{
+						MessageBox::Show("Интеграция через сторонний EXE/DLL файл может быть только односторонняя!");
+						return false;
+					}
+				}
+				else
+				{
+					if (_isGroup)
+					{
+						if (_groupPairs == nullptr || _groupPairs->Count <= 0)
+						{
+							MessageBox::Show("Не заданы связи между реквизитами!");
+							return false;
+						}
+					}
+					else
+					{
+						if (_attrPairs == nullptr)
+						{
+							MessageBox::Show("Не заданы связи между реквизитами!");
+							return false;
+						}
+					}
 				}
 				return true;
 			}
@@ -454,46 +497,42 @@ private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void bSave_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 if (_isGroup)
+			 if (!SaveSchemaCheck())
 			 {
-				 if (_groupPairs == nullptr || _groupPairs->Count <= 0)
-				 {
-					 MessageBox::Show("Не заданы связи между реквизитами!");
-					 return;
-				 }
-			 }
-			 else
-			 {
-				 if (_attrPairs == nullptr)
-				 {
-					 MessageBox::Show("Не заданы связи между реквизитами!");
-					 return;
-				 }
-			 }
-
-			 if (String::IsNullOrEmpty(tbName->Text))
-			 {
-				 MessageBox::Show("Не задано наименование схемы интеграции!");
-				 return;
-			 }
-			 else if (cbIntgr->SelectedItem == nullptr)
-			 {
-				 MessageBox::Show("Не задан тип интеграции!");
 				 return;
 			 }
 
 			 int intgrType = cbIntgr->SelectedIndex;
 			 String^ name = tbName->Text->Trim();
-			 IntegrationSettings^ intSettings;
-			 if (_isGroup)
+
+			 if (_sourceBook == nullptr)
 			 {
-				 intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType,_groupPairs); 
+				 String^ oS = dgvSource[0, dgvSource->SelectedCells[0]->RowIndex]->Value->ToString();
+				 _sourceBook = gcnew BookSettings(OdbcClass::GetResInt(oS), _odbc);
+			 }
+			 if (_targetBook == nullptr)
+			 {
+				 String^ oT = dgvTarget[0, dgvTarget->SelectedCells[0]->RowIndex]->Value->ToString();
+				 _targetBook = gcnew BookSettings(OdbcClass::GetResInt(oT), _odbc);
+			 }
+
+
+			 IntegrationSettings^ intSettings;
+			 if (_isTargetExe)
+			 {
+				 intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType);
 			 }
 			 else
 			 {
-				 intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType, _attrPairs, _attrEquivs, _complexAttrs); 
+				 if (_isGroup)
+				 {
+					 intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType,_groupPairs); 
+				 }
+				 else
+				 {
+					 intSettings = gcnew IntegrationSettings(_odbc, name, _sourceBook, _targetBook, intgrType, _attrPairs, _attrEquivs, _complexAttrs); 
+				 }
 			 }
-			 
 
 			 Close();
 		 }

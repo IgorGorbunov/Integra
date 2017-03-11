@@ -65,7 +65,8 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column6;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
-	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^  bStartExe;
+
 
 
 	private:
@@ -85,6 +86,7 @@ namespace Integra {
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
 			this->bCancel = (gcnew System::Windows::Forms::Button());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
+			this->bStartExe = (gcnew System::Windows::Forms::Button());
 			this->bStartAccurate = (gcnew System::Windows::Forms::Button());
 			this->bStartRough = (gcnew System::Windows::Forms::Button());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
@@ -103,7 +105,6 @@ namespace Integra {
 			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column6 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column7 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			this->panel5->SuspendLayout();
 			this->panel2->SuspendLayout();
@@ -142,7 +143,7 @@ namespace Integra {
 			// 
 			// panel2
 			// 
-			this->panel2->Controls->Add(this->button1);
+			this->panel2->Controls->Add(this->bStartExe);
 			this->panel2->Controls->Add(this->bStartAccurate);
 			this->panel2->Controls->Add(this->bStartRough);
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Top;
@@ -150,6 +151,16 @@ namespace Integra {
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(1158, 52);
 			this->panel2->TabIndex = 1;
+			// 
+			// bStartExe
+			// 
+			this->bStartExe->Location = System::Drawing::Point(564, 13);
+			this->bStartExe->Name = L"bStartExe";
+			this->bStartExe->Size = System::Drawing::Size(316, 23);
+			this->bStartExe->TabIndex = 2;
+			this->bStartExe->Text = L"Запустить интеграцию через EXE файл";
+			this->bStartExe->UseVisualStyleBackColor = true;
+			this->bStartExe->Click += gcnew System::EventHandler(this, &ManualIntegrationForm1::bStartExe_Click);
 			// 
 			// bStartAccurate
 			// 
@@ -289,15 +300,6 @@ namespace Integra {
 			this->Column7->Name = L"Column7";
 			this->Column7->ReadOnly = true;
 			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(564, 13);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(316, 23);
-			this->button1->TabIndex = 2;
-			this->button1->Text = L"Запустить интеграцию через EXE файл";
-			this->button1->UseVisualStyleBackColor = true;
-			// 
 			// ManualIntegrationForm1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -387,6 +389,19 @@ private: System::Void bStartAccurate_Click(System::Object^  sender, System::Even
 
 			 Results3^ resForm	= gcnew Results3(settings, 1);
 			 resForm->ShowDialog();
+		 }
+
+private: System::Void bStartExe_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (dataGridView1->RowCount <= 0 || dataGridView1->ColumnCount <= 0)
+			 {
+				 return;
+			 }
+
+			 int paramId = OdbcClass::GetResInt(dataGridView1[0, dataGridView1->SelectedCells[0]->RowIndex]->Value);
+
+			 IntegrationSettings^ settings = gcnew IntegrationSettings(paramId, _odbc);
+			 ProgramIntegration::StartExeIntegration(settings);
 		 }
 };
 }

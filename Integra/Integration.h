@@ -314,6 +314,68 @@ namespace Integra {
 // 			}
 		}
 
+		void StartExeIntegration()
+		{
+			_intgrResults = gcnew IntegrationResult(_odbc, _settings, 3);
+			_intgrResults->WriteDbStart();
+
+			_attrPairs = _settings->AttributePairs;
+			SetAttrLists();
+
+			_bWorker = nullptr;
+			InitializeBackgoundWorkers();
+			List<Position^>^ _sourcePositions;
+
+			bool secondIsSemantic = false;
+			if (!_settings->SourceBook->IsSemantic && _settings->TargetBook->IsSemantic)
+			{
+				secondIsSemantic = true;
+				_sourceBook = GetBook(_settings->SourceBook, true);
+				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs, _settings->SourceBook->DbFilters, _settings->SourceBook->DbLinks);
+				_bWorker = _backgroundWorker2;
+			}
+
+			if	(_bWorker == nullptr)
+			{
+				_sourceBook = GetBook(_settings->SourceBook, true);
+				_sourcePositions = _sourceBook->GetAllPositionsTable(_sourceAttrs, _settings->SourceBook->DbFilters, _settings->SourceBook->DbLinks);
+			}
+			else
+			{
+				_isBusy = true;
+				_bWorker->RunWorkerAsync();
+			}
+
+
+			while (_bWorker != nullptr && _isBusy)
+			{
+				System::Threading::Thread::Sleep(1000);
+			}
+
+			if(_sourcePositions == nullptr)
+			{
+				_sourcePositions = _sourceStaicPositions;
+			}
+			NinSource = _sourcePositions->Count;
+
+			Nequal = 0;
+			Nmatches = 0;
+
+			String^ exePath = _settings->TargetBook->ExePath;
+			
+			for each (Position^ pos in _sourcePositions)
+			{
+				String^ exeAttrs = "";
+				for each (KeyValuePair<Attribute^, String^>^ pair in pos->AttributesAndValues)
+				{
+					Attribute^ attr = pair->Key;
+					exeAttrs += String::Format("{{ {0} ({1}) - {2} }}, ", attr->Name, attr->Code, pair->Value);
+				}
+				exeAttrs = exeAttrs->Substring(0, exeAttrs->Length - 2);
+				Process::Start(exePath, exeAttrs);
+			}
+		}
+
 		void StartIntegByOneGroup(IntegrationGroupPair^ integGroup)
 		{
 			int groupId;

@@ -109,6 +109,12 @@ namespace Integra {
 				case 2:
 					row[6] = "Ручная (грубый)";
 					break;
+				case 3:
+					row[6] = "Ручная (сторонний EXE файл)";
+					break;
+				case 4:
+					row[6] = "Ручная (карты норм времени)";
+					break;
 				}
 
 				row[7] = qList[i+7]->ToString();

@@ -1,4 +1,4 @@
-﻿Построение начато 11.03.2017 15:46:48.
+﻿Построение начато 11.03.2017 19:36:07.
      1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
      1>ClCompile:
          D:\soft\Visual Studio 2010\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FUD:\Work\Coding\Github\repos\Integra\Integra\Debug\Interop.Microsoft.Office.Interop.Excel.dll /FUD:\Work\Coding\Github\repos\Integra\_libs\Interop.SemanticCore.1.0.dll /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt AddComplexAttrForm.cpp AddDbAttrsForm.cpp AddEditGroupForm.cpp AddEditSchemaForm2.cpp AddEditSystemBookForm.cpp AddEditUserRole.cpp AddGroupLinksForm.cpp AddNewTableForm.cpp AddNewUser.cpp AddSemAttrForm.cpp AutoConfigsForm.cpp AutoSettingsForm.cpp DbFiltersForm.cpp DetailResults.cpp DifferencesForm.cpp EditForm.cpp GroupParamsForm.cpp GroupTableAttrs.h IntgrResultsForm.cpp JournalChangesForm.cpp LoginForm.cpp MainForm.cpp ManualIntegrationForm.cpp ManualIntegrationForm1.cpp NormIntegrForm.cpp NoticesForm.cpp ODBCclass.h PosGroupParamsForm.cpp Results.cpp Results2.cpp Results3.cpp RoughInterg.cpp SearchForm.cpp SettingsForm.cpp TableLinksForm.cpp UserBookAccessForm.cpp /clr:nostdlib 
@@ -88,4 +88,4 @@
 
 Построение успешно завершено.
 
-Затраченное время: 00:00:15.04
+Затраченное время: 00:00:14.27

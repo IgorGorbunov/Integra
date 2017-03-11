@@ -30,7 +30,7 @@ namespace Integra {
 		int _id;
 		int _idInteg;
 		IntegrationSettings^ _settings;
-		// 0 - auto, 1 - manual exact, 2 - manual rough
+		// 0 - auto, 1 - manual exact, 2 - manual rough, 3 - manual exe, 4 - norm time
 		int _type;
 
 		DateTime^ _startTime;

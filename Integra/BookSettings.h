@@ -108,6 +108,15 @@ namespace Integra {
 			}
 
 		}
+		property String^ ExePath
+		{
+			String^ get()
+			{
+				return _exePath;
+			}
+
+		}
+
 
 		property String^ AttrTitleFullcode
 		{
@@ -279,6 +288,7 @@ namespace Integra {
 		String^ _systemName;
 		String^ _bookName;
 		String^ _name;
+		String^ _exePath;
 
 		String^ _login;
 		String^ _password;
@@ -434,7 +444,7 @@ namespace Integra {
 	private:
 		void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE, NAME, ATTR_GROUP, ATTR_ROUGH, ROUGH_SYMBOLS from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE, NAME, ATTR_GROUP, ATTR_ROUGH, ROUGH_SYMBOLS, EXE_PATH from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
 			SetSystem(OdbcClass::GetResInt(parametrs[0]));
 			SetBook(OdbcClass::GetResInt(parametrs[1]));
 			SetLogPass(parametrs[2]->ToString(), parametrs[3]->ToString());
@@ -461,6 +471,7 @@ namespace Integra {
 			_idAttrPosGroupId = OdbcClass::GetResInt(parametrs[15]);
 			_roughAttrId = OdbcClass::GetResInt(parametrs[16]);
 			_roughSymbols = OdbcClass::GetResString(parametrs[17]);
+			_exePath = OdbcClass::GetResString(parametrs[18]);
 		}
 
 		void SetSystem(int id)

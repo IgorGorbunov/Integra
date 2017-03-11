@@ -62,6 +62,8 @@ namespace Integra {
 			}
 		}
 
+
+
 		property List<Attribute^>^ SimpleSourceAttributes
 		{
 			List<Attribute^>^ get()
@@ -98,7 +100,7 @@ namespace Integra {
 		{
 			Attribute^ get()
 			{
-				if (_attrEquivs == nullptr || _attrEquivs->Count <= 0)
+				if (_attrEquivs != nullptr && _attrEquivs->Count > 0)
 				{
 					for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrEquivs)
 					{
@@ -112,7 +114,7 @@ namespace Integra {
 		{
 			Attribute^ get()
 			{
-				if (_attrEquivs == nullptr || _attrEquivs->Count <= 0)
+				if (_attrEquivs != nullptr && _attrEquivs->Count > 0)
 				{
 					for each (KeyValuePair<Attribute^, Attribute^>^ pair in _attrEquivs)
 					{
@@ -145,6 +147,8 @@ namespace Integra {
 		IntegrationType _type;
 		int _intType;
 		String^ _name;
+
+
 		Attribute^ _sourceAttributeEquil;
 		Attribute^ _targetAttributeEquil;
 		

@@ -85,6 +85,14 @@ namespace Integra {
 			Nmatches = _integration->Nmatches;
 		}
 
+		static void StartExeIntegration(IntegrationSettings^ intSet)
+		{
+			_integration = gcnew Integration(intSet, Odbc);
+			_integration->StartExeIntegration();
+
+			
+		}
+
 		static void StopIntegration()
 		{
 			_integration->StopIntegration();

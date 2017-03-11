@@ -165,6 +165,7 @@ namespace Integra {
 			this->Name = L"LoginForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Аутентификация";
+			this->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &LoginForm::LoginForm_FormClosed);
 			this->Load += gcnew System::EventHandler(this, &LoginForm::LoginForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -241,6 +242,10 @@ private: System::Void LoginForm_Load(System::Object^  sender, System::EventArgs^
 			 }
 			 
 			 
+		 }
+private: System::Void LoginForm_FormClosed(System::Object^  sender, System::Windows::Forms::FormClosedEventArgs^  e) 
+		 {
+			
 		 }
 };
 }

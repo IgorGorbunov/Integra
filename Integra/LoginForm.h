@@ -13,6 +13,7 @@ namespace Integra {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+
 	/// <summary>
 	/// Сводка для LoginForm
 	/// </summary>
@@ -218,7 +219,11 @@ namespace Integra {
 				 RoleStation::SetRole(login);
 				 this->Visible = false;
 
-				 
+				 bool autoStarted = ProcessLib::ProcessLib::HasInTaskManager("autoIntegrationManager");
+				 if (!autoStarted)
+				 {
+					 Process::Start(Path::Combine(Application::StartupPath, "autoIntegrationManager.exe"));
+				 }
 
 				 MainForm^ form = gcnew MainForm();
 				 form->ShowDialog();

@@ -1,4 +1,4 @@
-#include "MainForm.h"
+
 #include "LoginForm.h"
 
 using namespace Integra; //name of your project

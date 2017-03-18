@@ -278,6 +278,43 @@ namespace Integra {
 			}
 		}
 
+		property bool HasAnnulAttr
+		{
+			bool get()
+			{
+				if (_attrAnnulId != -1)
+				{
+					return true;
+				}
+				return false;
+			}
+		}
+		property Attribute^ AnnulAttr
+		{
+			Attribute^ get()
+			{
+				if (_annulAttr == nullptr)
+				{
+					_annulAttr = gcnew Attribute(_attrAnnulId, _odbc);
+				}
+				return _annulAttr;
+			}
+		}
+		property String^ AnnulAction
+		{
+			String^ get()
+			{
+				return _annulAction;
+			}
+		}
+		property String^ AnnulValue
+		{
+			String^ get()
+			{
+				return _annulValue;
+			}
+		}
+
 		int BookId;
 
 	private:
@@ -329,6 +366,10 @@ namespace Integra {
 		String^ _roughSymbols;
 		array<String^, 1>^ _arrRoughSymbols;
 
+		int _attrAnnulId;
+		Attribute^ _annulAttr;
+		String^ _annulAction;
+		String^ _annulValue;
 
 	public:
 		BookSettings(int parametrsId, OdbcClass^ odbc)
@@ -444,7 +485,7 @@ namespace Integra {
 	private:
 		void Set(int id)
 		{
-			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE, NAME, ATTR_GROUP, ATTR_ROUGH, ROUGH_SYMBOLS, EXE_PATH from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
+			List<Object^>^ parametrs = _odbc->ExecuteQuery("select ID_SYSTEM, ID_BOOK, LOGIN, PASSWORD, TNS_DATABASE, HOST, PORT, SERVICE_NAME, SID, DRIVER, IS_SEMANTIC, GROUP_ID, ATTR_ID, ATTR_TITLE, NAME, ATTR_GROUP, ATTR_ROUGH, ROUGH_SYMBOLS, EXE_PATH, ATTR_ANNUL, ANNUL_ACTION, ANNUL_VALUE from " + _odbc->schema + "INTEGRATION_BOOK where ID = " + id);
 			SetSystem(OdbcClass::GetResInt(parametrs[0]));
 			SetBook(OdbcClass::GetResInt(parametrs[1]));
 			SetLogPass(parametrs[2]->ToString(), parametrs[3]->ToString());
@@ -472,6 +513,13 @@ namespace Integra {
 			_roughAttrId = OdbcClass::GetResInt(parametrs[16]);
 			_roughSymbols = OdbcClass::GetResString(parametrs[17]);
 			_exePath = OdbcClass::GetResString(parametrs[18]);
+
+			_attrAnnulId = OdbcClass::GetResInt(parametrs[19]);
+			if (_attrAnnulId != -1)
+			{
+				_annulAction = OdbcClass::GetResString(parametrs[20]);
+				_annulValue = OdbcClass::GetResString(parametrs[21]);
+			}
 		}
 
 		void SetSystem(int id)

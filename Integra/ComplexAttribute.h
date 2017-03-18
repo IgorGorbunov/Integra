@@ -90,6 +90,19 @@ namespace Integra {
 
 	public:
 
+		static void Delete(OdbcClass^ odbc, int id)
+		{
+			String^ squery = String::Format("select CAA.START_COMPOSE_ATTR_ID from {0}COMPLEX_ATTRS CAA where CAA.ID = {1}", odbc->schema, id);
+			List<Object^>^ resList = odbc->ExecuteQuery(squery);
+			if (resList != nullptr && resList->Count > 0)
+			{
+				int cId = OdbcClass::GetResInt(resList[0]);
+				ComposeAttribute::Delete(odbc, cId);
+			}
+			squery = String::Format("delete from {0}COMPLEX_ATTRS IBB where IBB.ID = {1}", odbc->schema, id);
+			odbc->ExecuteNonQuery(squery);
+		}
+
 		ComplexAttribute(OdbcClass^ odbc, Attribute^ recAttribute, String^ name, List<Object^>^ composeAttrs, bool writeSource)
 		{
 			_odbc = odbc;

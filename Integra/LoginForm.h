@@ -222,7 +222,16 @@ namespace Integra {
 				 bool autoStarted = ProcessLib::ProcessLib::HasInTaskManager("autoIntegrationManager");
 				 if (!autoStarted)
 				 {
-					 Process::Start(Path::Combine(Application::StartupPath, "autoIntegrationManager.exe"));
+					 String^ fullPath = Path::Combine(Application::StartupPath, "autoIntegrationManager.exe");
+					 if (File::Exists(fullPath))
+					 {
+						 Process::Start(fullPath);
+					 }
+					 else
+					 {
+						 //todo
+					 }
+					 
 				 }
 
 				 MainForm^ form = gcnew MainForm();

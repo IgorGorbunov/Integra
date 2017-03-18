@@ -771,7 +771,17 @@ namespace Integra {
 					 Attribute^ aS = GetAttr(_sourceAttrs, o1->ToString());
 					 Attribute^ aT = GetAttr(_targetAttrs, o2->ToString());
 
-					 bool equiv = (bool)dgv[0, i]->Value;
+					 Object^ equiv = dgv[0, i]->Value;
+					 bool bequiv;
+					 if	(equiv != nullptr && (bool)equiv == true)
+					 {
+						 bequiv = true;
+					 }
+					 else
+					 {
+						 bequiv = false;
+					 }
+					 
 					 if	(equiv)
 					 {
 						 AttrEquivs->Add(aS, aT);

@@ -585,9 +585,19 @@ namespace Integra {
 			Dictionary<Attribute^, String^>^ newAttrsAndVals = gcnew Dictionary<Attribute ^, String ^>();
 			for each (AttributePair^ attrPair in _attrPairs)
 			{
+				attrPair->SetSourceValues(p->AttributesAndValues, nullptr);
+
+
 				if (attrPair->SimpleTargetAttribute != nullptr)
 				{
+					for each (KeyValuePair<Attribute^, String^>^ pair in p->AttributesAndValues)
+					{
+						Attribute^ attr = pair->Key;
+						String^ str = pair->Value;
+					}
+					
 					newAttrsAndVals->Add(attrPair->SimpleTargetAttribute, attrPair->SourceValue);
+					
 				}
 			}
 			_targetBook->AddPosition(newAttrsAndVals, p->EqualValue, p->Caption, _intgrResults, 1);
@@ -618,13 +628,13 @@ namespace Integra {
 
 		void NoticeRemoveFromSource(Position^ currentPos)
 		{
-			Notice^ notice = gcnew Notice(_odbc, _intgrResults->Id, "На удаление", currentPos->UnicId, _settings->SourceBook->Id);
+			Notice^ notice = gcnew Notice(_odbc, _intgrResults->Id, "На удаление", currentPos->UnicId, currentPos->Caption, _settings->SourceBook->Id);
 			notice->InsertToDb();
 		}
 
 		void NoticeRemoveFromTarget(Position^ currentPos)
 		{
-			Notice^ notice = gcnew Notice(_odbc, _intgrResults->Id, "На удаление", currentPos->UnicId, _settings->TargetBook->Id);
+			Notice^ notice = gcnew Notice(_odbc, _intgrResults->Id, "На удаление", currentPos->UnicId, currentPos->Caption, _settings->TargetBook->Id);
 			notice->InsertToDb();
 		}
 
@@ -828,16 +838,15 @@ namespace Integra {
 			for (int i = 0; i < _attrPairs->Count; i++)
 			{
 				AttributePair^ newAttrPair = nullptr;
+				newAttrPair = gcnew AttributePair(_attrPairs[i]);
 				if (_attrPairs[i]->CheckEqual(sourcePos->AttributesAndValues, sourcePos->GroupingAttrs, 
 												targetPos->AttributesAndValues, targetPos->GroupingAttrs))
 				{
-					newAttrPair = gcnew AttributePair(_attrPairs[i]);
 					diffPos->AddEqualAttr(newAttrPair);
 				}
 				else
 				{
 					equal = false;
-					newAttrPair = gcnew AttributePair(_attrPairs[i]);
 					diffPos->AddDifferenceAttr(newAttrPair);
 				}
 			}

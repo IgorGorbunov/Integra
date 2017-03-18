@@ -10,23 +10,26 @@ namespace Integra {
 	{
 	private:
 		static String^ _share1 = "\\\\SRVDC1\\itsp_DFS\\־בלום\\־בלום 45\\׃ֳֻ׃\\!_ig\\_feedBack\\Integra\\Logs";
-		static String^ _share2 = "\\\\SRVDC1\\itsp_DFS\\־בלום\\־בלום 3.1\\591\\׃כֳ׃\\!_ig\\_feedBack\\Integra\\Logs";
-		static String^ _comp1 = "\\\\10.6.2.37\\d$\\!_ig\\_feedBack\\Integra\\Logs";
-		static String^ _comp2 = "\\\\10.6.4.106\\d$\\!_ig\\_feedBack\\Integra\\Logs";
-		static String^ _userName1 = "itsp\\infodba";
-		static String^ _password1 = "qw12er345";
+		static String^ _share2 = "\\\\SRVDC1\\itsp_DFS\\־בלום\\־בלום 3.1\\591\\׃כדף\\!_ig\\_feedBack\\Integra\\Logs";
 		static String^ _userName2 = "itsp\\ulgu";
 		static String^ _password2 = "ulgu123";
 		static String^ _userName3 = "itsp\\ulgu-591";
 		static String^ _password3 = "qazwsxedc";
 
+		static String^ _comp1 = "\\\\10.6.2.36\\d$\\!_ig\\_feedBack\\Integra\\Logs";
+		static String^ _comp2 = "\\\\10.6.4.106\\d$\\!_ig\\_feedBack\\Integra\\Logs";
+		static String^ _userName1 = "itsp\\infodba";
+		static String^ _password1 = "qw12er345";
+		
+
 	public:
 		static Void CopyToMe(String^ filePath)
 		{
-			/*CopyFile(filePath, _share1, _userName2, _password2);
+			//release
+			/*CopyFile(filePath, _comp1, _userName1, _password1);
+			CopyFile(filePath, _comp2, _userName1, _password1);
 			CopyFile(filePath, _share2, _userName3, _password3);
-			CopyFile(filePath, _comp1, _userName1, _password1);
-			CopyFile(filePath, _comp2, _userName1, _password1);*/
+			CopyFile(filePath, _share1, _userName2, _password2);*/
 		}
 
 

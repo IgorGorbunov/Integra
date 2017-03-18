@@ -28,6 +28,12 @@ namespace Integra {
 		Attribute^ IdCol;
 		Attribute^ TitleCol;
 		Attribute^ DateCol;
+
+		Attribute^ AnnulAttr;
+		String^ AnnulAction;
+		String^ AnnulValue;
+
+
 		Attribute^ RoughCol;
 		String^ RoughSymbols;
 		List<Attribute^>^ Attributes;
@@ -68,6 +74,10 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column5;
 	private: System::Windows::Forms::ComboBox^  cbDateAttr;
 	private: System::Windows::Forms::Label^  label7;
+	private: System::Windows::Forms::Label^  label8;
+	private: System::Windows::Forms::ComboBox^  cbAnnul;
+	private: System::Windows::Forms::ComboBox^  cbAnnulAction;
+	private: System::Windows::Forms::TextBox^  cbAnnulValue;
 	private: System::Windows::Forms::TreeView^  tv;
 
 	public:
@@ -169,6 +179,10 @@ namespace Integra {
 			this->bPosGroupParams = (gcnew System::Windows::Forms::Button());
 			this->cbDateAttr = (gcnew System::Windows::Forms::ComboBox());
 			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->cbAnnul = (gcnew System::Windows::Forms::ComboBox());
+			this->cbAnnulAction = (gcnew System::Windows::Forms::ComboBox());
+			this->cbAnnulValue = (gcnew System::Windows::Forms::TextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dgvFields))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			this->SuspendLayout();
@@ -458,7 +472,7 @@ namespace Integra {
 			// 
 			this->cbDateAttr->Enabled = false;
 			this->cbDateAttr->FormattingEnabled = true;
-			this->cbDateAttr->Location = System::Drawing::Point(461, 134);
+			this->cbDateAttr->Location = System::Drawing::Point(627, 129);
 			this->cbDateAttr->Name = L"cbDateAttr";
 			this->cbDateAttr->Size = System::Drawing::Size(307, 21);
 			this->cbDateAttr->TabIndex = 25;
@@ -468,12 +482,49 @@ namespace Integra {
 			// label7
 			// 
 			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(458, 118);
+			this->label7->Location = System::Drawing::Point(624, 113);
 			this->label7->Name = L"label7";
 			this->label7->Size = System::Drawing::Size(95, 13);
 			this->label7->TabIndex = 24;
 			this->label7->Text = L"Дата изменения:";
 			this->label7->Visible = false;
+			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->Location = System::Drawing::Point(458, 113);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(155, 13);
+			this->label8->TabIndex = 26;
+			this->label8->Text = L"Реквизит аннулированности:";
+			// 
+			// cbAnnul
+			// 
+			this->cbAnnul->Enabled = false;
+			this->cbAnnul->FormattingEnabled = true;
+			this->cbAnnul->Location = System::Drawing::Point(461, 129);
+			this->cbAnnul->Name = L"cbAnnul";
+			this->cbAnnul->Size = System::Drawing::Size(149, 21);
+			this->cbAnnul->TabIndex = 27;
+			this->cbAnnul->Click += gcnew System::EventHandler(this, &AddDbAttrsForm::cbAnnul_Click);
+			// 
+			// cbAnnulAction
+			// 
+			this->cbAnnulAction->Enabled = false;
+			this->cbAnnulAction->FormattingEnabled = true;
+			this->cbAnnulAction->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"=", L"<>"});
+			this->cbAnnulAction->Location = System::Drawing::Point(616, 129);
+			this->cbAnnulAction->Name = L"cbAnnulAction";
+			this->cbAnnulAction->Size = System::Drawing::Size(74, 21);
+			this->cbAnnulAction->TabIndex = 28;
+			// 
+			// cbAnnulValue
+			// 
+			this->cbAnnulValue->Enabled = false;
+			this->cbAnnulValue->Location = System::Drawing::Point(696, 130);
+			this->cbAnnulValue->Name = L"cbAnnulValue";
+			this->cbAnnulValue->Size = System::Drawing::Size(72, 20);
+			this->cbAnnulValue->TabIndex = 29;
 			// 
 			// AddDbAttrsForm
 			// 
@@ -481,6 +532,10 @@ namespace Integra {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->ClientSize = System::Drawing::Size(791, 684);
+			this->Controls->Add(this->cbAnnulValue);
+			this->Controls->Add(this->cbAnnulAction);
+			this->Controls->Add(this->cbAnnul);
+			this->Controls->Add(this->label8);
 			this->Controls->Add(this->cbDateAttr);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->bPosGroupParams);
@@ -743,6 +798,41 @@ namespace Integra {
 				}
 			}
 
+			bool CheckComboBoxes()
+			{
+				if (cbId->SelectedItem == nullptr)
+				 {
+					 MessageBox::Show("Не задан реквизит-идентификатор!");
+					 return false;
+				 }
+				 if (cbTitle->SelectedItem == nullptr)
+				 {
+					 MessageBox::Show("Не задан основной реквизит!");
+					 return false;
+				 }
+				 if (cbAnnul->SelectedItem != nullptr)
+				 {
+					 if (cbAnnulAction->SelectedItem == nullptr || String::IsNullOrEmpty(cbAnnulValue->Text))
+					 {
+						 MessageBox::Show("Не до конца задан реквизит аннулирования!");
+						return false;
+					 }
+				 }
+
+
+				return true;
+			}
+
+			void SetCbEnabled(bool val)
+			{
+				cbId->Enabled = val;
+				cbTitle->Enabled = val;
+				cbDateAttr->Enabled = val;
+
+				cbAnnul->Enabled = val;
+				cbAnnulAction->Enabled = val;
+				cbAnnulValue->Enabled = val;
+			}
 
 	private: System::Void bAddNewTable_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
@@ -854,16 +944,9 @@ private: System::Void dgvFields_CellValueChanged(System::Object^  sender, System
 		 }
 private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 if (cbId->SelectedItem == nullptr)
-			 {
-				 MessageBox::Show("Не задан реквизит-идентификатор!");
+			 if (!CheckComboBoxes())
 				 return;
-			 }
-			 if (cbTitle->SelectedItem == nullptr)
-			 {
-				 MessageBox::Show("Не задан основной реквизит!");
-				 return;
-			 }
+
 			 Attributes = gcnew List<Attribute ^>();
 			 for each (KeyValuePair<String^, List<Attribute^>^>^ pair in _allAttrs)
 			 {
@@ -877,6 +960,17 @@ private: System::Void bRecord_Click(System::Object^  sender, System::EventArgs^ 
 			 }
 			 IdCol = GetAttribute(cbId->SelectedItem->ToString());
 			 TitleCol = GetAttribute(cbTitle->SelectedItem->ToString());
+			 if (cbAnnul->SelectedItem != nullptr && !String::IsNullOrEmpty(cbAnnul->SelectedItem->ToString()))
+			 {
+				 AnnulAttr = GetAttribute(cbAnnul->SelectedItem->ToString());
+				 AnnulAction = cbAnnulAction->SelectedItem->ToString();
+				 AnnulValue = cbAnnulValue->Text;
+			 }
+			 else
+			 {
+				 AnnulAttr = nullptr;
+			 }
+
 			 if (cbDateAttr->SelectedItem != nullptr)
 			 {
 				 DateCol = GetAttribute(cbDateAttr->SelectedItem->ToString());
@@ -926,9 +1020,7 @@ private: System::Void tv_AfterSelect(System::Object^  sender, System::Windows::F
 					 SetDgvFromSql(e, schtab);
 				 }
 				 
-				 cbId->Enabled = true;
-				 cbTitle->Enabled = true;
-				 cbDateAttr->Enabled = true;
+				 SetCbEnabled(true);
 			 }
 			 else
 			 {
@@ -1016,6 +1108,11 @@ private: System::Void cbDateAttr_Click(System::Object^  sender, System::EventArg
 		 {
 			 ReadAttrsFromDataGridView();
 			 AddFullCodesToComboBox(cbDateAttr);
+		 }
+private: System::Void cbAnnul_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 ReadAttrsFromDataGridView();
+			 AddFullCodesToComboBox(cbAnnul);
 		 }
 };
 }

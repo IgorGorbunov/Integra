@@ -141,6 +141,8 @@ namespace Integra {
 
 		String^ _sVal;
 		String^ _tVal;
+		String^ _sType;
+		String^ _tType;
 
 	public:
 
@@ -350,6 +352,21 @@ namespace Integra {
 			return list;
 		}
 
+		static void Delete(OdbcClass^ odbc, int intSchemaId)
+		{
+			String^ squery = String::Format("select CAA.ID_SOURCE_COMPLEX_ATTR, CAA.ID_TARGET_COMPLEX_ATTR from {0}ATTRIBUTE_PAIRS CAA where CAA.ID_PARAMETRS = {1}", odbc->schema, intSchemaId);
+			List<Object^>^ resList = odbc->ExecuteQuery(squery);
+			if (resList != nullptr && resList->Count > 0)
+			{
+				for (int i = 0; i < resList->Count; i++)
+				{
+					int cId = OdbcClass::GetResInt(resList[i]);
+					ComplexAttribute::Delete(odbc, cId);
+				}
+			}
+			squery = String::Format("delete from {0}ATTRIBUTE_PAIRS IBB where IBB.ID_PARAMETRS = {1}", odbc->schema, intSchemaId);
+			odbc->ExecuteNonQuery(squery);
+		}
 
 		AttributePair(OdbcClass^ odbc, int id, Attribute^ attr1, Attribute^ attr2, ComplexAttribute^ cAttr1, ComplexAttribute^ cAttr2, bool isEquiv)
 		{
@@ -380,7 +397,7 @@ namespace Integra {
 		bool CheckEqual(Dictionary<Attribute^, String^>^ sourceAttrs, List<GroupingAttr^>^ sGroups, Dictionary<Attribute^, String^>^ targetAttrs, List<GroupingAttr^>^ tGroups)
 		{
 			//tst
-			for each (KeyValuePair<Attribute^, String^>^ pair in sourceAttrs)
+			/*for each (KeyValuePair<Attribute^, String^>^ pair in sourceAttrs)
 			{
 				Attribute^ attr = pair->Key;
 				String^ val = pair->Value;
@@ -390,83 +407,115 @@ namespace Integra {
 			{
 				Attribute^ attr = pair->Key;
 				String^ val = pair->Value;
-			}
+			}*/
 			//tst
+			SetValues(sourceAttrs, sGroups, targetAttrs, tGroups);
 
 			if (_attr1 != nullptr && _attr2 != nullptr)
 			{
-				String^ sourceVal;
-				String^ sType;
-				if (sourceAttrs->ContainsKey(_attr1))
-				{
-					sourceVal = sourceAttrs[_attr1];
-					sType = _attr1->DataType;
-				}
-				else
-				{
-					sourceVal = GroupingAttr::GetValueByGrAttribute(_attr1, sGroups);
-					sType = GroupingAttr::GetDataTypeByGrAttribute(_attr1, sGroups);
-				}
-
-				String^ targetVal;
-				String^ tType;
-				if (targetAttrs->ContainsKey(_attr2))
-				{
-					targetVal = targetAttrs[_attr2];
-					tType = _attr2->DataType;
-				}
-				else
-				{
-					targetVal = GroupingAttr::GetValueByGrAttribute(_attr2, tGroups);
-					tType = GroupingAttr::GetDataTypeByGrAttribute(_attr2, tGroups);
-				}
-
-				if (sourceVal == nullptr && targetVal == nullptr)
+				if (SourceValue == nullptr && TargetValue == nullptr)
 				{
 					return true;
 				}
 
-				return IsEqual(sourceVal, sType, targetVal, tType);
+				return IsEqual(SourceValue, _sType, TargetValue, _tType);
 			}
 			else if (_attr1 != nullptr && _cAttr2 != nullptr)
 			{
-				String^ sourceVal;
-				String^ sType;
-				if (sourceAttrs->ContainsKey(_attr1))
-				{
-					sourceVal = sourceAttrs[_attr1];
-					sType = _attr1->DataType;
-				}
-				else
-				{
-					sourceVal = GroupingAttr::GetValueByGrAttribute(_attr1, sGroups);
-					sType = GroupingAttr::GetDataTypeByGrAttribute(_attr1, sGroups);
-				}
-
-				String^ complexVal = _cAttr2->GetValue(targetAttrs, tGroups);
-				return IsEqual(sourceVal, sType, complexVal, "岩形世");
+				return IsEqual(SourceValue, _sType, TargetValue, _tType);
 			}
 			else if (_cAttr1 != nullptr && _attr2 != nullptr)
 			{
-				String^ targetVal;
-				String^ tType;
-				if (targetAttrs->ContainsKey(_attr2))
-				{
-					targetVal = targetAttrs[_attr2];
-					tType = _attr2->DataType;
-				}
-				else
-				{
-					targetVal = GroupingAttr::GetValueByGrAttribute(_attr2, tGroups);
-					tType = GroupingAttr::GetDataTypeByGrAttribute(_attr2, tGroups);
-				}
-
-				String^ complexVal = _cAttr1->GetValue(sourceAttrs, sGroups);
-				return IsEqual(complexVal, "岩形世", targetVal, tType);
+				return IsEqual(SourceValue, _sType, TargetValue, _tType);
 			}
 			return false;
 		}
 
+		void SetValues(Dictionary<Attribute^, String^>^ sourceAttrs, List<GroupingAttr^>^ sGroups, Dictionary<Attribute^, String^>^ targetAttrs, List<GroupingAttr^>^ tGroups)
+		{
+			SetSourceValues(sourceAttrs, sGroups);
+			SetTargetValues(targetAttrs, tGroups);
+		}
+
+		void SetSourceValues(Dictionary<Attribute^, String^>^ sourceAttrs, List<GroupingAttr^>^ sGroups)
+		{
+			if (_attr1 != nullptr && _attr2 != nullptr)
+			{
+				String^ sourceVal;
+				if (sourceAttrs->ContainsKey(_attr1))
+				{
+					sourceVal = sourceAttrs[_attr1];
+					_sType = _attr1->DataType;
+				}
+				else
+				{
+					sourceVal = GroupingAttr::GetValueByGrAttribute(_attr1, sGroups);
+					_sType = GroupingAttr::GetDataTypeByGrAttribute(_attr1, sGroups);
+				}
+				_sVal = sourceVal->Trim();
+			}
+			else if (_attr1 != nullptr && _cAttr2 != nullptr)
+			{
+				String^ sourceVal;
+				if (sourceAttrs->ContainsKey(_attr1))
+				{
+					sourceVal = sourceAttrs[_attr1];
+					_sType = _attr1->DataType;
+				}
+				else
+				{
+					sourceVal = GroupingAttr::GetValueByGrAttribute(_attr1, sGroups);
+					_sType = GroupingAttr::GetDataTypeByGrAttribute(_attr1, sGroups);
+				}
+				_sVal = sourceVal->Trim();
+			}
+			else if (_cAttr1 != nullptr && _attr2 != nullptr)
+			{
+				String^ complexVal = _cAttr1->GetValue(sourceAttrs, sGroups);
+				_sType = "岩形世";
+				_sVal = complexVal->Trim();
+			}
+		}
+
+		void SetTargetValues(Dictionary<Attribute^, String^>^ targetAttrs, List<GroupingAttr^>^ tGroups)
+		{
+			if (_attr1 != nullptr && _attr2 != nullptr)
+			{
+				String^ targetVal;
+				if (targetAttrs->ContainsKey(_attr2))
+				{
+					targetVal = targetAttrs[_attr2];
+					_tType = _attr2->DataType;
+				}
+				else
+				{
+					targetVal = GroupingAttr::GetValueByGrAttribute(_attr2, tGroups);
+					_tType = GroupingAttr::GetDataTypeByGrAttribute(_attr2, tGroups);
+				}
+				_tVal = targetVal->Trim();
+			}
+			else if (_attr1 != nullptr && _cAttr2 != nullptr)
+			{
+				String^ complexVal = _cAttr2->GetValue(targetAttrs, tGroups);
+				_tVal = complexVal->Trim();
+				_tType = "岩形世";
+			}
+			else if (_cAttr1 != nullptr && _attr2 != nullptr)
+			{
+				String^ targetVal;
+				if (targetAttrs->ContainsKey(_attr2))
+				{
+					targetVal = targetAttrs[_attr2];
+					_tType = _attr2->DataType;
+				}
+				else
+				{
+					targetVal = GroupingAttr::GetValueByGrAttribute(_attr2, tGroups);
+					_tType = GroupingAttr::GetDataTypeByGrAttribute(_attr2, tGroups);
+				}
+				_tVal = targetVal->Trim();
+			}
+		}
 
 	protected:
 		/// <summary>

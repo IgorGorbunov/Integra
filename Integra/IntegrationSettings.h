@@ -6,6 +6,9 @@
 #include "ComplexAttribute.h"
 #include "AttributePair.h"
 #include "IntegrationGroupPair.h"
+//#include "Book.h"
+//#include "SemanticBook.h"
+//#include "DbBook.h"
 
 
 namespace Integra {
@@ -61,8 +64,6 @@ namespace Integra {
 				return _name;
 			}
 		}
-
-
 
 		property List<Attribute^>^ SimpleSourceAttributes
 		{
@@ -162,8 +163,6 @@ namespace Integra {
 
 		Dictionary<String^, String^>^ _fields;
 
-		
-
 	public:
 
 		static Dictionary<int, String^>^ GetIntSchemas(OdbcClass^ odbc)
@@ -242,8 +241,32 @@ namespace Integra {
 			return AttributePair::GetPairs(Id, _odbc, groupId);
 		}
 
-
-		
+		/*Book^ GetBook(int idBook)
+		{
+		if (SourceBook->Id == idBook)
+		{
+		if (SourceBook->IsSemantic)
+		{
+		return gcnew SemanticBook(SourceBook, this, _odbc, true);
+		}
+		else
+		{
+		return gcnew DbBook(SourceBook, this, true, _odbc);
+		}
+		}
+		else if (TargetBook->Id == idBook)
+		{
+		if (TargetBook->IsSemantic)
+		{
+		return gcnew SemanticBook(TargetBook, this, _odbc, false);
+		}
+		else
+		{
+		return gcnew DbBook(TargetBook, this, false, _odbc);
+		}
+		}
+		return nullptr;
+		}*/
 
 	protected:
 		/// <summary>

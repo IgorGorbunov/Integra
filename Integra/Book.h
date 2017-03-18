@@ -61,6 +61,7 @@ namespace Integra {
 		virtual void UpdatePosition(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals) abstract;
 		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) abstract;
 
+		virtual void Remove(String^ posId) abstract;
 
 		virtual Object^ GetSemObject(String^ location) abstract;
 

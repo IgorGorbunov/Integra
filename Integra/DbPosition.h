@@ -56,7 +56,6 @@ namespace Integra {
 			AttrId = attrId;
 			_attributeList = attributeList;
 			_attributes = attributes;
-			
 		}
 
 		DbPosition(List<Object^>^ attrs, List<Attribute^>^ attrNames, int iId, int iTitle, BookSettings^ intgrBook) 
@@ -72,6 +71,13 @@ namespace Integra {
 			{
 				_attributes->Add(attrNames[i], attrs[i]->ToString());
 			}
+		}
+
+		DbPosition(String^ id, BookSettings^ intgrBook)
+		{
+			_unicId = id;
+			_intgrBook = intgrBook;
+			AttrId = _intgrBook->AttrId;
 		}
 
 		virtual void SetEquivAttr(Attribute^ equivAttr) override

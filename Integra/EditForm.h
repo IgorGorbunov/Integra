@@ -59,12 +59,8 @@ namespace Integra {
 				if (result == System::Windows::Forms::DialogResult::Yes)
 				{
 					DeleteItem();
-					Close();
 				}
-				else
-				{
-					Close();
-				}
+				Close();
 			}
 		}
 

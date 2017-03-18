@@ -118,7 +118,7 @@ namespace Integra {
 		Dictionary<int, String^>^ GetSystemBooksIdExe()
 		{
 			String^ squery = String::Format("select IBB.ID, IBB.EXE_PATH " +
-				"from INTEGRATION_BOOK IBB order by IBB.ID", _odbc->schema);
+				"from {0}INTEGRATION_BOOK IBB order by IBB.ID", _odbc->schema);
 			List<Object^>^ resList = _odbc->ExecuteQuery(squery);
 
 			Dictionary<int, String^>^ resDict = gcnew Dictionary<int, String ^>();

@@ -2,6 +2,8 @@
 
 #include "ODBCclass.h"
 #include "Notice.h"
+#include "BookSettings.h"
+#include "IntegrationSettings.h"
 
 namespace Integra {
 
@@ -67,10 +69,31 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
 	private: System::Windows::Forms::DataGridViewCheckBoxColumn^  Column2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column3;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column11;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column4;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column5;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column6;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column9;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column10;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private:
 		/// <summary>
@@ -86,14 +109,6 @@ namespace Integra {
 		void InitializeComponent(void)
 		{
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column2 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
-			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column6 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Column7 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->dateTimePicker1 = (gcnew System::Windows::Forms::DateTimePicker());
 			this->dateTimePicker2 = (gcnew System::Windows::Forms::DateTimePicker());
@@ -106,6 +121,17 @@ namespace Integra {
 			this->bClose = (gcnew System::Windows::Forms::Button());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
 			this->panel4 = (gcnew System::Windows::Forms::Panel());
+			this->Column8 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewCheckBoxColumn());
+			this->Column3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column11 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column4 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column5 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column6 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column7 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column9 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column10 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
 			this->panel1->SuspendLayout();
 			this->panel2->SuspendLayout();
@@ -118,66 +144,16 @@ namespace Integra {
 			this->dataGridView1->AllowUserToAddRows = false;
 			this->dataGridView1->AllowUserToDeleteRows = false;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {this->Column8, 
-				this->Column1, this->Column2, this->Column3, this->Column4, this->Column5, this->Column6, this->Column7});
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(11) {this->Column8, 
+				this->Column1, this->Column2, this->Column3, this->Column11, this->Column4, this->Column5, this->Column6, this->Column7, this->Column9, 
+				this->Column10});
 			this->dataGridView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->dataGridView1->Location = System::Drawing::Point(10, 10);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->ReadOnly = true;
 			this->dataGridView1->RowHeadersVisible = false;
-			this->dataGridView1->Size = System::Drawing::Size(715, 273);
+			this->dataGridView1->Size = System::Drawing::Size(854, 273);
 			this->dataGridView1->TabIndex = 0;
-			// 
-			// Column8
-			// 
-			this->Column8->HeaderText = L"ID";
-			this->Column8->Name = L"Column8";
-			this->Column8->ReadOnly = true;
-			this->Column8->Visible = false;
-			// 
-			// Column1
-			// 
-			this->Column1->HeaderText = L"Дата проведения извещения";
-			this->Column1->Name = L"Column1";
-			this->Column1->ReadOnly = true;
-			// 
-			// Column2
-			// 
-			this->Column2->HeaderText = L"Согласовано";
-			this->Column2->Name = L"Column2";
-			this->Column2->ReadOnly = true;
-			// 
-			// Column3
-			// 
-			this->Column3->HeaderText = L"Тип извещения";
-			this->Column3->Name = L"Column3";
-			this->Column3->ReadOnly = true;
-			this->Column3->Resizable = System::Windows::Forms::DataGridViewTriState::True;
-			this->Column3->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-			// 
-			// Column4
-			// 
-			this->Column4->HeaderText = L"Пользователь";
-			this->Column4->Name = L"Column4";
-			this->Column4->ReadOnly = true;
-			// 
-			// Column5
-			// 
-			this->Column5->HeaderText = L"Интеграционная схема";
-			this->Column5->Name = L"Column5";
-			this->Column5->ReadOnly = true;
-			// 
-			// Column6
-			// 
-			this->Column6->HeaderText = L"Справочник";
-			this->Column6->Name = L"Column6";
-			this->Column6->ReadOnly = true;
-			// 
-			// Column7
-			// 
-			this->Column7->HeaderText = L"Система";
-			this->Column7->Name = L"Column7";
-			this->Column7->ReadOnly = true;
 			// 
 			// button1
 			// 
@@ -233,6 +209,7 @@ namespace Integra {
 			this->bSoglas->TabIndex = 6;
 			this->bSoglas->Text = L"Согласовать";
 			this->bSoglas->UseVisualStyleBackColor = true;
+			this->bSoglas->Click += gcnew System::EventHandler(this, &NoticesForm::bSoglas_Click);
 			// 
 			// bCancel
 			// 
@@ -255,7 +232,7 @@ namespace Integra {
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Controls->Add(this->dateTimePicker1);
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Right;
-			this->panel1->Location = System::Drawing::Point(735, 0);
+			this->panel1->Location = System::Drawing::Point(874, 0);
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(153, 293);
 			this->panel1->TabIndex = 8;
@@ -286,7 +263,7 @@ namespace Integra {
 			this->panel3->Location = System::Drawing::Point(0, 0);
 			this->panel3->Name = L"panel3";
 			this->panel3->Padding = System::Windows::Forms::Padding(10);
-			this->panel3->Size = System::Drawing::Size(735, 293);
+			this->panel3->Size = System::Drawing::Size(874, 293);
 			this->panel3->TabIndex = 9;
 			// 
 			// panel4
@@ -295,14 +272,84 @@ namespace Integra {
 			this->panel4->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel4->Location = System::Drawing::Point(0, 0);
 			this->panel4->Name = L"panel4";
-			this->panel4->Size = System::Drawing::Size(735, 293);
+			this->panel4->Size = System::Drawing::Size(874, 293);
 			this->panel4->TabIndex = 10;
+			// 
+			// Column8
+			// 
+			this->Column8->HeaderText = L"ID";
+			this->Column8->Name = L"Column8";
+			this->Column8->ReadOnly = true;
+			this->Column8->Visible = false;
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"Дата проведения извещения";
+			this->Column1->Name = L"Column1";
+			this->Column1->ReadOnly = true;
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"Согласовано";
+			this->Column2->Name = L"Column2";
+			this->Column2->ReadOnly = true;
+			this->Column2->Width = 50;
+			// 
+			// Column3
+			// 
+			this->Column3->HeaderText = L"Тип извещения";
+			this->Column3->Name = L"Column3";
+			this->Column3->ReadOnly = true;
+			this->Column3->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+			this->Column3->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+			// 
+			// Column11
+			// 
+			this->Column11->HeaderText = L"Наименование позиции";
+			this->Column11->Name = L"Column11";
+			this->Column11->ReadOnly = true;
+			// 
+			// Column4
+			// 
+			this->Column4->HeaderText = L"Пользователь, создавший извещение";
+			this->Column4->Name = L"Column4";
+			this->Column4->ReadOnly = true;
+			// 
+			// Column5
+			// 
+			this->Column5->HeaderText = L"Название интеграционной схемы";
+			this->Column5->Name = L"Column5";
+			this->Column5->ReadOnly = true;
+			// 
+			// Column6
+			// 
+			this->Column6->HeaderText = L"Тип справочника";
+			this->Column6->Name = L"Column6";
+			this->Column6->ReadOnly = true;
+			// 
+			// Column7
+			// 
+			this->Column7->HeaderText = L"Система";
+			this->Column7->Name = L"Column7";
+			this->Column7->ReadOnly = true;
+			// 
+			// Column9
+			// 
+			this->Column9->HeaderText = L"Дата согласования";
+			this->Column9->Name = L"Column9";
+			this->Column9->ReadOnly = true;
+			// 
+			// Column10
+			// 
+			this->Column10->HeaderText = L"Пользователь, согласовавший извещение";
+			this->Column10->Name = L"Column10";
+			this->Column10->ReadOnly = true;
 			// 
 			// NoticesForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(888, 293);
+			this->ClientSize = System::Drawing::Size(1027, 293);
 			this->Controls->Add(this->panel4);
 			this->Controls->Add(this->panel1);
 			this->MinimumSize = System::Drawing::Size(904, 331);
@@ -321,19 +368,16 @@ namespace Integra {
 		}
 #pragma endregion
 
-private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
-		 {
-
-		 }
-private: System::Void NoticesForm_Load(System::Object^  sender, System::EventArgs^  e) 
-		 {
-			 List<Notice^>^ notices = Notice::GetAllNotices(_odbc);
+		void SetDgv()
+		{
+			List<Notice^>^ notices = Notice::GetAllNotices(_odbc);
 			 if (notices == nullptr || notices->Count < 0)
 				 return;
 
+			 dataGridView1->Rows->Clear();
 			 for each (Notice^ notice in notices)
 			 {
-				 array<Object^>^ row = gcnew array<Object ^>(8);
+				 array<Object^>^ row = gcnew array<Object ^>(11);
 				 row[0] = notice->Id;
 				 row[1] = notice->CreateDate;
 				 if (notice->IsSoglas)
@@ -345,17 +389,71 @@ private: System::Void NoticesForm_Load(System::Object^  sender, System::EventArg
 					 row[2] = false;
 				 }
 				 row[3] = notice->Type;
-				 row[4] = notice->CreateUser;
-				 row[5] = notice->IntSchemaName;
-				 row[6] = notice->BookType;
-				 row[7] = notice->System;
+
+
+				 row[5] = notice->CreateUser;
+				 row[6] = notice->IntSchemaName;
+				 row[7] = notice->BookType;
+				 row[8] = notice->System;
+				 row[9] = notice->SoglasDate;
+				 row[10] = notice->SoglasUser;
 				 dataGridView1->Rows->Add(row);
 			 }
+		}
 
+
+private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (dataGridView1->SelectedCells != nullptr && dataGridView1->SelectedCells->Count > 0)
+			 {
+				 int iRow = dataGridView1->SelectedCells[0]->RowIndex;
+				 int id = (int)dataGridView1[0, iRow]->Value;
+				 Notice::Delete(_odbc, id);
+				 dataGridView1->Rows->RemoveAt(iRow);
+			 }
+			 
 		 }
+private: System::Void NoticesForm_Load(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 SetDgv();
+		 }
+
 private: System::Void bClose_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 Close();
+		 }
+
+private: System::Void bSoglas_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (dataGridView1->SelectedCells != nullptr && dataGridView1->SelectedCells->Count > 0)
+			 {
+				 int iRow = dataGridView1->SelectedCells[0]->RowIndex;
+				 int id = (int)dataGridView1[0, iRow]->Value;
+				 Notice::SoglasNotice(_odbc, id);
+
+				 String^ squery = String::Format("select NN.ID_INTGR_BOOK, IRR.ID_INTGR " + 
+					 "from {0}INTEGRATION_RESULTS IRR, {0}NOTICES NN " + 
+					 "where NN.ID = {1} and NN.ID_INTGR = IRR.ID", _odbc->schema, id);
+				 List<Object^>^ resList = _odbc->ExecuteQuery(squery);
+				 int bSettingsId = OdbcClass::GetResInt(resList[0]);
+				 int iSettingsId = OdbcClass::GetResInt(resList[1]);
+				 BookSettings^ bSettings = gcnew BookSettings(bSettingsId, _odbc);
+				 IntegrationSettings^ iSettings = gcnew IntegrationSettings(iSettingsId, _odbc);
+
+				 Book^ book;
+				if (bSettings->IsSemantic)
+				{
+					book = gcnew SemanticBook(bSettings, iSettings, _odbc, true);
+				}
+				else
+				{
+					book = gcnew DbBook(bSettings, iSettings, true, _odbc);
+				}
+				book->Remove();
+
+
+				 SetDgv();
+			 }
 		 }
 };
 }

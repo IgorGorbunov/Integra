@@ -75,7 +75,8 @@ namespace Integra {
 	private: System::Windows::Forms::Button^  bAddSchema;
 	private: System::Windows::Forms::Label^  label7;
 	private: System::Windows::Forms::DataGridView^  dgvSchemas;
-	private: System::Windows::Forms::Button^  bEditSchema;
+	private: System::Windows::Forms::Button^  bDelSchema;
+
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::DataGridView^ dataGridView1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ dataGridViewTextBoxColumn1;
@@ -166,7 +167,7 @@ namespace Integra {
 			this->cbSystems = (gcnew System::Windows::Forms::ComboBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->tpIntegrationSchemas = (gcnew System::Windows::Forms::TabPage());
-			this->bEditSchema = (gcnew System::Windows::Forms::Button());
+			this->bDelSchema = (gcnew System::Windows::Forms::Button());
 			this->bAddSchema = (gcnew System::Windows::Forms::Button());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->dgvSchemas = (gcnew System::Windows::Forms::DataGridView());
@@ -647,7 +648,7 @@ namespace Integra {
 			// tpIntegrationSchemas
 			// 
 			this->tpIntegrationSchemas->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->tpIntegrationSchemas->Controls->Add(this->bEditSchema);
+			this->tpIntegrationSchemas->Controls->Add(this->bDelSchema);
 			this->tpIntegrationSchemas->Controls->Add(this->bAddSchema);
 			this->tpIntegrationSchemas->Controls->Add(this->label7);
 			this->tpIntegrationSchemas->Controls->Add(this->dgvSchemas);
@@ -659,17 +660,16 @@ namespace Integra {
 			this->tpIntegrationSchemas->Text = L"Интеграционные схемы";
 			this->tpIntegrationSchemas->Enter += gcnew System::EventHandler(this, &SettingsForm::tpIntegrationSchemas_Enter);
 			// 
-			// bEditSchema
+			// bDelSchema
 			// 
-			this->bEditSchema->BackColor = System::Drawing::Color::WhiteSmoke;
-			this->bEditSchema->Location = System::Drawing::Point(625, 10);
-			this->bEditSchema->Name = L"bEditSchema";
-			this->bEditSchema->Size = System::Drawing::Size(75, 23);
-			this->bEditSchema->TabIndex = 3;
-			this->bEditSchema->Text = L"Изменить";
-			this->bEditSchema->UseVisualStyleBackColor = false;
-			this->bEditSchema->Visible = false;
-			this->bEditSchema->Click += gcnew System::EventHandler(this, &SettingsForm::bEditSchema_Click);
+			this->bDelSchema->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->bDelSchema->Location = System::Drawing::Point(625, 10);
+			this->bDelSchema->Name = L"bDelSchema";
+			this->bDelSchema->Size = System::Drawing::Size(75, 23);
+			this->bDelSchema->TabIndex = 3;
+			this->bDelSchema->Text = L"Удалить";
+			this->bDelSchema->UseVisualStyleBackColor = false;
+			this->bDelSchema->Click += gcnew System::EventHandler(this, &SettingsForm::bDelSchema_Click);
 			// 
 			// bAddSchema
 			// 
@@ -832,13 +832,13 @@ namespace Integra {
 				}
 			}
 
-			Void SetShemas(List<IntegrationSettings^>^ settings)
+			Void SetShemaDgv(List<IntegrationSettings^>^ settings)
 			{
 				dgvSchemas->Rows->Clear();
 				for each (IntegrationSettings^ setting in settings)
 				{
-					array<String^>^ row = gcnew array<String ^>(8);
-					row[0] = setting->Id + "";
+					array<Object^>^ row = gcnew array<Object ^>(8);
+					row[0] = setting->Id;
 					row[1] = setting->Name;
 					row[2] = setting->SourceBook->BookName;
 					row[3] = setting->SourceBook->Name;
@@ -855,6 +855,18 @@ namespace Integra {
 					}
 					dgvSchemas->Rows->Add(row);
 				}
+			}
+
+			void SetShemas()
+			{
+				List<Object^>^ integrationIds = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATION_PARAMS");
+				List<IntegrationSettings^>^ inegrationSettings = gcnew List<IntegrationSettings^>();
+				for each (Object^ id in integrationIds)
+				{
+					IntegrationSettings^ settings = gcnew IntegrationSettings(_odbc->GetResInt(id), _odbc);
+					inegrationSettings->Add(settings);
+				}
+				SetShemaDgv(inegrationSettings);
 			}
 
 			void SetRoles()
@@ -984,14 +996,7 @@ private: System::Void bEditSystem_Click(System::Object^  sender, System::EventAr
 		 }
 private: System::Void tpIntegrationSchemas_Enter(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 List<Object^>^ integrationIds = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATION_PARAMS");
-			 List<IntegrationSettings^>^ inegrationSettings = gcnew List<IntegrationSettings^>();
-			 for each (Object^ id in integrationIds)
-			 {
-				 IntegrationSettings^ settings = gcnew IntegrationSettings(_odbc->GetResInt(id), _odbc);
-				 inegrationSettings->Add(settings);
-			 }
-			 SetShemas(inegrationSettings);
+			 SetShemas();
 		 }
 private: System::Void bCancel_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -1001,19 +1006,32 @@ private: System::Void bAddSchema_Click(System::Object^  sender, System::EventArg
 		 {
 			 AddEditSchemaForm2^ form = gcnew AddEditSchemaForm2(_settings, _odbc);
 			 form->ShowDialog();
-			 List<Object^>^ integrationIds = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "INTEGRATION_PARAMS");
-			 List<IntegrationSettings^>^ inegrationSettings = gcnew List<IntegrationSettings^>();
-			 for each (Object^ id in integrationIds)
-			 {
-				 IntegrationSettings^ settings = gcnew IntegrationSettings(OdbcClass::GetResInt(id), _odbc);
-				 inegrationSettings->Add(settings);
-			 }
-			 SetShemas(inegrationSettings);
+			 SetShemas();
 
 		 }
-private: System::Void bEditSchema_Click(System::Object^  sender, System::EventArgs^  e) 
+private: System::Void bDelSchema_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 if (dgvSchemas->CurrentCell != nullptr && dgvSchemas->CurrentCell->RowIndex >= 0)
+			 {
+				 System::Windows::Forms::DialogResult result = 
+					 MessageBox::Show("Вы действительно хотите удалить интеграционную схему?", "Предупреждение", 
+					 MessageBoxButtons::YesNoCancel, MessageBoxIcon::Warning);
 
+				 if (result == System::Windows::Forms::DialogResult::Yes)
+				 {
+					 int idSchema = (int)dgvSchemas->Rows[dgvSchemas->CurrentCell->RowIndex]->Cells[0]->Value;
+
+					 //todo update del attr, not delete
+					 IntegrationGroupPair::Delete(_odbc, idSchema);
+					 AttributePair::Delete(_odbc, idSchema);
+
+					 String^ squery = String::Format("delete from {0}INTEGRATION_PARAMS IBB where IBB.ID = {1}", _odbc->schema, idSchema);
+					 _odbc->ExecuteNonQuery(squery);
+					 SetShemas();
+
+				 }
+
+			 }
 		 }
 private: System::Void cbSystems_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -1078,9 +1096,22 @@ private: System::Void bDeleteSystem2_Click(System::Object^  sender, System::Even
 			 if (dataGridView1->CurrentCell != nullptr && dataGridView1->CurrentCell->RowIndex >= 0)
 			 {
 				 Object^ value = dataGridView1->Rows[dataGridView1->CurrentCell->RowIndex]->Cells[0]->Value;
+
+				 String^ squery = String::Format("select NAME from {0}INTEGRATION_BOOK where ID_SYSTEM = {1}", _odbc->schema, value);
+				 List<Object^>^ resList = _odbc->ExecuteQuery(squery);
+
+				 if (resList != nullptr && resList->Count > 0)
+				 {
+					 String^ name = OdbcClass::GetResString(resList[0]);
+					 MessageBox::Show("Выбранная система используется в декларированном справочнике \"" + name + "\". Удаление невозможно.");
+					 return;
+				 }
+				 else
+				 {
 				 EditForm^ form = gcnew EditForm(value, String::Empty, 0, 2, _odbc);
 				 //form->ShowDialog();
 				 SetSystems(_settings->Systems);
+				 }
 			 }
 		 }
 private: System::Void bEditBook2_Click(System::Object^  sender, System::EventArgs^  e) 
@@ -1099,9 +1130,22 @@ private: System::Void bDeleteBook2_Click(System::Object^  sender, System::EventA
 			 if (dgvBooks->CurrentCell != nullptr && dgvBooks->CurrentCell->RowIndex >= 0)
 			 {
 				 Object^ value = dgvBooks->Rows[dgvBooks->CurrentCell->RowIndex]->Cells[0]->Value;
+
+				 String^ squery = String::Format("select NAME from {0}INTEGRATION_BOOK where ID_BOOK = {1}", _odbc->schema, value);
+				 List<Object^>^ resList = _odbc->ExecuteQuery(squery);
+
+				 if (resList != nullptr && resList->Count > 0)
+				 {
+					 String^ name = OdbcClass::GetResString(resList[0]);
+					 MessageBox::Show("Выбранный тип справочника используется в декларированном справочнике \"" + name + "\". Удаление невозможно.");
+					 return;
+				 }
+				 else
+				 {
 				  EditForm^ form = gcnew EditForm(value, String::Empty, 1, 2, _odbc);
 				  //form->ShowDialog();
 				  SetBooks(_settings->Books);
+				 }
 			 }
 		 }
 private: System::Void bDeleteSystemBook_Click(System::Object^  sender, System::EventArgs^  e) 
@@ -1114,10 +1158,33 @@ private: System::Void bDeleteSystemBook_Click(System::Object^  sender, System::E
 
 				 if (result == System::Windows::Forms::DialogResult::Yes)
 				 {
-					 Object^ value = dgvSystemBooks->Rows[dgvSystemBooks->CurrentCell->RowIndex]->Cells[0]->Value;
-					 String^ squery = String::Format("delete from {0}INTEGRATION_BOOK IBB where IBB.ID = {1}", _odbc->schema, value);
-					 _odbc->ExecuteNonQuery(squery);
-					 SetSystemBooks("");
+					 Object^ idBook = dgvSystemBooks->Rows[dgvSystemBooks->CurrentCell->RowIndex]->Cells[0]->Value;
+					 String^ squery = String::Format("select INT_NAME from {0}INTEGRATION_PARAMS where ID_SOURCE_BOOK = {1} or ID_TARGET_BOOK = {1}", _odbc->schema, idBook);
+					 List<Object^>^ resList = _odbc->ExecuteQuery(squery);
+
+					 if (resList != nullptr && resList->Count > 0)
+					 {
+						 String^ intSchemaName = OdbcClass::GetResString(resList[0]);
+						 MessageBox::Show("Справочник используется в интеграционной схеме \"" + intSchemaName + "\". Удаление невозможно.");
+						 return;
+					 }
+					 else
+					 {
+						 squery = String::Format("delete from {0}DB_FILTERS IBB where IBB.ID_INTGR_BOOK = {1}", _odbc->schema, idBook);
+						 _odbc->ExecuteNonQuery(squery);
+						 squery = String::Format("delete from {0}DB_LINKS IBB where IBB.ID_INTGR_BOOK = {1}", _odbc->schema, idBook);
+						 _odbc->ExecuteNonQuery(squery);
+						 squery = String::Format("delete from {0}POSITION_GROUP_ATTRIBUTE_PAIRS IBB where IBB.ID_INTEGRATION_BOOK = {1}", _odbc->schema, idBook);
+						 _odbc->ExecuteNonQuery(squery);
+						 squery = String::Format("delete from {0}USERS_BOOKS IBB where IBB.ID_INT_BOOK = {1}", _odbc->schema, idBook);
+						 _odbc->ExecuteNonQuery(squery);
+						 squery = String::Format("delete from {0}INTEGRATION_ATTRIBUTES IBB where IBB.ID_INTGR_BOOK = {1}", _odbc->schema, idBook);
+						 _odbc->ExecuteNonQuery(squery);
+						 squery = String::Format("delete from {0}INTEGRATION_BOOK IBB where IBB.ID = {1}", _odbc->schema, idBook);
+						 _odbc->ExecuteNonQuery(squery);
+						 SetSystemBooks("");
+					 }
+
 				 }
 			 
 			 }

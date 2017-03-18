@@ -210,6 +210,12 @@ namespace Integra {
 
 			return list;
 		}
+		
+		static void Delete(OdbcClass^ odbc, int intSchemaId)
+		{
+			String^ squery = String::Format("delete from {0}DB_GROUPS IBB where IBB.ID_INTGR_PARAMS = {1}", odbc->schema, intSchemaId);
+			odbc->ExecuteNonQuery(squery);
+		}
 
 		IntegrationGroupPair(int id, String^ name, String^ sourceGroupId, String^ targetGroupId)
 		{

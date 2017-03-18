@@ -3,7 +3,7 @@
 #include "Book.h"
 #include "DbPosition.h"
 #include "Position.h"
-#include "IntegrationSettings.h"
+//#include "IntegrationSettings.h"
 #include "Results2.h"
 #include "ODBCclass.h"
 #include "Editting.h"
@@ -466,12 +466,64 @@ namespace Integra {
 			
 		}
 
+		virtual void Remove(String^ posId) override
+		{
+			if (BookSetting->HasAnnulAttr)
+			{
+				Exclude(posId);
+			}
+			else
+			{
+				Delete(posId);
+			}
+		}
+
+
 		virtual Object^ GetSemObject(String^ location) override
 		{
 			return nullptr;
 		}
 
 		private:
+
+			void Exclude(String^ posId)
+			{
+				Attribute^ attrId = BookSetting->AttrId;
+				String^ annulVal;
+				if (BookSetting->AnnulAction == "=")
+				{
+					annulVal = BookSetting->AnnulValue;
+				}
+				else
+				{
+					if (BookSetting->AnnulValue == "0")
+					{
+						annulVal = "1";
+					}
+					else
+					{
+						annulVal = "5";
+					}
+				}
+				annulVal = OdbcClass::GetSqlString(annulVal);
+
+				String^ squery = String::Format("update {0} set {1} = {2} where {3} = {4}", 
+					BookSetting->AnnulAttr->FullTable, BookSetting->AnnulAttr->FullCode, annulVal, BookSetting->AttrId->FullCode, posId);
+				BookSetting->Odbc->ExecuteNonQuery(squery);
+			}
+
+			void Delete(String^ posId)
+			{
+				Dictionary<String^, String^>^ tablesAndAttrIds = gcnew Dictionary<String^, String^>();
+				if (BookSetting->DbLinks != nullptr && BookSetting->DbLinks->Count > 0)
+				{
+					//todo
+				}
+
+				Attribute^ attrId = BookSetting->AttrId;
+				String^ squery = String::Format("delete from {0} where {1} = {2}", attrId->FullTable, attrId->FullCode, posId);
+				BookSetting->Odbc->ExecuteNonQuery(squery);
+			}
 
 			List<String^>^ AddPositonsOnLink(Dictionary<Attribute^, String^>^ attrsAndNewVals, Object^ idVal)
 			{

@@ -255,7 +255,7 @@ namespace Integra {
 		void CheckGroups(Dictionary<Attribute^, String^>^ attrsAndNewVals)
 		{
 			SortTables();
-			for each (String^ table in _tables)
+			/*for each (String^ table in _tables)
 			{
 				Dictionary<Attribute^, String^>^ tableAttrs = gcnew Dictionary<Attribute^, String^>();
 				for each (KeyValuePair<Attribute^, String^>^ pair in attrsAndNewVals)
@@ -269,7 +269,8 @@ namespace Integra {
 						AddCurrentLevelPosition(_tables, attrsAndNewVals);
 					}
 				}
-			}
+			}*/
+			AddCurrentLevelPosition(_tables, attrsAndNewVals);
 		}
 
 		bool Contains(Dictionary<Attribute^, String^>^ tableAttrs, String^ table)

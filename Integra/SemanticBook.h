@@ -3,7 +3,7 @@
 #include "Logger.h"
 #include "Semantic.h"
 #include "SemanticPosition.h"
-#include "IntegrationSettings.h"
+//#include "IntegrationSettings.h"
 #include "Book.h"
 #include "Position.h"
 #include "Results2.h"
@@ -121,6 +121,11 @@ namespace Integra {
 		virtual void UpdatePositionForEachAttr(Position^ currentPos, Dictionary<Attribute^, String^>^ attrsAndNewVals, IntegrationResult^ result, int isTarget) override
 		{
 
+		}
+
+		virtual void Remove(String^ posId) override
+		{
+			
 		}
 
 		virtual Object^ GetSemObject(String^ location) override

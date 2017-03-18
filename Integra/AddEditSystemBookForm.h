@@ -91,8 +91,8 @@ namespace Integra {
 			this->cbBook = (gcnew System::Windows::Forms::ComboBox());
 			this->bAddAttrs = (gcnew System::Windows::Forms::Button());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->pExeFile = (gcnew System::Windows::Forms::Panel());
 			this->tbDriver = (gcnew System::Windows::Forms::TextBox());
+			this->pExeFile = (gcnew System::Windows::Forms::Panel());
 			this->bAddExeFile = (gcnew System::Windows::Forms::Button());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->tbExePath = (gcnew System::Windows::Forms::TextBox());
@@ -160,6 +160,15 @@ namespace Integra {
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Соединение";
 			// 
+			// tbDriver
+			// 
+			this->tbDriver->Location = System::Drawing::Point(13, 59);
+			this->tbDriver->Multiline = true;
+			this->tbDriver->Name = L"tbDriver";
+			this->tbDriver->Size = System::Drawing::Size(177, 134);
+			this->tbDriver->TabIndex = 10;
+			this->tbDriver->Visible = false;
+			// 
 			// pExeFile
 			// 
 			this->pExeFile->Controls->Add(this->bAddExeFile);
@@ -170,15 +179,6 @@ namespace Integra {
 			this->pExeFile->Size = System::Drawing::Size(177, 131);
 			this->pExeFile->TabIndex = 14;
 			this->pExeFile->Visible = false;
-			// 
-			// tbDriver
-			// 
-			this->tbDriver->Location = System::Drawing::Point(13, 59);
-			this->tbDriver->Multiline = true;
-			this->tbDriver->Name = L"tbDriver";
-			this->tbDriver->Size = System::Drawing::Size(177, 134);
-			this->tbDriver->TabIndex = 10;
-			this->tbDriver->Visible = false;
 			// 
 			// bAddExeFile
 			// 
@@ -214,7 +214,7 @@ namespace Integra {
 			this->cbConnType->Name = L"cbConnType";
 			this->cbConnType->Size = System::Drawing::Size(177, 21);
 			this->cbConnType->TabIndex = 8;
-			this->cbConnType->Text = L" Логин, пароль, база данных";
+			this->cbConnType->Text = L"Логин, пароль, база данных";
 			this->cbConnType->SelectedIndexChanged += gcnew System::EventHandler(this, &AddEditSystemBookForm::cbConnType_SelectedIndexChanged);
 			// 
 			// label5
@@ -379,6 +379,10 @@ namespace Integra {
 			Attribute^ _titleCol;
 			Attribute^ _dateCol;
 
+			Attribute^ _annulCol;
+			String^ _annulAction;
+			String^ _annulValue;
+
 			List<DbFilter^>^ _dbFilters;
 			List<DbLink^>^ _dbLinks;
 
@@ -427,7 +431,7 @@ namespace Integra {
 
 			Void WriteIntegrBook()
 			{
-				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE,NAME,EXE_PATH";
+				String^ columns = "ID,ID_SYSTEM,ID_BOOK,LOGIN,PASSWORD,TNS_DATABASE,DRIVER,IS_SEMANTIC,CREATE_USER,CREATE_DATE,NAME,EXE_PATH,ANNUL_ACTION,ANNUL_VALUE";
 				
 				_intgrBookId = _odbc->GetLastFreeId(_odbc->schema + "INTEGRATION_BOOK");
 				List<Object^>^ idBook = _odbc->ExecuteQuery("select ID from " + _odbc->schema + "BOOKS where NAME = \'" + cbBook->Text + "\'");
@@ -463,10 +467,13 @@ namespace Integra {
 					}
 				}
 				String^ sExePath = OdbcClass::GetSqlString(tbExePath->Text);
+				String^ sAnnulAction = OdbcClass::GetSqlString(_annulAction);
+				String^ sAnnulValue = OdbcClass::GetSqlString(_annulValue);
 
 				String^ query;
-				query = String::Format("insert into {0}INTEGRATION_BOOK ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13})", 
-					_odbc->schema, columns, _intgrBookId, sqlIdSystem, sqlIdBook, sqlLogin, sqlPassword, sqlDb, sqlDriver, _systemTypeId, sqlUser, sqlDate, sqlName,sExePath);
+				query = String::Format("insert into {0}INTEGRATION_BOOK ({1}) values ({2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15})", 
+					_odbc->schema, columns, _intgrBookId, sqlIdSystem, sqlIdBook, sqlLogin, sqlPassword, sqlDb, sqlDriver, _systemTypeId, sqlUser, sqlDate, 
+					sqlName, sExePath, sAnnulAction, sAnnulValue);
 				_odbc->ExecuteNonQuery(query);
 			}
 
@@ -554,7 +561,7 @@ namespace Integra {
 
 			}
 
-			void WriteSingleAttrs(Attribute^ idCol, Attribute^ titleCol, Attribute^ dateCol, Attribute^ roughCol, int intgrId)
+			void WriteSingleAttrs(Attribute^ idCol, Attribute^ titleCol, Attribute^ dateCol, Attribute^ roughCol, Attribute^ annulCol, int intgrId)
 			{
 				int id = WriteSingleAttr(idCol, intgrId);
 				String^ squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_ID = " + id + " where ID = " + intgrId;
@@ -575,6 +582,13 @@ namespace Integra {
 				{
 					int roughAttrId = WriteSingleAttr(roughCol, intgrId);
 					squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_ROUGH = " + roughAttrId + " where ID = " + intgrId;
+					_odbc->ExecuteNonQuery(squery);
+				}
+
+				if (annulCol != nullptr)
+				{
+					int annulAttrId = WriteSingleAttr(annulCol, intgrId);
+					squery = "update " + _odbc->schema + "INTEGRATION_BOOK set ATTR_ANNUL = " + annulAttrId + " where ID = " + intgrId;
 					_odbc->ExecuteNonQuery(squery);
 				}
 			}
@@ -672,7 +686,7 @@ namespace Integra {
 				if (!isDllExeBook)
 				{
 					WriteUseAttrs(_dbAttrs, _intgrBookId);
-					WriteSingleAttrs(_idCol, _titleCol, _dateCol, _roughCol, _intgrBookId);
+					WriteSingleAttrs(_idCol, _titleCol, _dateCol, _roughCol, _annulCol, _intgrBookId);
 					if (_dbFilters != nullptr)
 					{
 						WriteDbFilters();
@@ -924,6 +938,13 @@ private: System::Void bAddAttrs_Click(System::Object^  sender, System::EventArgs
 						 _groupIdCol = addAttrForm->GroupIdCol;
 						 _groupNameCol = addAttrForm->GroupNameCol;
 						 _groupAttrs = addAttrForm->GroupAttrs;
+					 }
+
+					 _annulCol = addAttrForm->AnnulAttr;
+					 if (_annulCol != nullptr)
+					 {
+						 _annulAction = addAttrForm->AnnulAction;
+						 _annulValue = addAttrForm->AnnulValue;
 					 }
 					 
 					 _posParamAttrs = addAttrForm->PosParamAttrs;

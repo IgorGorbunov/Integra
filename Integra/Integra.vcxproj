@@ -168,6 +168,8 @@
     <ClInclude Include="AutoConfigsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="AutoIntegration.h" />
+    <ClInclude Include="AutoIntegrationManager.h" />
     <ClInclude Include="AutoSettingsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

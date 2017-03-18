@@ -471,10 +471,12 @@ namespace Integra {
 			if (BookSetting->HasAnnulAttr)
 			{
 				Exclude(posId);
+				MessageBox::Show("Позиция аннулирована!");
 			}
 			else
 			{
 				Delete(posId);
+				MessageBox::Show("Позиция удалена!");
 			}
 		}
 
@@ -505,10 +507,11 @@ namespace Integra {
 						annulVal = "5";
 					}
 				}
-				annulVal = OdbcClass::GetSqlString(annulVal);
+				annulVal = BookSetting->Odbc->GetSqlValue(BookSetting->AnnulAttr->DataType, annulVal);
+				String^ sPosId = BookSetting->Odbc->GetSqlValue(attrId->DataType, posId);
 
 				String^ squery = String::Format("update {0} set {1} = {2} where {3} = {4}", 
-					BookSetting->AnnulAttr->FullTable, BookSetting->AnnulAttr->FullCode, annulVal, BookSetting->AttrId->FullCode, posId);
+					BookSetting->AnnulAttr->FullTable, BookSetting->AnnulAttr->FullCode, annulVal, attrId->FullCode, sPosId);
 				BookSetting->Odbc->ExecuteNonQuery(squery);
 			}
 
@@ -521,7 +524,8 @@ namespace Integra {
 				}
 
 				Attribute^ attrId = BookSetting->AttrId;
-				String^ squery = String::Format("delete from {0} where {1} = {2}", attrId->FullTable, attrId->FullCode, posId);
+				String^ sPosId = BookSetting->Odbc->GetSqlValue(attrId->DataType, posId);
+				String^ squery = String::Format("delete from {0} where {1} = {2}", attrId->FullTable, attrId->FullCode, sPosId);
 				BookSetting->Odbc->ExecuteNonQuery(squery);
 			}
 

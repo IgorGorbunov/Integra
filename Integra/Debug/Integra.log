@@ -1,59 +1,9 @@
-﻿Построение начато 17.03.2017 17:56:53.
-     1>Проект "E:\igor\Integra - копия\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
-     1>ClCompile:
-         e:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FU"E:\igor\Integra - копия\Integra\Debug\Interop.Microsoft.Office.Interop.Excel.dll" /FU"E:\igor\Integra - копия\_libs\Interop.SemanticCore.1.0.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /FU"E:\igor\Integra - копия\_libs\ProcessLib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt AddComplexAttrForm.cpp AddDbAttrsForm.cpp AddEditGroupForm.cpp AddEditSchemaForm2.cpp AddEditSystemBookForm.cpp AddEditUserRole.cpp AddGroupLinksForm.cpp AddNewTableForm.cpp AddNewUser.cpp AddSemAttrForm.cpp AutoConfigsForm.cpp AutoSettingsForm.cpp DbFiltersForm.cpp DetailResults.cpp DifferencesForm.cpp EditForm.cpp GroupParamsForm.cpp GroupTableAttrs.h IntgrResultsForm.cpp JournalChangesForm.cpp LoginForm.cpp MainForm.cpp ManualIntegrationForm.cpp ManualIntegrationForm1.cpp NormIntegrForm.cpp NoticesForm.cpp ODBCclass.h PosGroupParamsForm.cpp Results.cpp Results2.cpp Results3.cpp RoughInterg.cpp SearchForm.cpp SettingsForm.cpp TableLinksForm.cpp UserBookAccessForm.cpp /clr:nostdlib 
-         AddComplexAttrForm.cpp
-         AddDbAttrsForm.cpp
-         AddEditGroupForm.cpp
-         AddEditSchemaForm2.cpp
-         AddEditSystemBookForm.cpp
-         AddEditUserRole.cpp
-         AddGroupLinksForm.cpp
-         AddNewTableForm.cpp
-         AddNewUser.cpp
-         AddSemAttrForm.cpp
-         AutoConfigsForm.cpp
-         AutoSettingsForm.cpp
-         DbFiltersForm.cpp
-         DetailResults.cpp
-         DifferencesForm.cpp
-         EditForm.cpp
-         GroupParamsForm.cpp
-         GroupTableAttrs.h
-         IntgrResultsForm.cpp
-         JournalChangesForm.cpp
-         Создание кода...
-         Компиляция...
-         LoginForm.cpp
-     1>e:\igor\integra - копия\integra\NoticesForm.h(452): error C2660: Integra::Book::Remove: функция не принимает 0 аргументов
-         MainForm.cpp
-     1>e:\igor\integra - копия\integra\NoticesForm.h(452): error C2660: Integra::Book::Remove: функция не принимает 0 аргументов
-         ManualIntegrationForm.cpp
-         ManualIntegrationForm1.cpp
-         NormIntegrForm.cpp
-         NoticesForm.cpp
-     1>e:\igor\integra - копия\integra\NoticesForm.h(443): error C2065: Book: необъявленный идентификатор
-     1>e:\igor\integra - копия\integra\NoticesForm.h(443): error C2065: book: необъявленный идентификатор
-     1>e:\igor\integra - копия\integra\NoticesForm.h(446): error C2065: book: необъявленный идентификатор
-     1>e:\igor\integra - копия\integra\NoticesForm.h(446): error C2061: синтаксическая ошибка: идентификатор "SemanticBook"
-     1>e:\igor\integra - копия\integra\NoticesForm.h(450): error C2065: book: необъявленный идентификатор
-     1>e:\igor\integra - копия\integra\NoticesForm.h(450): error C2061: синтаксическая ошибка: идентификатор "DbBook"
-     1>e:\igor\integra - копия\integra\NoticesForm.h(452): error C2065: book: необъявленный идентификатор
-     1>e:\igor\integra - копия\integra\NoticesForm.h(452): error C2227: выражение слева от "->Remove" должно указывать на тип класса, структуры или объединения либо на универсальный тип
-                 тип: 'unknown-type'
-         ODBCclass.h
-         PosGroupParamsForm.cpp
-         Results.cpp
-         Results2.cpp
-         Results3.cpp
-         RoughInterg.cpp
-         SearchForm.cpp
-         SettingsForm.cpp
-         TableLinksForm.cpp
-         UserBookAccessForm.cpp
-         Создание кода...
-     1>Построение проекта "E:\igor\Integra - копия\Integra\Integra.vcxproj" завершено (целевые объекты Build) с ошибкой.
+﻿Построение начато 18.03.2017 20:05:25.
+     1>Проект "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" в узле 2 (целевые объекты Build).
+     1>Link:
+         Integra.vcxproj -> D:\Work\Coding\Github\repos\Integra\Integra\Debug\Integra.exe
+     1>Построение проекта "D:\Work\Coding\Github\repos\Integra\Integra\Integra.vcxproj" завершено (целевые объекты Build).
 
-Сбой построения.
+Построение успешно завершено.
 
-Затраченное время: 00:00:09.97
+Затраченное время: 00:00:00.09

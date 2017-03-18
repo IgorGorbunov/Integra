@@ -4,6 +4,9 @@
 #include "Notice.h"
 #include "BookSettings.h"
 #include "IntegrationSettings.h"
+#include "Book.h"
+#include "SemanticBook.h"
+#include "DbBook.h"
 
 namespace Integra {
 
@@ -44,12 +47,6 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridView^  dataGridView1;
 	protected: 
 
-
-
-
-
-
-
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::DateTimePicker^  dateTimePicker1;
 	private: System::Windows::Forms::DateTimePicker^  dateTimePicker2;
@@ -76,6 +73,13 @@ namespace Integra {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column7;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column9;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column10;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column12;
+
+
+
+
+
+
 
 
 
@@ -132,6 +136,7 @@ namespace Integra {
 			this->Column7 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column9 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Column10 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column12 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
 			this->panel1->SuspendLayout();
 			this->panel2->SuspendLayout();
@@ -144,9 +149,9 @@ namespace Integra {
 			this->dataGridView1->AllowUserToAddRows = false;
 			this->dataGridView1->AllowUserToDeleteRows = false;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(11) {this->Column8, 
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(12) {this->Column8, 
 				this->Column1, this->Column2, this->Column3, this->Column11, this->Column4, this->Column5, this->Column6, this->Column7, this->Column9, 
-				this->Column10});
+				this->Column10, this->Column12});
 			this->dataGridView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->dataGridView1->Location = System::Drawing::Point(10, 10);
 			this->dataGridView1->Name = L"dataGridView1";
@@ -345,6 +350,13 @@ namespace Integra {
 			this->Column10->Name = L"Column10";
 			this->Column10->ReadOnly = true;
 			// 
+			// Column12
+			// 
+			this->Column12->HeaderText = L"posId";
+			this->Column12->Name = L"Column12";
+			this->Column12->ReadOnly = true;
+			this->Column12->Visible = false;
+			// 
 			// NoticesForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -377,7 +389,7 @@ namespace Integra {
 			 dataGridView1->Rows->Clear();
 			 for each (Notice^ notice in notices)
 			 {
-				 array<Object^>^ row = gcnew array<Object ^>(11);
+				 array<Object^>^ row = gcnew array<Object ^>(12);
 				 row[0] = notice->Id;
 				 row[1] = notice->CreateDate;
 				 if (notice->IsSoglas)
@@ -389,7 +401,7 @@ namespace Integra {
 					 row[2] = false;
 				 }
 				 row[3] = notice->Type;
-
+				 row[4] = notice->PosCaption;
 
 				 row[5] = notice->CreateUser;
 				 row[6] = notice->IntSchemaName;
@@ -397,6 +409,8 @@ namespace Integra {
 				 row[8] = notice->System;
 				 row[9] = notice->SoglasDate;
 				 row[10] = notice->SoglasUser;
+				 row[11] = notice->PosId;
+
 				 dataGridView1->Rows->Add(row);
 			 }
 		}
@@ -428,6 +442,11 @@ private: System::Void bSoglas_Click(System::Object^  sender, System::EventArgs^ 
 			 if (dataGridView1->SelectedCells != nullptr && dataGridView1->SelectedCells->Count > 0)
 			 {
 				 int iRow = dataGridView1->SelectedCells[0]->RowIndex;
+				 bool isSoglas = (bool)dataGridView1[2, iRow]->Value;
+				 if (isSoglas)
+					return;
+				 
+
 				 int id = (int)dataGridView1[0, iRow]->Value;
 				 Notice::SoglasNotice(_odbc, id);
 
@@ -449,8 +468,8 @@ private: System::Void bSoglas_Click(System::Object^  sender, System::EventArgs^ 
 				{
 					book = gcnew DbBook(bSettings, iSettings, true, _odbc);
 				}
-				book->Remove();
-
+				String^ posId = dataGridView1[11, iRow]->Value->ToString();
+				book->Remove(posId);
 
 				 SetDgv();
 			 }

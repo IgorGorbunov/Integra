@@ -86,6 +86,20 @@ namespace Integra {
 				return _soglasUser;
 			}
 		}
+		property String^ PosCaption
+		{
+			String^ get()
+			{
+				return _caption;
+			}
+		}
+		property String^ PosId
+		{
+			String^ get()
+			{
+				return _posId;
+			}
+		}
 
 	private:
 		OdbcClass^ _odbc;
@@ -139,7 +153,8 @@ namespace Integra {
 			_integrationBookId = integrationBookId;
 		}
 
-		Notice(OdbcClass^ odbc, int id, DateTime^ creationDate, int isSoglas, String^ reason, String^ createUser, String^ integrationName, String^ bookName, String^ systemName, String^ soglasUser, String^ soglasDate, String^ caption)
+		Notice(OdbcClass^ odbc, int id, DateTime^ creationDate, int isSoglas, String^ reason, String^ createUser, String^ integrationName, String^ bookName, String^ systemName, 
+			String^ soglasUser, String^ soglasDate, String^ caption, String^ posId)
 		{
 			_odbc = odbc;
 			_id = id;
@@ -161,6 +176,7 @@ namespace Integra {
 			_soglasUser = soglasUser;
 			_soglasDate = soglasDate;
 			_caption = caption;
+			_posId = posId;
 		}
 
 		void InsertToDb()
@@ -182,7 +198,7 @@ namespace Integra {
 
 		static List<Notice^>^ GetAllNotices(OdbcClass^ odbc)
 		{
-			String^ squery = "select NN.ID, NN.CREATE_DATE, NN.SOGLAS, NN.REASON, NN.CREATE_USER, IPP.INT_NAME, BB.NAME, ISS.NAME, NN.SOGLAS_USER, NN.SOGLAS_DATE, NN.CAPTION " +
+			String^ squery = "select NN.ID, NN.CREATE_DATE, NN.SOGLAS, NN.REASON, NN.CREATE_USER, IPP.INT_NAME, BB.NAME, ISS.NAME, NN.SOGLAS_USER, NN.SOGLAS_DATE, NN.CAPTION, NN.ID_POS " +
 				"from {0}NOTICES NN, {0}INTEGRATION_RESULTS IRR, {0}INTEGRATION_PARAMS IPP, {0}INTEGRATION_BOOK IBB, {0}BOOKS BB, {0}INTEGRATED_SYSTEMS ISS " +
 			    "where NN.ID_INTGR = IRR.ID and IPP.ID = IRR.ID_INTGR and IBB.ID = NN.ID_INTGR_BOOK and BB.ID = IBB.ID_BOOK and IBB.ID_SYSTEM = ISS.ID";
 			squery = String::Format(squery, odbc->schema);
@@ -194,7 +210,7 @@ namespace Integra {
 				notices = gcnew List<Notice ^>();
 			}
 
-			for (int i = 0; i < resList->Count; i+=11)
+			for (int i = 0; i < resList->Count; i+=12)
 			{
 				int id = odbc->GetResInt(resList[i+0]);
 				DateTime^ createDate = odbc->GetResDate(resList[i+1]);
@@ -207,8 +223,9 @@ namespace Integra {
 				String^ soglasUser = odbc->GetResString(resList[i+8]);
 				String^ soglasDate = odbc->GetResString(resList[i+9]);
 				String^ caption = odbc->GetResString(resList[i+10]);
+				String^ posId = odbc->GetResString(resList[i+11]);
 
-				Notice^ notice = gcnew Notice(odbc, id, createDate, soglas, reason, createUser, integrationSchemaName, bookName, systemName, soglasUser, soglasDate, caption);
+				Notice^ notice = gcnew Notice(odbc, id, createDate, soglas, reason, createUser, integrationSchemaName, bookName, systemName, soglasUser, soglasDate, caption, posId);
 				notices->Add(notice);
 			}
 			return notices;

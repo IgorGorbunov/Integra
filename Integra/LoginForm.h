@@ -225,11 +225,11 @@ namespace Integra {
 					 String^ fullPath = Path::Combine(Application::StartupPath, "autoIntegrationManager.exe");
 					 if (File::Exists(fullPath))
 					 {
-						 Process::Start(fullPath);
+						 Process::Start(fullPath, "\"" + driver + "\"");
 					 }
 					 else
 					 {
-						 //todo
+						 MessageBox::Show("Ошибка! Файл менеджера автоматической интеграции не найден!");
 					 }
 					 
 				 }

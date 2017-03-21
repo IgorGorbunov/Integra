@@ -40,8 +40,8 @@ namespace Integra {
 			void Init()
 			{
 				//release
-				schema = ""; 
-				//schema = "INTEGRA.";
+				//schema = ""; 
+				schema = "INTEGRA.";
 			}
 
 			OdbcClass(String^ driver) 

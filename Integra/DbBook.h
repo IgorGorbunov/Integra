@@ -3,7 +3,6 @@
 #include "Book.h"
 #include "DbPosition.h"
 #include "Position.h"
-//#include "IntegrationSettings.h"
 #include "Results2.h"
 #include "ODBCclass.h"
 #include "Editting.h"

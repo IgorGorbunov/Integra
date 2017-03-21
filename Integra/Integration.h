@@ -95,9 +95,19 @@ namespace Integra {
 
 
 	public:
-		Void StartExactIntegration(Form^% form, Label^% lblCount)
+		Void StartExactIntegration(Form^% form, Label^% lblCount, bool isAuto)
 		{
-			_intgrResults = gcnew IntegrationResult(_odbc, _settings, 1);
+			int iType;
+			if (isAuto)
+			{
+				iType = 0;
+			}
+			else
+			{
+				iType = 1;
+			}
+
+			_intgrResults = gcnew IntegrationResult(_odbc, _settings, iType);
 			_intgrResults->WriteDbStart();
 
 			_attrPairs = _settings->AttributePairs;
@@ -136,8 +146,8 @@ namespace Integra {
 				_bWorker->RunWorkerAsync();
 			}
 			
-
-			lblCount->Text = "0";
+			if (lblCount != nullptr)
+				lblCount->Text = "0";
 			Application::DoEvents();
 
 			while (_bWorker != nullptr && _isBusy)
@@ -312,6 +322,11 @@ namespace Integra {
 // 				Position^ p = gcnew DbPosition(sListingPos, attrSourceTitles, iSAttrId, iSAttrTitle);
 // 				TargetNew->Add(p);
 // 			}
+		}
+
+		void StartAutoExactIntegration()
+		{
+			StartExactIntegration(gcnew Form(), gcnew Label(), true);
 		}
 
 		void StartExeIntegration()

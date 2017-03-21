@@ -58,7 +58,7 @@ namespace Integra {
 		static Void StartIntegrationTable(IntegrationSettings^ intSet, System::Windows::Forms::Form^% form, System::Windows::Forms::Label^% lblCount) 
 		{
 			_integration = gcnew Integration(intSet, Odbc);
-			_integration->StartExactIntegration(form, lblCount);
+			_integration->StartExactIntegration(form, lblCount, 1);
 
 			SourceNew = _integration->SourceNew;
 			TargetNew = _integration->TargetNew;
@@ -89,8 +89,28 @@ namespace Integra {
 		{
 			_integration = gcnew Integration(intSet, Odbc);
 			_integration->StartExeIntegration();
+		}
 
-			
+		static void StartAutoIntegration(IntegrationSettings^ intSet, OdbcClass^ odbc)
+		{
+			_integration = gcnew Integration(intSet, odbc);
+			_integration->StartAutoExactIntegration();
+
+			List<Position^>^ newPositionsInSource = _integration->SourceNew;
+			List<Position^>^ newPositionsInTarget = _integration->TargetNew;
+
+			//todo
+			List<DifferencePosition^>^ differencePositions = _integration->Differences;
+
+			for each (Position^ pos in newPositionsInSource)
+			{
+				ProgramIntegration::AddPosToTarget(pos);
+			}
+
+			for each (Position^ pos in newPositionsInTarget)
+			{
+				ProgramIntegration::NoticeRemoveFromSource(pos);
+			}
 		}
 
 		static void StopIntegration()

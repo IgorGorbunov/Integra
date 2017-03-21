@@ -4,5 +4,6 @@
     <LocalDebuggerSQLDebugging>true</LocalDebuggerSQLDebugging>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <ShowAllFiles>false</ShowAllFiles>
+    <LocalDebuggerCommandArguments>{ Атрибут1 [ ЦЕЛОЕ ] - 223 }, { Атрибут2 [ СТРОКА ] - 200,12 }, { Атрибут 3 [ СТРОКА ] - 200.2 }</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

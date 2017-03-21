@@ -34,7 +34,7 @@ namespace Integra {
 			_systemList = settings->Systems;
 
 			//release
-			tbDriver->Text = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=D:\\_Test.accdb;Uid=Admin;Pwd=;";
+			//tbDriver->Text = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=D:\\_Test.accdb;Uid=Admin;Pwd=;";
 		}
 
 	protected:

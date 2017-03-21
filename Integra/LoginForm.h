@@ -186,8 +186,8 @@ namespace Integra {
 			 if (String::IsNullOrEmpty(tbPass->Text->Trim()))
 			 {
 				 //release
-				driver = _driver;
-				//MessageBox::Show("¬ведите пароль!");return;
+				//driver = _driver;
+				MessageBox::Show("¬ведите пароль!");return;
 			 }
 			 else
 			 {

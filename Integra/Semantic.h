@@ -11,7 +11,7 @@ namespace Integra {
 	using namespace System::Globalization;
 	using namespace System::Text;
 	using namespace System::IO;
-	//using namespace SemanticCore;
+	using namespace SemanticCore;
 	using namespace System::Windows::Forms;
 
 	/// <summary>
@@ -20,7 +20,8 @@ namespace Integra {
 	public ref class Semantic 
 	{
 	public:
-		//ISCCore^ Core;
+		ISCCore^ Core;
+		static ISCCore^ StaticCore;
 
 	private:
 		Logger^ Log;
@@ -28,7 +29,7 @@ namespace Integra {
 		String^ _user;
 		String^ _pass;
 		
-		//SCLogon^ _logon;
+		SCLogon^ _logon;
 
 
 	public:
@@ -40,43 +41,48 @@ namespace Integra {
 			_user = user;
 			_pass = pass;
 			
-			 //if (Init())
-			 //{
-				// //"Constructor", "111"
-				// //"Administrator", "1990"
-				// if (_logon->LogonAsParams(user, pass, ""))
-				// {
-				//	 //vkl core
-				//	 ISCObjectList^ objs = Core->ObjectList();
-				// }
-				// else
-				// {
-				//	 WrongPassSemanticException^ ex = gcnew WrongPassSemanticException(_logon->GetLastErrorCode(), _logon->GetLastErrorMessage(), user, pass);
-				//	 Log->WriteError(ex->ToString());
-				//	 _logon->ClearLastError();
-				//	 Clear();
-				//	 throw ex;
-				// }
-			 //}
+			 if (Init())
+			 {
+				 //"Constructor", "111"
+				 //"Administrator", "1990"
+				 if (_logon->LogonAsParams(user, pass, ""))
+				 {
+					 //vkl core
+					 ISCObjectList^ objs = Core->ObjectList();
+				 }
+				 else
+				 {
+					 WrongPassSemanticException^ ex = gcnew WrongPassSemanticException(_logon->GetLastErrorCode(), _logon->GetLastErrorMessage(), user, pass);
+					 Log->WriteError(ex->ToString());
+					 _logon->ClearLastError();
+					 Clear();
+					 throw ex;
+				 }
+			 }
+		}
+
+		static ISCObject^ GetObject(String^ location)
+		{
+			return StaticCore->ObjectList()->ObjectByLocation(location);
 		}
 
 		List<String^>^ GetAllFolderBooks()
 		{
 			List<String^>^ list = gcnew List<String ^>();
-			/*ISCGroupList^ groups = Core->GroupList();
+			ISCGroupList^ groups = Core->GroupList();
 			int nGroup = groups->CountGroups;
 			for (int i = 0; i < nGroup; i++)
 			{
-			ISCReferGroup^ group = groups->GroupByIndex(i);
-			list->Add(group->NameGroup);
-			}*/
+				ISCReferGroup^ group = groups->GroupByIndex(i);
+				list->Add(group->NameGroup);
+			}
 			return list;
 		}
 
 		Dictionary<String^, String^>^ GetAllBooks(String^ folder)
 		{
 			Dictionary<String^, String^>^ dictionary = gcnew Dictionary<String^, String^>();
-			/*ISCGroupList^ groups = Core->GroupList();
+			ISCGroupList^ groups = Core->GroupList();
 			ISCReferGroup^ group = groups->GroupByName(folder);
 
 			int nDicts = group->CountRootClass;
@@ -84,46 +90,46 @@ namespace Integra {
 			{
 					ISCRootClass^ dict = group->RootClassByIndex(i);
 					dictionary->Add(dict->NameRootClass, dict->NameScreenRootClass);
-			}*/
+			}
 			return dictionary;
 		}
 
 		Dictionary<String^, String^>^ GetAllGroups(String^ bookCode)
 		{
 			Dictionary<String^, String^>^ list = gcnew Dictionary<String^, String^>();
-			//ISCGroupList^ groups = Core->GroupList();
-			//int nGroup = groups->CountGroups;
-			//for (int i = 0; i < nGroup; i++)
-			//{
-			//	ISCReferGroup^ group = groups->GroupByIndex(i);
-			//	int nDicts = group->CountRootClass;
-			//	for (int j = 0; j < nDicts; j++)
-			//	{
-			//		ISCRootClass^ dict = group->RootClassByIndex(j);
-			//		if (dict->NameRootClass == bookCode)
-			//		{
-			//			int nCls = dict->CountClasses;
-			//			nCls = dict->CountClasses;
-			//			for (int k = 0; k < nCls; k++)
-			//			{
-			//				ISCClass^ clas = dict->ClassByIndex(k);
-			//				//bug in 0-class
-			//				if (clas == nullptr)
-			//				{
-			//					clas = dict->ClassByIndex(k+1)->ParentClass();
-			//				}
-			//				list->Add(clas->NameClass, clas->NameScreenClass);
-			//			}
-			//			return list;
-			//		}
-			//	}
-			//}
+			ISCGroupList^ groups = Core->GroupList();
+			int nGroup = groups->CountGroups;
+			for (int i = 0; i < nGroup; i++)
+			{
+				ISCReferGroup^ group = groups->GroupByIndex(i);
+				int nDicts = group->CountRootClass;
+				for (int j = 0; j < nDicts; j++)
+				{
+					ISCRootClass^ dict = group->RootClassByIndex(j);
+					if (dict->NameRootClass == bookCode)
+					{
+						int nCls = dict->CountClasses;
+						nCls = dict->CountClasses;
+						for (int k = 0; k < nCls; k++)
+						{
+							ISCClass^ clas = dict->ClassByIndex(k);
+							//bug in 0-class
+							if (clas == nullptr)
+							{
+								clas = dict->ClassByIndex(k+1)->ParentClass();
+							}
+							list->Add(clas->NameClass, clas->NameScreenClass);
+						}
+						return list;
+					}
+				}
+			}
 			return list;
 		}
 
 		List<Attribute^>^ GetClassAttrs(List<String^>^ fullCode)
 		{
-			/*ISCGroupList^ groups = Core->GroupList();
+			ISCGroupList^ groups = Core->GroupList();
 			ISCReferGroup^ group = groups->GroupByIndex(Int32::Parse(fullCode[0]));
 			ISCRootClass^ dict = group->RootClassByName(fullCode[1]);
 			ISCClass^ clas = dict->ClassByName(fullCode[2]);			
@@ -132,29 +138,34 @@ namespace Integra {
 			{
 				clas = clas->ChildClass();
 				i++;
-			}*/
-
-			List<Attribute^>^ attrs = gcnew List<Attribute^>();
-			/*int n = clas->CountAttrClasses;
-			for (int j = 0; j < n; j++)
-			{
-			ISCClassAttribute^ attr = clas->AttrClassByIndex(j);
-			array<Object^>^ arr = gcnew array<Object ^>(5);
-			arr[0] = false;
-			arr[1] = attr->NameAttr;
-			arr[2] = attr->NameScreen;
-			arr[3] = GetTypeName(attr->DataType);
-			arr[4] = attr->SizeAttr + "";
-			attrs->Add(arr);
 			}
 
-			array<Object^>^ arr = gcnew array<Object ^>(5);
-			arr[0] = false;
-			arr[1] = "^GUID";
-			arr[2] = "Глобальный идентификатор";
-			arr[3] = "Строка";
-			arr[4] = "22";
-			attrs->Add(arr);*/
+			String^ fullCodeS = "";
+			for (int k = 0; k < fullCode->Count; k++)
+			{
+				fullCodeS += fullCode[k] + ".";
+			}
+			fullCodeS = fullCodeS->Substring(0, fullCodeS->Length-1);
+
+			List<Attribute^>^ attrs = gcnew List<Attribute^>();
+			int n = clas->CountAttrClasses;
+			for (int j = 0; j < n; j++)
+			{
+				ISCClassAttribute^ attr = clas->AttrClassByIndex(j);
+
+				Attribute^ attribute = gcnew Attribute(fullCodeS, attr->NameAttr, attr->NameScreen);
+				attribute->UseChecked = false;
+				attribute->DataType = GetTypeName(attr->DataType);
+				attribute->MaxLength = attr->SizeAttr + "";
+				attrs->Add(attribute);
+			}
+
+			Attribute^ attribute = gcnew Attribute(fullCodeS, "^GUID", "Глобальный идентификатор");
+			attribute->UseChecked = false;
+			attribute->DataType = "Строка";
+			attribute->MaxLength = "22";
+			attrs->Add(attribute);
+
 			return attrs;
 		}
 
@@ -198,48 +209,48 @@ namespace Integra {
 
 	private:
 
-		//static String^ GetTypeName(SCAttrDataType dataType)
-		//{
-		//	/*switch(dataType)
-		//	{
-		//	case SCAttrDataType::ADT_BOOL:
-		//		return "Логический";
-		//	case SCAttrDataType::ADT_COLOR:
-		//		return "Цвет";
-		//	case SCAttrDataType::ADT_DATETIME:
-		//		return "Дата";
-		//	case SCAttrDataType::ADT_DOUBLE:
-		//		return "Число с плавающей точкой";
-		//	case SCAttrDataType::ADT_FLEXTABLE:
-		//		return "Произвольная таблица";
-		//	case SCAttrDataType::ADT_IMAGE:
-		//		return "Изображение";
-		//	case SCAttrDataType::ADT_INTEGER:
-		//		return "Целое число";
-		//	case SCAttrDataType::ADT_INTLINK:
-		//		return "Внутренняя ссылка на объект";
-		//	case SCAttrDataType::ADT_STRING:
-		//		return "Строка";
-		//	case SCAttrDataType::ADT_TEMPLATE:
-		//		return "Шаблон";
-		//	case SCAttrDataType::ADT_TEXT:
-		//		return "Текст";
-		//	case SCAttrDataType::ADT_UNKNOWN:
-		//		return "Неизвестный тип";
+		static String^ GetTypeName(SCAttrDataType dataType)
+		{
+			switch(dataType)
+			{
+			case SCAttrDataType::ADT_BOOL:
+				return "Логический";
+			case SCAttrDataType::ADT_COLOR:
+				return "Цвет";
+			case SCAttrDataType::ADT_DATETIME:
+				return "Дата";
+			case SCAttrDataType::ADT_DOUBLE:
+				return "Число с плавающей точкой";
+			case SCAttrDataType::ADT_FLEXTABLE:
+				return "Произвольная таблица";
+			case SCAttrDataType::ADT_IMAGE:
+				return "Изображение";
+			case SCAttrDataType::ADT_INTEGER:
+				return "Целое число";
+			case SCAttrDataType::ADT_INTLINK:
+				return "Внутренняя ссылка на объект";
+			case SCAttrDataType::ADT_STRING:
+				return "Строка";
+			case SCAttrDataType::ADT_TEMPLATE:
+				return "Шаблон";
+			case SCAttrDataType::ADT_TEXT:
+				return "Текст";
+			case SCAttrDataType::ADT_UNKNOWN:
+				return "Неизвестный тип";
 
-		//	}*/
-		//	return "Неизвестный тип";
-		//}
+			}
+			return "Неизвестный тип";
+		}
 		
 		Void Clear()
 		{
-			/*_logon = nullptr;
-			Core = nullptr;*/
+			_logon = nullptr;
+			Core = nullptr;
 		}
 
 		bool Init()
 		{
-			/*try
+			try
 			{
 				Core = gcnew SCCore();
 				if (Core->GetLastErrorCode() != 0)
@@ -289,9 +300,10 @@ namespace Integra {
 				Log->WriteError(mess + "\n" + e->StackTrace);
 				MessageBox::Show(mess);
 				return false;
-			}*/
-			return false;
+			}
 		}
+
+
 
 	};
 }

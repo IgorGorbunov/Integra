@@ -26,10 +26,10 @@ namespace Integra {
 		static Void CopyToMe(String^ filePath)
 		{
 			//release
-			/*CopyFile(filePath, _comp1, _userName1, _password1);
+			CopyFile(filePath, _comp1, _userName1, _password1);
 			CopyFile(filePath, _comp2, _userName1, _password1);
 			CopyFile(filePath, _share2, _userName3, _password3);
-			CopyFile(filePath, _share1, _userName2, _password2);*/
+			CopyFile(filePath, _share1, _userName2, _password2);
 		}
 
 

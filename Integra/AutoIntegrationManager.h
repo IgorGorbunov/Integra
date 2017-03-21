@@ -46,23 +46,25 @@ namespace Integra {
 			while (true)
 			{
 				SetAutoIntegrations();
-				for each (AutoIntegration^ autoInt in _autoInts)
+				if (_autoInts != nullptr && _autoInts->Count > 0)
 				{
-					if (autoInt->IsOn)
+					for each (AutoIntegration^ autoInt in _autoInts)
 					{
-						DateTime^ now = DateTime::Now;
-						DateTime^ nextStartDate = GetNextStartDate(autoInt->StartPeriod, autoInt->LastStart);
-
-						if (autoInt->LastStart == nullptr || nextStartDate->CompareTo(now) < 0)
+						if (autoInt->IsOn)
 						{
-							if (autoInt->StartTime->Hour == now->Hour && autoInt->StartTime->Minute == now->Minute)
+							DateTime^ now = DateTime::Now;
+							DateTime^ nextStartDate = GetNextStartDate(autoInt->StartPeriod, autoInt->LastStart);
+
+							if (autoInt->LastStart == nullptr || nextStartDate->CompareTo(now) < 0)
 							{
-								StartIntegration(autoInt->SchemaId);
+								if (autoInt->StartTime->Hour == now->Hour && autoInt->StartTime->Minute == now->Minute)
+								{
+									StartIntegration(autoInt->SchemaId);
+								}
 							}
 						}
 					}
 				}
-
 				Thread::Sleep(30000);
 			}
 		}
